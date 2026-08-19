@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NAN RECORVERY ACCOUNT - Jasa bantuan pemulihan akun Google melalui prosedur resmi.">
+  <title>NAN RECORVERY ACCOUNT | Pemulihan Akun</title>
+  <style>
+    :root{
+      --blue:#1769e0; --blue2:#0b4db8; --dark:#0c1728; --muted:#64748b;
+      --bg:#f5f8fc; --card:#fff; --line:#e4eaf2; --green:#18a957;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--dark);line-height:1.6}
+    a{text-decoration:none;color:inherit}
+    .container{width:min(1120px,92%);margin:auto}
+    header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+    .nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:800}
+    .brand img{width:48px;height:48px;object-fit:cover;border-radius:12px}
+    .brand span{font-size:17px;line-height:1.1}
+    .brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;margin-top:3px}
+    .navlinks{display:flex;gap:24px;color:#334155;font-weight:600;font-size:14px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer}
+    .btn-primary{background:var(--blue);color:white;box-shadow:0 8px 22px #1769e02b}
+    .btn-primary:hover{background:var(--blue2)}
+    .hero{padding:78px 0 55px;background:linear-gradient(180deg,#fff 0%,#f5f8fc 100%)}
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:55px;align-items:center}
+    .badge{display:inline-flex;background:#eaf2ff;color:var(--blue2);padding:7px 12px;border-radius:999px;font-weight:800;font-size:12px;margin-bottom:18px}
+    h1{font-size:clamp(40px,6vw,70px);line-height:1.02;letter-spacing:-2px;margin-bottom:20px}
+    h1 em{font-style:normal;color:var(--blue)}
+    .hero p{font-size:18px;color:var(--muted);max-width:650px;margin-bottom:27px}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-light{background:#fff;border:1px solid var(--line)}
+    .trust{display:flex;gap:18px;flex-wrap:wrap;margin-top:25px;color:#475569;font-size:13px;font-weight:700}
+    .trust span{display:flex;align-items:center;gap:7px}
+    .hero-card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:0 20px 60px #0b172812}
+    .hero-card img{width:100%;display:block;border-radius:20px}
+    .section{padding:78px 0}
+    .section-head{text-align:center;max-width:700px;margin:0 auto 40px}
+    .section-head h2{font-size:36px;letter-spacing:-1px;margin-bottom:10px}
+    .section-head p{color:var(--muted)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 10px 35px #0b172808}
+    .icon{width:48px;height:48px;border-radius:14px;background:#eaf2ff;color:var(--blue);display:grid;place-items:center;font-size:23px;margin-bottom:17px}
+    .card h3{font-size:19px;margin-bottom:7px}
+    .card p{color:var(--muted);font-size:14px}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .step{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
+    .num{font-size:13px;color:var(--blue);font-weight:900;margin-bottom:10px}
+    .step h3{font-size:16px;margin-bottom:6px}
+    .step p{font-size:13px;color:var(--muted)}
+    .notice{margin-top:30px;background:#fff8e6;border:1px solid #f6df9c;border-radius:16px;padding:17px;color:#725514;font-size:13px}
+    .cta{padding:60px 0}
+    .cta-box{background:linear-gradient(135deg,#1769e0,#0b4db8);color:white;border-radius:28px;padding:45px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+    .cta-box p{color:#dbeafe;margin-top:8px}
+    .cta .btn{background:#fff;color:var(--blue2)}
+    footer{background:#0c1728;color:#cbd5e1;padding:34px 0}
+    .footer-row{display:flex;justify-content:space-between;gap:25px;align-items:center}
+    footer strong{color:white}
+    footer p{font-size:13px;margin-top:5px}
+    .wa{position:fixed;right:20px;bottom:20px;background:var(--green);color:#fff;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:27px;font-weight:900;box-shadow:0 12px 30px #18a95755;z-index:30}
+    @media(max-width:850px){
+      .navlinks{display:none}.hero-grid{grid-template-columns:1fr}.hero{padding-top:45px}
+      .cards{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}
+      .cta-box{flex-direction:column;align-items:flex-start;padding:32px}
+    }
+    @media(max-width:520px){.steps{grid-template-columns:1fr}h1{font-size:45px}.section{padding:55px 0}}
+  
+    .testimonials{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .testimonial{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 10px 35px #0b172808}
+    .testimonial img,.testimonial video{width:100%;height:300px;display:block;object-fit:cover;background:#0c1728}
+    .testimonial-body{padding:17px 18px}
+    .testimonial-body strong{display:block;margin-bottom:5px}
+    .testimonial-body p{font-size:13px;color:var(--muted)}
+    .testimonial-note{margin-top:20px;text-align:center;color:var(--muted);font-size:12px}
+    @media(max-width:850px){.testimonials{grid-template-columns:1fr 1fr}}
+    @media(max-width:520px){.testimonials{grid-template-columns:1fr}}
+
+  </style>
+</head>
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="#home">
+      <img src="logo.jpeg" alt="Logo NAN RECORVERY ACCOUNT">
+      <span>NAN RECORVERY ACCOUNT<small>ACCOUNT RECOVERY SERVICE</small></span>
+    </a>
+    <nav class="navlinks">
+      <a href="#layanan">Layanan</a>
+      <a href="#proses">Proses</a>
+      <a href="#testimoni">Testimoni</a>
+      <a href="#aman">Keamanan</a>
+    </nav>
+    <a class="btn btn-primary" href="#kontak">Konsultasi</a>
+  </div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="badge">BANTUAN PEMULIHAN AKUN</span>
+        <h1>NAN <em>RECORVERY</em><br>ACCOUNT</h1>
+        <p>Membantu pemilik akun menangani masalah lupa sandi, akun dinonaktifkan, dan akun yang diduga diretas dengan mengarahkan proses melalui jalur pemulihan resmi.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#kontak">Mulai Konsultasi</a>
+          <a class="btn btn-light" href="#proses">Lihat Proses</a>
+        </div>
+        <div class="trust">
+          <span>✓ Tanpa meminta password</span>
+          <span>✓ Tanpa meminta kode OTP</span>
+          <span>✓ Privasi dijaga</span>
+        </div>
+      </div>
+      <div class="hero-card">
+        <img src="logo.jpeg" alt="NAN RECORVERY ACCOUNT">
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="layanan">
+    <div class="container">
+      <div class="section-head">
+        <h2>Layanan Kami</h2>
+        <p>Bantuan untuk memahami dan menjalankan langkah pemulihan akun yang sesuai.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="icon">🔐</div>
+          <h3>Lupa Sandi</h3>
+          <p>Bantuan langkah demi langkah untuk memulihkan akses ketika password akun terlupa.</p>
+        </article>
+        <article class="card">
+          <div class="icon">⚠️</div>
+          <h3>Akun Dinonaktifkan</h3>
+          <p>Membantu mengecek opsi banding dan prosedur resmi yang tersedia untuk akun yang dinonaktifkan.</p>
+        </article>
+        <article class="card">
+          <div class="icon">🛡️</div>
+          <h3>Akun Diduga Diretas</h3>
+          <p>Membantu mengamankan akun dan mengarahkan pemilik ke alur pemulihan resmi setelah terjadi akses tidak dikenal.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="proses">
+    <div class="container">
+      <div class="section-head">
+        <h2>Proses Pemulihan</h2>
+        <p>Transparan, aman, dan berfokus pada pemilik akun yang sah.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="num">01</div><h3>Konsultasi</h3><p>Ceritakan kendala akun dan kondisi terakhir yang kamu alami.</p></div>
+        <div class="step"><div class="num">02</div><h3>Identifikasi</h3><p>Kami membantu menentukan jalur pemulihan resmi yang relevan.</p></div>
+        <div class="step"><div class="num">03</div><h3>Pemulihan</h3><p>Pemilik akun menjalankan verifikasi melalui halaman resmi penyedia akun.</p></div>
+        <div class="step"><div class="num">04</div><h3>Pengamanan</h3><p>Setelah akses kembali, lakukan penggantian sandi dan pengamanan tambahan.</p></div>
+      </div>
+      <div class="notice"><strong>Penting:</strong> NAN RECORVERY ACCOUNT tidak meminta password, OTP, recovery code, cookie, atau kredensial rahasia. Keputusan pemulihan tetap berada pada penyedia layanan akun dan pemilik akun.</div>
+    </div>
+  </section>
+
+
+  <section class="section" id="testimoni">
+    <div class="container">
+      <div class="section-head">
+        <h2>Testimoni & Dokumentasi</h2>
+        <p>Beberapa dokumentasi dan feedback pelanggan yang kamu kirim.</p>
+      </div>
+      <div class="testimonials">
+        <article class="testimonial">
+          <img src="testimonial_1.jpeg" alt="Bukti proses pemulihan akun" loading="lazy">
+          <div class="testimonial-body"><strong>Bukti proses pemulihan akun</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <img src="testimonial_2.jpeg" alt="Dokumentasi akun pelanggan" loading="lazy">
+          <div class="testimonial-body"><strong>Dokumentasi akun pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <img src="testimonial_3.jpeg" alt="Hasil pemulihan yang dibagikan pelanggan" loading="lazy">
+          <div class="testimonial-body"><strong>Hasil pemulihan yang dibagikan pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <img src="testimonial_4.jpeg" alt="Testimoni pelanggan" loading="lazy">
+          <div class="testimonial-body"><strong>Testimoni pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <img src="testimonial_5.jpeg" alt="Dokumentasi proses" loading="lazy">
+          <div class="testimonial-body"><strong>Dokumentasi proses</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <img src="testimonial_6.jpeg" alt="Feedback pelanggan" loading="lazy">
+          <div class="testimonial-body"><strong>Feedback pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <video controls preload="metadata"><source src="testimonial_7.mp4"></video>
+          <div class="testimonial-body"><strong>Video testimoni pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <video controls preload="metadata"><source src="testimonial_8.mp4"></video>
+          <div class="testimonial-body"><strong>Video dokumentasi</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article><article class="testimonial">
+          <video controls preload="metadata"><source src="testimonial_9.mp4"></video>
+          <div class="testimonial-body"><strong>Video feedback pelanggan</strong><p>Media dibagikan sebagai dokumentasi pengalaman pelanggan.</p></div>
+        </article>
+      </div>
+      <div class="testimonial-note">Catatan: dokumentasi di halaman ini merupakan materi testimoni yang diberikan kepada NAN RECORVERY ACCOUNT. Identitas dan informasi sensitif sebaiknya disamarkan sebelum dipublikasikan.</div>
+    </div>
+  </section>
+
+  <section class="cta" id="kontak">
+    <div class="container">
+      <div class="cta-box">
+        <div>
+          <h2>Butuh bantuan pemulihan akun?</h2>
+          <p>Hubungi kami untuk konsultasi awal mengenai kendala akunmu.</p>
+        </div>
+        <!-- GANTI nomor WhatsApp di bawah dengan nomor bisnis Anda -->
+        <a class="btn" href="https://wa.me/6282148995663?text=Halo%20NAN%20RECORVERY%20ACCOUNT,%20saya%20ingin%20konsultasi%20pemulihan%20akun." target="_blank" rel="noopener">Chat WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="aman">
+  <div class="container footer-row">
+    <div>
+      <strong>NAN RECORVERY ACCOUNT</strong>
+      <p>Jasa bantuan pemulihan akun melalui prosedur resmi.</p>
+    </div>
+    <div><p>© 2026 NAN RECORVERY ACCOUNT</p></div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/6282148995663?text=Halo%20NAN%20RECORVERY%20ACCOUNT" target="_blank" rel="noopener" aria-label="WhatsApp">☏</a>
+</body>
+</html>
