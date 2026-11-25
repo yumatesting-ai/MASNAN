@@ -2,7 +2,7 @@
 // Render klip animasi karakter ke MP4 (atau PNG satu frame).
 //
 //   node tools/render.js --char nana --clip idle --out out/idle.mp4
-//   node tools/render.js --char nana --clip wave --fps 30 --scale 3 --bg "#ffffff"
+//   node tools/render.js --char nana --clip wave --fps 30 --scale 3 --bg "#ffffff"   # default 60fps
 //   node tools/render.js --char nana --pose '{"expr":"happy","view":"three"}' --out out/pose.png
 //   node tools/render.js --clip happy --label "senang"   # teks label di bawah
 //   node tools/render.js --list            # daftar klip & ekspresi
@@ -17,7 +17,7 @@ const { chromium } = require("playwright");
 
 function args() {
   const a = process.argv.slice(2);
-  const o = { char: "nana", clip: "idle", view: null, fps: 30, scale: 3, bg: "#ffffff", loops: 2 };
+  const o = { char: "nana", clip: "idle", view: null, fps: 60, scale: 3, bg: "#ffffff", loops: 2 };
   for (let i = 0; i < a.length; i += 2) o[a[i].replace(/^--/, "")] = a[i + 1];
   o.fps = +o.fps; o.scale = +o.scale; o.loops = +o.loops;
   return o;
@@ -33,7 +33,7 @@ function args() {
   }
   const dir = path.join(__dirname, "..", "characters", o.char);
   const rig = require(path.join(dir, "rig.js"));
-  const { CLIPS } = require(path.join(dir, "animations.js"));
+  const { CLIPS, samplePose } = require(path.join(dir, "animations.js"));
   const W = 300, H = 400;
 
   const browser = await chromium.launch();
@@ -60,7 +60,7 @@ function args() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "frames-"));
   const n = Math.round(clip.duration * o.fps);
   for (let i = 0; i < n; i++) {
-    await shot(clip.pose(i / o.fps), path.join(tmp, `f${String(i).padStart(5, "0")}.png`), clip.view);
+    await shot(samplePose(clip, i / o.fps, rig.resolvePose), path.join(tmp, `f${String(i).padStart(5, "0")}.png`), clip.view);
   }
   await browser.close();
 

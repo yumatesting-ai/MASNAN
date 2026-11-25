@@ -58,6 +58,7 @@
     bodyX: 0, bodyY: 0,
     lean: 0,          // derajat, condong seluruh badan (pivot kaki)
     squash: 0,        // + = gepeng (ancang-ancang/mendarat), - = memanjang (melompat)
+    scaleX: 1,        // skala horizontal seluruh badan (transisi putar)
   };
 
   const EXPRESSIONS = {
@@ -144,6 +145,7 @@
   const outline = (d, extra = "") => `<path fill="none" ${LINE} ${extra} d="${d}"/>`;
   const shade = (clipId, fill, d, extra = "") => `<path clip-path="url(#nana-${clipId})" fill="${fill}" ${extra} d="${d}"/>`;
   const MIRROR = `translate(300 0) scale(-1 1)`;
+  const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
   function defs() {
     const clip = (id, d) => `<clipPath id="nana-${id}"><path d="${d}"/></clipPath>`;
@@ -373,7 +375,9 @@
     const legs = `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""}">
       ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}</g>`;
 
-    const SHOULDER = "118 208";
+    const SHOULDER = "118 208";      // pivot lengan baju
+    const ARM_ROOT = "106 236";      // pivot lengan di dalam lengan baju
+    const SLEEVE_K = 0.6;            // lengan baju ikut berputar 60% saja -> tidak "mengepak"
     const armLayer = (side, deg, part) => {
       const mirror = side === 1 ? MIRROR : "";
       const far = isThree && side === -1;
@@ -385,10 +389,15 @@
            ${outline(SHAPE.arm)}`
         : `<path fill="${C.shirt}" d="${SHAPE.sleeve}"/>
            ${shade("sleeve", C.shirtShade, "M121,222 C117,236 108,246 86,247 L86,262 L124,262 Z")}
-           ${outline("M124,203 C110,206 100,212 95,224 C91,233 89,242 88,250 C96,255 105,257 114,256")}
+           ${outline("M114,205.5 C110,206.4 106,207.8 102,210", `opacity="${clamp01(1 - (Math.abs(deg) - 8) / 22).toFixed(2)}"`)}
+           ${outline("M102,210 C99,213 97,218 95,224 C91,233 89,242 88,250 C96,255 105,257 114,256")}
            ${outline("M115,256 C115.6,248 116.2,241 117,235")}
            ${Math.abs(deg) > 25 || isBack ? outline("M117,235 C118,225 121,214 128,206", `opacity="${isBack ? 1 : Math.min(1, (Math.abs(deg) - 25) / 30).toFixed(2)}"`) : ""}`;
-      return `<g id="${id}" transform="${mirror} ${shift}"><g transform="rotate(${deg} ${SHOULDER})">${shape}</g></g>`;
+      const rs = deg * SLEEVE_K;
+      const inner = part === "arm"
+        ? `<g transform="rotate(${rs} ${SHOULDER})"><g transform="rotate(${deg - rs} ${ARM_ROOT})">${shape}</g></g>`
+        : `<g transform="rotate(${rs} ${SHOULDER})">${shape}</g>`;
+      return `<g id="${id}" transform="${mirror} ${shift}">${inner}</g>`;
     };
 
     const torsoD = isBack ? SHAPE.torsoBack : SHAPE.torso;
@@ -519,7 +528,9 @@
   // ================= RAKIT =================
   function resolvePose(pose) {
     const preset = EXPRESSIONS[pose.expr || "neutral"] || {};
-    return Object.assign({}, DEFAULT_POSE, preset, pose);
+    const clean = {};
+    for (const k in pose) if (pose[k] !== undefined) clean[k] = pose[k]; // undefined = pakai preset
+    return Object.assign({}, DEFAULT_POSE, preset, clean);
   }
 
   function drawCharacter(view = "front", pose = {}, opts = {}) {
@@ -541,7 +552,7 @@
     const sq = p.squash;
     const dir = p.flip ? -1 : 1; // condong & geser ikut arah hadap
     const rootT = `translate(${dir * p.bodyX} ${p.bodyY}) rotate(${dir * p.lean} 150 380)
-      translate(150 380) scale(${1 + 0.12 * sq} ${1 - 0.12 * sq}) translate(-150 -380)`;
+      translate(150 380) scale(${(1 + 0.12 * sq) * p.scaleX} ${1 - 0.12 * sq}) translate(-150 -380)`;
     const lift = Math.max(0, -p.bodyY);
     const ground = `<ellipse fill="${PALETTE.ground}" cx="${150 + p.bodyX}" cy="381" rx="${Math.max(20, 54 - lift * 0.5) * (1 + 0.1 * sq)}" ry="${Math.max(3, 7 - lift * 0.06)}"/>`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="${w}" height="${h}">${bg}${defs()}${ground}

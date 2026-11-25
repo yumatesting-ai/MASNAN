@@ -18,6 +18,7 @@ characters/<nama>/
   animations.js   CLIPS { nama: { duration, view, pose(t) } }
 tools/render.js   render klip -> MP4, atau pose -> PNG
 tools/sheet.js    contact sheet (ekspresi / tampak / frame klip) untuk cek visual
+tools/check.js    QA numerik: lompatan parameter antar frame & sambungan loop
 ```
 
 ## Alur kerja
@@ -37,15 +38,24 @@ tools/sheet.js    contact sheet (ekspresi / tampak / frame klip) untuk cek visua
    node tools/sheet.js --mode views --out out/tampak.png     # semua tampak + flip
    node tools/sheet.js --mode clip --clip jump --frames 6    # potongan frame klip
    ```
-3. **Selalu cek hasil secara visual** sebelum menyerahkan (`tools/sheet.js --mode clip`):
-   bagian tidak hilang/tertutup, outline tidak terdistorsi, tidak ada garis ganda, loop mulus.
+3. **QA sebelum menyerahkan**:
+   - Visual: `tools/sheet.js --mode clip --clip <nama> --frames 8` — bagian tidak hilang/tertutup,
+     outline tidak terdistorsi, tidak ada garis ganda, tidak terpotong tepi kanvas.
+   - Numerik: `node tools/check.js` — daftar parameter yang melompat antar frame (termasuk sambungan loop).
+     Yang tersisa hanya boleh gerak cepat yang disengaja (lari, ayunan lompat).
 4. **Menyusun adegan**: pilih `view` + `expr` + klip. Pose bisa memakai preset ekspresi (`expr`) lalu
    menimpa field tertentu (mis. `{ expr: "happy", mouth: "o" }`).
-5. **Menambah klip baru**: tambah entri `{ duration, view, pose(t) }` di `animations.js`. Pakai
-   `wave(t, periode)` (periode harus membagi `duration` agar loop mulus), `seg/easeOut/easeInOut` untuk
-   gerak berfase (ancang-ancang -> aksi -> mendarat), `blinkAt` untuk kedip, `life(t)` untuk gerak
-   sekunder (napas, rambut, ahoge). Efek beranimasi pakai `fx` yang naik bilangan bulat per loop.
-   Prinsip: ancang-ancang + squash/stretch, ahoge & rambut tertinggal (follow-through), jangan diam total.
+5. **Menambah klip baru**: tambah `{ duration, view, smooth?, pose(t) }` di `animations.js`. Aturan wajib
+   agar gerak halus dan tidak "error":
+   - **Loop mulus**: periode `wave(t, P)` harus membagi `duration`; keyframe di t=0 sama dengan t=duration.
+   - **Jangan melompatkan nilai**: perpindahan posisi pakai `kf(t, [[waktu, nilai, easing], ...])`
+     (easing `io`, `out`, `in`, `back`, `lin`), bukan `t < x ? a : b`.
+   - **Ganti ekspresi didahului kedip/pejam singkat** (2–5 frame) agar tidak terasa memotong.
+   - Akting: ancang-ancang -> aksi -> mendarat (squash/stretch), gerak sekunder lewat `life(t, periode)`.
+   - Getaran cepat (gemetar, isak) periodenya >= 0.15 dtk dan set `smooth` kecil (0.015) agar tidak hilang.
+   - Renderer selalu memakai `samplePose()` yang menambah penghalusan gaussian (sadar-loop) dan
+     **follow-through otomatis** (ahoge & rambut tertinggal mengikuti kepala) — tidak perlu animasi ahoge manual.
+   - Setelah membuat klip, jalankan cek lompatan per frame (lihat bagian QA) dan contact sheet.
 6. **Menambah ekspresi**: varian mata di `eye()`, mulut di `mouth()`, efek di `faceExtras/aboveFx`,
    lalu preset di `EXPRESSIONS`. Dokumentasikan di `CHARACTER.md`.
 7. **Menambah tampak (view)**: tambah bentuk di `SHAPE`, tata letak wajah di `LAYOUT`, fungsi gambar,
@@ -58,6 +68,8 @@ tools/sheet.js    contact sheet (ekspresi / tampak / frame klip) untuk cek visua
 - Stroke 3px, `stroke-linejoin="round"`. Bentuk yang di-scale memakai `vector-effect="non-scaling-stroke"`.
 - Urutan lapisan: rambut belakang → kaki → lengan → badan → kepala (wajah, poni, ahoge).
 - Lengan terangkat >~130° tertutup kepala; untuk melambai/angkat tangan pakai ±100–125°.
+  Lengan baju hanya ikut berputar 60% (`SLEEVE_K`) dan lengan berputar dari dalamnya, agar tidak "mengepak".
+- Video default 60fps (`--fps 30` untuk file lebih kecil).
 - Tampak `three`/`side` menghadap kiri; pakai `flip` untuk kanan. Teks efek dibuat path agar tidak bergantung font.
 
 ## Kanvas

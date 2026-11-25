@@ -17,7 +17,7 @@ o.cols = +o.cols; o.scale = +o.scale; o.frames = +o.frames;
 
 const dir = path.join(__dirname, "..", "characters", o.char);
 const rig = require(path.join(dir, "rig.js"));
-const { CLIPS } = require(path.join(dir, "animations.js"));
+const { CLIPS, samplePose } = require(path.join(dir, "animations.js"));
 
 let items; // [{label, pose}]
 if (o.poses) items = JSON.parse(o.poses).map((p, i) => ({ label: p.expr || p.view || `#${i}`, pose: p }));
@@ -29,7 +29,7 @@ else if (o.mode === "clip") {
   if (!c) throw new Error(`Klip tidak ada. Pilihan: ${Object.keys(CLIPS).join(", ")}`);
   items = Array.from({ length: o.frames }, (_, i) => {
     const t = (i / o.frames) * c.duration;
-    return { label: `${o.clip} t=${t.toFixed(2)}`, pose: Object.assign({ view: c.view }, c.pose(t)) };
+    return { label: `${o.clip} t=${t.toFixed(2)}`, pose: samplePose(c, t, rig.resolvePose) };
   });
 }
 
