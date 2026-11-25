@@ -81,34 +81,44 @@
         <ellipse ${S(C.shoe)} cx="171" cy="373" rx="20" ry="8"/>
       </g>`;
 
-    // ---------- Lengan (sleeve ikut berputar bersama lengan) ----------
-    const arm = (side, deg) => {
-      // Digambar untuk sisi kiri layar, sisi kanan dicerminkan. + derajat = ayun keluar.
+    // ---------- Lengan ----------
+    // Dua lapis per lengan dengan rotasi yang sama: kulit (di belakang badan) dan
+    // lengan baju (di depan badan, sambungan ketiak melengkung). + derajat = ayun keluar.
+    const SHOULDER = "118 208";
+    const armLayer = (side, deg, part) => {
       const mirror = side === 1 ? `translate(300 0) scale(-1 1)` : "";
-      return `
-      <g id="arm-${side === -1 ? "l" : "r"}" transform="${mirror}">
-        <g transform="rotate(${deg} 116 206)">
-          <path ${S(C.skin)} d="
-            M99,236 C97,258 96,276 97,290
-            C97,301 102,305 107,305
-            C113,305 115,300 115,290
-            C115,276 115,258 115,240 Z"/>
-          <path ${S(C.shirt)} d="
-            M120,198 C104,202 94,216 90,244
-            C98,249 108,251 117,250
-            C117,236 118,224 122,216 Z"/>
-        </g>
-      </g>`;
+      const id = `${part}-${side === -1 ? "l" : "r"}`;
+      const shape = part === "arm"
+        ? `<path ${S(C.skin)} d="
+            M98,240 C96,260 95,277 96,290
+            C96,301 101,305 106,305
+            C112,305 114,300 114,290
+            C114,277 114,260 114,244 Z"/>`
+        : `<path ${S(C.shirt)} d="
+            M123,204
+            C110,206 100,212 95,224
+            C91,233 89,242 88,250
+            C96,255 107,257 118,256
+            C116,238 117,220 123,204 Z"/>
+           <path fill="none" stroke="${C.shirtShade}" stroke-width="2" stroke-linecap="round"
+             d="M93,246 C100,249 108,250 115,250"/>`;
+      return `<g id="${id}" transform="${mirror}"><g transform="rotate(${deg} ${SHOULDER})">${shape}</g></g>`;
     };
 
-    // ---------- Badan ----------
+    // ---------- Badan (kaos) ----------
+    // Bahu landai, garis leher melengkung, badan sedikit melebar ke bawah (A-line),
+    // ujung bawah melengkung lembut.
     const torso = `
-      <g id="torso" transform="translate(150 284) scale(${breatheScale}) translate(-150 -284)">
+      <g id="torso" transform="translate(150 286) scale(${breatheScale}) translate(-150 -286)">
+        <path ${S(C.skin)} d="M141,186 L159,186 L159,208 L141,208 Z"/>
         <path ${S(C.shirt)} d="
-          M116,200 C132,192 168,192 184,200
-          C190,226 190,262 189,284
-          C164,288 136,288 111,284
-          C110,262 110,226 116,200 Z"/>
+          M114,208
+          C120,203 130,200 138,199
+          Q150,210 162,199
+          C170,200 180,203 186,208
+          C188,232 190,262 192,284
+          C166,292 134,292 108,284
+          C110,262 112,232 114,208 Z"/>
       </g>`;
 
     // ---------- Wajah ----------
@@ -139,7 +149,6 @@
 
     const head = `
       <g id="head" transform="translate(0 ${p.headY}) rotate(${p.headTilt} ${headPivot})">
-        <rect ${S(C.skin)} x="141" y="188" width="18" height="16" rx="3"/>
         <circle ${S(C.skin)} cx="213" cy="160" r="10"/>
         <path fill="none" stroke="${C.line}" stroke-width="2" d="M211,155 Q216,160 211,165"/>
         <ellipse ${S(C.skin)} cx="150" cy="140" rx="64" ry="58"/>
@@ -176,9 +185,11 @@
       <g transform="translate(0 ${p.bodyY})">
         ${hairBack}
         ${legs}
-        ${arm(-1, p.armL)}
-        ${arm(1, p.armR)}
+        ${armLayer(-1, p.armL, "arm")}
+        ${armLayer(1, p.armR, "arm")}
         ${torso}
+        ${armLayer(-1, p.armL, "sleeve")}
+        ${armLayer(1, p.armR, "sleeve")}
         ${head}
       </g>`;
   }

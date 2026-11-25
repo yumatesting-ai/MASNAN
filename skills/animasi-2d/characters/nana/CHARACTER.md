@@ -10,7 +10,7 @@ Referensi turnaround: `reference.jpg` (6 tampak: depan, 3/4 depan, samping, 3/4 
 - **Ahoge**: satu helai ikal di puncak kepala, selalu ada, ikut memantul saat bergerak.
 - **Mata**: oval putih horizontal, pupil titik kecil di sisi dalam (ekspresi "kosong").
 - **Mulut default**: `:3`. Tetes keringat di pipi kanan (ciri khas canggung).
-- **Pakaian**: kaos putih lengan pendek, celana panjang abu tua `#4e4e4e`, sepatu putih.
+- **Pakaian**: kaos putih lengan pendek (bahu landai, garis leher melengkung, potongan sedikit A-line), celana panjang abu tua `#4e4e4e`, sepatu putih.
 
 ## Bagian rig (`rig.js`)
 | Grup | Pivot | Parameter pose |
@@ -18,7 +18,7 @@ Referensi turnaround: `reference.jpg` (6 tampak: depan, 3/4 depan, samping, 3/4 
 | `hair-back` | puncak kepala | `hairSway` |
 | `head` | leher (150,200) | `headTilt`, `headY`, `blink`, `lookX`, `mouth`, `sweat` |
 | `ahoge` | pangkal ahoge | `ahoge` |
-| `arm-l` / `arm-r` | bahu | `armL`, `armR` (+ = ayun ke luar, ±120 = angkat/melambai) |
+| `arm-*` (kulit, di belakang badan) + `sleeve-*` (lengan baju, di depan badan) | bahu (118,208) | `armL`, `armR` (+ = ayun ke luar, ±120 = angkat/melambai) |
 | `torso` | pinggang | `breathe` |
 | seluruh badan | — | `bodyY` |
 
