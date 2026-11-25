@@ -27,7 +27,7 @@
     breathe: 0,      // 0..1 dada mengembang
     armL: 0,         // derajat rotasi lengan kiri layar (+ = ke luar)
     armR: 0,         // derajat rotasi lengan kanan layar (+ = ke luar)
-    hairSway: 0,     // derajat, ayunan rambut belakang
+    hairSway: 0,     // derajat skew ujung rambut belakang (crown tetap), aman ±2
     ahoge: 0,        // derajat, pantulan ahoge
     lookX: 0,        // -1..1 arah pupil
     mouth: "cat",    // "cat" (:3) | "open" | "flat"
@@ -44,22 +44,27 @@
     const breatheScale = 1 + 0.015 * p.breathe;
 
     // ---------- Rambut belakang ----------
+    // Satu siluet mulus: puncak mengikuti bentuk kepala, jatuh lurus di samping badan,
+    // ujung bawah bergelombang lembut.
     const hairBack = `
-      <g id="hair-back" transform="rotate(${p.hairSway} 150 100)">
+      <g id="hair-back" transform="translate(0 ${p.headY}) rotate(${p.headTilt} ${headPivot})">
+      <g transform="translate(0 142) skewX(${p.hairSway}) translate(0 -142)">
         <path ${S(C.hair)} d="
-          M96,96
-          C64,140 80,182 68,222
-          C60,250 70,272 86,268
-          C92,280 108,280 114,270
-          C120,278 132,276 136,266
-          L164,266
-          C168,276 180,278 186,270
-          C192,280 208,280 214,268
-          C230,272 240,250 232,222
-          C220,182 236,140 204,96 Z"/>
+          M150,72
+          C196,72 224,100 225,142
+          C226,178 230,208 235,236
+          C239,256 236,270 225,274
+          C219,281 209,281 204,274
+          C198,280 189,279 186,272
+          L114,272
+          C111,279 102,280 96,274
+          C91,281 81,281 75,274
+          C64,270 61,256 65,236
+          C70,208 74,178 75,142
+          C76,100 104,72 150,72 Z"/>
         <path fill="none" stroke="${C.hairShade}" stroke-width="2" stroke-linecap="round"
-          d="M84,190 C80,215 82,240 90,258 M216,190 C220,215 218,240 210,258"/>
-      </g>`;
+          d="M82,200 C80,224 81,246 86,262 M218,200 C220,224 219,246 214,262"/>
+      </g></g>`;
 
     // ---------- Kaki & sepatu ----------
     const legs = `
@@ -135,36 +140,35 @@
     const head = `
       <g id="head" transform="translate(0 ${p.headY}) rotate(${p.headTilt} ${headPivot})">
         <rect ${S(C.skin)} x="141" y="188" width="18" height="16" rx="3"/>
-        <circle ${S(C.skin)} cx="214" cy="152" r="10"/>
-        <path fill="none" stroke="${C.line}" stroke-width="2" d="M212,147 Q217,152 212,157"/>
+        <circle ${S(C.skin)} cx="213" cy="160" r="10"/>
+        <path fill="none" stroke="${C.line}" stroke-width="2" d="M211,155 Q216,160 211,165"/>
         <ellipse ${S(C.skin)} cx="150" cy="140" rx="64" ry="58"/>
         ${eye(122, 148, 6)}
         ${eye(178, 148, -6)}
         ${mouths[p.mouth] || mouths.cat}
         ${sweat}
-        <!-- Rambut depan: atap kepala + poni -->
+        <!-- Rambut depan: atap kepala + poni lembut + helai pembingkai wajah kiri (satu bentuk) -->
         <path ${S(C.hair)} d="
-          M86,168
-          C76,108 108,76 150,76
-          C194,76 226,108 212,150
-          C208,130 202,118 194,110
-          C193,120 189,127 183,131
-          C178,118 170,110 160,106
-          C158,116 154,122 148,127
-          C141,114 131,108 120,110
-          C116,119 110,125 104,129
-          C101,138 98,150 97,168 Z"/>
-        <!-- Helai samping kiri menutupi telinga -->
-        <path ${S(C.hair)} d="
-          M98,124 C84,148 82,190 90,218
-          C98,208 104,190 104,170
-          C104,154 102,140 106,128 Z"/>
+          M80,196
+          C76,176 75,160 75,142
+          C76,100 104,72 150,72
+          C196,72 224,100 225,142
+          C225,148 223,152 220,154
+          C214,140 208,126 200,114
+          C197,123 190,128 182,126
+          C177,115 168,108 158,107
+          C155,117 149,124 141,125
+          C136,114 126,108 115,111
+          C112,121 106,129 100,134
+          C96,152 96,174 101,192
+          C96,200 86,202 80,196 Z"/>
+        <!-- Helai tipis (detail) -->
         <path fill="none" stroke="${C.hairShade}" stroke-width="2" stroke-linecap="round"
-          d="M146,80 C142,90 144,100 150,106 M176,82 C184,92 190,100 194,110 M118,86 C114,96 114,104 120,110"/>
+          d="M150,80 C140,88 137,98 139,108 M172,82 C184,90 190,100 192,110 M122,86 C112,96 106,110 104,124"/>
         <!-- Ahoge -->
-        <g id="ahoge" transform="rotate(${p.ahoge} 150 78)">
+        <g id="ahoge" transform="rotate(${p.ahoge} 150 76)">
           <path fill="none" stroke="${C.line}" stroke-width="2.8" stroke-linecap="round"
-            d="M150,78 C151,66 156,58 152,50 C148,43 139,46 141,53 C143,58 149,57 150,53"/>
+            d="M150,76 C151,64 156,58 152,50 C148,43 139,46 141,53 C143,58 149,57 150,53"/>
         </g>
       </g>`;
 

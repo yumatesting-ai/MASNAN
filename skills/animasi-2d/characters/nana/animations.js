@@ -21,7 +21,7 @@
       pose: (t) => ({
         breathe: (wave(t, 2) + 1) / 2,
         headY: 1.2 * wave(t, 2, 0.15),
-        hairSway: 0.8 * wave(t, 4),
+        hairSway: 1.5 * wave(t, 4),
         ahoge: 6 * wave(t, 2, 0.3),
         armL: 1.5 * wave(t, 2, 0.1),
         armR: 1.5 * wave(t, 2, 0.1),
@@ -38,7 +38,7 @@
         armL: 2 * wave(t, 2),
         headTilt: 5,
         ahoge: 10 * wave(t, 0.5, 0.2),
-        hairSway: 1.2 * wave(t, 1),
+        hairSway: 2 * wave(t, 1),
         mouth: "open",
         sweat: false,
         blink: blinkAt(t, [1.4]),
