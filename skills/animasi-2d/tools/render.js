@@ -3,7 +3,9 @@
 //
 //   node tools/render.js --char nana --clip idle --out out/idle.mp4
 //   node tools/render.js --char nana --clip wave --fps 30 --scale 3 --bg "#ffffff"
-//   node tools/render.js --char nana --pose '{"blink":1}' --out out/pose.png
+//   node tools/render.js --char nana --pose '{"expr":"happy","view":"three"}' --out out/pose.png
+//   node tools/render.js --clip happy --label "senang"   # teks label di bawah
+//   node tools/render.js --list            # daftar klip & ekspresi
 //
 // Butuh: Playwright (Chromium) dan ffmpeg.
 
@@ -15,7 +17,7 @@ const { chromium } = require("playwright");
 
 function args() {
   const a = process.argv.slice(2);
-  const o = { char: "nana", clip: "idle", view: "front", fps: 30, scale: 3, bg: "#ffffff", loops: 2 };
+  const o = { char: "nana", clip: "idle", view: null, fps: 30, scale: 3, bg: "#ffffff", loops: 2 };
   for (let i = 0; i < a.length; i += 2) o[a[i].replace(/^--/, "")] = a[i + 1];
   o.fps = +o.fps; o.scale = +o.scale; o.loops = +o.loops;
   return o;
@@ -23,6 +25,12 @@ function args() {
 
 (async () => {
   const o = args();
+  if (process.argv.includes("--list")) {
+    const d = path.join(__dirname, "..", "characters", o.char);
+    console.log("Klip:", Object.keys(require(path.join(d, "animations.js")).CLIPS).join(", "));
+    console.log("Ekspresi:", Object.keys(require(path.join(d, "rig.js")).EXPRESSIONS).join(", "));
+    return;
+  }
   const dir = path.join(__dirname, "..", "characters", o.char);
   const rig = require(path.join(dir, "rig.js"));
   const { CLIPS } = require(path.join(dir, "animations.js"));
@@ -30,9 +38,10 @@ function args() {
 
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: o.scale });
-  const shot = async (pose, file) => {
-    const svg = rig.drawCharacter(o.view, pose, { width: W, height: H, background: o.bg === "none" ? null : o.bg });
-    await page.setContent(`<body style="margin:0">${svg}</body>`);
+  const shot = async (pose, file, view = "front") => {
+    const svg = rig.drawCharacter(o.view || view, pose, { width: W, height: H, background: o.bg === "none" ? null : o.bg });
+    const label = o.label ? `<div style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font:700 16px sans-serif;color:#666">${o.label}</div>` : "";
+    await page.setContent(`<body style="margin:0">${svg}${label}</body>`);
     await page.screenshot({ path: file, omitBackground: o.bg === "none" });
   };
 
@@ -51,7 +60,7 @@ function args() {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "frames-"));
   const n = Math.round(clip.duration * o.fps);
   for (let i = 0; i < n; i++) {
-    await shot(clip.pose(i / o.fps), path.join(tmp, `f${String(i).padStart(5, "0")}.png`));
+    await shot(clip.pose(i / o.fps), path.join(tmp, `f${String(i).padStart(5, "0")}.png`), clip.view);
   }
   await browser.close();
 

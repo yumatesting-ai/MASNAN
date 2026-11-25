@@ -22,18 +22,39 @@ Bayangan berupa blok warna tegas, satu tingkat lebih gelap, dipotong (clipPath) 
 - Bayangan lantai: elips `ground` di bawah kaki (mengecil saat badan memantul).
 Arah cahaya: dari atas-depan. Jangan menambah gradasi atau warna di luar palet.
 
-## Bagian rig (`rig.js`)
-| Grup | Pivot | Parameter pose |
-|---|---|---|
-| `hair-back` | puncak kepala | `hairSway` |
-| `head` | leher (150,200) | `headTilt`, `headY`, `blink`, `lookX`, `mouth`, `sweat` |
-| `ahoge` | pangkal ahoge | `ahoge` |
-| `arm-*` (kulit, di belakang badan) + `sleeve-*` (lengan baju, di depan badan) | bahu (118,208) | `armL`, `armR` (+ = ayun ke luar, ±120 = angkat/melambai) |
-| `torso` | pinggang | `breathe` |
-| seluruh badan | — | `bodyY` |
+## Tampak (view)
+| view | Keterangan |
+|---|---|
+| `front` | depan |
+| `three` | 3/4, menghadap kiri layar (telinga kanan terlihat, mata jauh lebih kecil) |
+| `side` | samping, menghadap kiri layar (rambut jatuh di punggung) |
+| `back` | belakang (rambut menutup kepala & punggung, ahoge tetap) |
 
-Mulut: `cat` (:3), `open`, `flat`.
+`flip: true` membalik arah hadap (efek ?, !, z tetap terbaca normal).
+Belum ada: 3/4 belakang dan menunduk.
 
-## Status tampak
-- [x] Depan (`front`)
-- [ ] 3/4 depan, samping, 3/4 belakang, belakang, menunduk
+## Parameter pose (`rig.js` -> `DEFAULT_POSE`)
+| Grup | Parameter |
+|---|---|
+| Wajah | `eyes`, `mouth`, `blink`, `lookX`, `lookY`, `blush`, `sweat`, `tears`, `anger`, `gloom`, `above`, `fx` |
+| Kepala | `headTilt`, `headX`, `headY`, `hairSway` (±3), `ahoge` |
+| Lengan | `armL`, `armR` — depan/3-4/belakang: + = ayun keluar (±110–125 melambai); samping: + = ke depan |
+| Kaki | `legL`, `legR` — depan/3-4/belakang: angkat (px, 0–15); samping: rotasi (deg, + = ke depan) |
+| Badan | `breathe`, `bodyX`, `bodyY`, `lean` (condong, pivot kaki), `squash` (+ gepeng, - memanjang) |
+
+- **Mata**: `normal`, `closed`, `happy` (^ ^), `wide`, `sad`, `angry`, `half`, `sparkle`, `dizzy` (spiral), `cry` (> <)
+- **Mulut**: `cat` (:3), `open`, `flat`, `smile`, `frown`, `o`, `grin`, `wavy`, `shout`, `smirk`
+- **Efek atas kepala** (`above`): `question`, `exclaim`, `zzz`, `heart`, `sparkles`, `stars`, `music`
+- **Efek wajah**: `blush` (0–1), `tears` (`drop`/`stream`), `anger` (urat marah), `gloom` (garis suram), `sweat`
+
+## Preset ekspresi (`expr`)
+neutral, smile, happy, laugh, surprised, shocked, sad, cry, angry, furious, confused, dizzy,
+sleepy, smug, deadpan, shy, love, nervous. Field pose yang ditulis langsung mengalahkan preset.
+
+## Klip animasi (`animations.js`)
+| Kategori | Klip |
+|---|---|
+| Diam | `idle`, `idle_three`, `idle_side`, `look_around` |
+| Komunikasi | `wave`, `talk`, `nod`, `shake_no` |
+| Gerak | `walk` (samping), `walk_front`, `run`, `jump`, `turnaround` |
+| Emosi | `happy`, `laugh`, `love`, `shy`, `sad`, `cry`, `surprised`, `shocked`, `angry`, `confused`, `dizzy`, `sleepy`, `nervous`, `smug` |
