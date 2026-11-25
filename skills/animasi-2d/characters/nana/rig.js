@@ -94,12 +94,24 @@
             C96,301 101,305 106,305
             C112,305 114,300 114,290
             C114,277 114,260 114,244 Z"/>`
-        : `<path ${S(C.shirt)} d="
-            M123,204
+        : `<!-- isi lengan baju tanpa garis di sisi dalam, menutup garis samping badan -> tanpa jahitan -->
+           <path fill="${C.shirt}" stroke="none" d="
+            M124,203
             C110,206 100,212 95,224
             C91,233 89,242 88,250
-            C96,255 107,257 118,256
-            C116,238 117,220 123,204 Z"/>
+            C96,255 105,257 115,256
+            C117,238 119,220 128,206 Z"/>
+           <path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="
+            M124,203
+            C110,206 100,212 95,224
+            C91,233 89,242 88,250
+            C96,255 105,257 114,256"/>
+           <!-- Garis jahitan setengah: dari ketiak naik ke tengah. Saat lengan diangkat, garis penuh. -->
+           <path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round"
+             d="M115,256 C115.6,248 116.2,241 117,235"/>
+           ${Math.abs(deg) > 25 ? `<path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round"
+             opacity="${Math.min(1, (Math.abs(deg) - 25) / 30).toFixed(2)}"
+             d="M117,235 C118,225 121,214 128,206"/>` : ""}
            <path fill="none" stroke="${C.shirtShade}" stroke-width="2" stroke-linecap="round"
              d="M93,246 C100,249 108,250 115,250"/>`;
       return `<g id="${id}" transform="${mirror}"><g transform="rotate(${deg} ${SHOULDER})">${shape}</g></g>`;
