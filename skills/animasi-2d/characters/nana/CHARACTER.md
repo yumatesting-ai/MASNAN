@@ -12,6 +12,16 @@ Referensi turnaround: `reference.jpg` (6 tampak: depan, 3/4 depan, samping, 3/4 
 - **Mulut default**: `:3`. Tetes keringat di pipi kanan (ciri khas canggung).
 - **Pakaian**: kaos putih lengan pendek (bahu landai, garis leher melengkung, potongan sedikit A-line; garis jahitan lengan hanya setengah dari ketiak, penuh saat lengan diangkat), celana panjang abu tua `#4e4e4e`, sepatu putih.
 
+## Shading (cel, tanpa gradasi)
+Bayangan berupa blok warna tegas, satu tingkat lebih gelap, dipotong (clipPath) ke bentuk masing-masing:
+- Rambut: kilau putus-putus melengkung di puncak (`hairShine`), rambut belakang lebih gelap (`hairBack`),
+  sisi bawah rambut belakang & helai kiri pakai `hairShade`.
+- Wajah: bayangan poni di dahi (bentuk poni digeser 2,7px). Leher seluruhnya `skinShade`.
+- Kaos: bayangan dagu di garis leher, sisi badan di bawah ketiak, bawah lengan baju, satu lipatan kecil.
+- Lengan: bawah lengan baju + sisi dalam. Celana: di bawah ujung kaos + sisi dalam kaki. Sepatu: sol.
+- Bayangan lantai: elips `ground` di bawah kaki (mengecil saat badan memantul).
+Arah cahaya: dari atas-depan. Jangan menambah gradasi atau warna di luar palet.
+
 ## Bagian rig (`rig.js`)
 | Grup | Pivot | Parameter pose |
 |---|---|---|

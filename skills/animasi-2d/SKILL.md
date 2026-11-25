@@ -40,6 +40,8 @@ tools/render.js   render klip -> MP4, atau pose -> PNG
 
 ## Aturan gaya
 - Pakai palet `PALETTE` di `rig.js`; jangan menambah warna di luar grayscale karakter tanpa diminta.
+- Shading cel: isi -> blok bayangan (clip-path ke `SHAPE`) -> garis luar. Bentuk dasar ada di `SHAPE`
+  agar isi dan clipPath selalu sama. Lihat bagian Shading di `CHARACTER.md`.
 - Stroke 3px, `stroke-linejoin="round"`. Bentuk yang di-scale memakai `vector-effect="non-scaling-stroke"`.
 - Urutan lapisan: rambut belakang → kaki → lengan → badan → kepala (wajah, poni, ahoge).
 - Lengan terangkat >~140° akan tertutup kepala; untuk melambai pakai ±110–135°.
