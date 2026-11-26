@@ -1,77 +1,104 @@
 ---
 name: animasi-2d
-description: Membuat konten animasi 2D dari karakter rig vektor (SVG) milik kreator — pose, ekspresi, dan klip animasi (idle, melambai, gugup, dll) dirender ke PNG/MP4. Gunakan saat user minta membuat/menggerakkan karakter animasi 2D, menambah ekspresi/gerakan/tampak baru, atau merender klip untuk konten.
+description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) milik kreator — Nana, Bima, Rara, atau karakter baru — dengan 18 ekspresi, 4 tampak (depan, 3/4, samping, belakang), 27 klip gerak, dan adegan multi-karakter, dirender ke PNG/MP4. Gunakan saat user minta membuat/menggerakkan karakter animasi 2D, menambah karakter/baju/rambut/ekspresi/gerakan/tampak baru, atau merender klip/adegan untuk konten.
 ---
 
-# Animasi 2D — Karakter Rig
+# Animasi 2D — Karakter Rig Chibi
 
-Karakter dibangun sebagai **rig SVG**: setiap bagian (rambut belakang, kepala, ahoge, lengan, badan, kaki)
-adalah grup terpisah dengan pivot sendiri dan digerakkan oleh objek **pose**. Klip animasi = fungsi
-`waktu → pose`. Renderer menangkap tiap frame dengan Playwright lalu menyatukannya dengan ffmpeg.
+Semua karakter dibangun dari **satu mesin rig SVG** (`engine/chibi-rig.js`). Bagian badan (rambut belakang,
+kepala, ahoge, lengan, badan, kaki) adalah grup terpisah dengan pivot sendiri, digerakkan objek **pose**.
+Perbedaan antar karakter ada di **desain** (`characters/<nama>/design.js`): rambut, atasan, lengan,
+bawahan, kaus kaki, sepatu, warna, aksesori, ekspresi default. Klip animasi (`engine/clips.js`) =
+fungsi `waktu → pose`, dipakai bersama oleh semua karakter.
+
+## Karakter
+| id | Nama | Gender | Rambut | Pakaian |
+|---|---|---|---|---|
+| `nana` | Nana | perempuan | panjang abu tua, poni runcing, ahoge ikal | kaos putih, celana panjang, sneakers |
+| `bima` | Bima | laki-laki | pendek jabrik hitam, jambul | hoodie lengan panjang, celana pendek, kaus kaki, sneakers |
+| `rara` | Rara | perempuan | bob terang, poni lurus, jepit rambut | sweater kerah bulat, rok lipit, kaus kaki panjang, sepatu hitam |
+
+Lihat `characters/<nama>/CHARACTER.md` untuk ciri wajib tiap karakter.
 
 ## Struktur
 ```
+engine/chibi-rig.js   createRig(design) -> { drawCharacter, drawPart, resolvePose, EXPRESSIONS, ... }
+engine/clips.js       CLIPS bersama + samplePose (penghalusan & follow-through) + kf/EASE
 characters/<nama>/
-  CHARACTER.md    model sheet: ciri wajib, palet, bagian rig, status tampak
-  reference.jpg   gambar referensi asli dari kreator
-  rig.js          drawCharacter(view, pose, opts) -> string SVG; EXPRESSIONS; SHAPE; LAYOUT
-  animations.js   CLIPS { nama: { duration, view, pose(t) } }
-tools/render.js   render klip -> MP4, atau pose -> PNG
-tools/sheet.js    contact sheet (ekspresi / tampak / frame klip) untuk cek visual
-tools/check.js    QA numerik: lompatan parameter antar frame & sambungan loop
+  design.js           desain karakter (lihat format di bawah)
+  CHARACTER.md        model sheet: ciri wajib, palet, sifat
+  rig.js              createRig(design)       animations.js   klip bersama (+ klip khusus)
+  reference.jpg       gambar referensi (jika ada)
+tools/render.js       klip -> MP4, pose -> PNG (satu karakter)
+tools/scene.js        adegan multi-karakter berdampingan -> MP4/PNG
+tools/sheet.js        contact sheet (ekspresi / tampak / frame klip)
+tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loop
 ```
 
 ## Alur kerja
-1. **Baca `CHARACTER.md` dulu.** Ciri wajib karakter tidak boleh berubah antar konten (konsistensi model).
-2. **Render pose / klip**:
+1. **Baca `CHARACTER.md` karakter yang dipakai.** Ciri wajib tidak boleh berubah antar konten.
+2. **Render**:
    ```bash
-   node tools/render.js --char nana --clip idle --out out/idle.mp4
-   node tools/render.js --char nana --clip wave --fps 30 --scale 3 --loops 3
-   node tools/render.js --char nana --pose '{"expr":"happy","view":"three"}' --out out/pose.png
-   node tools/render.js --char nana --clip walk --label "jalan"   # label teks di bawah
-   node tools/render.js --char nana --clip idle --bg none          # latar transparan
-   node tools/render.js --list                                     # daftar klip & ekspresi
+   node tools/render.js --char bima --clip wave --out out/bima-wave.mp4
+   node tools/render.js --char rara --pose '{"expr":"happy","view":"three"}' --out out/rara.png
+   node tools/render.js --char nana --clip walk --label "jalan"     # label di bawah gambar
+   node tools/render.js --char nana --clip idle --bg none           # latar transparan
+   node tools/render.js --list                                      # daftar klip & ekspresi
+   node tools/scene.js --cast "nana:wave,bima:happy,rara:shy" --label "Halo!" --out out/trio.mp4
+   node tools/scene.js --cast "nana:walk:flip,rara:walk" --png out/frame.png --t 0.3
    ```
-   Contact sheet untuk cek cepat:
-   ```bash
-   node tools/sheet.js --mode expr  --out out/ekspresi.png   # semua preset ekspresi
-   node tools/sheet.js --mode views --out out/tampak.png     # semua tampak + flip
-   node tools/sheet.js --mode clip --clip jump --frames 6    # potongan frame klip
-   ```
+   Contact sheet: `node tools/sheet.js --char rara --mode expr|views` atau `--mode clip --clip jump --frames 6`.
 3. **QA sebelum menyerahkan**:
-   - Visual: `tools/sheet.js --mode clip --clip <nama> --frames 8` — bagian tidak hilang/tertutup,
-     outline tidak terdistorsi, tidak ada garis ganda, tidak terpotong tepi kanvas.
-   - Numerik: `node tools/check.js` — daftar parameter yang melompat antar frame (termasuk sambungan loop).
-     Yang tersisa hanya boleh gerak cepat yang disengaja (lari, ayunan lompat).
-4. **Menyusun adegan**: pilih `view` + `expr` + klip. Pose bisa memakai preset ekspresi (`expr`) lalu
-   menimpa field tertentu (mis. `{ expr: "happy", mouth: "o" }`).
-5. **Menambah klip baru**: tambah `{ duration, view, smooth?, pose(t) }` di `animations.js`. Aturan wajib
-   agar gerak halus dan tidak "error":
-   - **Loop mulus**: periode `wave(t, P)` harus membagi `duration`; keyframe di t=0 sama dengan t=duration.
-   - **Jangan melompatkan nilai**: perpindahan posisi pakai `kf(t, [[waktu, nilai, easing], ...])`
-     (easing `io`, `out`, `in`, `back`, `lin`), bukan `t < x ? a : b`.
-   - **Ganti ekspresi didahului kedip/pejam singkat** (2–5 frame) agar tidak terasa memotong.
-   - Akting: ancang-ancang -> aksi -> mendarat (squash/stretch), gerak sekunder lewat `life(t, periode)`.
-   - Getaran cepat (gemetar, isak) periodenya >= 0.15 dtk dan set `smooth` kecil (0.015) agar tidak hilang.
-   - Renderer selalu memakai `samplePose()` yang menambah penghalusan gaussian (sadar-loop) dan
-     **follow-through otomatis** (ahoge & rambut tertinggal mengikuti kepala) — tidak perlu animasi ahoge manual.
-   - Setelah membuat klip, jalankan cek lompatan per frame (lihat bagian QA) dan contact sheet.
-6. **Menambah ekspresi**: varian mata di `eye()`, mulut di `mouth()`, efek di `faceExtras/aboveFx`,
-   lalu preset di `EXPRESSIONS`. Dokumentasikan di `CHARACTER.md`.
-7. **Menambah tampak (view)**: tambah bentuk di `SHAPE`, tata letak wajah di `LAYOUT`, fungsi gambar,
-   daftarkan di `drawCharacter`; cocokkan dengan `reference.jpg`, perbarui `CHARACTER.md`.
+   - Visual: contact sheet — bagian tidak hilang/tertutup, tidak ada garis ganda, tidak terpotong kanvas.
+   - Numerik: `node tools/check.js` — yang tersisa hanya gerak cepat yang disengaja (lari, ayunan lompat).
+4. **Menyusun adegan**: pilih karakter + `view` + `expr` + klip. Pose bisa memakai preset (`expr`) lalu
+   menimpa field tertentu (mis. `{ expr: "happy", mouth: "o" }`); nilai `undefined` = pakai preset.
+
+## Menambah karakter baru
+1. Salin folder karakter yang paling mirip (`characters/rara` untuk rambut pendek/bob, `nana` untuk panjang).
+2. Ubah `design.js`:
+   - `colors`: `hair`, `top`, `bottom`, `shoe`, `skin`, `sock`, `accent` (bayangan dihitung otomatis).
+   - `hair.long` (rambut panjang menutup punggung di tampak belakang), `hair.shapes`:
+     `hairBack` (di belakang kepala), `hairFront` (atap + poni), `hairBackSide`, `hairFrontSide`
+     (samping, digambar menghadap kanan), opsional `hairBackView` (tampak belakang, harus menutup kepala).
+     Garis helai: `frontStrands`, `backStrands`, `backViewStrands`, `sideStrands`, `sideBackStrands`.
+   - `ears`: `{ front: ["l","r"], side: true, back: [...] }` — telinga yang tidak tertutup rambut.
+   - `ahoge`: `"curl"` | `"spike"` | `null`. `accessory`: `{ front, side, back }` -> SVG (jepit, pita, kacamata).
+   - `top`: `"tee"` | `"hoodie"` | `"sweater"`; `sleeves`: `"short"` | `"long"`;
+     `bottom`: `"pants"` | `"shorts"` | `"skirt"`; `legwear`: `null` | `"socks"` | `"kneeSocks"`;
+     `shoes`: `"sneaker"` | `"dark"`.
+   - `expr`: override preset per karakter (sifat), mis. `{ neutral: { mouth: "smirk", sweat: false } }`.
+3. Koordinat kepala tetap: wajah elips (150,140) rx64 ry58, mata y≈148, poni sebaiknya berakhir y≈110–130.
+4. Cek: `sheet.js --char <id> --mode views`, `--mode expr`, beberapa klip (`wave`, `walk`, `jump`), lalu
+   tulis `CHARACTER.md`. Pakaian/rambut jenis baru ditambahkan di mesin (`BODY_SHAPES` + cabang di
+   `frontish()`/`side()`), bukan disalin per karakter.
+
+## Menambah klip (engine/clips.js)
+`{ duration, view, smooth?, pose(t) }`. Aturan agar gerak halus dan tidak "error":
+- **Loop mulus**: periode `wave(t, P)` membagi `duration`; keyframe di t=0 sama dengan t=duration.
+- **Jangan melompatkan nilai**: pakai `kf(t, [[waktu, nilai, easing], ...])` (easing `io|out|in|back|lin`).
+- **Ganti ekspresi didahului kedip/pejam singkat** (2–5 frame).
+- Akting: ancang-ancang -> aksi -> mendarat (squash/stretch); gerak sekunder lewat `life(t, periode)`.
+- Getaran cepat periodenya >= 0.15 dtk dan set `smooth` kecil (0.015).
+- `samplePose()` menambah penghalusan gaussian (sadar-loop) dan follow-through otomatis ahoge/rambut.
+- Klip khusus satu karakter: tambahkan di `characters/<nama>/animations.js` (spread dari klip bersama).
+
+## Menambah ekspresi / tampak
+- Ekspresi: varian mata `eye()`, mulut `mouth()`, efek `faceExtras/aboveFx`, lalu preset di
+  `BASE_EXPRESSIONS` (engine). Berlaku untuk semua karakter.
+- Tampak: bentuk di `BODY_SHAPES`/desain, tata letak wajah di `LAYOUT`, fungsi gambar di engine.
 
 ## Aturan gaya
-- Pakai palet `PALETTE` di `rig.js`; jangan menambah warna di luar grayscale karakter tanpa diminta.
-- Shading cel: isi -> blok bayangan (clip-path ke `SHAPE`) -> garis luar. Bentuk dasar ada di `SHAPE`
-  agar isi dan clipPath selalu sama. Lihat bagian Shading di `CHARACTER.md`.
+- Seri grayscale: warna desain abu-abu kecuali user minta warna. Bedakan karakter lewat nilai gelap-terang,
+  siluet rambut, dan jenis pakaian.
+- Shading cel: isi -> blok bayangan (clip-path ke `SHAPE`) -> garis luar. ID clipPath diberi prefix id karakter.
 - Stroke 3px, `stroke-linejoin="round"`. Bentuk yang di-scale memakai `vector-effect="non-scaling-stroke"`.
-- Urutan lapisan: rambut belakang → kaki → lengan → badan → kepala (wajah, poni, ahoge).
-- Lengan terangkat >~130° tertutup kepala; untuk melambai/angkat tangan pakai ±100–125°.
-  Lengan baju hanya ikut berputar 60% (`SLEEVE_K`) dan lengan berputar dari dalamnya, agar tidak "mengepak".
+- Urutan lapisan: rambut belakang → kaki → lengan → badan → lengan baju → kepala (wajah, poni, ahoge).
+- Lengan terangkat >~130° tertutup kepala; melambai/angkat tangan ±100–125°. Lengan baju pendek ikut
+  berputar 60% (`SLEEVE_K`), lengan panjang ikut penuh.
 - Video default 60fps (`--fps 30` untuk file lebih kecil).
-- Tampak `three`/`side` menghadap kiri; pakai `flip` untuk kanan. Teks efek dibuat path agar tidak bergantung font.
+- Tampak `three`/`side` menghadap kiri; pakai `flip` untuk kanan. Teks efek dibuat path (tidak bergantung font).
 
 ## Kanvas
-viewBox `300×400`, lantai di y≈382. `--scale 3` → 900×1200 px. Untuk video konten vertikal 9:16,
-komposisikan karakter di adegan (latar, teks) pada langkah berikutnya.
+Per karakter viewBox `300×400`, lantai y≈382. `--scale 3` → 900×1200 px. Adegan: lebar 300 per karakter
+(`--gap` untuk jarak). Untuk video vertikal 9:16 dengan latar/teks, komposisikan di langkah berikutnya.

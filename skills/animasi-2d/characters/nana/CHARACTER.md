@@ -1,5 +1,7 @@
 # Nana — Model Sheet
 
+Perempuan, karakter utama (dari gambar referensi kreator). Desain: `design.js`, mesin: `../../engine/chibi-rig.js`.
+
 Referensi turnaround: `reference.jpg` (6 tampak: depan, 3/4 depan, samping, 3/4 belakang, belakang, menunduk).
 
 ## Ciri wajib (jangan diubah antar konten)
@@ -33,7 +35,7 @@ Arah cahaya: dari atas-depan. Jangan menambah gradasi atau warna di luar palet.
 `flip: true` membalik arah hadap (efek ?, !, z tetap terbaca normal).
 Belum ada: 3/4 belakang dan menunduk.
 
-## Parameter pose (`rig.js` -> `DEFAULT_POSE`)
+## Parameter pose (`engine/chibi-rig.js` -> `BASE_DEFAULT_POSE`)
 | Grup | Parameter |
 |---|---|
 | Wajah | `eyes`, `mouth`, `blink`, `lookX`, `lookY`, `blush`, `sweat`, `tears`, `anger`, `gloom`, `above`, `fx` |
@@ -51,7 +53,7 @@ Belum ada: 3/4 belakang dan menunduk.
 neutral, smile, happy, laugh, surprised, shocked, sad, cry, angry, furious, confused, dizzy,
 sleepy, smug, deadpan, shy, love, nervous. Field pose yang ditulis langsung mengalahkan preset.
 
-## Klip animasi (`animations.js`)
+## Klip animasi (`engine/clips.js`, dipakai semua karakter)
 | Kategori | Klip |
 |---|---|
 | Diam | `idle`, `idle_three`, `idle_side`, `look_around` |

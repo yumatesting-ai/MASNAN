@@ -34,14 +34,14 @@ function args() {
   const dir = path.join(__dirname, "..", "characters", o.char);
   const rig = require(path.join(dir, "rig.js"));
   const { CLIPS, samplePose } = require(path.join(dir, "animations.js"));
-  const W = 300, H = 400;
+  const W = 300, H = 400 + (o.label ? 30 : 0); // ruang label di bawah gambar
 
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: o.scale });
   const shot = async (pose, file, view = "front") => {
-    const svg = rig.drawCharacter(o.view || view, pose, { width: W, height: H, background: o.bg === "none" ? null : o.bg });
+    const svg = rig.drawCharacter(o.view || view, pose, { width: W, height: 400, background: o.bg === "none" ? null : o.bg });
     const label = o.label ? `<div style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font:700 16px sans-serif;color:#666">${o.label}</div>` : "";
-    await page.setContent(`<body style="margin:0">${svg}${label}</body>`);
+    await page.setContent(`<body style="margin:0;background:${o.bg === "none" ? "transparent" : o.bg}"><div style="line-height:0">${svg}</div>${label}</body>`);
     await page.screenshot({ path: file, omitBackground: o.bg === "none" });
   };
 
