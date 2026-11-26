@@ -625,8 +625,14 @@ function createRig(design) {
     };
     // pangkuan (paha yang mengarah ke kamera) saat duduk
     const lapCol = B === "pants" || B === "shorts" ? C.pants : C.skin;
-    const lap = SIT > 0.35 && !isBack && B !== "sarong" && design.top !== "daster"
-      ? `<path fill="${lapCol}" ${LINE} opacity="${clamp01((SIT - 0.35) / 0.4).toFixed(2)}" d="M112,281 L188,281 C191,292 189,302 182,306 L154,306 L150,300 L146,306 L118,306 C111,302 109,292 112,281 Z"/>` : "";
+    const lap = "";
+    // PANGKUAN di depan ujung baju (tampak depan/serong): dua paha memendek mengarah ke kamera dengan lutut membulat,
+    // digambar SETELAH badan agar terbaca jelas "sedang duduk". Sarung/daster/rok: kain menutup pangkuan.
+    const lapA = clamp01((SIT - 0.35) / 0.4), lapFill = B === "sarong" ? C.pants : design.top === "daster" ? C.shirt : B === "skirt" ? C.pants : lapCol;
+    const lapTop = SIT > 0.35 && !isBack ? `<g opacity="${lapA.toFixed(2)}">
+      <path fill="${lapFill}" ${LINE} d="M110,288 C108,300 110,312 118,318 C128,322 140,321 147,316 L150,312 L153,316 C160,321 172,322 182,318 C190,312 192,300 190,288 Z"/>
+      <path fill="none" stroke="${C.line}" stroke-width="2" stroke-linecap="round" opacity="0.55" d="M150,296 L150,311"/>
+      <path fill="#000" opacity="0.08" d="M112,308 C122,318 140,320 147,315 L150,311 L153,315 C160,320 178,318 188,308 C186,316 176,321 164,321 C158,320 154,318 150,314 C146,318 142,320 136,321 C124,321 114,316 112,308 Z"/></g>` : "";
     const legs = `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""} translate(0 ${sitDy.toFixed(2)})">
       ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}${lap}</g>`;
 
@@ -864,11 +870,11 @@ function createRig(design) {
     const up = (svg) => `<g transform="translate(0 ${sitDy.toFixed(2)})">${svg}</g>`;
     const paper = p.hold === "newspaper" && !isBack ? newspaper(view, p) : "";
     if (isBack) {
-      return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
+      return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}
         ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
     }
     return `${up(hairBackG(false))}${legs}
-      ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
+      ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}
       ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head}${paper}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
   }
 
