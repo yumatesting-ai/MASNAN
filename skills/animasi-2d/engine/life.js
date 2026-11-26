@@ -94,11 +94,12 @@ function cat(w, x, z, o = {}) {
         <g transform="scale(0.85) translate(-16 -10)">${head(0, 0, true, false)}</g>
         <ellipse cx="-24" cy="-2" rx="4" ry="2.6" fill="${F(c)}" ${L}/>
         <text x="-22" y="${-30 - 3 * Math.sin(T * 1.2)}" font-size="9" font-family="DejaVu Sans" font-weight="700" fill="${lc}" opacity="${(0.4 + 0.5 * Math.abs(Math.sin(T * 1.2))).toFixed(2)}">z</text>`;
-    } else if (mode === "walk") { // tampak samping menghadap kiri: 4 kaki bergantian, ekor tegak bergoyang
+    } else if (mode === "walk" || mode === "leap") { // tampak samping menghadap kiri: 4 kaki bergantian, ekor tegak bergoyang
+      const LEAP = mode === "leap"; // melompat: kaki depan menjulur ke depan, kaki belakang ke belakang, ekor lurus
       const g = moving ? T * 9 : 0, A = moving ? 7 : 0, bob = moving ? Math.abs(Math.sin(g)) * 1.2 : 0;
-      const leg = (lx, ph, back) => { const a = Math.sin(g + ph) * A; return `<path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${F(back ? c2 : c)}" stroke-width="${(sw * 2.6).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>
+      const leg = (lx, ph, back) => { const a = LEAP ? (lx < 0 ? -16 : 16) : Math.sin(g + ph) * A; return `<path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${F(back ? c2 : c)}" stroke-width="${(sw * 2.6).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${lc}" stroke-width="${(sw * 2.6 + sw * 1.3).toFixed(2)}" stroke-linecap="round" opacity="0" />`; };
-      const sway = Math.sin(T * 3) * 6;
+      const sway = LEAP ? 14 : Math.sin(T * 3) * 6;
       body = `<g transform="translate(0 ${-bob})">
         ${leg(12, Math.PI, true)}${leg(-6, 0, true)}
         <path d="M17,-17 Q30,-22 ${30 + sway * 0.4},${-36 + Math.abs(sway) * 0.3} Q${32 + sway * 0.6},${-44} ${27 + sway},${-46}" fill="none" stroke="${lc}" stroke-width="${(sw * 3.4).toFixed(2)}" stroke-linecap="round"/>

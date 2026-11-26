@@ -8,7 +8,7 @@
       "loc": "posronda",
       "seconds": 2.85,
       "extras": "off",
-      "cast": "bima:sit{expr=confused;lookX=1}@duduk_bale, rara:sit{expr=nervous;lookX=1;sweat=true}@duduk_bale2, hasan:idle@2.3,5.3",
+      "cast": "bima:sit{expr=confused;lookX=1}@duduk_dekat, rara:sit{expr=nervous;lookX=1;sweat=true}@duduk_dekat2, hasan:idle@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
@@ -20,15 +20,17 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 0,
-          "y": 1.15,
-          "z": 1.6,
-          "f": 1250,
+          "x": -0.6,
+          "y": 1.1,
+          "z": 2.6,
+          "f": 1350,
           "horizon": 0.45
         },
         {
           "t": 2.85,
-          "z": 2.0
+          "x": 0.35,
+          "z": 3.3,
+          "f": 1450
         }
       ],
       "fx": [],
@@ -40,7 +42,7 @@
       "loc": "posronda",
       "seconds": 3.15,
       "extras": "off",
-      "cast": "bima:nervous{sit=1;expr=shocked;sweat=true;tears=drop}@duduk_bale",
+      "cast": "bima:nervous{sit=1;expr=shocked;sweat=true;tears=drop}@duduk_dekat",
       "dialog": [
         {
           "who": "bima",
@@ -52,15 +54,17 @@
       "camkeys": [
         {
           "t": 0,
-          "x": -1.3,
+          "x": -0.5,
           "y": 1.0,
-          "z": 3.9,
-          "f": 1450,
+          "z": 3.6,
+          "f": 1400,
           "horizon": 0.42
         },
         {
           "t": 3.15,
-          "z": 4.2
+          "x": -0.42,
+          "z": 4.25,
+          "f": 1550
         }
       ],
       "fx": [],
@@ -84,15 +88,18 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.3,
-          "y": 0.55,
-          "z": 2.4,
-          "f": 1250,
-          "horizon": 0.68
+          "x": 2.1,
+          "y": 0.5,
+          "z": 2.0,
+          "f": 1200,
+          "horizon": 0.7
         },
         {
           "t": 3.95,
-          "z": 2.7
+          "x": 2.3,
+          "y": 0.6,
+          "z": 2.8,
+          "f": 1300
         }
       ],
       "fx": [
@@ -146,13 +153,19 @@
       "fx": [
         {
           "type": "cat",
-          "t": 0.0,
-          "x": 2.95,
+          "t": 0,
+          "x": 2.9,
           "z": 4.95,
-          "flip": true,
+          "flip": false,
           "food": true,
           "color": "#e59a4c",
-          "stripe": "#b8692c"
+          "stripe": "#b8692c",
+          "from": [
+            4.6,
+            5.4
+          ],
+          "dur": 0.4,
+          "h": 0.5
         },
         {
           "type": "text",
@@ -181,7 +194,7 @@
           "amp": 0.06
         }
       ],
-      "visual": "KRESEK! Kucing melompat keluar tepat di kaki Pak Hasan; Pak Hasan melompat & menjerit.",
+      "visual": "KRESEK! Kucing melompat dari kanan dan mendarat di kaki Pak Hasan; Pak Hasan melompat & menjerit.",
       "narasi": ""
     },
     {
@@ -189,7 +202,7 @@
       "loc": "posronda",
       "seconds": 1.55,
       "extras": "off",
-      "cast": "bima:sit{expr=smile}@duduk_bale, rara:deadpan{sit=1}@duduk_bale2, hasan:idle{expr=shy;sweat=true}@2.3,5.3",
+      "cast": "bima:sit{expr=smile}@duduk_dekat, rara:deadpan{sit=1}@duduk_dekat2, hasan:idle{expr=shy;sweat=true}@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
@@ -201,24 +214,26 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.0,
+          "x": 2.4,
           "y": 1.15,
-          "z": 1.6,
-          "f": 1150,
+          "z": 2.2,
+          "f": 1250,
           "horizon": 0.47
         },
         {
           "t": 1.55,
-          "z": 1.8
+          "x": 1.4,
+          "z": 2.0,
+          "f": 1200
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 2.95,
+          "x": 2.9,
           "z": 4.95,
-          "flip": true,
+          "flip": false,
           "food": true,
           "color": "#e59a4c",
           "stripe": "#b8692c"
@@ -232,7 +247,7 @@
       "loc": "posronda",
       "seconds": 1.1,
       "extras": "off",
-      "cast": "bima:point{sit=1;expr=confused}@duduk_bale",
+      "cast": "bima:point{sit=1;expr=confused}@duduk_dekat",
       "dialog": [
         {
           "who": "bima",
@@ -244,11 +259,17 @@
       "camkeys": [
         {
           "t": 0,
-          "x": -1.0,
+          "x": -0.2,
           "y": 1.0,
-          "z": 3.9,
+          "z": 3.7,
           "f": 1400,
           "horizon": 0.42
+        },
+        {
+          "t": 1.1,
+          "x": -0.4,
+          "z": 4.0,
+          "f": 1480
         }
       ],
       "fx": [],
@@ -260,7 +281,7 @@
       "loc": "posronda",
       "seconds": 1.0,
       "extras": "off",
-      "cast": "rara:sit@duduk_bale2",
+      "cast": "rara:sit@duduk_dekat2",
       "dialog": [
         {
           "who": "rara",
@@ -272,24 +293,26 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.75,
-          "y": 0.4,
-          "z": 3.6,
-          "f": 1500,
+          "x": 2.65,
+          "y": 0.45,
+          "z": 3.4,
+          "f": 1450,
           "horizon": 0.5
         },
         {
           "t": 1,
-          "z": 3.7
+          "x": 2.8,
+          "z": 3.65,
+          "f": 1550
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 2.95,
+          "x": 2.9,
           "z": 4.95,
-          "flip": true,
+          "flip": false,
           "food": true,
           "color": "#e59a4c",
           "stripe": "#b8692c"
@@ -303,7 +326,7 @@
       "loc": "posronda",
       "seconds": 4.5,
       "extras": "off",
-      "cast": "bima:sit{lookX=1;expr=smug}@duduk_bale, rara:sit{lookX=1;expr=smug}@duduk_bale2, hasan:nervous{sweat=true;expr=shocked}@2.3,5.3",
+      "cast": "bima:sit{lookX=1;expr=smug}@duduk_dekat, rara:sit{lookX=1;expr=smug}@duduk_dekat2, hasan:nervous{sweat=true;expr=shocked}@2.3,5.3",
       "dialog": [
         {
           "who": "bima",
@@ -315,26 +338,31 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 0.6,
-          "y": 1.2,
-          "z": 1.2,
-          "f": 1150,
+          "x": 0.0,
+          "y": 1.15,
+          "z": 2.4,
+          "f": 1300,
           "horizon": 0.45
         },
         {
+          "t": 1.6,
+          "x": 0.1,
+          "z": 2.6
+        },
+        {
           "t": 4.5,
-          "x": 2.1,
-          "z": 2.6,
-          "f": 1350
+          "x": 2.2,
+          "z": 2.9,
+          "f": 1400
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 2.95,
+          "x": 2.9,
           "z": 4.95,
-          "flip": true,
+          "flip": false,
           "food": true,
           "color": "#e59a4c",
           "stripe": "#b8692c"
@@ -415,15 +443,17 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.3,
+          "x": 2.2,
           "y": 1.4,
-          "z": 3.3,
-          "f": 1450,
+          "z": 3.2,
+          "f": 1400,
           "horizon": 0.42
         },
         {
           "t": 1.6,
-          "z": 3.45
+          "x": 2.35,
+          "z": 3.55,
+          "f": 1500
         }
       ],
       "fx": [],
@@ -447,15 +477,17 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.9,
+          "x": 2.75,
           "y": 1.45,
-          "z": 2.4,
-          "f": 1450,
+          "z": 2.3,
+          "f": 1400,
           "horizon": 0.42
         },
         {
           "t": 2.1,
-          "z": 2.55
+          "x": 2.9,
+          "z": 2.65,
+          "f": 1520
         }
       ],
       "fx": [],
@@ -467,7 +499,7 @@
       "loc": "posronda",
       "seconds": 3.65,
       "extras": "off",
-      "cast": "bima:laugh_hard{sit=1}@duduk_bale, rara:laugh_hard{sit=1}@duduk_bale2, hasan:idle{expr=deadpan;gloom=true;sweat=true}@2.3,5.3, atin:deadpan{anger=true}@1.5,4.6",
+      "cast": "bima:laugh_hard{sit=1}@duduk_dekat, rara:laugh_hard{sit=1}@duduk_dekat2, hasan:idle{expr=deadpan;gloom=true;sweat=true}@2.3,5.3, atin:deadpan{anger=true}@1.5,4.6",
       "dialog": [
         {
           "who": "bima",
@@ -485,24 +517,26 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 0.75,
+          "x": 0.9,
           "y": 1.05,
-          "z": 0.5,
+          "z": 1.5,
           "f": 950,
-          "horizon": 0.5
+          "horizon": 0.48
         },
         {
           "t": 3.65,
-          "z": 0.8
+          "x": 1.0,
+          "z": 2.0,
+          "f": 1000
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 2.95,
+          "x": 2.9,
           "z": 4.95,
-          "flip": true,
+          "flip": false,
           "food": true,
           "color": "#e59a4c",
           "stripe": "#b8692c"
