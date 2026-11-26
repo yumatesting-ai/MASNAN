@@ -172,11 +172,15 @@ function frame(t) {
       const mo = mouthAt(d.text, (t - d.at) * (d.est / d.dur)); // diregangkan agar pas dengan durasi audio asli
       if (mo) { pose.mouth = mo; pose.headY = (pose.headY || 0) + 1.2 * Math.abs(Math.sin((t - d.at) * 7)); }
     }
-    // DUDUK DI TEMPAT TINGGI (bale, meja, tembok): bila seat lebih tinggi dari panjang kaki, seluruh tokoh diangkat
-    // ke atas tempat duduk & kaki menjuntai (rig cukup memakai tinggi duduk normal) -> tidak terlihat seperti berdiri.
-    const SC = (m.rig.CANVAS && m.rig.CANVAS.scale) || 1, LEGH = 0.4 * SC;
-    let yLift = 0;
-    if ((pose.sit || 0) > 0.05 && (pose.seat || 0) > LEGH) { yLift = (pose.seat - LEGH) * pose.sit; pose.seat = LEGH; }
+    // DUDUK: titik duduk ada di atas permukaan tempat duduk; tokoh digambar DI DEPAN tepi tempat duduknya
+    // (pinggul di permukaan, kaki menjuntai di depan sisi bangku/bale) -> tepi tidak menembus badan.
+    const seated = (pose.sit || 0) > 0.5;
+    // tempat duduk tinggi (bale): kaki menjuntai berayun pelan bergantian -> jelas terbaca sedang duduk
+    if (seated && (pose.seat || 0) > 0.5 && !m.extra && pose.view !== "back") {
+      const ph = (m.who || "").length * 0.9;
+      pose.legL = (pose.legL || 0) + 9 * Math.max(0, Math.sin(t * 3 + ph));
+      pose.legR = (pose.legR || 0) + 9 * Math.max(0, Math.sin(t * 3 + ph + Math.PI));
+    }
     // bayangan matahari karakter (searah bayangan lingkungan)
     const hS = 0.55 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1) + (pose.sit ? (pose.seat || 0.45) * 0.6 : 0);
     w.castBlob(x, z, hS, 0.24 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1), { trunk: 0.12, strength: m.extra ? 0.6 : 0.9 });
@@ -185,7 +189,7 @@ function frame(t) {
       const s = p / KID_UNITS_PER_M;
       const inner = `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(pose.view, pose)}</g>`;
       return `<g ${m.extra ? exFilter(z) : fogFilter(w.fogK(z) * 0.35)}>${inner}</g>`; // tokoh utama hanya sedikit berkabut
-    }, { bias: m.extra ? -0.04 : -0.05, y: y + yLift });
+    }, { bias: (m.extra ? -0.04 : -0.05) + (seated ? -0.4 : 0), y });
   }
   return w.render();
 }
