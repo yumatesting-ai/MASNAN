@@ -3,6 +3,12 @@ module.exports = {
   id: "nana",
   name: "Nana",
   gender: "perempuan",
+  fullName: "Nana Kirana",
+  role: "Tokoh utama — si canggung",
+  age: "remaja (16)",
+  personality: "pendiam, canggung, gampang gugup & berkeringat, tapi tulus dan baik hati",
+  hobbies: "menggambar, ngemil, rebahan",
+  catchphrase: "E-eh… aku harus ngapain?",
   colors: { hair: "#5b5b5b", top: "#f8f8f8", bottom: "#4e4e4e", shoe: "#fafafa", skin: "#efefef" },
   hair: {
     long: true, // rambut panjang sampai pinggang, poni runcing, helai kiri menutup telinga

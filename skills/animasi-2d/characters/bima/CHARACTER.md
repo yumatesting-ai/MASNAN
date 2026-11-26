@@ -2,6 +2,18 @@
 
 Laki-laki, sifat santai & usil. Desain: `design.js`.
 
+
+## Profil
+| | |
+|---|---|
+| Nama lengkap | **Bima Saputra** |
+| Panggilan | Bima |
+| Peran | Sahabat Nana — si usil |
+| Umur | remaja (16) |
+| Sifat | santai, usil, percaya diri, suka bercanda, setia kawan |
+| Hobi | main game, basket, jahilin teman |
+| Kalimat khas | "Santai aja, beres kok!" |
+
 ## Ciri wajib
 - **Rambut**: pendek jabrik hitam (`#2f2f2f`), poni zig-zag menutup dahi, cambang pendek, **kedua telinga terlihat**.
   Jambul runcing (`ahoge: "spike"`) di puncak kepala. Tampak belakang: ujung tengkuk jabrik.

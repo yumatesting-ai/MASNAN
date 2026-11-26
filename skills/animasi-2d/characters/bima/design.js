@@ -3,6 +3,12 @@ module.exports = {
   id: "bima",
   name: "Bima",
   gender: "laki-laki",
+  fullName: "Bima Saputra",
+  role: "Sahabat Nana — si usil",
+  age: "remaja (16)",
+  personality: "santai, usil, percaya diri, suka bercanda, setia kawan",
+  hobbies: "main game, basket, jahilin teman",
+  catchphrase: "Santai aja, beres kok!",
   colors: { hair: "#2f2f2f", top: "#7a7a7a", bottom: "#4a4a4a", shoe: "#fafafa", skin: "#efefef", sock: "#fafafa", accent: "#fafafa" },
   hair: {
     long: false,

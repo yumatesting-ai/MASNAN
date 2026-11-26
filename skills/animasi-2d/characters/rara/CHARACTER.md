@@ -2,6 +2,18 @@
 
 Perempuan, sifat manis & kalem. Desain: `design.js`.
 
+
+## Profil
+| | |
+|---|---|
+| Nama lengkap | **Rara Ayudia** |
+| Panggilan | Rara |
+| Peran | Teman sekelas — si manis |
+| Umur | remaja (15) |
+| Sifat | manis, kalem, rapi, perhatian, gampang malu |
+| Hobi | membaca, merajut, bikin kue |
+| Kalimat khas | "Pelan-pelan aja, ya~" |
+
 ## Ciri wajib
 - **Rambut**: bob abu terang (`#a6a6a6`) sebatas dagu, **poni lurus** (hime) tepat di atas mata, dua helai
   samping menutup telinga. **Jepit rambut putih dua batang** di sisi kanan layar (tampak depan). Tanpa ahoge.

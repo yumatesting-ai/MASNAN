@@ -4,6 +4,18 @@ Perempuan, karakter utama (dari gambar referensi kreator). Desain: `design.js`, 
 
 Referensi turnaround: `reference.jpg` (6 tampak: depan, 3/4 depan, samping, 3/4 belakang, belakang, menunduk).
 
+
+## Profil
+| | |
+|---|---|
+| Nama lengkap | **Nana Kirana** |
+| Panggilan | Nana |
+| Peran | Tokoh utama — si canggung |
+| Umur | remaja (16) |
+| Sifat | pendiam, canggung, gampang gugup & berkeringat, tapi tulus dan baik hati |
+| Hobi | menggambar, ngemil, rebahan |
+| Kalimat khas | "E-eh… aku harus ngapain?" |
+
 ## Ciri wajib (jangan diubah antar konten)
 - **Gaya**: chibi, grayscale penuh, outline gelap tebal (`#2a2a2a`, 3px), tanpa gradasi.
 - **Proporsi**: kepala ±40% tinggi badan; badan pendek, kaki lurus.

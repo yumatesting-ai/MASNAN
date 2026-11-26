@@ -3,6 +3,12 @@ module.exports = {
   id: "rara",
   name: "Rara",
   gender: "perempuan",
+  fullName: "Rara Ayudia",
+  role: "Teman sekelas — si manis",
+  age: "remaja (15)",
+  personality: "manis, kalem, rapi, perhatian, gampang malu",
+  hobbies: "membaca, merajut, bikin kue",
+  catchphrase: "Pelan-pelan aja, ya~",
   colors: { hair: "#a6a6a6", top: "#c9c9c9", bottom: "#3f3f3f", shoe: "#3a3a3a", skin: "#efefef", sock: "#fafafa", accent: "#ffffff" },
   hair: {
     long: false,

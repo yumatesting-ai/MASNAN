@@ -12,13 +12,15 @@ bawahan, kaus kaki, sepatu, warna, aksesori, ekspresi default. Klip animasi (`en
 fungsi `waktu → pose`, dipakai bersama oleh semua karakter.
 
 ## Karakter
-| id | Nama | Gender | Rambut | Pakaian |
+| id | Nama (lengkap) | Gender | Rambut | Pakaian |
 |---|---|---|---|---|
-| `nana` | Nana | perempuan | panjang abu tua, poni runcing, ahoge ikal | kaos putih, celana panjang, sneakers |
-| `bima` | Bima | laki-laki | pendek jabrik hitam, jambul | hoodie lengan panjang, celana pendek, kaus kaki, sneakers |
-| `rara` | Rara | perempuan | bob terang, poni lurus, jepit rambut | sweater kerah bulat, rok lipit, kaus kaki panjang, sepatu hitam |
+| `nana` | Nana (Nana Kirana) — tokoh utama, si canggung | perempuan | panjang abu tua, poni runcing, ahoge ikal | kaos putih, celana panjang, sneakers |
+| `bima` | Bima (Bima Saputra) — sahabat Nana, si usil | laki-laki | pendek jabrik hitam, jambul | hoodie lengan panjang, celana pendek, kaus kaki, sneakers |
+| `rara` | Rara (Rara Ayudia) — teman sekelas, si manis | perempuan | bob terang, poni lurus, jepit rambut | sweater kerah bulat, rok lipit, kaus kaki panjang, sepatu hitam |
 
-Lihat `characters/<nama>/CHARACTER.md` untuk ciri wajib tiap karakter.
+Lihat `characters/<nama>/CHARACTER.md` untuk ciri wajib dan profil (sifat, hobi, kalimat khas) tiap karakter.
+Pakai profil itu saat menulis dialog/cerita agar kepribadian konsisten. Data profil juga ada di `design.js`
+(`fullName`, `role`, `personality`, `hobbies`, `catchphrase`).
 
 ## Struktur
 ```
@@ -46,6 +48,7 @@ tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loo
    node tools/render.js --list                                      # daftar klip & ekspresi
    node tools/scene.js --cast "nana:wave,bima:happy,rara:shy" --label "Halo!" --out out/trio.mp4
    node tools/scene.js --cast "nana:walk:flip,rara:walk" --png out/frame.png --t 0.3
+   node tools/scene.js --cast "nana:idle,bima:idle,rara:idle" --names   # nama di bawah tiap karakter
    ```
    Contact sheet: `node tools/sheet.js --char rara --mode expr|views` atau `--mode clip --clip jump --frames 6`.
 3. **QA sebelum menyerahkan**:
