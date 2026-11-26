@@ -36,7 +36,7 @@ module.exports = {
   // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
   obstacles: [
     { name: "kucing", x: -4.0, z: 6.8, r: 0.2 }, { name: "gentong", x: -2.7, z: 9.95, r: 0.25 }, { name: "karung", x: 2.5, z: 9.6, r: 0.25 },
-    { name: "sepeda bersandar", x0: 3.0, x1: 3.95, z0: 7.4, z1: 7.8 },
+    { name: "sepeda bersandar", x0: 2.2, x1: 3.8, z0: 10.0, z1: 10.4 },
     { name: "meja jualan", x0: -1.6, x1: 1.6, z0: 8.2, z1: 8.75 }, { name: "dinding kios kiri", x0: -1.85, x1: -1.7, z0: 8.6, z1: 10.6 },
     { name: "dinding kios kanan", x0: 1.7, x1: 1.85, z0: 8.6, z1: 10.6 }, { name: "meja kompor", x0: 1.95, x1: 2.65, z0: 8.3, z1: 8.8 },
     { name: "galon", x: 2.85, z: 8.3, r: 0.17 }, { name: "bangku depan meja jualan", x0: -1.5, x1: 0.5, z0: 7.15, z1: 7.57 },
@@ -168,6 +168,6 @@ module.exports = {
     LIFE.butterfly(w, -4.6, 10.2, { y: 0.9 });
     LIFE.kite(w, 5, 40, { y: 18 });
     LIFE.perchBirds(w, 0, 6.68, { y: 2.42, n: 3, len: 2.2 });                  // burung di tepi atap warung
-    LIFE.waterJar(w, -2.7, 9.95); LIFE.sack(w, 2.5, 9.6); LIFE.bike(w, 3.6, 7.6, { flip: true });
+    LIFE.waterJar(w, -2.7, 9.95); LIFE.sack(w, 2.5, 9.6); LIFE.bike(w, 3.0, 10.2, { flip: true });
   },
 };

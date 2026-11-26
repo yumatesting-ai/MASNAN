@@ -187,6 +187,22 @@ function frame(t) {
 (async () => {
   if (o.check) {
     const exCrash = extras.flatMap((m, i) => (m.tl.phases ? checkTimeline(LOC, `figuran#${LOC.extras[i].seed}`, m.tl) : []));
+    // benda bergerak (sepeda ontel, gerobak, kucing jalan, bebek) vs tokoh, figuran & benda diam, dicek tiap 0,2 dtk
+    const { hit } = require("../engine/collide.js");
+    const seen = new Set();
+    for (let t = 0; t <= duration + 1e-6; t += 0.2) {
+      const te = t + (+o.t0 || 0), w = createWorld(Object.assign({ W, H }, LOC.camera));
+      w.movers = []; w.t = te; LOC.build(w, { t: te, extras: o.extras !== "off" });
+      const people = [...cast.map((m) => ({ who: m.who, ...m.tl.at(t) })), ...extras.map((m, i) => ({ who: `figuran#${LOC.extras[i].seed}`, ...m.tl.at((te + m.phase) % m.tl.total) }))];
+      for (const mv of w.movers) {
+        for (const pp of people) if (Math.hypot(pp.x - mv.x, pp.z - mv.z) < mv.r + 0.16) {
+          const key = `${pp.who}|${mv.name}`; if (seen.has(key)) continue; seen.add(key);
+          exCrash.push(`${pp.who} bertabrakan/tembus dengan '${mv.name}' pada t=${t.toFixed(1)} dtk (x=${mv.x.toFixed(2)} z=${mv.z.toFixed(2)})`);
+        }
+        const ob = (LOC.obstacles || []).find((ob2) => hit(ob2, mv.x, mv.z, mv.r * 0.9));
+        if (ob) { const key = `${mv.name}|${ob.name}`; if (!seen.has(key)) { seen.add(key); exCrash.push(`'${mv.name}' menembus '${ob.name}' pada t=${t.toFixed(1)} dtk (x=${mv.x.toFixed(2)} z=${mv.z.toFixed(2)})`); } }
+      }
+    }
     for (const c of exCrash) console.error(`PERINGATAN TEMBUS: ${c}`);
     console.log(crash.length + exCrash.length ? `${crash.length + exCrash.length} rute menembus benda` : "OK: tidak ada rute yang menembus benda");
     process.exit(crash.length + exCrash.length ? 2 : 0);

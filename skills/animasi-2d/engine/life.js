@@ -22,6 +22,24 @@ const col = (h) => {
   const x = v.toString(16).padStart(2, "0");
   return `#${x}${x}${x}`;
 };
+
+// objek JAUH dibuat seperti figuran: siluet abu-abu buram, makin jauh makin pudar (selaras gaya figuran)
+const FAR_FROM = 0.1; // fogK mulai berubah jadi siluet
+function farWrap(w, z, svg) {
+  const k = w.fogK ? w.fogK(z) : 0;
+  if (k < FAR_FROM) return svg;
+  const b = Math.round(Math.min(0.6, k) * 10) / 10, id = `lifeFar${Math.round(b * 10)}`;
+  w._lifeFar = w._lifeFar || new Set();
+  if (!w._lifeFar.has(id)) {
+    w._lifeFar.add(id);
+    const g = (0.5 + b * 0.6).toFixed(3);
+    w.add("sky", 2e9, `<defs><filter id="${id}" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0.85 0"/><feGaussianBlur stdDeviation="1.4"/></filter></defs>`);
+  }
+  return `<g filter="url(#${id})">${svg}</g>`;
+}
+const spr = (w, x, z, fn, o) => w.sprite(x, z, (sx, sy, p, fog, lc, sw) => farWrap(w, z, fn(sx, sy, p, fog, lc, sw)), o);
+// benda bergerak mendaftarkan posisinya (untuk cek tabrakan tokoh vs kendaraan/hewan, tools/location.js --check)
+const mover = (w, name, x, z, r) => { if (w.movers) w.movers.push({ name, x, z, r }); };
 const TAU = Math.PI * 2;
 const hash = (a) => { const s = Math.sin(a * 127.1) * 43758.5453; return s - Math.floor(s); };
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -38,8 +56,9 @@ function cat(w, x, z, o = {}) {
     dir = (u < go + 2 ? 1 : -1) * Math.sign(o.to[0] - x || 1);
     var moving = (u < go) || (u > go + 2 && u < 2 * go + 2);
   }
+  if (mode === "walk") mover(w, "kucing", px, pz, 0.25);
   if (w.castBlob) w.castBlob(px, pz, 0.15 + (o.y || 0), 0.2, { strength: 0.6 });
-  w.sprite(px, pz, (sx, sy, p, fog, lc, sw) => {
+  spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.01, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
     if (mode === "sleep") { // meringkuk, napas, ekor melingkar, zzz kecil
       const br = 1 + 0.04 * Math.sin(T * 2.4);
@@ -76,8 +95,9 @@ function ducks(w, route, o = {}) {
   const at = (d) => { d = ((d % total) + total) % total; for (const [a, b, L] of segs) { if (d <= L) return [lerp(a[0], b[0], d / L), lerp(a[1], b[1], d / L), Math.sign(b[0] - a[0]) || 1]; d -= L; } return [route[0][0], route[0][1], 1]; };
   for (let i = 0; i < n; i++) {
     const big = i === 0, [x, z, dir] = at(T * sp - i * 0.45);
+    mover(w, "bebek", x, z, 0.15);
     if (w.castBlob) w.castBlob(x, z, 0.12, 0.13, { strength: 0.5 });
-    w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    spr(w, x, z, (sx, sy, p, fog, lc, sw) => {
       const s = p * (big ? 0.0105 : 0.0085), wob = Math.sin(T * 9 + i) * 6, b = Math.abs(Math.sin(T * 9 + i)) * 1.5;
       const L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round"`;
       return `<g transform="translate(${sx} ${sy - b}) scale(${dir * s} ${s}) rotate(${wob})">
@@ -93,7 +113,7 @@ function ducks(w, route, o = {}) {
 function butterfly(w, x, z, o = {}) {
   const T = (w.t || 0) + (o.phase || 0), r = o.r || 0.6;
   const px = x + r * Math.sin(T * 0.9) + 0.2 * Math.sin(T * 2.3), pz = z + r * 0.5 * Math.cos(T * 0.7), py = (o.y || 0.9) + 0.25 * Math.sin(T * 1.7);
-  w.sprite(px, pz, (sx, sy, p, fog, lc, sw) => {
+  spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.006, fl = Math.abs(Math.cos(T * 14)) * 0.85 + 0.15, c = col(o.color || "#f2b632"), c2 = col(o.color2 || "#e2632c");
     return `<g transform="translate(${sx} ${sy}) scale(${s})" stroke="${lc}" stroke-width="1.2">
       <g transform="scale(${fl} 1)"><path d="M0,0 C-14,-18 -24,-6 -16,4 C-22,12 -10,16 0,4 Z" fill="${fog(c)}"/><path d="M0,0 C14,-18 24,-6 16,4 C22,12 10,16 0,4 Z" fill="${fog(c)}"/>
@@ -104,7 +124,7 @@ function butterfly(w, x, z, o = {}) {
 
 function kite(w, x, z, o = {}) {
   const T = (w.t || 0) + (o.phase || 0), y = (o.y || 14) + 0.6 * Math.sin(T * 0.8), dx = 0.8 * Math.sin(T * 0.6);
-  w.sprite(x + dx, z, (sx, sy, p, fog, lc, sw) => {
+  spr(w, x + dx, z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.03, rot = 10 * Math.sin(T * 1.1), c = col(o.color || "#e0453a"), c2 = col(o.color2 || "#f4d23c");
     let tail = `M0,22`; for (let i = 1; i <= 8; i++) tail += ` L${(6 * Math.sin(T * 3 + i * 0.8)).toFixed(1)},${22 + i * 7}`;
     return `<g transform="translate(${sx} ${sy}) rotate(${rot}) scale(${s})" stroke="${lc}" stroke-width="1.4" stroke-linejoin="round">
@@ -117,7 +137,7 @@ function kite(w, x, z, o = {}) {
 function flag(w, x, z, o = {}) {
   const T = w.t || 0, h = o.h || 4;
   w.box(x - 0.04, 0, z - 0.04, 0.08, h, 0.08, col("#cbab6b"));
-  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+  spr(w, x, z, (sx, sy, p, fog, lc, sw) => {
     const W2 = p * 0.9, H2 = p * 0.6;
     const wave = (u, ph) => Math.sin(T * 5 - u * 5 + ph) * p * 0.06 * u;
     let top = "", bot = "";
@@ -134,7 +154,7 @@ function smoke(w, x, z, o = {}) {
   const T = (w.t || 0) + (o.phase || 0), y0 = o.y || 2.6;
   for (let i = 0; i < 6; i++) {
     const age = ((T * 0.35 + i / 6) % 1), y = y0 + age * 2.2, dx = 0.25 * Math.sin(age * 6 + i) + age * 0.6;
-    w.sprite(x + dx, z, (sx, sy, p, fog, lc, sw) => {
+    spr(w, x + dx, z, (sx, sy, p, fog, lc, sw) => {
       const r = p * (0.12 + age * 0.35);
       return `<circle cx="${sx}" cy="${sy}" r="${r.toFixed(1)}" fill="${fog(col("#e8e6e1"))}" opacity="${(0.55 * (1 - age)).toFixed(2)}"/>`;
     }, { y, layer: "obj", bias: -0.5 });
@@ -148,7 +168,7 @@ function leaves(w, x, z, o = {}) {
     const per = 5 + hash(i + x) * 3, age = ((T + hash(i * 3 + z) * per) % per) / per;
     const px = x + (hash(i + 7) - 0.5) * sp + 0.4 * Math.sin(T * 1.5 + i) , py = y0 * (1 - age), pz = z + (hash(i + 11) - 0.5) * sp;
     if (py < 0.02) continue;
-    w.sprite(px, pz, (sx, sy, p, fog, lc, sw) => {
+    spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
       const s = p * 0.0045, rot = (T * 140 + i * 60) % 360, flip = Math.cos(T * 3 + i);
       return `<g transform="translate(${sx} ${sy}) rotate(${rot}) scale(${(s * flip).toFixed(4)} ${s})"><path d="M-10,0 Q0,-7 10,0 Q0,7 -10,0 Z" fill="${fog(col(cs[i % 4]))}" stroke="${lc}" stroke-width="1"/></g>`;
     }, { y: py, bias: -0.2 });
@@ -160,7 +180,7 @@ function perchBirds(w, x, z, o = {}) {
   for (let i = 0; i < n; i++) {
     const off = (i / Math.max(1, n - 1) - 0.5) * len, bx = o.axis === "z" ? x : x + off, bz = o.axis === "z" ? z + off : z, ph = hash(i + x), hop = Math.max(0, Math.sin(T * 1.3 + ph * 9)) > 0.97 ? 1 : 0;
     const peck = Math.sin(T * 4 + ph * 20) > 0.8;
-    w.sprite(bx, bz, (sx, sy, p, fog, lc, sw) => {
+    spr(w, bx, bz, (sx, sy, p, fog, lc, sw) => {
       const s = p * 0.006, d = ph > 0.5 ? 1 : -1;
       return `<g transform="translate(${sx} ${sy - hop * p * 0.06}) scale(${d * s} ${s})" stroke="${lc}" stroke-width="1.3" stroke-linejoin="round">
         <path d="M-10,-8 Q-8,-18 4,-16 Q12,-14 10,-6 Q4,0 -6,-2 Z" fill="${fog(col("#8a6a4a"))}"/>
@@ -181,8 +201,9 @@ const SIL = () => col("#8d8d8d"); // siluet figuran (selaras gaya figuran)
 
 function cyclist(w, a, b, o = {}) {
   const T = w.t || 0, per = o.period || 18, m = travel(T, a, b, per, o.phase);
+  mover(w, "sepeda ontel", m.x, m.z, 0.8);
   if (w.castBlob) w.castBlob(m.x, m.z, 0.9, 0.5, { strength: 0.5 });
-  w.sprite(m.x, m.z, (sx, sy, p, fog, lc, sw) => {
+  spr(w, m.x, m.z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.01, R = 30, sp = (T * 6) % TAU, frame = fog(col(o.color || "#2f6b8f")), sil = fog(SIL());
     const spokes = (cx) => [0, 1, 2, 3].map((k) => { const an = sp + (k * Math.PI) / 4; return `M${cx + Math.cos(an) * R},${-R + Math.sin(an) * R} L${cx - Math.cos(an) * R},${-R - Math.sin(an) * R}`; }).join(" ");
     const ped = Math.sin(T * 6) * 14;
@@ -198,8 +219,9 @@ function cyclist(w, a, b, o = {}) {
 
 function cart(w, a, b, o = {}) {
   const T = w.t || 0, per = o.period || 30, m = travel(T, a, b, per, o.phase);
+  mover(w, "gerobak bakso", m.x, m.z, 1.1);
   if (w.castBlob) w.castBlob(m.x, m.z, 1.2, 0.7, { strength: 0.6 });
-  w.sprite(m.x, m.z, (sx, sy, p, fog, lc, sw) => {
+  spr(w, m.x, m.z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.01, wl = (T * 3) % TAU, sil = fog(SIL()), walk = Math.sin(T * 6) * 12;
     return `<g transform="translate(${sx} ${sy}) scale(${m.dir * s} ${s})" stroke="${lc}" stroke-width="2.2" stroke-linejoin="round">
       <rect x="-60" y="-112" width="110" height="62" rx="4" fill="${fog(col("#f1e6c8"))}"/>
@@ -218,7 +240,7 @@ function cart(w, a, b, o = {}) {
 
 // ---------------- BENDA KAMPUNG (diam) ----------------
 function bike(w, x, z, o = {}) { // sepeda ontel bersandar
-  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+  spr(w, x, z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.0095 * (o.flip ? -1 : 1), R = 30, fr = fog(col(o.color || "#2f6b4f"));
     return `<g transform="translate(${sx} ${sy}) scale(${s} ${Math.abs(s)}) rotate(-4)" stroke="${lc}" stroke-width="2.2" fill="none" stroke-linecap="round">
       <circle cx="-48" cy="${-R}" r="${R}" stroke-width="3"/><circle cx="48" cy="${-R}" r="${R}" stroke-width="3"/>
@@ -229,7 +251,7 @@ function bike(w, x, z, o = {}) { // sepeda ontel bersandar
 function bucket(w, x, z, o = {}) { w.prism(x, z, 0.14, 0, 0.26, 10, col(o.color || "#3f86c4"), { capColor: col("#2c5f8a") }); }
 function trashBin(w, x, z) { w.prism(x, z, 0.22, 0, 0.62, 10, col("#2f7a4f"), { capColor: col("#245f3d") }); }
 function sack(w, x, z) {
-  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => { const s = p * 0.01;
+  spr(w, x, z, (sx, sy, p, fog, lc, sw) => { const s = p * 0.01;
     return `<g transform="translate(${sx} ${sy}) scale(${s})" stroke="${lc}" stroke-width="2"><path d="M-22,0 Q-28,-30 -16,-46 L16,-46 Q28,-30 22,0 Z" fill="${fog(col("#e7dcc0"))}"/>
       <path d="M-16,-46 Q0,-56 16,-46" fill="none"/><text x="0" y="-18" font-size="10" text-anchor="middle" font-family="DejaVu Sans" fill="${fog(col("#3a6ea5"))}" stroke="none">BERAS</text></g>`; }, { bias: -0.04 });
 }
@@ -238,7 +260,7 @@ function firewood(w, x, z, o = {}) {
   for (let i = 0; i < n; i++) w.box(x - 0.35, 0.07 * Math.floor(i / 3) * 1.6, z + (i % 3) * 0.12, 0.7, 0.1, 0.1, col(i % 2 ? "#8d5f3c" : "#7a5236"), { swk: 0.5 });
 }
 function waterJar(w, x, z) { // gentong tanah liat
-  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => { const s = p * 0.01;
+  spr(w, x, z, (sx, sy, p, fog, lc, sw) => { const s = p * 0.01;
     return `<g transform="translate(${sx} ${sy}) scale(${s})" stroke="${lc}" stroke-width="2.2"><path d="M-18,0 Q-36,-26 -20,-50 L20,-50 Q36,-26 18,0 Z" fill="${fog(col("#b8643a"))}"/>
       <rect x="-22" y="-56" width="44" height="8" rx="3" fill="${fog(col("#9c5330"))}"/><path d="M-24,-30 Q0,-24 24,-30" fill="none" stroke="${fog(col("#8a4a2a"))}"/></g>`; }, { bias: -0.04 });
 }

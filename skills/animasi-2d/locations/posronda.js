@@ -24,7 +24,7 @@ module.exports = {
 
   // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
   obstacles: [
-    { name: "tiang bendera", x: 2.75, z: 6.3, r: 0.08 }, { name: "sepeda", x0: -3.45, x1: -2.5, z0: 7.2, z1: 7.6 },
+    { name: "tiang bendera", x: 2.75, z: 6.3, r: 0.08 }, { name: "sepeda", x0: -4.4, x1: -2.8, z0: 5.4, z1: 5.8 },
     { name: "ember", x: -3.0, z: 9.4, r: 0.16 }, { name: "kayu bakar", x0: 3.95, x1: 4.65, z0: 6.6, z1: 7.0 },
     { name: "gardu/bale ronda", x0: -2.4, x1: 2.4, z0: 6.6, z1: 9.6 }, { name: "tiang listrik", x: -4.2, z: 2.5, r: 0.12 },
     { name: "rumah kanan", x0: 5, x1: 12, z0: 7, z1: 13 }, { name: "rumah kiri", x0: -12.5, x1: -5.5, z0: 9, z1: 15 },
@@ -86,6 +86,6 @@ module.exports = {
     LIFE.smoke(w, 8.5, 10, { y: 3.4 });
     LIFE.butterfly(w, 3.2, 10, { y: 0.9 });
     LIFE.kite(w, -5, 40, { y: 17 });
-    LIFE.bike(w, -2.85, 7.4, { flip: true }); LIFE.bucket(w, -3.0, 9.4); LIFE.firewood(w, 4.3, 6.6);
+    LIFE.bike(w, -3.6, 5.6, { flip: true }); LIFE.bucket(w, -3.0, 9.4); LIFE.firewood(w, 4.3, 6.6);
   },
 };

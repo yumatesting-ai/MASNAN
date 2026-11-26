@@ -326,5 +326,7 @@ Semua bergerak menurut waktu dan otomatis abu-abu di mode abu-abu.
 | Bergerak | `kite` (layangan + benang), `flag` (merah-putih berkibar), `smoke` (asap dapur / uap ceret), `leaves` (daun berguguran), jemuran bergoyang, `cyclist` (sepeda ontel lewat), `cart` (gerobak bakso didorong) |
 | Benda kampung | `bike` (sepeda bersandar), `bucket`, `trashBin`, `sack` (karung beras), `firewood`, `waterJar` (gentong) |
 
-Aturan penempatan: benda diam yang bisa ditabrak WAJIB ditambahkan ke `obstacles` lokasi; jangan taruh di rute
+Objek JAUH otomatis jadi siluet abu-abu buram (sama seperti figuran). Kendaraan & hewan berjalan mendaftarkan
+posisinya (`w.movers`) dan `--check` mengecek tiap 0,2 dtk: tidak boleh menabrak tokoh/figuran/benda.
+Aturan penempatan: benda diam yang bisa ditabrak WAJIB ditambahkan ke `obstacles` lokasi (sepeda = kotak 1,6 m); jangan taruh di rute
 figuran/tokoh (jalankan `--check`). Kendaraan lewat di jalan melintang/jauh (bergerak sumbu x) atau jalan depan.

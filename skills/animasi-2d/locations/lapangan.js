@@ -29,7 +29,7 @@ module.exports = {
   ],
   // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
   obstacles: [
-    { name: "sepeda", x0: -8.2, x1: -7.0, z0: 5.2, z1: 5.6 }, { name: "ember", x: -4.2, z: 5.7, r: 0.16 },
+    { name: "sepeda", x0: -8.4, x1: -6.8, z0: 5.2, z1: 5.6 }, { name: "ember", x: -4.2, z: 5.7, r: 0.16 },
     { name: "bangku pinggir lapangan", x0: -6.8, x1: -4.6, z0: 6.0, z1: 6.42 },
     { name: "tiang gawang kiri", x: -9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kiri 2", x: -9.6, z: 14.7, r: 0.1 },
     { name: "tiang gawang kanan", x: 9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kanan 2", x: 9.6, z: 14.7, r: 0.1 },
