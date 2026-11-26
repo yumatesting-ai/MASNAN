@@ -67,6 +67,24 @@ function makePalette(c) {
 
 // ---------- bentuk badan bersama ----------
 const BODY_SHAPES = {
+  // badan dewasa: kulit (di bawah kutang) & atasan baru
+  bellyBody: `M112,206 C124,198 176,198 188,206 C200,222 214,246 216,268 C218,290 196,302 150,302 C104,302 82,290 84,268 C86,246 100,222 112,206 Z`,
+  bellyBodyBack: `M112,206 C124,198 176,198 188,206 C200,222 212,246 214,268 C216,290 196,302 150,302 C104,302 84,290 86,268 C88,246 100,222 112,206 Z`,
+  bellyBodySide: `M128,206 C140,198 164,198 172,206 C190,220 206,244 206,270 C206,294 184,302 150,302 C134,302 122,296 120,286 C120,262 122,232 128,206 Z`,
+  singlet: `M126,200 L134,200 C136,214 164,214 166,200 L174,200 C178,214 188,224 198,236 C212,252 216,270 212,286 C202,300 178,304 150,304 C122,304 98,300 88,286 C84,270 88,252 102,236 C112,224 122,214 126,200 Z`,
+  singletBack: `M126,200 L136,200 C140,206 160,206 164,200 L174,200 C178,214 188,224 198,236 C210,252 214,270 210,286 C200,300 178,304 150,304 C122,304 100,300 90,286 C86,270 90,252 102,236 C112,224 122,214 126,200 Z`,
+  singletSide: `M136,200 L146,200 C148,210 154,212 160,208 L166,200 C182,214 202,238 204,264 C206,290 186,300 152,300 C136,300 124,294 122,284 C122,262 126,230 136,200 Z`,
+  daster: `M108,206 C120,200 132,199 138,199 Q150,212 162,199 C168,199 180,200 192,206 C208,226 220,256 222,286 C224,312 224,334 224,352 C184,366 116,366 76,352 C76,334 76,312 78,286 C80,256 92,226 108,206 Z`,
+  dasterBack: `M108,206 C128,199 172,199 192,206 C208,226 220,256 222,286 C224,312 224,334 224,352 C184,366 116,366 76,352 C76,334 76,312 78,286 C80,256 92,226 108,206 Z`,
+  dasterSide: `M128,206 C138,198 166,198 178,206 C196,230 206,262 208,292 C210,318 210,336 210,352 C172,364 126,364 98,352 C100,330 104,300 110,270 C116,246 122,222 128,206 Z`,
+  sarong: `M102,276 C130,284 170,284 198,276 C200,304 202,334 204,362 C170,372 130,372 96,362 C98,334 100,304 102,276 Z`,
+  sarongSide: `M116,276 C140,282 166,282 188,276 C190,304 191,334 192,362 C162,370 136,370 110,362 C112,334 114,304 116,276 Z`,
+  armFull: `M120,203 C106,206 97,216 95,232 C93,256 95,276 96,290 C96,301 101,305 106,305 C112,305 114,300 114,290 C115,270 116,252 118,238 C119,226 121,214 126,206 Z`,
+  armSideFull: `M141,205 C134,218 140,236 141,250 L141,290 C141,301 146,305 151,305 C157,305 159,300 159,290 L159,250 C160,236 168,218 161,205 C156,200 146,200 141,205 Z`,
+  sandalSole: `M110,377 C110,371 118,369 129,369 C140,369 149,371 149,377 C149,381 143,383 129,383 C115,383 110,381 110,377 Z`,
+  sandalFoot: `M114,372 C114,363 120,359 129,359 C138,359 145,363 145,372 C140,375 118,375 114,372 Z`,
+  sandalSoleSide: `M130,378 C130,374 140,373 158,373 C176,373 186,375 186,379 C186,383 176,384 158,384 C140,384 130,383 130,378 Z`,
+  sandalFootSide: `M136,376 C136,366 146,360 158,362 C170,364 180,370 182,376 C170,378 148,378 136,376 Z`,
   face: `M86,140 A64,58 0 1 0 214,140 A64,58 0 1 0 86,140 Z`,
   // atasan
   tee: `M114,208 C120,203 130,200 138,199 Q150,210 162,199 C170,200 180,203 186,208
@@ -332,7 +350,44 @@ function createRig(design) {
       : fillLine(PALETTE.hair, a.d);
     return `<g id="ahoge" transform="rotate(${p.ahoge} 150 76)">${body}</g>`;
   };
-  const acc = (where) => (design.accessory && design.accessory[where] ? design.accessory[where](PALETTE, LINE) : "");
+  const acc = (where, view) => (design.accessory && design.accessory[where] ? design.accessory[where](PALETTE, LINE, view) : "");
+  const F = design.face || {};
+  // ciri wajah generik yang mengikuti tata letak tiap tampak
+  function faceFeatures(L, view, p) {
+    const C = PALETTE;
+    let out = "";
+    if (F.mustache && L.mouth) {
+      const m = L.mouth, sc = m.s, cx = m.x + (view === "side" ? 4 : 0);
+      out += `<g transform="translate(${cx} ${m.y - 11}) scale(${sc * 0.92})">
+        <path fill="${F.mustacheColor || "#2c2c2c"}" stroke="${C.line}" stroke-width="${2.6 / sc}" stroke-linejoin="round"
+          d="${view === "side" ? "M-22,-4 C-16,-14 -2,-14 6,-8 C14,-12 22,-10 26,-2 C18,2 10,0 4,-3 C-6,2 -16,2 -22,-4 Z"
+            : "M-28,-2 C-22,-14 -8,-15 0,-9 C8,-15 22,-14 28,-2 C22,4 10,2 0,-4 C-10,2 -22,4 -28,-2 Z"}"/>
+        <path fill="none" stroke="#555" stroke-width="${1.6 / sc}" stroke-linecap="round" d="M-16,-8 l-3,4 M-8,-9 l-2,4 M8,-9 l2,4 M16,-8 l3,4"/></g>`;
+    }
+    if (F.glasses && L.eyes.length) {
+      const rim = (e) => `<ellipse fill="#ffffff" fill-opacity="0.12" stroke="${C.line}" stroke-width="3.2" cx="${e.cx}" cy="${e.cy}" rx="${e.rx + 5}" ry="${e.ry + 7}"/>`;
+      out += L.eyes.map(rim).join("");
+      if (L.eyes.length === 2) {
+        const [a, b] = L.eyes;
+        out += `<path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round" d="M${a.cx + a.rx + 5},${a.cy - 2} Q${(a.cx + b.cx) / 2 + (a.cx + a.rx + b.cx - b.rx) / 2 - (a.cx + b.cx) / 2},${a.cy - 8} ${b.cx - b.rx - 5},${b.cy - 2}"/>`;
+        if (view === "front") out += `<path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round" d="M${a.cx - a.rx - 5},${a.cy - 4} L86,${a.cy - 6} M${b.cx + b.rx + 5},${b.cy - 4} L214,${b.cy - 6}"/>`;
+        if (view === "three") out += `<path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round" d="M${b.cx + b.rx + 5},${b.cy - 4} L204,${b.cy - 8}"/>`;
+      } else {
+        const e = L.eyes[0];
+        out += `<path fill="none" stroke="${C.line}" stroke-width="3" stroke-linecap="round" d="M${e.cx - e.rx - 5},${e.cy - 4} L148,${e.cy + 4}"/>`;
+      }
+    }
+    return out;
+  }
+  const headSkinExtras = (view) => {
+    const C = PALETTE;
+    let out = "";
+    if (F.baldShine) out += `<path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.9" d="${view === "side" ? "M150,90 C166,86 184,92 194,104" : "M114,104 C124,92 140,86 156,86"}"/>`;
+    if (F.doubleChin && view !== "back") out += `<path fill="none" stroke="${C.line}" stroke-width="2.2" stroke-linecap="round" d="${view === "side" ? "M176,196 C186,200 196,198 202,192" : "M128,196 C140,203 160,203 172,196"}"/>`;
+    return out;
+  };
+  const ARM_DX = (design.build && design.build.armDX) || 0; // lengan bergeser keluar (badan lebar)
+  const ARM_REST = (design.build && design.build.armRest) || 0; // lengan membuka (deg) saat istirahat, mis. perut buncit
   const earSvg = (x, y, mirror = false) => {
     const s = mirror ? -1 : 1;
     return `<circle fill="${PALETTE.skin}" ${LINE} cx="${x}" cy="${y}" r="9"/>
@@ -351,6 +406,12 @@ function createRig(design) {
   }
   function shoeSvg(shapeKey, isBack, isSide) {
     const C = PALETTE;
+    if (design.shoes === "sandal") {
+      const sole = isSide ? "sandalSoleSide" : "sandalSole", foot = isSide ? "sandalFootSide" : "sandalFoot";
+      return `${fillLine(C.shoe, SHAPE[sole])}
+        <path fill="${C.skin}" d="${SHAPE[foot]}"/>${shade(foot, C.skinShade, isSide ? "M120,372 L200,372 L200,380 L120,380 Z" : "M100,368 L160,368 L160,380 L100,380 Z")}${outline(SHAPE[foot])}
+        ${isBack ? "" : `<path fill="none" stroke="${C.shoe}" stroke-width="3.4" stroke-linecap="round" d="${isSide ? "M150,366 L160,376 M150,366 L170,374" : "M121,364 L129,372 L137,364"}"/>`}`;
+    }
     const strap = design.shoes === "dark"
       ? (isSide ? outline("M146,364 C150,370 158,371 164,366") : outline("M118,365 C125,369 133,369 140,365"))
         + (isSide ? "" : `<ellipse fill="#ffffff" opacity="0.35" cx="122" cy="368" rx="4" ry="2"/>`)
@@ -359,6 +420,36 @@ function createRig(design) {
       ${isBack ? shade(shapeKey, C.shoeShade, "M100,360 L160,360 L160,371 C140,368 120,368 100,371 Z") : ""}
       ${shade(shapeKey, C.shoeShade, isSide ? "M120,375 L200,375 L200,390 L120,390 Z" : "M100,375 C115,378 145,378 160,375 L160,390 L100,390 Z")}
       ${outline(SHAPE[shapeKey])}${strap}`;
+  }
+
+  // sarung kotak-kotak (pola diklip ke bentuk)
+  function sarongSvg(key, isSide) {
+    const C = PALETTE;
+    const xs = [], ys = [];
+    for (let x = 80; x <= 220; x += 15) xs.push(`M${x},270 L${x + 4},380`);
+    for (let y = 290; y <= 370; y += 16) ys.push(`M80,${y} L220,${y + 2}`);
+    return `<path fill="${C.pants}" d="${SHAPE[key]}"/>
+      <g clip-path="url(#${ID}-${key})">
+        <path fill="none" stroke="${C.pantsShade}" stroke-width="5" d="${xs.join(" ")}"/>
+        <path fill="none" stroke="${C.pantsShade}" stroke-width="4" d="${ys.join(" ")}"/>
+        <path fill="none" stroke="${C.accent}" stroke-width="1.4" opacity="0.55" d="${xs.join(" ")} ${ys.join(" ")}"/>
+        <path fill="${C.pantsShade}" opacity="0.7" d="M80,270 L220,270 L220,292 C180,300 120,300 80,292 Z"/>
+      </g>
+      ${outline(SHAPE[key])}
+      ${strokeLines(isSide ? "M118,290 C140,296 166,296 188,290" : "M102,290 C130,298 170,298 198,290", C.line, 2.2)}
+      ${isSide ? "" : outline("M150,292 L142,334 M150,292 L160,330", 'stroke-width="2.2"')}`;
+  }
+  // motif bunga daster (diklip ke bentuk)
+  function dasterPattern(key) {
+    const C = PALETTE;
+    let dots = "";
+    let row = 0;
+    for (let y = 222; y <= 352; y += 22, row++) {
+      for (let x = 86 + (row % 2) * 13; x <= 214; x += 26) {
+        dots += `<circle cx="${x}" cy="${y}" r="4.2"/><circle cx="${x}" cy="${y}" r="1.6" fill="${C.shirtDeep}"/>`;
+      }
+    }
+    return `<g clip-path="url(#${ID}-${key})" fill="${C.accent}" stroke="${C.shirtDeep}" stroke-width="1.2">${dots}</g>`;
   }
 
   // ================= TAMPAK DEPAN / 3-4 / BELAKANG =================
@@ -413,18 +504,25 @@ function createRig(design) {
       ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}</g>`;
 
     // ---------- lengan ----------
-    const LONG = design.sleeves === "long";
+    const LONG = design.sleeves === "long", NOSLEEVE = design.sleeves === "none";
     const SHOULDER = "118 208";     // pivot lengan baju
     const ARM_ROOT = "106 236";     // pivot lengan di dalam lengan baju pendek
-    const SLEEVE_K = LONG ? 1 : 0.6; // lengan baju pendek ikut 60% -> tidak "mengepak"
-    const armLayer = (side, deg, part) => {
+    const SLEEVE_K = LONG || NOSLEEVE ? 1 : 0.6; // lengan baju pendek ikut 60% -> tidak "mengepak"
+    const armLayer = (side, deg0, part) => {
+      const deg = deg0 + ARM_REST;
       const mirror = side === 1 ? MIRROR : "";
       const far = isThree && side === -1;
-      const shift = far ? "translate(7 0)" : "";
+      const shift = `translate(${(far ? 7 : 0) - ARM_DX} 0)`;
       const id = `${part}-${side === -1 ? "l" : "r"}`;
       const seamOp = isBack ? 1 : clamp01((Math.abs(deg) - 25) / 30);
       let shape;
-      if (part === "arm") {
+      if (NOSLEEVE) {
+        shape = part === "arm" ? "" : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
+           ${shade("armFull", C.skinShade, "M108,226 L122,226 L122,310 L109,310 C111,290 110,256 108,226 Z")}
+           ${outline("M114,205.5 C110,206.4 106,207.8 102,210", `opacity="${clamp01(1 - (Math.abs(deg) - 8) / 22).toFixed(2)}"`)}
+           ${outline("M102,210 C98,214 96,222 95,232 C93,256 95,276 96,290 C96,301 101,305 106,305 C112,305 114,300 114,290 C115,270 116,252 117,240")}
+           ${seamOp > 0 ? outline("M117,240 C118,226 121,214 126,206", `opacity="${seamOp.toFixed(2)}"`) : ""}`;
+      } else if (part === "arm") {
         shape = LONG
           ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="103" cy="297" r="8.5"/>`
           : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.arm}"/>
@@ -457,6 +555,10 @@ function createRig(design) {
     const top = design.top;
     const tKey = top + (isBack ? "Back" : "");
     const torsoD = SHAPE[tKey];
+    const sarong = B === "sarong" ? sarongSvg("sarong", false) : "";
+    const bodySkin = design.top === "singlet" ? `<path fill="${C.skin}" d="${SHAPE[isBack ? "bellyBodyBack" : "bellyBody"]}"/>
+        ${shade(isBack ? "bellyBodyBack" : "bellyBody", C.skinShade, "M80,236 C100,250 104,270 104,300 L80,300 Z M220,236 C200,250 196,270 196,300 L220,300 Z")}
+        ${outline(SHAPE[isBack ? "bellyBodyBack" : "bellyBody"])}` : "";
     const skirt = B === "skirt" ? `
         <path fill="${C.pants}" d="${SHAPE.skirt}"/>
         ${shade("skirt", C.pantsShade, "M90,300 C130,312 170,312 210,300 L210,330 L90,330 Z M126,262 L116,330 L104,330 L104,262 Z")}
@@ -464,6 +566,13 @@ function createRig(design) {
         ${outline(SHAPE.skirt)}` : "";
     let topExtra = "";
     if (top === "tee") topExtra = strokeLines("M140,274 C145,279 151,281 157,280", C.shirtShade, 2.2);
+    if (top === "singlet") topExtra = `${shade(tKey, C.shirtShade, "M84,270 C120,292 180,292 216,270 L216,306 L84,306 Z", 'opacity="0.8"')}
+        ${isBack ? "" : strokeLines("M150,266 C147,270 147,274 150,276", C.line, 2.2)}
+        ${isBack ? "" : `<path fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.8" d="M178,246 C188,254 194,264 196,274"/>`}
+        ${strokeLines("M122,236 C120,250 122,262 126,272 M178,236 C180,250 178,262 174,272", C.shirtShade, 2)}`;
+    if (top === "daster") topExtra = `${dasterPattern(tKey)}
+        ${strokeLines("M84,344 C120,354 180,354 216,344", C.line, 2)}
+        ${strokeLines("M84,348 l6,6 M100,351 l5,6 M116,353 l4,6 M132,354 l3,6 M148,355 l2,6 M164,354 l-2,6 M180,353 l-3,6 M196,351 l-4,6 M212,348 l-5,6", C.shirtDeep, 1.6)}`;
     if (top === "hoodie") {
       topExtra = isBack
         ? `${fillLine(C.shirtShade, "M122,206 C120,232 134,248 150,248 C166,248 180,232 178,206 C168,200 132,200 122,206 Z")}
@@ -487,7 +596,9 @@ function createRig(design) {
     const torso = `
       <g id="torso" transform="translate(150 286) scale(${(isThree ? 0.95 : 1) * breatheScale} ${breatheScale}) translate(-150 -286)">
         ${neck}
+        ${sarong}
         ${skirt}
+        ${bodySkin}
         <path fill="${C.shirt}" d="${torsoD}"/>
         ${isBack ? "" : shade(tKey, C.shirtShade, "M112,196 C130,214 170,214 188,196 L188,190 L112,190 Z")}
         ${shade(tKey, C.shirtShade, "M104,240 C114,250 120,268 119,300 L100,300 Z M196,240 C186,250 180,268 181,300 L200,300 Z")}
@@ -499,8 +610,11 @@ function createRig(design) {
     let head;
     if (isBack) {
       const ears = (design.ears.back || []).map((s) => (s === "r" ? earSvg(214, 160) : earSvg(86, 160, true))).join("");
-      head = { before: `<g transform="${headT}">${ears}</g>`,
-        after: `<g id="head" transform="${headT}">${acc("back")}${angerMark(L, p)}${AHOGE(p)}</g>` };
+      const bald = H.bald ? `<path fill="${C.skin}" d="${SHAPE.face}"/>
+        ${shade("face", C.skinShade, "M80,150 C110,176 190,176 220,150 L220,210 L80,210 Z")}${outline(SHAPE.face)}
+        <path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.9" d="M120,100 C134,90 166,90 180,100"/>` : "";
+      head = { before: `<g transform="${headT}">${ears}${bald}</g>`,
+        after: `<g id="head" transform="${headT}">${acc("back", view)}${angerMark(L, p)}${AHOGE(p)}</g>` };
     } else {
       const ears = design.ears.front || [];
       const earR = ears.includes("r") ? (isThree ? earSvg(205, 162) : earSvg(214, 162)) : "";
@@ -512,10 +626,12 @@ function createRig(design) {
         <path clip-path="url(#${ID}-face)" fill="${C.skinShade}" transform="translate(${2 + hx} 7)" d="${SHAPE.hairFront}"/>
         ${isThree ? shade("face", C.skinShade, "M196,90 C214,120 216,170 196,206 L230,206 L230,90 Z") : ""}
         ${outline(SHAPE.face)}
+        ${headSkinExtras(view)}
         ${isThree ? earR : ""}
         ${faceExtras(L, p, "face")}
         ${L.eyes.map((e) => eye(e, p)).join("")}
         ${mouth(L.mouth, p)}
+        ${faceFeatures(L, view, p)}
         <g transform="translate(${hx} 0)">
           <path fill="${C.hair}" d="${SHAPE.hairFront}"/>
           <g clip-path="url(#${ID}-hairFront)">
@@ -524,7 +640,7 @@ function createRig(design) {
           </g>
           ${outline(SHAPE.hairFront)}
           ${strokeLines(H.frontStrands, C.hairShade)}
-          ${acc("front")}
+          ${acc("front", view)}
         </g>
         ${angerMark(L, p)}
         ${AHOGE(p)}
@@ -547,7 +663,7 @@ function createRig(design) {
     const headPivot = "150 200";
     const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt} ${headPivot})`;
     const breatheScale = 1 + 0.015 * p.breathe;
-    const LONG = design.sleeves === "long";
+    const LONG = design.sleeves === "long", NOSLEEVE = design.sleeves === "none";
 
     const hairBackG = `
       <g id="hair-back" transform="${headT}">
@@ -574,7 +690,11 @@ function createRig(design) {
     };
 
     const arm = (deg, far) => {
-      const body = LONG
+      const body = NOSLEEVE
+        ? `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armSideFull}"/>
+           ${shade("armSideFull", C.skinShade, "M136,226 L164,226 L164,250 C154,246 146,246 136,248 Z", 'opacity="0.6"')}
+           ${outline(SHAPE.armSideFull)}`
+        : LONG
         ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="151" cy="298" r="8.5"/>
            <path fill="${far ? C.shirtShade : C.shirt}" d="${SHAPE.longSleeveSide}"/>
            ${far ? "" : shade("longSleeveSide", C.shirtShade, "M128,236 C140,246 160,246 172,236 L172,300 L128,300 Z", 'opacity="0.55"')}
@@ -586,7 +706,7 @@ function createRig(design) {
            <path fill="${far ? C.shirtShade : C.shirt}" d="${SHAPE.sleeveSide}"/>
            ${far ? "" : shade("sleeveSide", C.shirtShade, "M128,240 C140,248 160,248 172,240 L172,262 L128,262 Z")}
            ${outline(SHAPE.sleeveSide)}`;
-      return `<g transform="${far ? "translate(5 0)" : ""} rotate(${-deg} 150 212)">${body}</g>`;
+      return `<g transform="translate(${far ? 5 + ARM_DX * 0.3 : -ARM_DX * 0.3} 0) rotate(${-deg} 150 212)">${body}</g>`;
     };
 
     const tKey = design.top + "Side";
@@ -595,13 +715,20 @@ function createRig(design) {
         ${shade("skirtSide", C.pantsShade, "M100,300 C140,312 170,312 200,300 L200,330 L100,330 Z")}
         ${strokeLines("M138,264 L128,320 M156,263 L154,322 M170,263 L178,320", C.line, 2)}
         ${outline(SHAPE.skirtSide)}` : "";
+    const sarongS = B === "sarong" ? sarongSvg("sarongSide", true) : "";
+    const bodySkinS = design.top === "singlet" ? fillLine(C.skin, SHAPE.bellyBodySide) : "";
+    const extraS = design.top === "daster" ? dasterPattern(tKey) + strokeLines("M104,344 C140,354 170,354 200,344", C.line, 2)
+      : design.top === "singlet" ? shade(tKey, C.shirtShade, "M110,262 C140,282 180,282 200,262 L200,300 L110,300 Z", 'opacity="0.8"') : "";
     const hood = design.top === "hoodie" ? fillLine(C.shirtShade, "M126,216 C112,208 114,192 130,192 C136,194 140,200 142,206 Z") : "";
     const torso = `
       <g id="torso" transform="translate(150 286) scale(${breatheScale}) translate(-150 -286)">
         ${fillLine(C.skinShade, "M144,186 L160,186 L160,208 L144,208 Z")}
+        ${sarongS}
         ${skirt}
+        ${bodySkinS}
         <path fill="${C.shirt}" d="${SHAPE[tKey]}"/>
         ${shade(tKey, C.shirtShade, "M116,200 C134,214 136,250 132,300 L116,300 Z M150,196 C160,210 172,210 180,200 L180,190 L150,190 Z")}
+        ${extraS}
         ${outline(SHAPE[tKey])}
         ${design.top === "hoodie" ? strokeLines("M118,284 C140,290 164,290 184,284", C.line, 2) : ""}
         ${design.top === "sweater" ? strokeLines("M120,264 C140,270 164,270 182,264", C.line, 2) : ""}
@@ -613,9 +740,11 @@ function createRig(design) {
         <path fill="${C.skin}" d="${SHAPE.face}"/>
         <path clip-path="url(#${ID}-face)" fill="${C.skinShade}" transform="translate(3 7)" d="${SHAPE.hairFrontSide}"/>
         ${outline(SHAPE.face)}
+        ${headSkinExtras("side")}
         ${faceExtras(L, p, "face")}
         ${L.eyes.map((e) => eye(e, p)).join("")}
         ${mouth(L.mouth, p)}
+        ${faceFeatures(L, "side", p)}
         <path fill="${C.hair}" d="${SHAPE.hairFrontSide}"/>
         <g clip-path="url(#${ID}-hairFrontSide)">
           <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineSide || "M100,110 C118,86 172,84 200,104"}"/>
@@ -625,7 +754,7 @@ function createRig(design) {
         ${strokeLines(H.sideStrands, C.hairShade)}
         ${design.ears.side ? `<circle fill="${C.skin}" ${LINE} cx="142" cy="160" r="10"/>
           <path fill="none" stroke="${C.line}" stroke-width="2" stroke-linecap="round" d="M144,155 Q139,160 144,165"/>` : ""}
-        ${acc("side")}
+        ${acc("side", "side")}
         ${angerMark(L, p)}
         ${AHOGE(p)}
       </g>`;

@@ -1,6 +1,6 @@
 ---
 name: animasi-2d
-description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) milik kreator — Nana, Bima, Rara, atau karakter baru — dengan 18 ekspresi, 4 tampak (depan, 3/4, samping, belakang), 27 klip gerak, dan adegan multi-karakter, dirender ke PNG/MP4. Gunakan saat user minta membuat/menggerakkan karakter animasi 2D, menambah karakter/baju/rambut/ekspresi/gerakan/tampak baru, atau merender klip/adegan untuk konten.
+description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) milik kreator — Nana, Bima, Rara, Pak Hasan, Buk Atin, atau karakter baru — dengan 18 ekspresi, 4 tampak (depan, 3/4, samping, belakang), 27 klip gerak, dan adegan multi-karakter, dirender ke PNG/MP4. Gunakan saat user minta membuat/menggerakkan karakter animasi 2D, menambah karakter/baju/rambut/ekspresi/gerakan/tampak baru, atau merender klip/adegan untuk konten.
 ---
 
 # Animasi 2D — Karakter Rig Chibi
@@ -17,6 +17,8 @@ fungsi `waktu → pose`, dipakai bersama oleh semua karakter.
 | `nana` | Nana (Nana Kirana) — tokoh utama, si canggung | perempuan | panjang abu tua, poni runcing, ahoge ikal | kaos putih, celana panjang, sneakers |
 | `bima` | Bima (Bima Saputra) — sahabat Nana, si usil | laki-laki | pendek jabrik hitam, jambul | hoodie lengan panjang, celana pendek, kaus kaki, sneakers |
 | `rara` | Rara (Rara Ayudia) — teman sekelas, si manis | perempuan | bob terang, poni lurus, jepit rambut | sweater kerah bulat, rok lipit, kaus kaki panjang, sepatu hitam |
+| `hasan` | Pak Hasan (Hasan Basri) — bapak komplek, si santai | laki-laki dewasa | botak + kumis tebal | kutang, perut buncit, sarung kotak-kotak, sandal jepit |
+| `atin` | Buk Atin (Hartini) — ibu warung, ratu gosip | perempuan dewasa | dicepol + kacamata | badan gemuk, daster motif bunga, sandal jepit |
 
 Lihat `characters/<nama>/CHARACTER.md` untuk ciri wajib dan profil (sifat, hobi, kalimat khas) tiap karakter.
 Pakai profil itu saat menulis dialog/cerita agar kepribadian konsisten. Data profil juga ada di `design.js`
@@ -67,9 +69,13 @@ tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loo
      Garis helai: `frontStrands`, `backStrands`, `backViewStrands`, `sideStrands`, `sideBackStrands`.
    - `ears`: `{ front: ["l","r"], side: true, back: [...] }` — telinga yang tidak tertutup rambut.
    - `ahoge`: `"curl"` | `"spike"` | `null`. `accessory`: `{ front, side, back }` -> SVG (jepit, pita, kacamata).
-   - `top`: `"tee"` | `"hoodie"` | `"sweater"`; `sleeves`: `"short"` | `"long"`;
-     `bottom`: `"pants"` | `"shorts"` | `"skirt"`; `legwear`: `null` | `"socks"` | `"kneeSocks"`;
-     `shoes`: `"sneaker"` | `"dark"`.
+   - `top`: `"tee"` | `"hoodie"` | `"sweater"` | `"singlet"` (kutang + perut buncit) | `"daster"` (badan gemuk);
+     `sleeves`: `"short"` | `"long"` | `"none"`;
+     `bottom`: `"pants"` | `"shorts"` | `"skirt"` | `"sarong"` | `"none"` (tertutup daster);
+     `legwear`: `null` | `"socks"` | `"kneeSocks"`; `shoes`: `"sneaker"` | `"dark"` | `"sandal"`.
+   - `face`: `{ mustache, glasses, doubleChin, baldShine }` — ciri wajah yang mengikuti posisi mata/mulut tiap tampak.
+     `hair.bald: true` untuk kepala botak (tampak belakang menggambar kulit kepala).
+   - `build`: `{ armDX, armRest }` — badan lebar: lengan bergeser keluar (px) & membuka saat istirahat (deg).
    - `expr`: override preset per karakter (sifat), mis. `{ neutral: { mouth: "smirk", sweat: false } }`.
 3. Koordinat kepala tetap: wajah elips (150,140) rx64 ry58, mata y≈148, poni sebaiknya berakhir y≈110–130.
 4. Cek: `sheet.js --char <id> --mode views`, `--mode expr`, beberapa klip (`wave`, `walk`, `jump`), lalu

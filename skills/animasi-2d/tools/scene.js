@@ -65,7 +65,7 @@ function frame(t) {
   }
   await b.close();
   execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-framerate", String(o.fps), "-i", path.join(tmp, "f%05d.png"),
-    "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", out]);
+    "-vf", `pad=ceil(iw/2)*2:ceil(ih/2)*2:color=${o.bg}`, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", out]);
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`Tersimpan: ${out} (${n} frame @ ${o.fps}fps, ${cast.length} karakter)`);
 })();
