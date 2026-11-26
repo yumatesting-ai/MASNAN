@@ -10,6 +10,7 @@
 //   { type: "text", t, dur: 1.2, text: "BYUR!", sx: 0.5, sy: 0.3, size: 0.1, rot: -8 }
 //                                                             teks onomatope komik: muncul membesar lalu memudar
 //   { type: "burst", t, sx, sy, dur: 0.35 }                   garis kejut radial (impact)
+//   { type: "gorengan", x, y, z, n: 10 }                        properti: piring gorengan menumpuk (selalu tampil)
 // --fg: latar depan dekat kamera, DIBURAMKAN (depth of field) -> parallax kuat saat kamera bergerak
 //   { kind: "grass"|"leaves"|"post"|"bush", x, z, y?, s? }
 const P = require("./props.js");
@@ -76,6 +77,18 @@ function draw(w, list, t) {
         font-family="DejaVu Sans, Arial Black, sans-serif" font-weight="900" font-size="${fs.toFixed(0)}" text-anchor="middle" dominant-baseline="middle">
         <text stroke="#1e1e1e" stroke-width="${(fs * 0.2).toFixed(1)}" stroke-linejoin="round" fill="#1e1e1e" x="${fs * 0.05}" y="${fs * 0.07}">${e.text}</text>
         <text stroke="#1e1e1e" stroke-width="${(fs * 0.12).toFixed(1)}" stroke-linejoin="round" paint-order="stroke" fill="#ffffff">${e.text}</text></g>`);
+    } else if (e.type === "gorengan") { // piring gorengan menumpuk (properti adegan)
+      const n = e.n || 10, C = require("./life.js").col;
+      w.sprite(e.x, e.z, (sx, sy, p, fog, lc, sw) => {
+        const r = p * 0.17;
+        let pile = "";
+        for (let i = 0; i < n; i++) {
+          const row = i < 5 ? 0 : i < 8 ? 1 : 2, k = row === 0 ? i : row === 1 ? i - 5 : i - 8, cnt = row === 0 ? 5 : row === 1 ? 3 : 2;
+          const px = (k - (cnt - 1) / 2) * r * 0.36, py = -r * 0.12 - row * r * 0.17, rot = ((i * 37) % 40) - 20;
+          pile += `<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${(r * 0.21).toFixed(1)}" ry="${(r * 0.1).toFixed(1)}" fill="${fog(C(i % 3 ? "#d99a3f" : "#c98532"))}" stroke="${lc}" stroke-width="${(sw * 0.55).toFixed(2)}" transform="rotate(${rot} ${px.toFixed(1)} ${py.toFixed(1)})"/>`;
+        }
+        return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})"><ellipse cx="0" cy="0" rx="${r.toFixed(1)}" ry="${(r * 0.3).toFixed(1)}" fill="${fog("#f6f6f6")}" stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}"/>${pile}</g>`;
+      }, { y: e.y || 0, bias: -0.12 });
     } else if (e.type === "burst") {
       const dur = e.dur || 0.35, tau = t - e.t;
       if (tau < 0 || tau > dur) continue;
