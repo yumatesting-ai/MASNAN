@@ -37,6 +37,10 @@ tools/render.js       klip -> MP4, pose -> PNG (satu karakter)
 tools/scene.js        adegan multi-karakter berdampingan -> MP4/PNG
 tools/sheet.js        contact sheet (ekspresi / tampak / frame klip)
 tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loop
+tools/location.js     lokasi kampung 2.5D + karakter di dalamnya -> PNG/MP4 (landscape/portrait)
+engine/world3d.js     mesin 2.5D (kamera perspektif, bidang berarsir, kabut, sprite)
+engine/props.js       perlengkapan kampung (rumah, pohon, pagar, tiang, gapura, perabot)
+locations/<id>.js     lokasi: kampung, warung, lapangan, masjid, posronda
 ```
 
 ## Alur kerja
@@ -84,6 +88,36 @@ tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loo
 4. Cek: `sheet.js --char <id> --mode views`, `--mode expr`, beberapa klip (`wave`, `walk`, `jump`), lalu
    tulis `CHARACTER.md`. Pakaian/rambut jenis baru ditambahkan di mesin (`BODY_SHAPES` + cabang di
    `frontish()`/`side()`), bukan disalin per karakter.
+
+## Lingkungan kampung 2.5D (`locations/`)
+Dunia 3D sederhana (satuan meter) diproyeksikan dengan perspektif kamera ke SVG bergaya seri: bidang diarsir
+cel sesuai arah cahaya, kabut atmosfer di kejauhan, garis menipis menjauh. Karakter dimasukkan sebagai sprite
+pada posisi 3D — ukurannya otomatis sesuai jarak dan urutan depan-belakang benar.
+
+| id | Lokasi | Titik berdiri (spots) |
+|---|---|---|
+| `kampung` | Jalan kampung: jalan cor retak, rumah tembok/papan/bilik bambu, atap genteng & seng, teras + bale, pagar bambu/tanaman, pisang-kelapa-mangga, jemuran, tiang listrik kayu, ayam, gapura "SELAMAT DATANG" | depan, kiri, kanan, tengah, jauh, pinggir_kiri, pinggir_kanan |
+| `warung` | Warung Bu Atin: papan kayu, atap seng, emperan terpal belang, renceng sachet, etalase, bale, meja kopi | balik_etalase, depan, bangku, meja, jalan_kiri, jalan_kanan, samping |
+| `lapangan` | Lapangan bola kampung: tanah berumput, gawang bambu, sandal, pagar bambu, masjid jauh | tengah, kiri, kanan, pinggir, gawang_kiri, gawang_kanan, jauh |
+| `masjid` | Masjid kampung beratap tumpang + mustaka, serambi, bedug, kentongan, toa | gerbang, setapak, halaman_kiri, halaman_kanan, serambi, depan, bedug |
+| `posronda` | Pos ronda bambu: bale, atap seng, kentongan, papan catur & kopi, lampu bohlam | depan, kiri, kanan, jalan, jalan_kanan, samping |
+
+```bash
+node tools/location.js --list
+node tools/location.js --loc kampung --png out/kampung.png                       # latar kosong
+node tools/location.js --loc warung --cast "atin:talk@balik_etalase,hasan:laugh@bangku" --seconds 3 --out out/warung.mp4
+node tools/location.js --loc kampung --cast "nana:walk_front@jauh>depan" --seconds 4 --out out/pulang.mp4   # berjalan
+node tools/location.js --loc kampung --format portrait --cast "nana:idle@depan" --png out/reels.png        # 9:16
+```
+Cast: `karakter:klip@titik[:flip]`; titik bisa nama spot atau `"x,z"` (meter); `a>b` = bergerak dari a ke b.
+
+Menambah lokasi: buat `locations/<id>.js` dengan `{ id, name, camera, spots, build(w) }`. Bangun dengan
+primitif `engine/world3d.js` (`box`, `gable` (genteng/`seng`), `hip` (limas/tajug, `top` untuk bertingkat),
+`prism`, `dome`, `arch`, `texture` (`plank`/`bamboo`/`seng`), `ground`, `line3` (kabel: `sag`), `sprite`, `text`)
+dan perlengkapan `engine/props.js` (`house` dengan `wall: plaster|plank|bamboo`, `roof: genteng|seng`, `teras`,
+`bale`, `fence: bamboo|bush`, `jemuran`; `villageRoad`, `tree` (`round|palm|banana`), `bush`, `poles`, `bulbLamp`,
+`gapura`, `bench`, `table`, `bale`, `glassOfCoffee`, `chicken`). Gaya: kampung sederhana, jangan terlalu modern.
+Sumbu: X kanan, Y atas, Z menjauh dari kamera; jalan kampung di sekitar x=0. Anak tinggi ±1.15 m.
 
 ## Menambah klip (engine/clips.js)
 `{ duration, view, smooth?, pose(t) }`. Aturan agar gerak halus dan tidak "error":

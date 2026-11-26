@@ -776,7 +776,7 @@ function createRig(design) {
   // ---------- tinggi badan ----------
   // build.scale > 1: karakter diperbesar dari titik pijak (150,382) -> lebih tinggi, kaki tetap di lantai.
   // Kanvas diperluas ke atas (CANVAS.top negatif) agar kepala tidak terpotong. Ketebalan garis dijaga sama
-  // dengan karakter lain lewat vector-effect: non-scaling-stroke.
+  // dengan karakter lain (stroke-width dibagi SCALE).
   const SCALE = (design.build && design.build.scale) || 1;
   const CANVAS_TOP = SCALE > 1 ? -Math.ceil(((SCALE - 1) * 382 + 10) / 10) * 10 : 0;
   const CANVAS_LEFT = SCALE > 1 ? -Math.ceil(((SCALE - 1) * 160) / 5) * 5 : 0; // ruang tangan terentang
@@ -807,9 +807,9 @@ function createRig(design) {
         ${aboveFx(p, { x: ax, y: ay })}
       </g>`;
     if (SCALE === 1) return `${defs()}${inner}`;
-    const cls = `${ID}-tall`;
-    return `${defs()}<style>.${cls} path,.${cls} ellipse,.${cls} circle,.${cls} rect{vector-effect:non-scaling-stroke}</style>
-      <g class="${cls}" transform="translate(150 382) scale(${SCALE}) translate(-150 -382)">${inner}</g>`;
+    // tebal garis dibagi SCALE -> setelah diperbesar tetap sama dengan karakter lain (juga saat diskalakan di adegan 3D)
+    const thin = inner.replace(/stroke-width="([\d.]+)"/g, (m, v) => `stroke-width="${(+v / SCALE).toFixed(2)}"`);
+    return `${defs()}<g transform="translate(150 382) scale(${SCALE}) translate(-150 -382)">${thin}</g>`;
   }
 
   function drawCharacter(view = "front", pose = {}, opts = {}) {
