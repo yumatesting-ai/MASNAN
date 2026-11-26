@@ -1,40 +1,35 @@
 {
   "title": "Diet Pak Hasan",
   "format": "portrait",
+  "audioNote": "Shot dipotong mengikuti VO ElevenLabs: tiap baris suara = 1 shot penutur.",
   "scenes": [
     {
-      "judul": "Shot 1 — Bima menghampiri (MEDIUM, push-in pelan)",
+      "judul": "1 · Bima datang (MEDIUM)",
       "loc": "warung",
-      "seconds": 7.6,
-      "cast": "hasan:sit_drink@duduk_meja/3.6+sit/4.0, bima:walk@0.5,5.0>-1.9,6.0+chat_a{face=l}/5",
+      "seconds": 3.5,
+      "cast": "hasan:sit_drink@duduk_meja, bima:walk@0.5,5.0>-1.9,6.0+chat_a{face=l}/1",
       "dialog": [
         {
           "who": "bima",
           "at": 0.15,
           "dur": 2.94,
           "text": "Pak Hasan, katanya lagi diet?"
-        },
-        {
-          "who": "hasan",
-          "at": 3.96,
-          "dur": 3.36,
-          "text": "Iya dong. Kopi pahit, tanpa gula."
         }
       ],
       "camkeys": [
         {
           "t": 0,
-          "x": -1.9,
+          "x": -1.3,
           "y": 1.2,
-          "z": 2.6,
-          "f": 1200,
+          "z": 2.4,
+          "f": 1150,
           "horizon": 0.45
         },
         {
-          "t": 7.6,
-          "x": -2.2,
-          "z": 3.2,
-          "f": 1270
+          "t": 3.5,
+          "x": -1.7,
+          "z": 2.7,
+          "f": 1200
         }
       ],
       "fx": [
@@ -46,32 +41,96 @@
           "n": 10
         }
       ],
-      "fg": [
-        {
-          "kind": "grass",
-          "x": -2.75,
-          "z": 3.9,
-          "s": 0.8
-        }
-      ],
-      "visual": "Pak Hasan ngopi santai di meja kayu; di mejanya ada sepiring gorengan menumpuk. Bima datang.",
+      "visual": "Pak Hasan ngopi; Bima berjalan menghampiri sambil bertanya.",
       "narasi": ""
     },
     {
-      "judul": "Shot 2 — Ketahuan (CLOSE-UP Pak Hasan, snap zoom)",
+      "judul": "2 · Pak Hasan bangga (MEDIUM CLOSE)",
       "loc": "warung",
-      "seconds": 6.9,
-      "cast": "hasan:sit{expr=neutral}@duduk_meja/3.2+sit{expr=nervous;sweat=true}/3.7",
+      "seconds": 4.2,
+      "cast": "hasan:sit{expr=smug}@duduk_meja",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.46,
+          "dur": 3.36,
+          "text": "Iya dong. Kopi pahit, tanpa gula."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.85,
+          "y": 1.0,
+          "z": 4.2,
+          "f": 1350,
+          "horizon": 0.42
+        },
+        {
+          "t": 4.2,
+          "z": 4.4
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 10
+        }
+      ],
+      "visual": "Pak Hasan menjawab dengan sok bijak; gorengan menumpuk di depannya.",
+      "narasi": ""
+    },
+    {
+      "judul": "3 · Bima curiga (CLOSE Bima)",
+      "loc": "warung",
+      "seconds": 3.1,
+      "cast": "bima:idle_three{face=l}@-1.9,6.0/0.4+point{flip=true}/2.7, hasan:sit{expr=smug}@duduk_meja",
       "dialog": [
         {
           "who": "bima",
-          "at": 0.44,
+          "at": 0.34,
           "dur": 2.42,
           "text": "Terus... gorengan sepuluh itu?"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.2,
+          "y": 1.0,
+          "z": 3.3,
+          "f": 1250,
+          "horizon": 0.45
         },
         {
+          "t": 3.1,
+          "z": 3.5
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 10
+        }
+      ],
+      "visual": "Bima menunjuk piring gorengan dengan curiga.",
+      "narasi": ""
+    },
+    {
+      "judul": "4 · Ketahuan (CLOSE-UP + snap zoom)",
+      "loc": "warung",
+      "seconds": 3.65,
+      "cast": "hasan:sit{expr=nervous;sweat=true}@duduk_meja",
+      "dialog": [
+        {
           "who": "hasan",
-          "at": 3.46,
+          "at": 0.26,
           "dur": 3.2,
           "text": "Itu... temannya kopi, Bim."
         }
@@ -81,22 +140,18 @@
           "t": 0,
           "x": -2.85,
           "y": 1.0,
-          "z": 4.3,
-          "f": 1400,
+          "z": 4.5,
+          "f": 1450,
           "horizon": 0.42
         },
         {
-          "t": 3.0,
-          "z": 4.4
-        },
-        {
-          "t": 3.2,
-          "z": 4.9,
+          "t": 0.15,
+          "z": 5.0,
           "f": 1650
         },
         {
-          "t": 6.9,
-          "z": 5.0
+          "t": 3.65,
+          "z": 5.1
         }
       ],
       "fx": [
@@ -109,7 +164,7 @@
         },
         {
           "type": "text",
-          "t": 3.15,
+          "t": 0.0,
           "dur": 0.9,
           "text": "GLEK!",
           "sx": 0.72,
@@ -118,30 +173,96 @@
           "rot": 10
         }
       ],
-      "visual": "Close-up Pak Hasan dengan gorengan di depannya. Ditanya soal gorengan, snap zoom: Pak Hasan berkeringat gugup.",
+      "visual": "Snap zoom: Pak Hasan berkeringat gugup.",
       "narasi": ""
     },
     {
-      "judul": "Shot 3 — Punchline (WIDE dua tokoh + Bu Atin)",
+      "judul": "5 · Bu Atin menagih (CLOSE Bu Atin)",
       "loc": "warung",
-      "seconds": 7.0,
-      "cast": "hasan:sit{expr=nervous;sweat=true}@duduk_meja/2.6+sit{expr=shy}/4.4, bima:idle_three{face=l}@-1.9,6.0/5.5+laugh_hard/1.5, atin:deadpan@balik_etalase/5.0+angry_shake/2.0",
+      "seconds": 2.35,
+      "cast": "atin:deadpan@balik_etalase",
       "dialog": [
         {
           "who": "atin",
-          "at": 0.12,
+          "at": 0.17,
           "dur": 1.76,
           "text": "Belum dibayar juga, Pak."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.75,
+          "y": 1.75,
+          "z": 5.6,
+          "f": 1700,
+          "horizon": 0.33
         },
+        {
+          "t": 2.35,
+          "z": 5.75
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 10
+        }
+      ],
+      "visual": "Bu Atin menagih dengan wajah datar dari balik etalase.",
+      "narasi": ""
+    },
+    {
+      "judul": "6 · Minta dicatat (DUA TOKOH)",
+      "loc": "warung",
+      "seconds": 2.6,
+      "cast": "hasan:sit{expr=shy}@duduk_meja, bima:idle_three{face=l}@-1.9,6.0",
+      "dialog": [
         {
           "who": "hasan",
-          "at": 2.72,
+          "at": 0.42,
           "dur": 1.8,
           "text": "Catat aja, Bu... kayak biasa."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.4,
+          "y": 1.15,
+          "z": 3.1,
+          "f": 1250,
+          "horizon": 0.45
         },
         {
+          "t": 2.6,
+          "z": 3.3
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 10
+        }
+      ],
+      "visual": "Pak Hasan nyengir malu, Bima melirik.",
+      "narasi": ""
+    },
+    {
+      "judul": "7 · PUNCHLINE (snap zoom Bu Atin)",
+      "loc": "warung",
+      "seconds": 1.5,
+      "cast": "atin:angry_shake@balik_etalase",
+      "dialog": [
+        {
           "who": "atin",
-          "at": 5.1,
+          "at": 0.2,
           "dur": 1.1,
           "text": "BUKUNYA UDAH PENUH, PAK!"
         }
@@ -149,25 +270,20 @@
       "camkeys": [
         {
           "t": 0,
-          "x": -1.1,
-          "y": 1.3,
-          "z": 1.2,
-          "f": 1000,
-          "horizon": 0.44
+          "x": 0.75,
+          "y": 1.75,
+          "z": 5.4,
+          "f": 1600,
+          "horizon": 0.33
         },
         {
-          "t": 5.0,
-          "z": 1.4
+          "t": 0.12,
+          "z": 6.0,
+          "f": 1900
         },
         {
-          "t": 5.2,
-          "x": -1.2,
-          "z": 2.0,
-          "f": 1080
-        },
-        {
-          "t": 7,
-          "z": 2.1
+          "t": 1.5,
+          "z": 6.05
         }
       ],
       "fx": [
@@ -180,21 +296,53 @@
         },
         {
           "type": "text",
-          "t": 5.15,
-          "dur": 1.5,
+          "t": 0.2,
+          "dur": 1.3,
           "text": "PENUH!",
           "sx": 0.5,
-          "sy": 0.17,
+          "sy": 0.15,
           "size": 0.15
         },
         {
           "type": "shake",
-          "t": 5.15,
+          "t": 0.2,
           "dur": 0.6,
           "amp": 0.05
         }
       ],
-      "visual": "Bu Atin menagih dengan wajah datar. Pak Hasan minta dicatat. Bu Atin meledak, Bima tertawa terbahak-bahak.",
+      "visual": "Bu Atin meledak marah, layar bergetar.",
+      "narasi": ""
+    },
+    {
+      "judul": "8 · Penutup (WIDE)",
+      "loc": "warung",
+      "seconds": 1.6,
+      "cast": "hasan:eye_twitch@duduk_meja, bima:laugh_hard@-1.9,6.0, atin:angry_shake@balik_etalase",
+      "dialog": [],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.3,
+          "y": 1.15,
+          "z": 2.5,
+          "f": 1250,
+          "horizon": 0.45
+        },
+        {
+          "t": 1.6,
+          "z": 2.8
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 10
+        }
+      ],
+      "visual": "Bima tertawa terbahak-bahak, Pak Hasan pasrah berkedut, Bu Atin masih kesal.",
       "narasi": ""
     }
   ]
