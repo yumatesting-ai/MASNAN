@@ -15,7 +15,7 @@ const PAL_ABU = {
 };
 // palet berwarna (WARNA=1): kampung tropis cerah
 const PAL_WARNA = {
-  sky: "#d6ecf8", skyTop: "#86c1ea", cloud: "#ffffff",
+  sky: "#e8f4f8", skyTop: "#6bb2e6", cloud: "#ffffff",
   concrete: "#c4beb2", crack: "#938c7f", dirt: "#dcc6a0", dirtDark: "#cdb48c", grass: "#97c46c", grassDark: "#80b157",
   asphalt: "#6f7275", gutter: "#5f6366", paving: "#ddd3c4",
   wallA: "#f3e7cf", wallB: "#e8d4b2", wallC: "#dac9a6", plank: "#b88c5e", bamboo: "#dcc489",
@@ -67,9 +67,20 @@ function sky(w, o = {}) {
     return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`;
   };
   const hills = o.hills === false ? "" : hill(H * 0.06, H * 0.03, SKYC.hill1, 1.3) + hill(H * 0.04, H * 0.012, SKYC.hill2, 3.1);
+  // mode warna: matahari bercahaya di kiri atas (searah cahaya & bayangan), gunung biru jauh, burung terbang
+  let extra = "";
+  if (THEME.COLOR) {
+    const T = w.t || 0, sx = W * 0.14, sy = Math.max(H * 0.07, hy * 0.28);
+    const mount = (amp, base, col, ph, n = 9) => { let d = `M0,${hy}`; for (let i = 0; i <= n; i++) { const xx = (i / n) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * Math.abs(Math.sin(i * 1.3 + ph)) * (0.7 + 0.3 * Math.sin(i * 0.5 + ph))).toFixed(1)}`; } return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`; };
+    const birds = [0, 1, 2, 3].map((k) => { const bx = ((W * (0.3 + k * 0.17) + T * 22 * (1 + k * 0.15)) % (W * 1.2)) - W * 0.1, by = hy * (0.3 + 0.1 * Math.sin(k * 2.1)) + 6 * Math.sin(T * 1.3 + k), f = 5 + 3 * Math.sin(T * 9 + k * 1.7), s2 = 7 + k;
+      return `<path d="M${(bx - s2).toFixed(1)},${(by - f * 0.4).toFixed(1)} Q${(bx - s2 * 0.4).toFixed(1)},${(by - f).toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)} Q${(bx + s2 * 0.4).toFixed(1)},${(by - f).toFixed(1)} ${(bx + s2).toFixed(1)},${(by - f * 0.4).toFixed(1)}" fill="none" stroke="#5f7d93" stroke-width="2" stroke-linecap="round"/>`; }).join("");
+    extra = `<defs><radialGradient id="sunG"><stop offset="0" stop-color="#fffbe6" stop-opacity="1"/><stop offset="0.25" stop-color="#fff3c4" stop-opacity="0.9"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="${sx}" cy="${sy}" r="${H * 0.2}" fill="url(#sunG)"/><circle cx="${sx}" cy="${sy}" r="${H * 0.035}" fill="#fffdf0"/>
+      ${mount(H * 0.09, H * 0.04, "#b4cfe0", 0.4, 7)}${mount(H * 0.06, H * 0.02, "#a8c8d8", 2.2, 11)}${birds}`;
+  }
   w.add("sky", 1e9, `<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${PAL.skyTop}"/><stop offset="1" stop-color="${PAL.sky}"/></linearGradient></defs>
-    <rect width="${W}" height="${H}" fill="url(#skyg)"/>${clouds}${hills}
+      <stop offset="0" stop-color="${PAL.skyTop}"/>${THEME.COLOR ? `<stop offset="0.55" stop-color="#b3dbf4"/>` : ""}<stop offset="1" stop-color="${PAL.sky}"/></linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#skyg)"/>${extra}${clouds}${hills}
     ${o.skyline === false ? "" : far}
     <rect y="${hy}" width="${W}" height="${H - hy}" fill="${o.groundColor || PAL.dirt}"/>`);
 }
@@ -91,12 +102,17 @@ function groundDetail(w, x0, x1, z0, z1, n = 40, seed = 1) {
   for (let i = 0; i < n; i++) {
     const x = x0 + r() * (x1 - x0), z = z0 + r() * (z1 - z0), s = 0.04 + r() * 0.07;
     const pts = []; for (let k = 0; k < 7; k++) { const a = (k / 7) * Math.PI * 2; pts.push([x + Math.cos(a) * s * (0.8 + r() * 0.4), 0.003, z + Math.sin(a) * s * 0.7]); }
-    w.ground(pts, r() < 0.5 ? "#a9a9a9" : "#d3d3d3", { bias: -0.4, swk: 0.45 });
+    w.ground(pts, r() < 0.5 ? (THEME.COLOR ? "#a69c8d" : "#a9a9a9") : (THEME.COLOR ? "#dcd3c4" : "#d3d3d3"), { bias: -0.4, swk: 0.45 });
   }
   for (let i = 0; i < Math.max(2, n / 10); i++) {
     const x = x0 + r() * (x1 - x0), z = z0 + r() * (z1 - z0), rr = 0.3 + r() * 0.5, pts = [];
     for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2; pts.push([x + Math.cos(a) * rr * (0.75 + r() * 0.4), 0.002, z + Math.sin(a) * rr * 0.6 * (0.75 + r() * 0.4)]); }
-    w.ground(pts, "#bdbdbd", { stroke: false, bias: -0.3 });
+    w.ground(pts, THEME.COLOR ? "#cdb58f" : "#bdbdbd", { stroke: false, bias: -0.3 });
+  }
+  if (THEME.COLOR) for (let i = 0; i < n / 2; i++) { // daun gugur (hijau tua, kuning, coklat)
+    const x = x0 + r() * (x1 - x0), z = z0 + r() * (z1 - z0), a = r() * Math.PI, L = 0.07 + r() * 0.05;
+    const pts = [[x - Math.cos(a) * L, 0.004, z - Math.sin(a) * L * 0.6], [x + Math.sin(a) * L * 0.35, 0.004, z - Math.cos(a) * L * 0.2], [x + Math.cos(a) * L, 0.004, z + Math.sin(a) * L * 0.6], [x - Math.sin(a) * L * 0.35, 0.004, z + Math.cos(a) * L * 0.2]];
+    w.ground(pts, ["#c9a03a", "#a8743a", "#7aa84a", "#d08a3a"][Math.floor(r() * 4)], { bias: -0.45, swk: 0.35 });
   }
 }
 
@@ -131,12 +147,20 @@ function villageRoad(w, o = {}) {
 function house(w, o) {
   const side = o.side, fx = o.fx, z0 = o.z, Wd = o.width || 6.5, D = o.depth || 7, Hh = o.height || 2.9, rh = o.roofH || 1.8;
   const kind = o.wall || "plaster";
-  const wallCol = o.wallColor || (kind === "plank" ? PAL.plank : kind === "bamboo" ? PAL.bamboo : PAL.wallA);
+  // mode warna: tiap rumah kampung beda warna (dinding pastel, pintu, kusen, tirai, genteng) dipilih dari seed posisi
+  const hr = treeRng(Math.abs(o.z * 7.1 + o.fx * 3.3) + 1), pick = (a) => a[Math.floor(hr() * a.length) % a.length];
+  const HC = THEME.COLOR ? {
+    wall: pick(["#f3e7cf", "#d8ead2", "#d4e5f1", "#f6e2b0", "#f1d3c2", "#e6dcee", "#f4efe4"]),
+    plank: pick(["#b88c5e", "#a97c50", "#c39a6b"]), bamboo: pick(["#dcc489", "#d2b878"]),
+    door: pick(["#7b5336", "#3f6e8c", "#2f6b4f", "#8c3b2f", "#5a6f3a"]), shutter: pick(["#3f7f8f", "#2f6b4f", "#8c5a2b", "#a2463a", "#4a6a9a"]),
+    curtain: pick(["#f2a7a0", "#f4d06f", "#9fc9e8", "#b8e0a8", "#e3b5e0"]), roof: pick(["#b9573a", "#a84b32", "#c9683f", "#9c5440"]), base: "#b9aea0",
+  } : null;
+  const wallCol = o.wallColor && !HC ? o.wallColor : (kind === "plank" ? (HC ? HC.plank : PAL.plank) : kind === "bamboo" ? (HC ? HC.bamboo : PAL.bamboo) : (HC ? HC.wall : o.wallColor || PAL.wallA));
   const x = side < 0 ? fx - D : fx;
-  w.box(x, 0, z0, D, 0.35, Wd, "#bdbdbd");
+  w.box(x, 0, z0, D, 0.35, Wd, HC ? HC.base : "#bdbdbd");
   w.box(x, 0.35, z0, D, Hh - 0.35, Wd, wallCol);
   const seng = o.roof === "seng";
-  w.gable(x, Hh, z0, D, Wd, rh, seng ? PAL.seng : (o.roofColor || PAL.roof), { ridge: "x", overhang: 0.5, wall: wallCol, tiles: seng ? 0 : 6, seng });
+  w.gable(x, Hh, z0, D, Wd, rh, seng ? PAL.seng : (o.roofColor || (HC ? HC.roof : PAL.roof)), { ridge: "x", overhang: 0.5, wall: wallCol, tiles: seng ? 0 : 6, seng });
   const fxx = fx - side * 0.02;
   if (kind !== "plaster") {
     const col = kind === "plank" ? "#7d7d7d" : "#9a9a9a";
@@ -151,15 +175,19 @@ function house(w, o) {
   w.poly([[fxx, 0.35, z0], [fxx, 0.35, z0 + Wd], [fxx, 0.6, z0 + Wd], [fxx, 0.6, z0]], mul(wallCol, 0.9), { stroke: false, bias: -0.011 });
   if (w.cam.z < z0) w.poly([[x, Hh - 0.45, z0 - 0.015], [x + D, Hh - 0.45, z0 - 0.015], [x + D, Hh, z0 - 0.015], [x, Hh, z0 - 0.015]], mul(wallCol, 0.82), { stroke: false, bias: -0.012 });
   // pintu kayu
-  fq(z0 + 1.0, z0 + 1.9, 0.35, 2.3, PAL.door);
+  fq(z0 + 1.0, z0 + 1.9, 0.35, 2.3, HC ? HC.door : PAL.door);
   // jendela kayu + daun jendela terbuka
   const wz0 = z0 + 2.5, wz1 = z0 + 3.6;
   fq(wz0, wz1, 1.0, 2.0, PAL.glass);
+  if (HC) { // tirai kain di balik kaca, dibuka ke samping
+    fq(wz0 + 0.04, wz0 + 0.32, 1.04, 1.96, HC.curtain, { stroke: false, bias: -0.03 });
+    fq(wz1 - 0.32, wz1 - 0.04, 1.04, 1.96, HC.curtain, { stroke: false, bias: -0.03 });
+  }
   w.line3([[fxx, 1.0, (wz0 + wz1) / 2], [fxx, 2.0, (wz0 + wz1) / 2]], PAL.frame, null, { bias: -0.05 });
   w.line3([[fxx, 1.5, wz0], [fxx, 1.5, wz1]], PAL.frame, null, { bias: -0.05 });
   const ox = fxx - side * 0.35;
-  w.face([[fxx, 1.0, wz0], [ox, 1.0, wz0 - 0.4], [ox, 2.0, wz0 - 0.4], [fxx, 2.0, wz0]], PAL.shutter, { swk: 0.7, bias: -0.04 });
-  w.face([[fxx, 1.0, wz1], [ox, 1.0, wz1 + 0.4], [ox, 2.0, wz1 + 0.4], [fxx, 2.0, wz1]], PAL.shutter, { swk: 0.7, bias: -0.04 });
+  w.face([[fxx, 1.0, wz0], [ox, 1.0, wz0 - 0.4], [ox, 2.0, wz0 - 0.4], [fxx, 2.0, wz0]], HC ? HC.shutter : PAL.shutter, { swk: 0.7, bias: -0.04 });
+  w.face([[fxx, 1.0, wz1], [ox, 1.0, wz1 + 0.4], [ox, 2.0, wz1 + 0.4], [fxx, 2.0, wz1]], HC ? HC.shutter : PAL.shutter, { swk: 0.7, bias: -0.04 });
   for (let i = 0; i < 4; i++) fq(z0 + 1.0 + i * 0.7, z0 + 1.3 + i * 0.7, 2.5, 2.7, "#8f8f8f", { swk: 0.5 });
   // teras: lantai + atap emperan + tiang kayu (+ bale-bale)
   if (o.teras) {

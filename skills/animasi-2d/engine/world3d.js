@@ -39,7 +39,16 @@ function createWorld(opt = {}) {
   };
   const depth = (z) => Math.max(NEAR, z - cam.z);
   const fogK = (z) => clamp((depth(z) - fogStart) / fogRange, 0, fogMax);
-  const fog = (color, z) => mix(color, fogColor, fogK(z));
+  // mode warna: abu-abu netral yang tersisa dihangatkan (kayu/semen kampung) -> tidak ada bagian "mati" abu-abu
+  const WARM = require("./theme.js").COLOR && opt.warm !== false;
+  const warm = (h) => {
+    if (!WARM || typeof h !== "string" || h[0] !== "#" || h.length !== 7) return h;
+    const n = parseInt(h.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    if (Math.abs(r - g) > 6 || Math.abs(g - b) > 6) return h;
+    const k = r > 235 ? 0.35 : 1, c = (v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0");
+    return `#${c(r + 14 * k)}${c(g + 5 * k)}${c(b - 12 * k)}`;
+  };
+  const fog = (color, z) => mix(warm(color), fogColor, fogK(z));
   const lineCol = (z) => mix(LINE, fogColor, fogK(z) * 0.9);
   const sw = (z, base = 1) => +(clamp(14 / depth(z), 0.6, 2.6) * base).toFixed(2);
   const ppm = (z) => f / depth(z); // piksel per meter pada kedalaman z
@@ -290,7 +299,9 @@ function createWorld(opt = {}) {
     // vinyet lembut di tepi (sinematik)
     const vignette = opt.vignette === false ? "" : `<defs><radialGradient id="vgn" cx="50%" cy="48%" r="75%">
         <stop offset="0.62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.2"/></radialGradient></defs>
-      <rect width="${W}" height="${H}" fill="url(#vgn)" pointer-events="none"/>`;
+      <rect width="${W}" height="${H}" fill="url(#vgn)" pointer-events="none"/>
+      ${require("./theme.js").COLOR && opt.grade !== false ? `<defs><radialGradient id="warmG" cx="8%" cy="2%" r="95%"><stop offset="0" stop-color="#fff1c9" stop-opacity="0.38"/><stop offset="0.55" stop-color="#ffe7b0" stop-opacity="0.1"/><stop offset="1" stop-color="#ffe0a0" stop-opacity="0"/></radialGradient></defs>
+      <rect width="${W}" height="${H}" fill="url(#warmG)" style="mix-blend-mode:screen" pointer-events="none"/>` : ""}`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
       ${background}${before}<g opacity="0.2">${shadows}</g>${after}${vignette}</svg>`;
   }

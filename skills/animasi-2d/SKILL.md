@@ -284,3 +284,33 @@ node tools/location.js --loc warung --cast "..." --check 1        # satu adegan 
 
 Bila tembus: tambahkan titik belok (`a>belok>b`) yang mengitari benda, atau geser rute. Menambah benda baru ke
 lokasi = tambahkan juga kotak/lingkarannya ke `obstacles`.
+
+## STANDAR GAYA VISUAL (pegangan untuk SEMUA konten, termasuk tokoh baru)
+
+Skill ini dibuat agar setiap konten baru, dengan tokoh apa pun, langsung memakai model animasi yang sama.
+Patuhi standar berikut setiap membuat tokoh, lokasi, atau episode baru.
+
+**Tokoh (chibi):**
+- Kepala besar ±45% tinggi badan, mata bulat besar, garis luar gelap `#2a2a2a` tebal 3, arsiran cel 2 tingkat (tanpa gradasi).
+- Anak skala 1.0 (±1,15 m); dewasa `build.scale` 1.2–1.3. Bentuk badan lewat `build` (perut buncit, tubuh lebar), bukan bentuk baru.
+- Tokoh baru = folder `characters/<id>/` berisi `design.js` (salin dari tokoh paling mirip), `rig.js`, `CHARACTER.md`.
+  Wajib ada dua palet: `colors` (abu-abu) dan `colorsWarna` (berwarna).
+- Palet warna tokoh: kulit hangat (`#ffe0c8` cerah s/d `#e8b88d` sawo matang); pakaian satu warna utama jenuh-sedang
+  (oranye, pink, kuning, magenta, hijau sarung) + bawahan gelap (navy/jeans). Tokoh harus LEBIH jenuh daripada latar agar menonjol.
+- Lengan selalu satu bentuk utuh saat menekuk (sudah otomatis di rig). Cek pose baru dengan `tools/sheet.js` diperbesar.
+
+**Latar (mode warna, `WARNA=1`):**
+- Kampung Indonesia sederhana, bukan modern. Langit biru bergradasi, matahari kiri-atas (searah bayangan), gunung biru jauh, burung.
+- Rumah: dinding pastel berbeda-beda, pintu/kusen berwarna, tirai, genteng terakota (otomatis per rumah dari posisinya).
+- Latar lebih pucat/kurang jenuh dari tokoh; makin jauh makin pudar kebiruan (kabut). Abu-abu netral otomatis dihangatkan.
+- Figuran: siluet abu-abu buram (tidak bersaing dengan tokoh utama).
+- Cahaya: bayangan matahari ke kanan-bawah, sapuan cahaya hangat dari kiri atas, vinyet halus.
+
+**Gerak & sinematik:** walk cycle bounce, lip sync dari teks, ancang-ancang & follow-through, variasi shot (wide → medium →
+close-up), kamera `camkeys`, latar depan buram (`fg`) untuk parallax, efek komik (`fx`) untuk lelucon.
+
+**Checklist sebelum render:**
+1. `node tools/episode.js <ep>.json --check 1` → tidak ada rute menembus benda.
+2. `node tools/episode.js <ep>.json --preview out/cek.png` → komposisi tiap adegan (tidak terpotong, tokoh tidak tertutup).
+3. Pose baru → `tools/sheet.js` diperbesar (lengan, tangan, prop).
+4. Render: `WARNA=1 node tools/episode.js <ep>.json --out out/x.mp4`.
