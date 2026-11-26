@@ -10,6 +10,7 @@
 //   { type: "text", t, dur: 1.2, text: "BYUR!", sx: 0.5, sy: 0.3, size: 0.1, rot: -8 }
 //                                                             teks onomatope komik: muncul membesar lalu memudar
 //   { type: "burst", t, sx, sy, dur: 0.35 }                   garis kejut radial (impact)
+//   { type: "cat", t, x, z, flip?, food? }                       kucing duduk muncul di detik t (food: menggigit gorengan)
 //   { type: "gorengan", x, y, z, n: 10 }                        properti: piring gorengan menumpuk (selalu tampil)
 // --fg: latar depan dekat kamera, DIBURAMKAN (depth of field) -> parallax kuat saat kamera bergerak
 //   { kind: "grass"|"leaves"|"post"|"bush", x, z, y?, s? }
@@ -89,6 +90,15 @@ function draw(w, list, t) {
         }
         return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})"><ellipse cx="0" cy="0" rx="${r.toFixed(1)}" ry="${(r * 0.3).toFixed(1)}" fill="${fog("#f6f6f6")}" stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}"/>${pile}</g>`;
       }, { y: e.y || 0, bias: -0.12 });
+    } else if (e.type === "cat") { // kucing (duduk) yang muncul pada detik t, opsional menggigit gorengan
+      if (t < (e.t || 0)) continue;
+      const LIFE = require("./life.js"), dir = e.flip ? -1 : 1;
+      LIFE.cat(w, e.x, e.z, { mode: "sit", flip: e.flip, color: e.color, stripe: e.stripe });
+      if (e.food) w.sprite(e.x - 0.1 * dir, e.z - 0.01, (sx, sy, p, fog, lc, sw) => { // gorengan menggantung dari mulut
+        const rx = p * 0.085, ry = p * 0.045;
+        return `<g transform="rotate(${dir * 25} ${sx} ${sy})"><ellipse cx="${sx}" cy="${sy}" rx="${rx}" ry="${ry}" fill="${fog(LIFE.col("#d99a3f"))}" stroke="${lc}" stroke-width="${sw * 0.7}"/>
+          <path d="M${sx - rx * 0.6},${sy} q${rx * 0.3},${-ry * 0.6} ${rx * 0.6},0 q${rx * 0.3},${ry * 0.6} ${rx * 0.6},0" fill="none" stroke="${fog(LIFE.col("#b0702a"))}" stroke-width="${sw * 0.6}"/></g>`;
+      }, { y: 0.24, bias: -0.08 });
     } else if (e.type === "burst") {
       const dur = e.dur || 0.35, tau = t - e.t;
       if (tau < 0 || tau > dur) continue;

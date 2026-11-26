@@ -1,0 +1,505 @@
+{
+  "title": "Peronda Terberani",
+  "format": "portrait",
+  "audio": "ElevenLabs Text to Dialogue 29,9 dtk",
+  "scenes": [
+    {
+      "judul": "1 · Rara berbisik (MEDIUM dua tokoh di bale)",
+      "loc": "posronda",
+      "seconds": 2.85,
+      "extras": "off",
+      "cast": "bima:sit@duduk_bale, rara:sit{expr=nervous;lookX=1}@duduk_bale2, hasan:idle@2.3,5.3",
+      "dialog": [
+        {
+          "who": "rara",
+          "at": 0.12,
+          "dur": 2.56,
+          "text": "Bim... denger nggak? Kresek-kresek..."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.15,
+          "z": 1.6,
+          "f": 1250,
+          "horizon": 0.45
+        },
+        {
+          "t": 2.85,
+          "z": 2.0
+        }
+      ],
+      "fx": [],
+      "visual": "Bima & Rara duduk di bale, Rara berbisik ketakutan.",
+      "narasi": ""
+    },
+    {
+      "judul": "2 · Bima ketakutan (CLOSE-UP)",
+      "loc": "posronda",
+      "seconds": 3.15,
+      "extras": "off",
+      "cast": "bima:sit{expr=nervous;sweat=true}@duduk_bale",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 0.15,
+          "dur": 2.95,
+          "text": "Ja-jangan-jangan... hantu?"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -1.3,
+          "y": 1.0,
+          "z": 3.9,
+          "f": 1450,
+          "horizon": 0.42
+        },
+        {
+          "t": 3.15,
+          "z": 4.2
+        }
+      ],
+      "fx": [],
+      "visual": "Bima gemetar berkeringat.",
+      "narasi": ""
+    },
+    {
+      "judul": "3 · Pak Hasan sok berani (LOW ANGLE)",
+      "loc": "posronda",
+      "seconds": 3.95,
+      "extras": "off",
+      "cast": "hasan:pat_belly@2.3,5.3",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.1,
+          "dur": 3.75,
+          "text": "Tenang! Ada Pak Hasan. Saya ini peronda PALING BERANI se-RT!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 2.3,
+          "y": 0.55,
+          "z": 2.4,
+          "f": 1250,
+          "horizon": 0.68
+        },
+        {
+          "t": 3.95,
+          "z": 2.7
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 1.6,
+          "dur": 2.2,
+          "text": "PALING BERANI",
+          "sx": 0.5,
+          "sy": 0.12,
+          "size": 0.09,
+          "rot": -6
+        }
+      ],
+      "visual": "Low angle: Pak Hasan menepuk perut, gagah.",
+      "narasi": ""
+    },
+    {
+      "judul": "4 · KRESEK! → Pak Hasan menjerit (snap zoom + guncang)",
+      "loc": "posronda",
+      "seconds": 1.3,
+      "extras": "off",
+      "cast": "hasan:jump{expr=shocked;mouth=shout}@2.3,5.3",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.1,
+          "dur": 1.1,
+          "text": "AAAAAA!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 2.3,
+          "y": 1.2,
+          "z": 2.4,
+          "f": 1250,
+          "horizon": 0.45
+        },
+        {
+          "t": 0.1,
+          "z": 2.9,
+          "f": 1500
+        },
+        {
+          "t": 1.3,
+          "z": 3.0
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.0,
+          "dur": 0.6,
+          "text": "KRESEK!",
+          "sx": 0.72,
+          "sy": 0.3,
+          "size": 0.1,
+          "rot": 8
+        },
+        {
+          "type": "text",
+          "t": 0.25,
+          "dur": 1.05,
+          "text": "AAAAA!",
+          "sx": 0.5,
+          "sy": 0.2,
+          "size": 0.15,
+          "rot": -6
+        },
+        {
+          "type": "shake",
+          "t": 0.1,
+          "dur": 1.0,
+          "amp": 0.06
+        }
+      ],
+      "visual": "Suara kresek, Pak Hasan melompat dan menjerit.",
+      "narasi": ""
+    },
+    {
+      "judul": "5 · Ternyata kucing (WIDE: bale + semak)",
+      "loc": "posronda",
+      "seconds": 1.55,
+      "extras": "off",
+      "cast": "bima:sit@duduk_bale, rara:deadpan{sit=1}@duduk_bale2, hasan:nervous{sweat=true}@2.3,5.3",
+      "dialog": [
+        {
+          "who": "rara",
+          "at": 0.05,
+          "dur": 1.45,
+          "text": "Pak... itu cuma kucing."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 3.0,
+          "y": 1.2,
+          "z": 1.5,
+          "f": 1150,
+          "horizon": 0.45
+        },
+        {
+          "t": 1.55,
+          "z": 1.7
+        }
+      ],
+      "fx": [
+        {
+          "type": "cat",
+          "t": 0,
+          "x": 3.75,
+          "z": 9.85,
+          "flip": true,
+          "food": true,
+          "color": "#e59a4c",
+          "stripe": "#b8692c"
+        }
+      ],
+      "visual": "Kucing putih muncul dari semak. Rara datar.",
+      "narasi": ""
+    },
+    {
+      "judul": "6 · Bima penasaran (CLOSE Bima menunjuk)",
+      "loc": "posronda",
+      "seconds": 1.1,
+      "extras": "off",
+      "cast": "bima:point{sit=1}@duduk_bale",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 0.05,
+          "dur": 0.75,
+          "text": "Kucingnya bawa apa tuh?"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -1.0,
+          "y": 1.0,
+          "z": 3.9,
+          "f": 1400,
+          "horizon": 0.42
+        }
+      ],
+      "fx": [],
+      "visual": "Bima menunjuk ke arah kucing.",
+      "narasi": ""
+    },
+    {
+      "judul": "7 · INSERT: kucing menggigit gorengan (CLOSE-UP)",
+      "loc": "posronda",
+      "seconds": 1.0,
+      "extras": "off",
+      "cast": "rara:sit@duduk_bale2",
+      "dialog": [
+        {
+          "who": "rara",
+          "at": 0.05,
+          "dur": 0.85,
+          "text": "Kayak... gorengan."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 3.55,
+          "y": 0.45,
+          "z": 8.1,
+          "f": 1500,
+          "horizon": 0.5
+        },
+        {
+          "t": 1,
+          "z": 8.2
+        }
+      ],
+      "fx": [
+        {
+          "type": "cat",
+          "t": 0,
+          "x": 3.75,
+          "z": 9.85,
+          "flip": true,
+          "food": true,
+          "color": "#e59a4c",
+          "stripe": "#b8692c"
+        }
+      ],
+      "visual": "Close-up kucing dengan gorengan di mulut (suara Rara di luar layar).",
+      "narasi": ""
+    },
+    {
+      "judul": "8 · Pelan-pelan sadar (slow push ke Pak Hasan)",
+      "loc": "posronda",
+      "seconds": 4.5,
+      "extras": "off",
+      "cast": "bima:sit{lookX=1}@duduk_bale, rara:sit{lookX=1;expr=smug}@duduk_bale2, hasan:nervous{sweat=true}@2.3,5.3",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 0.1,
+          "dur": 4.3,
+          "text": "Gorengan... yang disembunyiin... di semak..."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.6,
+          "y": 1.2,
+          "z": 1.2,
+          "f": 1150,
+          "horizon": 0.45
+        },
+        {
+          "t": 4.5,
+          "x": 2.1,
+          "z": 2.6,
+          "f": 1350
+        }
+      ],
+      "fx": [
+        {
+          "type": "cat",
+          "t": 0,
+          "x": 3.75,
+          "z": 9.85,
+          "flip": true,
+          "food": true,
+          "color": "#e59a4c",
+          "stripe": "#b8692c"
+        }
+      ],
+      "visual": "Bima & Rara pelan-pelan melirik Pak Hasan; kamera mendorong ke Pak Hasan yang berkeringat.",
+      "narasi": ""
+    },
+    {
+      "judul": "9 · Bu Atin datang marah (snap zoom + guncang)",
+      "loc": "posronda",
+      "seconds": 3.15,
+      "extras": "off",
+      "cast": "atin:run_angry@3.6,2.2>2.9,4.3+angry_shake/2.4, hasan:nervous{sweat=true}@2.3,5.3",
+      "dialog": [
+        {
+          "who": "atin",
+          "at": 0.05,
+          "dur": 2.95,
+          "text": "PAK HASAN! Katanya lagi DIET!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 2.6,
+          "y": 1.25,
+          "z": 0.6,
+          "f": 1200,
+          "horizon": 0.45
+        },
+        {
+          "t": 0.65,
+          "x": 2.8,
+          "z": 1.4,
+          "f": 1400
+        },
+        {
+          "t": 3.15,
+          "z": 1.6
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 1.2,
+          "dur": 1.8,
+          "text": "DIET?!",
+          "sx": 0.5,
+          "sy": 0.2,
+          "size": 0.14,
+          "rot": -6
+        },
+        {
+          "type": "shake",
+          "t": 0.7,
+          "dur": 0.8,
+          "amp": 0.05
+        }
+      ],
+      "visual": "Bu Atin datang tergopoh-gopoh dan meledak.",
+      "narasi": ""
+    },
+    {
+      "judul": "10 · Alasan Pak Hasan (CLOSE-UP)",
+      "loc": "posronda",
+      "seconds": 1.6,
+      "extras": "off",
+      "cast": "hasan:sheepish@2.3,5.3",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.1,
+          "dur": 1.45,
+          "text": "Itu... punya kucingnya, Bu."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 2.3,
+          "y": 1.4,
+          "z": 3.3,
+          "f": 1450,
+          "horizon": 0.42
+        },
+        {
+          "t": 1.6,
+          "z": 3.45
+        }
+      ],
+      "fx": [],
+      "visual": "Pak Hasan nyengir gugup.",
+      "narasi": ""
+    },
+    {
+      "judul": "11 · Punchline Bu Atin (CLOSE-UP datar)",
+      "loc": "posronda",
+      "seconds": 2.1,
+      "extras": "off",
+      "cast": "atin:deadpan@2.9,4.3",
+      "dialog": [
+        {
+          "who": "atin",
+          "at": 0.05,
+          "dur": 1.95,
+          "text": "Kucingnya juga ngutang di warung saya?"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 2.9,
+          "y": 1.45,
+          "z": 2.4,
+          "f": 1450,
+          "horizon": 0.42
+        },
+        {
+          "t": 2.1,
+          "z": 2.55
+        }
+      ],
+      "fx": [],
+      "visual": "Bu Atin menatap datar.",
+      "narasi": ""
+    },
+    {
+      "judul": "12 · Ngakak (WIDE)",
+      "loc": "posronda",
+      "seconds": 3.65,
+      "extras": "off",
+      "cast": "bima:laugh_hard{sit=1}@duduk_bale, rara:laugh_hard{sit=1}@duduk_bale2, hasan:sheepish@2.3,5.3, atin:deadpan@1.5,4.6",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 0.05,
+          "dur": 2.1,
+          "text": "(tertawa)"
+        },
+        {
+          "who": "rara",
+          "at": 2.25,
+          "dur": 1.15,
+          "text": "(tertawa)"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.55,
+          "y": 1.05,
+          "z": -0.3,
+          "f": 1080,
+          "horizon": 0.62
+        },
+        {
+          "t": 3.65,
+          "z": 0.1
+        }
+      ],
+      "fx": [
+        {
+          "type": "cat",
+          "t": 0,
+          "x": 3.75,
+          "z": 9.85,
+          "flip": true,
+          "food": true,
+          "color": "#e59a4c",
+          "stripe": "#b8692c"
+        }
+      ],
+      "visual": "Bima & Rara ngakak di bale, Pak Hasan pasrah, Bu Atin datar, kucing santai makan gorengan.",
+      "narasi": ""
+    }
+  ]
+}
