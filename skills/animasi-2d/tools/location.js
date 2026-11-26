@@ -73,6 +73,31 @@ const crash = cast.flatMap((m) => checkTimeline(LOC, m.who, m.tl));
 for (const c of crash) console.error(`PERINGATAN TEMBUS: ${c}`);
 // --dialog '[{"who":"hasan","at":1.2,"text":"Bu, kopi satu!"}]' -> LIP SYNC: mulut mengikuti huruf (bukan satu bentuk)
 const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d, { est: lineDuration(d.text) }));
+// --positions '{"bima":[-0.4,6.8],"hasan":[2.3,5.3]}' -> posisi tokoh di luar layar (untuk arah pandang saat close-up)
+const positions = o.positions ? JSON.parse(o.positions) : {};
+// ARAH PANDANG OTOMATIS: pendengar menatap pembicara, pembicara menatap lawan bicara (mata + kepala, dihaluskan),
+// anak mendongak ke orang dewasa & sebaliknya; tanpa dialog -> lirikan kecil alami. Override: {look=0} mematikan.
+function gazeTarget(who, t) {
+  const cur = dialog.find((d) => t >= d.at && t < d.at + d.dur + 0.2);
+  if (!cur) return null;
+  if (cur.who !== who) return cur.who;
+  if (cur.to) return cur.to;
+  const others = dialog.filter((d) => d.who !== who);
+  const prev = others.filter((d) => d.at <= cur.at).pop() || others.find((d) => d.at > cur.at);
+  return prev ? prev.who : null;
+}
+function gazeAt(m, t, self) {
+  const tg = gazeTarget(m.who, t);
+  if (!tg) return { lx: 0.22 * Math.sin(t * 0.7 + m.who.length) + 0.12 * Math.sin(t * 2.3), ly: 0.1 * Math.sin(t * 0.5), hx: 0 };
+  const other = cast.find((c) => c.who === tg);
+  let tx, tz, tsc = 1;
+  if (other) { const st = other.tl.at(t); tx = st.x; tz = st.z; tsc = (other.rig.CANVAS && other.rig.CANVAS.scale) || 1; }
+  else if (positions[tg]) { [tx, tz] = positions[tg]; tsc = /hasan|atin/.test(tg) ? 1.25 : 1; }
+  else return { lx: 0, ly: 0, hx: 0 };
+  const dx = tx - self.x, dz = tz - self.z, sc = (m.rig.CANVAS && m.rig.CANVAS.scale) || 1;
+  const lx = Math.max(-1, Math.min(1, (dx / Math.max(0.6, Math.abs(dx) + Math.abs(dz) * 0.5)) * 1.5));
+  return { lx, ly: Math.max(-0.6, Math.min(0.6, (sc - tsc) * 2)), hx: lx };
+}
 // --camkeys '[{"t":0,"x":0,"z":-1,"f":1300},{"t":3,"f":1800,"track":"hasan","dx":0.3}]' -> kamera sinematik:
 //   pan/tilt (x/y/horizon), zoom in/out (f), dolly (z), tracking (track=nama tokoh, dx/dz offset). Antar key: ease in-out.
 const camkeys = o.camkeys ? JSON.parse(o.camkeys) : null;
@@ -167,6 +192,16 @@ function frame(t) {
   for (const m of [...extras, ...cast]) {
     const tt = m.extra ? (te + m.phase) % m.tl.total : t;
     const { pose, x, z, y } = m.extra ? m.tl.at(tt) : states[cast.indexOf(m)];
+    // ARAH PANDANG (rata-rata 3 sampel waktu -> perpindahan lirikan halus)
+    if (!m.extra && pose.look !== 0 && pose.view !== "back") {
+      const self = { x, z }, g = [0, 0.1, 0.2].map((d) => gazeAt(m, Math.max(0, t - d), self));
+      let lx = (g[0].lx + g[1].lx + g[2].lx) / 3, ly = (g[0].ly + g[1].ly + g[2].ly) / 3;
+      if (pose.flip) lx = -lx; // tampak serong/samping dicerminkan
+      const side = pose.view === "side";
+      pose.lookX = side ? (pose.lookX || 0) : lx;
+      pose.lookY = (pose.lookY || 0) * 0.3 + ly;
+      if (!side) { pose.headX = (pose.headX || 0) + 3.2 * lx; pose.headTilt = (pose.headTilt || 0) + 2.5 * lx; }
+    }
     // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
     if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {
       const mo = mouthAt(d.text, (t - d.at) * (d.est / d.dur)); // diregangkan agar pas dengan durasi audio asli

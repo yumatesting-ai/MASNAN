@@ -353,3 +353,11 @@ Titik duduk (`seat`) diletakkan di TENGAH kedalaman permukaan duduk (bukan di de
 bangku/bale tergambar menutupi pangkal paha dan kaki menjuntai di depannya. Untuk tempat duduk lebih tinggi dari
 panjang kaki (bale ±0,55 m), `tools/location.js` otomatis mengangkat seluruh tokoh & kaki menjuntai.
 Rute jalan menuju titik duduk: lewat titik di depan tempat duduk dulu (mis. `jalan>-1.3,6.2>duduk_bale`).
+
+## Arah pandang otomatis (saling tatap)
+
+`tools/location.js` mengatur mata & kepala dari dialog: pendengar menatap pembicara, pembicara menatap lawan
+bicara (baris sebelumnya / berikutnya dari tokoh lain, atau `dialog[].to`), anak mendongak ke orang dewasa dan
+sebaliknya, lirikan dihaluskan. Close-up satu tokoh: beri `"positions": {"bima":[x,z], ...}` di episode agar tokoh
+melirik ke arah lawan bicara di luar layar. Tanpa dialog: lirikan kecil alami. Matikan per fase dengan `{look=0}`.
+Jangan pakai `lookX` statis di cast untuk adegan ngobrol.

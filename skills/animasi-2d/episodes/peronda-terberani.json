@@ -8,7 +8,7 @@
       "loc": "posronda",
       "seconds": 2.85,
       "extras": "off",
-      "cast": "bima:sit{expr=confused;lookX=1}@duduk_dekat, rara:sit{expr=nervous;lookX=1;sweat=true}@duduk_dekat2, hasan:idle@2.3,5.3",
+      "cast": "bima:sit{expr=confused}@duduk_dekat, rara:sit{expr=nervous;sweat=true}@duduk_dekat2, hasan:idle@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
@@ -326,7 +326,7 @@
       "loc": "posronda",
       "seconds": 4.5,
       "extras": "off",
-      "cast": "bima:sit{lookX=1;expr=smug}@duduk_dekat, rara:sit{lookX=1;expr=smug}@duduk_dekat2, hasan:nervous{sweat=true;expr=shocked}@2.3,5.3",
+      "cast": "bima:sit{expr=smug}@duduk_dekat, rara:sit{expr=smug}@duduk_dekat2, hasan:nervous{sweat=true;expr=shocked}@2.3,5.3",
       "dialog": [
         {
           "who": "bima",
@@ -548,5 +548,23 @@
       "narasi": ""
     }
   ],
-  "time": "night"
+  "time": "night",
+  "positions": {
+    "bima": [
+      -0.42,
+      6.8
+    ],
+    "rara": [
+      0.42,
+      6.8
+    ],
+    "hasan": [
+      2.3,
+      5.3
+    ],
+    "atin": [
+      2.9,
+      4.3
+    ]
+  }
 }

@@ -190,7 +190,7 @@ function createRig(design) {
     const C = PALETTE;
     const { cx, cy, rx, ry, inner } = e;
     const s = Math.sign(inner) || 1; // arah sisi dalam
-    const px = cx + inner + 3 * p.lookX, py = cy + 1 + 3 * p.lookY;
+    const px = cx + inner + 4.6 * p.lookX, py = cy + 1 + 3.4 * p.lookY; // jangkauan lirikan lebih lebar (saling tatap jelas)
     const type = p.blink >= 0.6 && !["happy", "cry", "dizzy", "closed"].includes(p.eyes) ? "closed" : p.eyes;
     const sy = type === p.eyes ? 1 - Math.min(p.blink, 0.6) : 1;
     const wrap = (inner) => `<g transform="translate(${cx} ${cy}) scale(1 ${sy}) translate(${-cx} ${-cy})">${inner}</g>`;
