@@ -5,6 +5,13 @@ description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) mili
 
 # Animasi 2D — Karakter Rig Chibi
 
+> **ATURAN KERJA (permintaan kreator): JANGAN langsung render video.**
+> Urutan wajib untuk setiap konten/video baru:
+> 1. Kirim naskah (alur, dialog, shot) + gambar pratinjau (`tools/episode.js --preview`) dulu.
+> 2. Tunggu persetujuan/revisi kreator.
+> 3. Baru render video setelah kreator bilang render/oke.
+> Tes cepat cukup gambar diam, bukan video.
+
 Semua karakter dibangun dari **satu mesin rig SVG** (`engine/chibi-rig.js`). Bagian badan (rambut belakang,
 kepala, ahoge, lengan, badan, kaki) adalah grup terpisah dengan pivot sendiri, digerakkan objek **pose**.
 Perbedaan antar karakter ada di **desain** (`characters/<nama>/design.js`): rambut, atasan, lengan,
