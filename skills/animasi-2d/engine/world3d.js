@@ -29,7 +29,9 @@ function createWorld(opt = {}) {
   const sky = opt.sky || "#eeeeee";
   // perspektif atmosfer: makin jauh makin pudar menuju abu-abu muda (fogColor)
   const fogStart = opt.fogStart ?? 5, fogRange = opt.fogRange ?? 40, fogMax = opt.fogMax ?? 0.82;
-  const fogColor = opt.fogColor || require("./theme.js").fogColor;
+  const NIGHT = !!opt.night;
+  // malam: kabut dipilih agar SETELAH filter malam menyatu dengan langit dekat cakrawala
+  const fogColor = opt.fogColor || (NIGHT ? "#7aa6c4" : require("./theme.js").fogColor);
   const NEAR = 0.3;
   const items = []; // { layer, z, svg }
 
@@ -291,22 +293,37 @@ function createWorld(opt = {}) {
   }
 
   function render(background = "") {
-    const order = { sky: 0, far: 1, ground: 2, shadow: 2.5, obj: 3, front: 4, ui: 5 };
+    const order = { sky: 0, far: 1, ground: 2, shadow: 2.5, obj: 3, front: 4, light: 4.5, ui: 5 };
     items.sort((a, b) => order[a.layer] - order[b.layer] || b.z - a.z);
     const shadows = items.filter((i) => i.layer === "shadow").map((i) => i.svg).join("");
     const before = items.filter((i) => order[i.layer] < 2.5).map((i) => i.svg).join("\n");
-    const after = items.filter((i) => order[i.layer] > 2.5).map((i) => i.svg).join("\n");
+    const after = items.filter((i) => order[i.layer] > 2.5 && order[i.layer] < 4.5).map((i) => i.svg).join("\n");
+    const lights = items.filter((i) => i.layer === "light").map((i) => i.svg).join("\n");
+    const ui = items.filter((i) => i.layer === "ui").map((i) => i.svg).join("\n");
+    const skyS = items.filter((i) => i.layer === "sky").map((i) => i.svg).join("\n");
+    const restS = items.filter((i) => order[i.layer] > 0 && order[i.layer] < 2.5).map((i) => i.svg).join("\n");
     // vinyet lembut di tepi (sinematik)
     const vignette = opt.vignette === false ? "" : `<defs><radialGradient id="vgn" cx="50%" cy="48%" r="75%">
         <stop offset="0.62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.2"/></radialGradient></defs>
       <rect width="${W}" height="${H}" fill="url(#vgn)" pointer-events="none"/>
-      ${require("./theme.js").COLOR && opt.grade !== false ? `<defs><radialGradient id="warmG" cx="8%" cy="2%" r="95%"><stop offset="0" stop-color="#fff1c9" stop-opacity="0.38"/><stop offset="0.55" stop-color="#ffe7b0" stop-opacity="0.1"/><stop offset="1" stop-color="#ffe0a0" stop-opacity="0"/></radialGradient></defs>
+      ${require("./theme.js").COLOR && opt.grade !== false && !NIGHT ? `<defs><radialGradient id="warmG" cx="8%" cy="2%" r="95%"><stop offset="0" stop-color="#fff1c9" stop-opacity="0.38"/><stop offset="0.55" stop-color="#ffe7b0" stop-opacity="0.1"/><stop offset="1" stop-color="#ffe0a0" stop-opacity="0"/></radialGradient></defs>
       <rect width="${W}" height="${H}" fill="url(#warmG)" style="mix-blend-mode:screen" pointer-events="none"/>` : ""}`;
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
-      ${background}${before}<g opacity="0.2">${shadows}</g>${after}${vignette}</svg>`;
+    // MALAM: semua kecuali langit diberi filter gelap kebiruan; lampu (layer "light") digambar SESUDAHNYA (tetap terang)
+    const nightF = NIGHT ? `<defs><filter id="nightF" color-interpolation-filters="sRGB"><feColorMatrix type="matrix"
+      values="0.42 0.04 0 0 0.02  0.03 0.46 0.04 0 0.03  0.05 0.08 0.62 0 0.08  0 0 0 1 0"/></filter></defs>` : "";
+    const body = `${restS}<g opacity="${NIGHT ? 0.35 : 0.2}">${shadows}</g>${after}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${nightF}
+      ${background}${skyS}${NIGHT ? `<g filter="url(#nightF)">${body}</g>` : body}${lights}${ui}${vignette}</svg>`;
   }
 
-  return { castPoints, castBlob, toGround, W, H, cam, f, hy, sky, proj, ppm, fog, fogK, lineCol, sw, poly, face, ground, line3, box, gable, prism, dome, hip, texture, arch, sprite, text, textSide, render, items,
+  // cahaya lampu (malam): pendar radial hangat, digambar di atas filter malam
+  function light(x, y, z, r = 2, o = {}) {
+    const [sx, sy] = proj([x, y, z]), R = ppm(z) * r, id = `lg${items.length}`, c = o.color || "#ffd98a", k = o.strength ?? 1;
+    items.push({ layer: "light", z, svg: `<defs><radialGradient id="${id}"><stop offset="0" stop-color="${c}" stop-opacity="${0.55 * k}"/><stop offset="0.35" stop-color="${c}" stop-opacity="${0.22 * k}"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${R.toFixed(1)}" fill="url(#${id})" style="mix-blend-mode:screen"/>
+      <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(ppm(z) * (o.core ?? 0.07)).toFixed(1)}" fill="${o.coreColor || "#fffbe8"}" opacity="${Math.min(1, k)}"/>` });
+  }
+  return { night: NIGHT, light, castPoints, castBlob, toGround, W, H, cam, f, hy, sky, proj, ppm, fog, fogK, lineCol, sw, poly, face, ground, line3, box, gable, prism, dome, hip, texture, arch, sprite, text, textSide, render, items,
     add: (layer, z, svg) => items.push({ layer, z, svg }) };
 }
 

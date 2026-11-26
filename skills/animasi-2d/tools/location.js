@@ -13,6 +13,7 @@
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
 // --camera '{"x":1,"z":2,"f":1600}' [--camera-to '{...}']  -> atur/gerakkan kamera (pan, zoom, push-in)
 // --t0 12        -> waktu lingkungan & figuran dimulai dari detik 12 (tokoh utama tetap dari 0)
+// --time night  -> MALAM: langit gelap, bulan & bintang, filter malam, lampu menyala, kunang-kunang
 // --extras off  -> tanpa figuran (karakter latar)
 // --extras-style shadow (default: siluet abu polos + sedikit buram) | blur (bentuk asli diburamkan) | detail
 
@@ -126,7 +127,7 @@ function frame(t) {
   }
   const sh = FX.shake(fxList, t);
   if (sh) camOpt.cam = { x: camOpt.cam.x + sh[0], y: camOpt.cam.y + sh[1], z: camOpt.cam.z };
-  const w = createWorld(Object.assign({ W, H }, camOpt));
+  const w = createWorld(Object.assign({ W, H, night: o.time === "night" }, camOpt));
   const te = t + (+o.t0 || 0); // --t0: geser waktu lingkungan & figuran (mis. agar gol terjadi di tengah adegan)
   w.t = te; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
   LOC.build(w, { t: te, extras: o.extras !== "off" });

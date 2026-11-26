@@ -48,7 +48,7 @@ function sky(w, o = {}) {
     const x = cx * W, y = cy * H, r = 38 * s;
     return `<path d="M${x - r * 2.2},${y + r * 0.6} C${x - r * 2.4},${y - r * 0.2} ${x - r * 1.4},${y - r * 0.6} ${x - r * 0.9},${y - r * 0.2}
         C${x - r * 0.6},${y - r * 1.1} ${x + r * 0.7},${y - r * 1.1} ${x + r * 0.9},${y - r * 0.2}
-        C${x + r * 1.6},${y - r * 0.5} ${x + r * 2.5},${y} ${x + r * 2.2},${y + r * 0.6} Z" fill="${PAL.cloud}" stroke="${SKYC.cloudLine}" stroke-width="2"/>`;
+        C${x + r * 1.6},${y - r * 0.5} ${x + r * 2.5},${y} ${x + r * 2.2},${y + r * 0.6} Z" fill="${w.night ? "#2b3f66" : PAL.cloud}" stroke="${w.night ? "#3b5280" : SKYC.cloudLine}" stroke-width="2" opacity="${w.night ? 0.8 : 1}"/>`;
   }).join("");
   // siluet pepohonan (kelapa, rimbun) & atap jauh di garis cakrawala
   let far = "", x = -20, seed = o.seed || 7;
@@ -67,10 +67,19 @@ function sky(w, o = {}) {
     for (let i = 0; i <= 24; i++) { const xx = (i / 24) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * (0.5 + 0.5 * Math.sin(i * 0.9 + ph)) * (0.6 + 0.4 * Math.sin(i * 0.37 + ph * 2))).toFixed(1)}`; }
     return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`;
   };
-  const hills = o.hills === false ? "" : hill(H * 0.06, H * 0.03, SKYC.hill1, 1.3) + hill(H * 0.04, H * 0.012, SKYC.hill2, 3.1);
+  const hills = o.hills === false || w.night ? "" : hill(H * 0.06, H * 0.03, SKYC.hill1, 1.3) + hill(H * 0.04, H * 0.012, SKYC.hill2, 3.1);
   // mode warna: matahari bercahaya di kiri atas (searah cahaya & bayangan), gunung biru jauh, burung terbang
   let extra = "";
-  if (THEME.COLOR) {
+  if (w.night) { // malam: bulan bercahaya, bintang berkelip, gunung siluet gelap
+    const T = w.t || 0, mx = W * 0.8, my = Math.max(H * 0.08, hy * 0.3);
+    let stars = ""; for (let i = 0; i < 70; i++) { const x = ((i * 397) % 1000) / 1000 * W, y = ((i * 613) % 1000) / 1000 * hy * 0.85, tw = 0.45 + 0.55 * Math.abs(Math.sin(T * 1.5 + i * 2.3));
+      stars += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(i % 5 === 0 ? 1.8 : 1.1)}" fill="#fffbe6" opacity="${tw.toFixed(2)}"/>`; }
+    const mount = (amp, base, col, ph, n = 9) => { let d = `M0,${hy}`; for (let i = 0; i <= n; i++) { const xx = (i / n) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * Math.abs(Math.sin(i * 1.3 + ph)) * (0.7 + 0.3 * Math.sin(i * 0.5 + ph))).toFixed(1)}`; } return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`; };
+    extra = `${stars}<defs><radialGradient id="moonG"><stop offset="0" stop-color="#fffbe6" stop-opacity="0.75"/><stop offset="0.3" stop-color="#cfe0ff" stop-opacity="0.25"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="${mx}" cy="${my}" r="${H * 0.13}" fill="url(#moonG)"/><circle cx="${mx}" cy="${my}" r="${H * 0.032}" fill="#fffbe6"/>
+      <circle cx="${mx - H * 0.009}" cy="${my - H * 0.006}" r="${H * 0.006}" fill="#e8e4d0"/><circle cx="${mx + H * 0.01}" cy="${my + H * 0.008}" r="${H * 0.004}" fill="#e8e4d0"/>
+      ${mount(H * 0.09, H * 0.04, "#2a3a5c", 0.4, 7)}${mount(H * 0.06, H * 0.02, "#33476b", 2.2, 11)}`;
+  } else if (THEME.COLOR) {
     const T = w.t || 0, sx = W * 0.14, sy = Math.max(H * 0.07, hy * 0.28);
     const mount = (amp, base, col, ph, n = 9) => { let d = `M0,${hy}`; for (let i = 0; i <= n; i++) { const xx = (i / n) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * Math.abs(Math.sin(i * 1.3 + ph)) * (0.7 + 0.3 * Math.sin(i * 0.5 + ph))).toFixed(1)}`; } return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`; };
     const birds = [0, 1, 2, 3].map((k) => { const bx = ((W * (0.3 + k * 0.17) + T * 22 * (1 + k * 0.15)) % (W * 1.2)) - W * 0.1, by = hy * (0.3 + 0.1 * Math.sin(k * 2.1)) + 6 * Math.sin(T * 1.3 + k), f = 5 + 3 * Math.sin(T * 9 + k * 1.7), s2 = 7 + k;
@@ -80,10 +89,11 @@ function sky(w, o = {}) {
       ${mount(H * 0.09, H * 0.04, "#b4cfe0", 0.4, 7)}${mount(H * 0.06, H * 0.02, "#a8c8d8", 2.2, 11)}${birds}`;
   }
   w.add("sky", 1e9, `<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${PAL.skyTop}"/>${THEME.COLOR ? `<stop offset="0.55" stop-color="#b3dbf4"/>` : ""}<stop offset="1" stop-color="${PAL.sky}"/></linearGradient></defs>
+      ${w.night ? `<stop offset="0" stop-color="#070f26"/><stop offset="0.6" stop-color="#16294f"/><stop offset="1" stop-color="#3a5a86"/>`
+        : `<stop offset="0" stop-color="${PAL.skyTop}"/>${THEME.COLOR ? `<stop offset="0.55" stop-color="#b3dbf4"/>` : ""}<stop offset="1" stop-color="${PAL.sky}"/>`}</linearGradient></defs>
     <rect width="${W}" height="${H}" fill="url(#skyg)"/>${extra}${clouds}${hills}
-    ${o.skyline === false ? "" : far}
-    <rect y="${hy}" width="${W}" height="${H - hy}" fill="${o.groundColor || PAL.dirt}"/>`);
+    ${o.skyline === false ? "" : w.night ? far.replace(/fill="#[0-9a-f]{6}"/g, 'fill="#22345a"').replace(/stroke="#[0-9a-f]{6}"/g, 'stroke="#22345a"') : far}
+    <rect y="${hy}" width="${W}" height="${H - hy}" fill="${w.night ? "#26375a" : o.groundColor || PAL.dirt}"/>`);
 }
 
 // bidang tanah sepanjang Z dipotong-potong agar kabut bertambah sesuai jarak
@@ -546,6 +556,7 @@ function bulbLamp(w, x, z, h = 3.2) {
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - h * p})" stroke="${lc}" stroke-width="${sw}">
     <path d="M${-0.25 * p},0 L${0.25 * p},0 L${0.18 * p},${0.12 * p} L${-0.18 * p},${0.12 * p} Z" fill="${fog("#6a6a6a")}"/>
     <circle cx="0" cy="${0.2 * p}" r="${0.08 * p}" fill="#ffffff"/></g>`, { bias: -0.1 });
+  if (w.night && w.light) w.light(x, h - 0.2, z, 3.2);
 }
 
 // ---------- gapura kampung (tembok bercat belang) ----------

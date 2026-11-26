@@ -339,3 +339,10 @@ Objek JAUH otomatis jadi siluet abu-abu buram (sama seperti figuran). Kendaraan 
 posisinya (`w.movers`) dan `--check` mengecek tiap 0,2 dtk: tidak boleh menabrak tokoh/figuran/benda.
 Aturan penempatan: benda diam yang bisa ditabrak WAJIB ditambahkan ke `obstacles` lokasi (sepeda = kotak 1,6 m); jangan taruh di rute
 figuran/tokoh (jalankan `--check`). Kendaraan lewat di jalan melintang/jauh (bergerak sumbu x) atau jalan depan.
+
+## Mode malam (`--time night` / `"time": "night"` di episode)
+
+Langit gelap bergradasi, bulan bercahaya, bintang berkelip; semua benda & tokoh diberi filter gelap kebiruan
+(tetap terbaca), lampu (`w.light(x, y, z, radius)`) digambar di atas filter sehingga tetap menyala hangat
+(bohlam pos ronda, lampu tiang `P.bulbLamp`). Kunang-kunang `LIFE.fireflies`. Kupu-kupu, layangan & burung
+otomatis tidak muncul. Lokasi baru: beri `w.light` pada setiap sumber cahaya bila `w.night`.

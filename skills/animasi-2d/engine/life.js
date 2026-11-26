@@ -111,6 +111,7 @@ function ducks(w, route, o = {}) {
 }
 
 function butterfly(w, x, z, o = {}) {
+  if (w.night) return; // tidak muncul di malam hari
   const T = (w.t || 0) + (o.phase || 0), r = o.r || 0.6;
   const px = x + r * Math.sin(T * 0.9) + 0.2 * Math.sin(T * 2.3), pz = z + r * 0.5 * Math.cos(T * 0.7), py = (o.y || 0.9) + 0.25 * Math.sin(T * 1.7);
   spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
@@ -123,6 +124,7 @@ function butterfly(w, x, z, o = {}) {
 }
 
 function kite(w, x, z, o = {}) {
+  if (w.night) return; // tidak muncul di malam hari
   const T = (w.t || 0) + (o.phase || 0), y = (o.y || 14) + 0.6 * Math.sin(T * 0.8), dx = 0.8 * Math.sin(T * 0.6);
   spr(w, x + dx, z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.03, rot = 10 * Math.sin(T * 1.1), c = col(o.color || "#e0453a"), c2 = col(o.color2 || "#f4d23c");
@@ -176,6 +178,7 @@ function leaves(w, x, z, o = {}) {
 }
 
 function perchBirds(w, x, z, o = {}) {
+  if (w.night) return; // tidak muncul di malam hari
   const T = w.t || 0, n = o.n || 3, len = o.len || 1.2, y = o.y || 3;
   for (let i = 0; i < n; i++) {
     const off = (i / Math.max(1, n - 1) - 0.5) * len, bx = o.axis === "z" ? x : x + off, bz = o.axis === "z" ? z + off : z, ph = hash(i + x), hop = Math.max(0, Math.sin(T * 1.3 + ph * 9)) > 0.97 ? 1 : 0;
@@ -265,4 +268,14 @@ function waterJar(w, x, z) { // gentong tanah liat
       <rect x="-22" y="-56" width="44" height="8" rx="3" fill="${fog(col("#9c5330"))}"/><path d="M-24,-30 Q0,-24 24,-30" fill="none" stroke="${fog(col("#8a4a2a"))}"/></g>`; }, { bias: -0.04 });
 }
 
-module.exports = { col, cat, ducks, butterfly, kite, flag, smoke, leaves, perchBirds, cyclist, cart, bike, bucket, trashBin, sack, firewood, waterJar };
+// kunang-kunang (malam): titik cahaya kuning-hijau melayang & berkedip
+function fireflies(w, x, z, o = {}) {
+  if (!w.night || !w.light) return;
+  const T = w.t || 0, n = o.n || 8, sp = o.spread || 3;
+  for (let i = 0; i < n; i++) {
+    const px = x + (hash(i + 1) - 0.5) * sp + 0.4 * Math.sin(T * 0.7 + i), pz = z + (hash(i + 5) - 0.5) * sp * 0.6 + 0.3 * Math.cos(T * 0.5 + i);
+    const py = 0.4 + hash(i + 9) * 1.2 + 0.2 * Math.sin(T * 1.1 + i * 2), on = Math.max(0, Math.sin(T * 2.2 + i * 1.9));
+    if (on > 0.15) w.light(px, py, pz, 0.22, { color: "#d8ff7a", strength: on * 0.8, core: 0.018, coreColor: "#f2ff9a" });
+  }
+}
+module.exports = { fireflies, col, cat, ducks, butterfly, kite, flag, smoke, leaves, perchBirds, cyclist, cart, bike, bucket, trashBin, sack, firewood, waterJar };

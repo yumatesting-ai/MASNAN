@@ -65,6 +65,7 @@ function sceneArgs(s, extra) {
   if (s.cast) a.push("--cast", s.cast);
   if (s.extras) a.push("--extras", s.extras);
   if (s.t0) a.push("--t0", String(s.t0));
+  if (s.time || ep.time) a.push("--time", s.time || ep.time);
   if (s.dialog) a.push("--dialog", JSON.stringify(s.dialog));
   if (s.camkeys) a.push("--camkeys", JSON.stringify(s.camkeys));
   if (s.fx) a.push("--fx", JSON.stringify(s.fx));

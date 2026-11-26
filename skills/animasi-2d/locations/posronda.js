@@ -62,6 +62,7 @@ module.exports = {
     // lampu bohlam di bawah atap
     w.sprite(0, (z0 + z1) / 2, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 2.6})" stroke="${lc}" stroke-width="${sw}">
         <path d="M0,0 L0,${p * 0.25}"/><circle cx="0" cy="${p * 0.33}" r="${p * 0.09}" fill="#ffffff"/></g>`, { bias: -2 });
+    if (w.night) { w.light(0, H - 0.4, (z0 + z1) / 2, 4.5, { strength: 1.4 }); w.light(0, 0.6, (z0 + z1) / 2, 3.2, { strength: 0.5, core: 0 }); w.light(-4.2, 6.6, 2.5, 3, { strength: 0.7 }); } // bohlam pos + lampu tiang
     // papan catur + kopi di atas bale
     w.box(-0.9, floorY, 7.6, 0.5, 0.04, 0.5, "#e8e8e8");
     for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) w.ground([[-0.9 + i * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125], [-0.9 + i * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125]], "#5a5a5a", { stroke: false, layer: "obj", bias: -0.3 });
@@ -85,6 +86,7 @@ module.exports = {
     LIFE.flag(w, 2.75, 6.3, { h: 3.6 });
     LIFE.smoke(w, 8.5, 10, { y: 3.4 });
     LIFE.butterfly(w, 3.2, 10, { y: 0.9 });
+    LIFE.fireflies(w, 4.2, 11.2, { n: 10, spread: 3 }); LIFE.fireflies(w, -4.8, 12.5, { n: 7 });
     LIFE.kite(w, -5, 40, { y: 17 });
     LIFE.bike(w, -3.6, 5.6, { flip: true }); LIFE.bucket(w, -3.0, 9.4); LIFE.firewood(w, 4.3, 6.6);
   },
