@@ -27,7 +27,9 @@ function createWorld(opt = {}) {
   const f = opt.f || 1300;
   const hy = H * (opt.horizon ?? 0.42);
   const sky = opt.sky || "#eeeeee";
-  const fogStart = opt.fogStart ?? 10, fogRange = opt.fogRange ?? 90, fogMax = opt.fogMax ?? 0.6;
+  // perspektif atmosfer: makin jauh makin pudar menuju abu-abu muda (fogColor)
+  const fogStart = opt.fogStart ?? 5, fogRange = opt.fogRange ?? 40, fogMax = opt.fogMax ?? 0.82;
+  const fogColor = opt.fogColor || "#dedede";
   const NEAR = 0.3;
   const items = []; // { layer, z, svg }
 
@@ -37,8 +39,8 @@ function createWorld(opt = {}) {
   };
   const depth = (z) => Math.max(NEAR, z - cam.z);
   const fogK = (z) => clamp((depth(z) - fogStart) / fogRange, 0, fogMax);
-  const fog = (color, z) => mix(color, sky, fogK(z));
-  const lineCol = (z) => mix(LINE, sky, fogK(z) * 0.85);
+  const fog = (color, z) => mix(color, fogColor, fogK(z));
+  const lineCol = (z) => mix(LINE, fogColor, fogK(z) * 0.9);
   const sw = (z, base = 1) => +(clamp(14 / depth(z), 0.6, 2.6) * base).toFixed(2);
   const ppm = (z) => f / depth(z); // piksel per meter pada kedalaman z
   const P = (pts) => pts.map(proj).map(([a, b]) => `${a.toFixed(1)},${b.toFixed(1)}`).join(" ");

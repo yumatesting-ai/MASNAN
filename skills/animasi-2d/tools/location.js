@@ -81,7 +81,7 @@ function frame(t) {
     const id = `chfog${Math.round(b * 100)}`;
     if (!fogIds.has(id)) {
       fogIds.add(id);
-      const sl = (1 - b).toFixed(3), ic = (b * 0.93).toFixed(3);
+      const sl = (1 - b).toFixed(3), ic = (b * 0.87).toFixed(3);
       w.add("sky", 2e9, `<defs><filter id="${id}" color-interpolation-filters="sRGB"><feComponentTransfer>
         <feFuncR type="linear" slope="${sl}" intercept="${ic}"/><feFuncG type="linear" slope="${sl}" intercept="${ic}"/>
         <feFuncB type="linear" slope="${sl}" intercept="${ic}"/></feComponentTransfer></filter></defs>`);
@@ -111,7 +111,7 @@ function frame(t) {
     w.sprite(x, z, (sx, sy, p) => {
       const s = p / KID_UNITS_PER_M;
       const inner = `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(pose.view, pose)}</g>`;
-      return `<g ${m.extra ? exFilter(z) : fogFilter(w.fogK(z) * 0.95)}>${inner}</g>`;
+      return `<g ${m.extra ? exFilter(z) : fogFilter(w.fogK(z) * 0.35)}>${inner}</g>`; // tokoh utama hanya sedikit berkabut
     }, { bias: m.extra ? -0.04 : -0.05, y });
   }
   return w.render();

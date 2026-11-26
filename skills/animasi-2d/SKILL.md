@@ -93,7 +93,9 @@ locations/<id>.js     lokasi: kampung, warung, lapangan, masjid, posronda
 
 ## Lingkungan kampung 2.5D (`locations/`)
 Dunia 3D sederhana (satuan meter) diproyeksikan dengan perspektif kamera ke SVG bergaya seri: bidang diarsir
-cel sesuai arah cahaya, kabut atmosfer di kejauhan, garis menipis menjauh. Karakter dimasukkan sebagai sprite
+cel sesuai arah cahaya, garis menipis menjauh, dan **perspektif atmosfer**: mulai ±5 m objek (pohon, rumah, tanah,
+figuran) memudar ke abu muda `fogColor` (#dedede), ±50% di 25 m, hampir menyatu di ±40 m (`fogStart/fogRange/fogMax`
+di kamera lokasi). Tokoh utama hanya terkena 35% kabut agar tetap jelas. Karakter dimasukkan sebagai sprite
 pada posisi 3D — ukurannya otomatis sesuai jarak dan urutan depan-belakang benar.
 
 | id | Lokasi | Titik berdiri (spots) |
