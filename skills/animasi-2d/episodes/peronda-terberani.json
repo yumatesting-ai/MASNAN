@@ -8,7 +8,7 @@
       "loc": "posronda",
       "seconds": 2.85,
       "extras": "off",
-      "cast": "bima:sit@duduk_bale, rara:sit{expr=nervous;lookX=1}@duduk_bale2, hasan:idle@2.3,5.3",
+      "cast": "bima:sit{expr=confused;lookX=1}@duduk_bale, rara:sit{expr=nervous;lookX=1;sweat=true}@duduk_bale2, hasan:idle@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
@@ -40,7 +40,7 @@
       "loc": "posronda",
       "seconds": 3.15,
       "extras": "off",
-      "cast": "bima:sit{expr=nervous;sweat=true}@duduk_bale",
+      "cast": "bima:nervous{sit=1;expr=shocked;sweat=true;tears=drop}@duduk_bale",
       "dialog": [
         {
           "who": "bima",
@@ -72,7 +72,7 @@
       "loc": "posronda",
       "seconds": 3.95,
       "extras": "off",
-      "cast": "hasan:pat_belly@2.3,5.3",
+      "cast": "hasan:pat_belly{expr=smug}@2.3,5.3",
       "dialog": [
         {
           "who": "hasan",
@@ -115,7 +115,7 @@
       "loc": "posronda",
       "seconds": 1.3,
       "extras": "off",
-      "cast": "hasan:jump{expr=shocked;mouth=shout}@2.3,5.3",
+      "cast": "hasan:jump{expr=surprised;eyes=wide;mouth=shout;sweat=true}@2.3,5.3",
       "dialog": [
         {
           "who": "hasan",
@@ -127,23 +127,33 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 2.3,
-          "y": 1.2,
+          "x": 2.65,
+          "y": 1.0,
           "z": 2.4,
-          "f": 1250,
-          "horizon": 0.45
+          "f": 1200,
+          "horizon": 0.5
         },
         {
           "t": 0.1,
-          "z": 2.9,
-          "f": 1500
+          "z": 2.8,
+          "f": 1300
         },
         {
           "t": 1.3,
-          "z": 3.0
+          "z": 2.9
         }
       ],
       "fx": [
+        {
+          "type": "cat",
+          "t": 0.0,
+          "x": 2.95,
+          "z": 4.95,
+          "flip": true,
+          "food": true,
+          "color": "#e59a4c",
+          "stripe": "#b8692c"
+        },
         {
           "type": "text",
           "t": 0.0,
@@ -171,7 +181,7 @@
           "amp": 0.06
         }
       ],
-      "visual": "Suara kresek, Pak Hasan melompat dan menjerit.",
+      "visual": "KRESEK! Kucing melompat keluar tepat di kaki Pak Hasan; Pak Hasan melompat & menjerit.",
       "narasi": ""
     },
     {
@@ -179,7 +189,7 @@
       "loc": "posronda",
       "seconds": 1.55,
       "extras": "off",
-      "cast": "bima:sit@duduk_bale, rara:deadpan{sit=1}@duduk_bale2, hasan:nervous{sweat=true}@2.3,5.3",
+      "cast": "bima:sit{expr=smile}@duduk_bale, rara:deadpan{sit=1}@duduk_bale2, hasan:idle{expr=shy;sweat=true}@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
@@ -191,23 +201,23 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 3.0,
-          "y": 1.2,
-          "z": 1.5,
+          "x": 2.0,
+          "y": 1.15,
+          "z": 1.6,
           "f": 1150,
-          "horizon": 0.45
+          "horizon": 0.47
         },
         {
           "t": 1.55,
-          "z": 1.7
+          "z": 1.8
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 3.75,
-          "z": 9.85,
+          "x": 2.95,
+          "z": 4.95,
           "flip": true,
           "food": true,
           "color": "#e59a4c",
@@ -222,7 +232,7 @@
       "loc": "posronda",
       "seconds": 1.1,
       "extras": "off",
-      "cast": "bima:point{sit=1}@duduk_bale",
+      "cast": "bima:point{sit=1;expr=confused}@duduk_bale",
       "dialog": [
         {
           "who": "bima",
@@ -262,30 +272,30 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 3.55,
-          "y": 0.45,
-          "z": 8.1,
+          "x": 2.75,
+          "y": 0.4,
+          "z": 3.6,
           "f": 1500,
           "horizon": 0.5
         },
         {
           "t": 1,
-          "z": 8.2
+          "z": 3.7
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 3.75,
-          "z": 9.85,
+          "x": 2.95,
+          "z": 4.95,
           "flip": true,
           "food": true,
           "color": "#e59a4c",
           "stripe": "#b8692c"
         }
       ],
-      "visual": "Close-up kucing dengan gorengan di mulut (suara Rara di luar layar).",
+      "visual": "Close-up kucing di kaki Pak Hasan, menggigit gorengan.",
       "narasi": ""
     },
     {
@@ -293,7 +303,7 @@
       "loc": "posronda",
       "seconds": 4.5,
       "extras": "off",
-      "cast": "bima:sit{lookX=1}@duduk_bale, rara:sit{lookX=1;expr=smug}@duduk_bale2, hasan:nervous{sweat=true}@2.3,5.3",
+      "cast": "bima:sit{lookX=1;expr=smug}@duduk_bale, rara:sit{lookX=1;expr=smug}@duduk_bale2, hasan:nervous{sweat=true;expr=shocked}@2.3,5.3",
       "dialog": [
         {
           "who": "bima",
@@ -322,8 +332,8 @@
         {
           "type": "cat",
           "t": 0,
-          "x": 3.75,
-          "z": 9.85,
+          "x": 2.95,
+          "z": 4.95,
           "flip": true,
           "food": true,
           "color": "#e59a4c",
@@ -338,7 +348,7 @@
       "loc": "posronda",
       "seconds": 3.15,
       "extras": "off",
-      "cast": "atin:run_angry@3.6,2.2>2.9,4.3+angry_shake/2.4, hasan:nervous{sweat=true}@2.3,5.3",
+      "cast": "atin:run_angry@3.6,2.2>2.9,4.3+angry_shake/2.4, hasan:idle{expr=shocked;sweat=true;gloom=true}@2.3,5.3",
       "dialog": [
         {
           "who": "atin",
@@ -393,7 +403,7 @@
       "loc": "posronda",
       "seconds": 1.6,
       "extras": "off",
-      "cast": "hasan:sheepish@2.3,5.3",
+      "cast": "hasan:sheepish{eyes=normal;sweat=true;blush=1}@2.3,5.3",
       "dialog": [
         {
           "who": "hasan",
@@ -425,7 +435,7 @@
       "loc": "posronda",
       "seconds": 2.1,
       "extras": "off",
-      "cast": "atin:deadpan@2.9,4.3",
+      "cast": "atin:deadpan{anger=true}@2.9,4.3",
       "dialog": [
         {
           "who": "atin",
@@ -457,7 +467,7 @@
       "loc": "posronda",
       "seconds": 3.65,
       "extras": "off",
-      "cast": "bima:laugh_hard{sit=1}@duduk_bale, rara:laugh_hard{sit=1}@duduk_bale2, hasan:sheepish@2.3,5.3, atin:deadpan@1.5,4.6",
+      "cast": "bima:laugh_hard{sit=1}@duduk_bale, rara:laugh_hard{sit=1}@duduk_bale2, hasan:idle{expr=deadpan;gloom=true;sweat=true}@2.3,5.3, atin:deadpan{anger=true}@1.5,4.6",
       "dialog": [
         {
           "who": "bima",
@@ -475,23 +485,23 @@
       "camkeys": [
         {
           "t": 0,
-          "x": 0.55,
+          "x": 0.75,
           "y": 1.05,
-          "z": -0.3,
-          "f": 1080,
-          "horizon": 0.62
+          "z": 0.5,
+          "f": 950,
+          "horizon": 0.5
         },
         {
           "t": 3.65,
-          "z": 0.1
+          "z": 0.8
         }
       ],
       "fx": [
         {
           "type": "cat",
           "t": 0,
-          "x": 3.75,
-          "z": 9.85,
+          "x": 2.95,
+          "z": 4.95,
           "flip": true,
           "food": true,
           "color": "#e59a4c",
