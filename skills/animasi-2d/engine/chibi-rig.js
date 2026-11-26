@@ -179,7 +179,7 @@ function createRig(design) {
     const rect = (id, y0, y1) => `<clipPath id="${ID}-${id}"><rect x="-200" y="${y0}" width="700" height="${y1 - y0}"/></clipPath>`;
     return `<defs>${Object.entries(SHAPE).map(([k, d]) => clip(k, d)).join("")}
       ${rect("armU", -200, 273)}${rect("armD", 271, 600)}${rect("armUL", -200, 269)}${rect("armDL", 267, 600)}
-      ${rect("hipU", -200, 283)}${rect("hipD", 281, 600)}${rect("kneeU", -200, 327)}${rect("kneeD", 324, 600)}</defs>`;
+      ${rect("armLow", 226, 600)}${rect("hipU", -200, 283)}${rect("hipD", 281, 600)}${rect("kneeU", -200, 327)}${rect("kneeD", 324, 600)}</defs>`;
   }
 
   // ================= WAJAH =================
@@ -610,9 +610,26 @@ function createRig(design) {
         const full = `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
            ${shade("armFull", C.skinShade, "M108,226 L122,226 L122,310 L109,310 C111,290 110,256 108,226 Z")}
            ${outline(SHAPE.armFull)}`;
-        shape = part === "arm"
-          ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="${EL[0]}" cy="${EL[1]}" r="9"/><g clip-path="url(#${ID}-${cU})">${full}</g>`
-          : `<g transform="${forearmT}"><g clip-path="url(#${ID}-${cD})">${full}</g>${prop(deg - elbow)}</g>`;
+        // Lengan TANPA lengan baju:
+        //  - lurus / sedikit menekuk: SELURUH lengan (atas + bawah) di belakang badan -> tidak ada potongan
+        //  - menekuk / melintang / memegang barang: lengan digambar SATU bentuk utuh (bahu -> siku membulat ->
+        //    lengan bawah -> tangan) di depan badan, garis tepi menyambung tanpa takik.
+        const cross = Math.abs(elbow) > 25 || deg < -8 || !!holdK;
+        const skinC = far ? C.skinFar : C.skin;
+        if (!cross) {
+          shape = part === "arm"
+            ? `<circle fill="${skinC}" ${LINE} cx="${EL[0]}" cy="${EL[1]}" r="9"/><g clip-path="url(#${ID}-${cU})">${full}</g>
+               <g transform="${forearmT}"><g clip-path="url(#${ID}-${cD})">${full}</g>${prop(deg - elbow)}</g>`
+            : "";
+        } else if (part === "arm") shape = "";
+        else {
+          const bent = bentArmPath(elbow);
+          shape = `<path fill="${skinC}" d="${bent}"/>
+             <path fill="${C.skinShade}" opacity="0.55" clip-path="url(#${ID}-bent${side})" d="${bentArmPath(elbow, 7)}"/>
+             <defs><clipPath id="${ID}-bent${side}"><path d="${bent}"/></clipPath></defs>
+             <path fill="none" ${LINE} d="${bent}"/>
+             <g transform="${forearmT}">${prop(deg - elbow)}</g>`;
+        }
       } else if (part === "arm") {
         shape = LONG
           ? ""
@@ -644,8 +661,19 @@ function createRig(design) {
       if (!LONG && !NOSLEEVE) {
         // lengan pendek: kulit lengan atas di belakang badan; lengan baju + lengan bawah (siku) di depan badan
         const armT = `rotate(${rs} ${SHOULDER}) rotate(${deg - rs} ${ARM_ROOT})`;
+        // menekuk / melintang / memegang barang: lengan kulit digambar SATU bentuk utuh di depan badan (pangkalnya
+        // tertutup lengan baju) -> tidak ada lengan bawah yang "melayang" terpisah di depan perut.
+        const crossS = true; // selalu satu bentuk utuh: tepi lengan atas const crossS = Math.abs(elbow) > 6 || deg < -4 || !!holdK; bawah tidak pernah bergeser (tanpa "tangga" di siku)
+        const skinC = far ? C.skinFar : C.skin;
+        const bent = crossS ? bentArmPath(elbow) : "";
         inner = part === "arm"
-          ? `<g transform="${armT}">${shape}</g>`
+          ? (crossS ? "" : `<g transform="${armT}">${shape}</g>`)
+          : crossS
+          ? `<g transform="${armT}"><g clip-path="url(#${ID}-armLow)">
+               <defs><clipPath id="${ID}-bentS${side}"><path d="${bent}"/></clipPath></defs>
+               <path fill="${skinC}" d="${bent}"/><path fill="${C.skinShade}" opacity="0.55" clip-path="url(#${ID}-bentS${side})" d="${bentArmPath(elbow, 7)}"/>
+               <path fill="none" ${LINE} d="${bent}"/></g><g transform="${forearmT}">${prop(deg - elbow)}</g></g>
+             <g transform="rotate(${rs} ${SHOULDER})">${shape}</g>`
           : `<g transform="${armT} ${forearmT}"><g clip-path="url(#${ID}-${cD})">${skinArm(far)}</g>${prop(deg - elbow)}</g>
              <g transform="rotate(${rs} ${SHOULDER})">${shape}</g>`;
       } else {
@@ -654,6 +682,32 @@ function createRig(design) {
       return `<g id="${id}" transform="${mirror} ${shift}">${inner}</g>`;
     };
 
+    // garis luar lengan tertekuk sebagai satu bentuk (koordinat lokal lengan; siku di (106,272), lengan bawah
+    // berputar -elbow derajat). inset > 0 -> bentuk lebih sempit di sisi dalam (untuk arsiran).
+    function bentArmPath(elbow, inset = 0) {
+      const E = [106, 272], a = (-elbow * Math.PI) / 180, ca = Math.cos(a), sa = Math.sin(a);
+      const R = ([x, y]) => [E[0] + (x - E[0]) * ca - (y - E[1]) * sa, E[1] + (x - E[0]) * sa + (y - E[1]) * ca];
+      const f = (q) => `${q[0].toFixed(2)},${q[1].toFixed(2)}`;
+      const meet = (P1, P2, Q1, Q2, fb) => { // perpotongan garis P1-P2 dan Q1-Q2
+        const den = (P1[0] - P2[0]) * (Q1[1] - Q2[1]) - (P1[1] - P2[1]) * (Q1[0] - Q2[0]);
+        if (Math.abs(den) < 1e-6) return fb;
+        const t = ((P1[0] - Q1[0]) * (Q1[1] - Q2[1]) - (P1[1] - Q1[1]) * (Q1[0] - Q2[0])) / den;
+        const X = [P1[0] + t * (P2[0] - P1[0]), P1[1] + t * (P2[1] - P1[1])];
+        return Math.hypot(X[0] - E[0], X[1] - E[1]) < 40 ? X : fb;
+      };
+      const oT = [95.6 + inset, 236], oE = [96 + inset, 272], iT = [118, 238], iE = [116, 272];
+      const c0 = R([96 + inset, 272]), c1 = R([96.5 + inset, 294]), d1 = R([114, 294]), d0 = R([116, 272]);
+      const top = `M120,203 C106,206 ${97 + inset},216 ${oT[0]},232`, back = `L118,238 C119,226 121,214 126,206 Z`;
+      const cap = `A9,9 0 0 0 ${f(d1)}`; // ujung tangan membulat (selalu lewat bawah)
+      if (Math.abs(elbow) < 0.5) return `${top} L${f(c1)} ${cap} L${f(iE)} ${back}`;
+      if (elbow > 0) { // lengan bawah menekuk ke dalam: siku membulat di sisi luar, sudut tajam di sisi dalam
+        const X = meet(iT, iE, d1, d0, iE);
+        return `${top} L${f(oE)} A${10.2 - inset},${10.2 - inset} 0 0 0 ${f(c0)} L${f(c1)} ${cap} L${f(X)} ${back}`;
+      }
+      // lengan bawah menekuk ke luar (mis. tangan ke kepala / bersorak): siku membulat di sisi dalam
+      const X = meet(oT, oE, c0, c1, oE);
+      return `${top} L${f(X)} L${f(c1)} ${cap} L${f(d0)} A10.2,10.2 0 0 0 ${f(iE)} ${back}`;
+    }
     function skinArm(far) {
       return `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.arm}"/>
         ${shade("arm", C.skinShade, "M90,236 L120,236 L120,266 C110,262 100,262 90,264 Z M108,236 L120,236 L120,310 L109,310 C111,290 110,262 108,236 Z")}
