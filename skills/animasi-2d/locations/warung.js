@@ -131,6 +131,11 @@ module.exports = {
     }
     // pohon besar di kiri (referensi)
     P.tree(w, -5.0, 9.2, { h: 7.2, bias: -2 });
+    // tanaman & bunga di depan warkop
+    P.potPlant(w, -2.2, 6.9, { pot: "ember" });
+    P.potPlant(w, 2.05, 7.9, { pot: "kaleng" });
+    for (const [x, z] of [[-4.6, 5.6], [3.6, 5.2], [-3.9, 5.8]]) P.flowerClump(w, x, z);
+    P.bush(w, -4.8, 10.5, 0.6, { flowers: true });
     P.chicken(w, 2.6, 7.6, { t, kind: "betina", flip: true });
     P.chicken(w, -1.2, 6.2, { t, kind: "jago", phase: 1.4 });
   },

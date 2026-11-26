@@ -60,6 +60,9 @@ module.exports = {
     P.house(w, { side: 1, fx: 5, z: 7, width: 6, wall: "plank", roof: "seng", jemuran: false });
     P.house(w, { side: -1, fx: -5.5, z: 9, width: 6, wall: "bamboo" });
     for (const [x, z, h, kind] of [[-7, 18, 6, "round"], [2.5, 20, 8, "palm"], [-3.5, 22, 3.8, "banana"], [8, 24, 5.5, "round"]]) P.tree(w, x, z, { h, kind });
+    for (const [x, z] of [[-3.0, 5.6], [3.0, 5.8], [-3.4, 9.8]]) P.flowerClump(w, x, z);
+    P.bush(w, 3.4, 10.4, 0.6, { flowers: true });
+    P.potPlant(w, -2.7, 6.3, { pot: "kaleng" });
     P.chicken(w, 3.6, 4.6, { t, kind: "jago", flip: true });
     P.chicken(w, 4.3, 5.4, { t, kind: "betina", phase: 1.6 });
   },

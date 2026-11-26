@@ -66,17 +66,15 @@ function villageRoad(w, o = {}) {
   for (const s of [-1, 1]) {
     strip(w, Math.min(s * hw, s * (hw + 1.2)), Math.max(s * hw, s * (hw + 1.2)), z0, z1, PAL.dirtDark, { bias: -0.05 });
     strip(w, Math.min(s * (hw + 1.2), s * 40), Math.max(s * (hw + 1.2), s * 40), z0, z1, PAL.grass, { bias: -0.04 });
-    for (let z = z0 + 2.6; z < Math.min(z1, 40); z += 1.7 + ((z * 7) % 3) * 0.4) grassTuft(w, s * (hw + 0.2 + ((z * 13) % 10) / 10), z);
+    // tepi jalan: rumput liar, rumpun bunga liar, sesekali semak
+    let k = 0;
+    for (let z = z0 + 2.4; z < Math.min(z1, 40); z += 1.4 + ((z * 7) % 3) * 0.35, k++) {
+      const ex = s * (hw + 0.25 + ((z * 13) % 10) / 12);
+      if (k % 3 === 1) flowerClump(w, ex, z); else grassTuft(w, ex, z);
+      if (k % 5 === 2 && z > 5) bush(w, s * (hw + 1.6 + ((z * 3) % 5) / 10), z + 0.4, 0.45 + ((z * 7) % 3) * 0.08);
+    }
   }
 }
-function grassTuft(w, x, z) {
-  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
-    const s = p * 0.11;
-    return `<path transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" d="M${-s},0 L${-s * 0.6},${-s * 1.1} L${-s * 0.2},0 L${s * 0.1},${-s * 1.4} L${s * 0.4},0 L${s * 0.8},${-s} L${s},0 Z"
-      fill="${fog("#a2a2a2")}" stroke="${lc}" stroke-width="${(sw * 0.6).toFixed(2)}" stroke-linejoin="round"/>`;
-  }, { layer: "ground", bias: -0.5 });
-}
-
 // ---------- rumah kampung (fasad menghadap jalan) ----------
 // side -1 = kiri jalan (fasad di x=fx menghadap +X), +1 = kanan
 // wall: "plaster" | "plank" | "bamboo"; roof: "genteng" | "seng"; teras/bale: bool; fence: "bamboo" | "bush" | null
@@ -118,6 +116,8 @@ function house(w, o) {
     const px = side < 0 ? fx + 2.05 : fx - 2.15;
     for (const pz of [z0 + 0.45, z0 + Wd - 0.55]) w.box(px, 0.3, pz, 0.12, 2.05, 0.12, PAL.wood);
     if (o.bale) bale(w, side < 0 ? fx + 0.4 : fx - 1.9, z0 + 2.2, 1.5, 1.0);
+    // pot tanaman di tepi teras
+    for (const pz of [z0 + 0.9, z0 + Wd - 1.1]) potPlant(w, side < 0 ? fx + 1.9 : fx - 1.9, pz, { y: 0.3, size: 0.32 });
   }
   if (o.fence === "bamboo") bambooFence(w, side < 0 ? fx + 3.2 : fx - 3.2, z0, z0 + Wd);
   if (o.fence === "bush") for (let z = z0 + 0.4; z < z0 + Wd; z += 0.9) bush(w, side < 0 ? fx + 3.2 : fx - 3.2, z);
@@ -129,14 +129,99 @@ function bambooFence(w, x, za, zb) {
   for (let z = za; z <= zb; z += 0.22) w.box(x - 0.04, 0, z, 0.08, 0.95 + ((Math.round(z * 37)) % 3) * 0.04, 0.08, PAL.bambooPole, { swk: 0.6 });
   w.box(x - 0.08, 0.7, za, 0.06, 0.06, zb - za, "#9a9a9a", { swk: 0.6 });
 }
-function bush(w, x, z, r = 0.55) {
+// rumput liar: helai melengkung meruncing, bergoyang pelan (w.t)
+function grassTuft(w, x, z, o = {}) {
+  const T = w.t || 0, seed = x * 17.3 + z * 5.1;
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
-    const R = r * p;
-    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" stroke="${lc}" stroke-width="${sw}">
-      <circle cx="${-R * 0.5}" cy="${-R * 0.7}" r="${R * 0.7}" fill="${fog(PAL.leaf)}"/><circle cx="${R * 0.45}" cy="${-R * 0.75}" r="${R * 0.72}" fill="${fog(PAL.leafB)}"/>
-      <circle cx="0" cy="${-R * 1.15}" r="${R * 0.6}" fill="${fog(PAL.leaf)}"/></g>`;
-  });
+    const r = treeRng(seed), H = (o.h || 0.22 + r() * 0.12) * p, n = 5 + Math.floor(r() * 3);
+    const sway = Math.sin(T * 2 + seed) * 0.12;
+    let blades = "";
+    for (let i = 0; i < n; i++) {
+      const bx = (i / (n - 1) - 0.5) * H * 0.9, lean = (i / (n - 1) - 0.5) * 0.9 + sway + (r() - 0.5) * 0.3, bh = H * (0.6 + r() * 0.5), bw = H * 0.07;
+      const tx = bx + lean * bh, ty = -bh;
+      blades += `<path d="M${(bx - bw).toFixed(1)},0 Q${(bx + lean * bh * 0.3).toFixed(1)},${(-bh * 0.6).toFixed(1)} ${tx.toFixed(1)},${ty.toFixed(1)} Q${(bx + lean * bh * 0.4 + bw).toFixed(1)},${(-bh * 0.5).toFixed(1)} ${(bx + bw).toFixed(1)},0 Z" fill="${fog(i % 2 ? "#9c9c9c" : "#ababab")}"/>`;
+    }
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" stroke="${lc}" stroke-width="${(sw * 0.55).toFixed(2)}" stroke-linejoin="round">${blades}</g>`;
+  }, { layer: o.layer || "ground", bias: -0.5 });
 }
+
+// semak: tajuk bergelombang berarsir + tekstur daun, opsional berbunga (kembang sepatu / bugenvil)
+function bush(w, x, z, r0 = 0.55, o = {}) {
+  const seed = x * 11.1 + z * 3.7 + r0, T = w.t || 0;
+  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    const r = treeRng(seed), R = r0 * p, flowers = o.flowers ?? (r() < 0.45);
+    const sway = Math.sin(T * 1.6 + seed) * 1.2;
+    const cy = -R * 0.85;
+    const body = cloudPath(0, cy, R * 1.15, R * 0.9, 9, r, 0.22);
+    const dark = cloudPath(R * 0.25, cy + R * 0.35, R * 0.95, R * 0.6, 8, r, 0.2);
+    const lite = cloudPath(-R * 0.35, cy - R * 0.35, R * 0.55, R * 0.38, 7, r, 0.2);
+    const id = `bs${Math.round(Math.abs(seed) * 100)}`;
+    const tufts = Array.from({ length: 8 }, () => {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.8, px = Math.cos(a) * R * 1.1 * d, py = cy + Math.sin(a) * R * 0.85 * d, s = R * 0.13;
+      return `M${(px - s).toFixed(1)},${py.toFixed(1)} q${s.toFixed(1)},${(-s * 1.2).toFixed(1)} ${(s * 2).toFixed(1)},0`;
+    }).join(" ");
+    const fl = flowers ? Array.from({ length: 5 }, () => {
+      const a = r() * Math.PI * 2, d = 0.3 + r() * 0.6, fx = Math.cos(a) * R * 1.0 * d, fy = cy + Math.sin(a) * R * 0.75 * d - R * 0.1;
+      return flower(fx, fy, R * 0.16, fog, lc, sw, r() < 0.5 ? "#f6f6f6" : "#d0d0d0");
+    }).join("") : "";
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)}) rotate(${sway.toFixed(2)} 0 0)" stroke="${lc}" stroke-width="${sw}" stroke-linejoin="round">
+      <ellipse cx="0" cy="0" rx="${(R * 1.2).toFixed(1)}" ry="${(R * 0.18).toFixed(1)}" fill="rgba(0,0,0,0.12)" stroke="none"/>
+      <clipPath id="${id}"><path d="${body}"/></clipPath>
+      <path d="${body}" fill="${fog("#999999")}" stroke="none"/>
+      <path clip-path="url(#${id})" d="${dark}" fill="${fog("#828282")}" stroke="none"/>
+      <path clip-path="url(#${id})" d="${lite}" fill="${fog("#b0b0b0")}" stroke="none"/>
+      <path clip-path="url(#${id})" d="${tufts}" fill="none" stroke="${fog("#6e6e6e")}" stroke-width="${sw * 0.7}" stroke-linecap="round"/>
+      <path d="${body}" fill="none"/>
+      ${fl}</g>`;
+  }, { bias: o.bias || 0 });
+}
+// satu kuntum bunga 5 kelopak (koordinat piksel)
+function flower(fx, fy, s, fog, lc, sw, col) {
+  const petals = Array.from({ length: 5 }, (_, i) => {
+    const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+    return `<ellipse cx="${(fx + Math.cos(a) * s * 0.55).toFixed(1)}" cy="${(fy + Math.sin(a) * s * 0.55).toFixed(1)}" rx="${(s * 0.42).toFixed(1)}" ry="${(s * 0.3).toFixed(1)}" transform="rotate(${((a * 180) / Math.PI).toFixed(0)} ${(fx + Math.cos(a) * s * 0.55).toFixed(1)} ${(fy + Math.sin(a) * s * 0.55).toFixed(1)})" fill="${fog(col)}"/>`;
+  }).join("");
+  return `<g stroke="${lc}" stroke-width="${(sw * 0.5).toFixed(2)}">${petals}<circle cx="${fx.toFixed(1)}" cy="${fy.toFixed(1)}" r="${(s * 0.2).toFixed(1)}" fill="${fog("#555555")}"/></g>`;
+}
+// rumpun bunga liar di pinggir jalan: batang + daun + beberapa kuntum
+function flowerClump(w, x, z, o = {}) {
+  const seed = x * 7.7 + z * 13.1, T = w.t || 0;
+  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    const r = treeRng(seed), H = (o.h || 0.35 + r() * 0.2) * p, n = 3 + Math.floor(r() * 3), sway = Math.sin(T * 1.8 + seed) * 0.1;
+    let stems = "", leaves = "", heads = "";
+    for (let i = 0; i < n; i++) {
+      const bx = (i - (n - 1) / 2) * H * 0.14, lean = (i - (n - 1) / 2) * 0.18 + sway, hh = H * (0.7 + r() * 0.35);
+      const tx = bx + lean * hh, ty = -hh;
+      stems += `M${bx.toFixed(1)},0 Q${(bx + lean * hh * 0.2).toFixed(1)},${(-hh * 0.6).toFixed(1)} ${tx.toFixed(1)},${ty.toFixed(1)} `;
+      const ly = -hh * (0.3 + r() * 0.2), ls = H * 0.16, dir = i % 2 ? 1 : -1;
+      leaves += `<path d="M${(bx + lean * hh * 0.25).toFixed(1)},${ly.toFixed(1)} q${(dir * ls).toFixed(1)},${(-ls * 0.9).toFixed(1)} ${(dir * ls * 1.6).toFixed(1)},${(-ls * 0.2).toFixed(1)} q${(-dir * ls * 0.8).toFixed(1)},${(ls * 0.5).toFixed(1)} ${(-dir * ls * 1.6).toFixed(1)},${(ls * 0.2).toFixed(1)} Z" fill="${fog("#9a9a9a")}"/>`;
+      heads += flower(tx, ty, H * (0.16 + r() * 0.05), fog, lc, sw, o.color || (r() < 0.5 ? "#f6f6f6" : "#cfcfcf"));
+    }
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" stroke="${lc}" stroke-width="${(sw * 0.6).toFixed(2)}" stroke-linejoin="round">
+      <path d="${stems}" fill="none" stroke="${fog("#6f6f6f")}" stroke-width="${(sw * 0.9).toFixed(2)}" stroke-linecap="round"/>${leaves}${heads}</g>`;
+  }, { bias: o.bias || -0.2 });
+}
+// tanaman dalam pot kaleng/ember bekas (khas kampung)
+function potPlant(w, x, z, o = {}) {
+  const seed = x * 9.9 + z * 2.3;
+  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    const r = treeRng(seed), s = p * (o.size || 0.35), kind = o.pot || (r() < 0.5 ? "kaleng" : "ember");
+    const pot = kind === "kaleng"
+      ? `<path d="M${-s * 0.35},${-s * 0.55} L${s * 0.35},${-s * 0.55} L${s * 0.32},0 L${-s * 0.32},0 Z" fill="${fog("#a9a9a9")}"/>
+         <path d="M${-s * 0.34},${-s * 0.4} L${s * 0.34},${-s * 0.4} M${-s * 0.33},${-s * 0.15} L${s * 0.33},${-s * 0.15}" fill="none" stroke="${fog("#7f7f7f")}"/>`
+      : `<path d="M${-s * 0.42},${-s * 0.55} L${s * 0.42},${-s * 0.55} L${s * 0.32},0 L${-s * 0.32},0 Z" fill="${fog("#7a7a7a")}"/>
+         <path d="M${-s * 0.42},${-s * 0.55} Q0,${-s * 0.85} ${s * 0.42},${-s * 0.55}" fill="none" stroke="${fog("#555555")}"/>`;
+    const leaves = Array.from({ length: 6 }, (_, i) => {
+      const a = (-150 + i * 24 + (r() - 0.5) * 10) * Math.PI / 180, L = s * (0.55 + r() * 0.35);
+      const ex = Math.cos(a) * L, ey = -s * 0.55 + Math.sin(a) * L;
+      return `<path d="M0,${-s * 0.55} Q${(ex * 0.3 - s * 0.12).toFixed(1)},${((ey - s * 0.55) / 2).toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)} Q${(ex * 0.5 + s * 0.12).toFixed(1)},${((ey - s * 0.4) / 2).toFixed(1)} 0,${-s * 0.55} Z" fill="${fog(i % 2 ? "#9a9a9a" : "#acacac")}"/>`;
+    }).join("");
+    const fl = r() < 0.6 ? flower(s * 0.1, -s * 1.15, s * 0.28, fog, lc, sw, "#f4f4f4") : "";
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" stroke="${lc}" stroke-width="${(sw * 0.8).toFixed(2)}" stroke-linejoin="round">
+      <ellipse cx="0" cy="0" rx="${s * 0.45}" ry="${s * 0.08}" fill="rgba(0,0,0,0.13)" stroke="none"/>${leaves}${pot}${fl}</g>`;
+  }, { bias: o.bias || -0.1, y: o.y || 0 });
+}
+
 // ---------- pohon (sprite berarsir, bergoyang tertiup angin) ----------
 // kind: "round" (pohon rindang/mangga), "palm" (kelapa), "banana" (pisang). Waktu animasi diambil dari w.t.
 function treeRng(seed) {
@@ -441,4 +526,4 @@ function chicken(w, x, z, o = {}) {
   }, { bias: -0.05 });
 }
 
-module.exports = { PAL, sky, strip, villageRoad, grassTuft, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };
+module.exports = { PAL, sky, strip, villageRoad, grassTuft, flowerClump, potPlant, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };
