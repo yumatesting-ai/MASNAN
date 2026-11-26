@@ -282,7 +282,7 @@ function createWorld(opt = {}) {
   }
 
   function render(background = "") {
-    const order = { sky: 0, far: 1, ground: 2, shadow: 2.5, obj: 3, front: 4 };
+    const order = { sky: 0, far: 1, ground: 2, shadow: 2.5, obj: 3, front: 4, ui: 5 };
     items.sort((a, b) => order[a.layer] - order[b.layer] || b.z - a.z);
     const shadows = items.filter((i) => i.layer === "shadow").map((i) => i.svg).join("");
     const before = items.filter((i) => order[i.layer] < 2.5).map((i) => i.svg).join("\n");

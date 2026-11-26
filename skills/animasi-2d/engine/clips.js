@@ -76,16 +76,25 @@
     } },
 
     // ---------- GERAK ----------
-    walk: { duration: 1, view: "side", pose: (t) => {
-      const s = wave(t, 1);
-      return { breathe: 0.5, legL: 24 * s, legR: -24 * s, armL: -22 * s, armR: 22 * s,
-        bodyY: -3 * Math.abs(Math.cos(TAU * t)), headY: 0.8 * Math.abs(Math.cos(TAU * t)),
-        hairSway: -2 + 0.8 * wave(t, 0.5, 0.2), lean: -2 };
+    // WALK CYCLE (1 dtk = 2 langkah): kontak (kaki terbuka) -> turun (badan terendah, sedikit squash) ->
+    // melintas (kaki berpapasan) -> naik (badan tertinggi). Lengan berlawanan kaki & tertinggal sedikit
+    // (overlap), siku menekuk saat lengan ke depan, kepala memantul terlambat (follow-through).
+    walk: { duration: 1, view: "side", smooth: 0.02, pose: (t) => {
+      const u = t % 1, sp = Math.sin(TAU * u), sa = Math.sin(TAU * (u - 0.06));
+      const leg = 26 * Math.sign(sp) * Math.pow(Math.abs(sp), 0.75); // tahan sebentar di posisi kontak
+      const bob = Math.cos(2 * TAU * (u - 0.06)); // 2x per siklus: +1 = naik (melintas), -1 = turun
+      return { breathe: 0.5, legL: leg, legR: -leg, armL: -24 * sa, armR: 24 * sa,
+        elbowL: 8 + 14 * Math.max(0, -sa), elbowR: 8 + 14 * Math.max(0, sa),
+        bodyY: -1 - 2.8 * bob, squash: 0.05 * Math.max(0, -bob), headY: 0.9 * Math.cos(2 * TAU * (u - 0.14)),
+        headTilt: 1.2 * Math.sin(2 * TAU * (u - 0.1)), lean: -3 - 0.8 * bob, hairSway: -2 + 0.8 * wave(t, 0.5, 0.2) };
     } },
-    walk_front: { duration: 1, view: "front", pose: (t) => {
-      const s = wave(t, 1);
-      return { breathe: 0.5, legL: Math.max(0, 10 * s), legR: Math.max(0, -10 * s), armL: 6 * s, armR: -6 * s,
-        bodyY: -2.2 * Math.abs(s), headTilt: 1.5 * s, hairSway: 1.2 * wave(t, 1, 0.2) };
+    walk_front: { duration: 1, view: "front", smooth: 0.02, pose: (t) => {
+      const u = t % 1, sp = Math.sin(TAU * u), sa = Math.sin(TAU * (u - 0.06));
+      const bob = Math.cos(2 * TAU * (u - 0.06));
+      return { breathe: 0.5, legL: Math.max(0, 13 * sp), legR: Math.max(0, -13 * sp), armL: 4 + 7 * sa, armR: 4 - 7 * sa,
+        elbowL: 6 + 8 * Math.max(0, sa), elbowR: 6 + 8 * Math.max(0, -sa),
+        bodyX: 2.2 * Math.sin(TAU * (u - 0.1)), bodyY: -1 - 2.4 * bob, squash: 0.04 * Math.max(0, -bob),
+        headTilt: -2 * Math.sin(TAU * (u - 0.14)), headY: 0.8 * Math.cos(2 * TAU * (u - 0.14)), hairSway: 1.4 * wave(t, 1, 0.25) };
     } },
     run: { duration: 0.6, view: "side", pose: (t) => {
       const s = wave(t, 0.6);
@@ -206,10 +215,13 @@
     // ---------- gerak lain ----------
     walk_back: { duration: 1, view: "back", pose: (t) => ({ ...CLIPS.walk_front.pose(t) }) },
     // jalan serong (mendekat diagonal): kaki terangkat seperti tampak depan + ayunan lengan sedang
-    walk_three: { duration: 1, view: "three", pose: (t) => {
-      const s = wave(t, 1);
-      return { breathe: 0.5, legL: Math.max(0, 14 * s), legR: Math.max(0, -14 * s), armL: -12 * s, armR: 12 * s,
-        bodyY: -2.6 * Math.abs(s), headTilt: 1.2 * s, hairSway: -1 + 1.0 * wave(t, 1, 0.2), lean: -1 };
+    walk_three: { duration: 1, view: "three", smooth: 0.02, pose: (t) => {
+      const u = t % 1, sp = Math.sin(TAU * u), sa = Math.sin(TAU * (u - 0.06));
+      const bob = Math.cos(2 * TAU * (u - 0.06));
+      return { breathe: 0.5, legL: Math.max(0, 16 * sp), legR: Math.max(0, -16 * sp), armL: -12 * sa, armR: 12 * sa,
+        elbowL: 8 + 10 * Math.max(0, sa), elbowR: 8 + 10 * Math.max(0, -sa), bodyX: 1.6 * Math.sin(TAU * (u - 0.1)),
+        bodyY: -1 - 2.6 * bob, squash: 0.04 * Math.max(0, -bob), headTilt: 1.4 * Math.sin(TAU * (u - 0.14)),
+        headY: 0.8 * Math.cos(2 * TAU * (u - 0.14)), hairSway: -1 + 1.0 * wave(t, 1, 0.2), lean: -1.5 };
     } },
     run_front: { duration: 0.6, view: "front", pose: (t) => {
       const s = wave(t, 0.6);
@@ -230,20 +242,20 @@
         lean: -7, headY: 3, lookY: 1, bodyX: 2 * sw, legL: 6 * wave(t, 1.6), legR: -6 * wave(t, 1.6), mouth: "flat", sweat: false };
     } },
     // memesan di warung (membelakangi kamera, menghadap penjual): bicara + gestur menunjuk ke etalase
-    order: { duration: 3, view: "back", pose: (t) => {
+    order: { once: true, duration: 3, view: "back", pose: (t) => {
       const g = kf(t, [[0, 0], [0.4, 1, "out"], [1.8, 1], [2.3, 0, "io"], [3, 0]]);
       return { ...life(t, 1.5), armR: 55 * g, elbowR: 25 * g + 8 * g * wave(t, 0.5), headTilt: 3 * wave(t, 1.5), headY: 1.2 * Math.abs(wave(t, 0.5)) };
     } },
     // menunggu pesanan sambil mengangguk kecil (membelakangi kamera)
     wait_back: { duration: 2, view: "back", pose: (t) => ({ ...life(t, 2), headY: 1.5 * Math.max(0, wave(t, 1)), armL: 2, armR: 2 }) },
     // menyerahkan gelas kopi ke depan (penjual di balik meja)
-    give: { duration: 2.4, view: "front", pose: (t) => {
+    give: { once: true, duration: 2.4, view: "front", pose: (t) => {
       const g = kf(t, [[0, 0], [0.6, 1, "io"], [1.7, 1], [2.2, 0, "io"], [2.4, 0]]);
       return { ...life(t, 1.2), expr: "smile", mouth: t > 0.5 && t < 1.6 ? "open" : "smile", holdR: t < 1.75 ? "coffee" : null,
         armR: -10 - 25 * g, elbowR: 30 + 60 * g, bodyY: -1.5 * g, headY: 2 * g, headTilt: 4 * g, blink: blinkAt(t, [0.3]) };
     } },
     // menerima sesuatu (membelakangi kamera): tangan terulur lalu kembali membawa barang
-    receive: { duration: 2.4, view: "back", pose: (t) => {
+    receive: { once: true, duration: 2.4, view: "back", pose: (t) => {
       const g = kf(t, [[0, 0], [0.6, 1, "io"], [1.7, 1], [2.2, 0.35, "io"], [2.4, 0.35]]);
       return { ...life(t, 1.2), holdR: t > 1.5 ? "coffee" : null, armR: 25 * g, elbowR: 45 * g, headY: 1.5 * g };
     } },
@@ -257,6 +269,96 @@
       const h = Math.abs(Math.sin((TAU * t) / 1.2));
       return { expr: "happy", mouth: "open", armL: 150 - 15 * h, armR: 150 - 15 * h, elbowL: -20, elbowR: -20, bodyY: -10 * h,
         squash: 0.25 * Math.pow(clamp(1 - h / 0.3), 2), headTilt: 3 * wave(t, 1.2), fx: t / 0.6 };
+    } },
+    // ---------- KOMEDI (ekspresif: ancang-ancang -> aksi -> follow-through -> tahan) ----------
+    // meniup kopi panas sebelum diminum
+    blow: { duration: 2, view: "front", pose: (t) => ({ ...life(t, 2), sit: 1, holdR: "coffee", armR: -62, elbowR: 128, holdTilt: 6,
+      armL: -8, elbowL: 35, mouth: "o", eyes: "half", headY: 2, bodyY: -0.8 * Math.abs(wave(t, 0.5)), sweat: false, blink: blinkAt(t, [1.2]) }) },
+    // menyeruput -> KAGET kepanasan -> menyembur (PFFT!) -> melet sambil mengipas mulut
+    spit_take: { once: true, duration: 3.2, view: "front", smooth: 0.012, pose: (t) => {
+      const sip = kf(t, [[0, 0], [0.45, 1, "io"], [0.85, 1], [1.0, 0.2, "out"], [3.2, 0.2]]);
+      const jolt = kf(t, [[0, 0], [0.85, 0], [0.95, 1, "out"], [1.35, 0.3, "io"], [3.2, 0]]);
+      const spray = t > 0.9 && t < 1.5, after = t >= 1.5;
+      return { ...life(t, 1.6), sit: 1, holdR: "coffee", armR: -20 - 50 * sip, elbowR: 75 + 75 * sip, holdTilt: 30 * sip,
+        armL: after ? 110 + 18 * wave(t, 0.25) : -8, elbowL: after ? -70 : 35,
+        eyes: t < 0.85 ? "closed" : spray ? "wide" : "cry", mouth: t < 0.85 ? "o" : spray ? "shout" : "tongue",
+        bodyY: -14 * jolt, squash: -0.25 * jolt, headY: -4 * jolt, headTilt: after ? 4 * wave(t, 0.5) : 0,
+        sweat: t > 0.9, above: t > 0.9 && t < 2 ? "exclaim" : null, blush: after ? 0.8 : 0, fx: t / 0.4 };
+    } },
+    // kepanasan: melet + mengipas mulut (loop)
+    hot_fan: { duration: 1.2, view: "front", pose: (t) => ({ ...life(t, 1.2), sit: 1, holdR: "coffee", armR: -20, elbowR: 75,
+      armL: 110 + 18 * wave(t, 0.3), elbowL: -70, eyes: "cry", mouth: "tongue", sweat: true, blush: 0.8,
+      bodyY: -2 * Math.abs(wave(t, 0.3)), headTilt: 3 * wave(t, 0.6), fx: t / 0.4 }) },
+    // menepuk perut dengan bangga (menghadap kamera)
+    pat_belly: { duration: 2.4, view: "front", pose: (t) => {
+      const pat = Math.max(0, wave(t, 0.4));
+      return { ...life(t, 1.2), expr: "smug", armR: -28, elbowR: 70 + 14 * pat, armL: -10, elbowL: 20, lean: 0,
+        bodyY: -2 - 1.2 * pat, squash: -0.05, headTilt: -4, headY: -2, blink: blinkAt(t, [1.7]) };
+    } },
+    // melirik curiga dari atas ke bawah (deadpan), lalu kembali menatap
+    deadpan_look: { once: true, duration: 3, view: "front", smooth: 0.04, pose: (t) => {
+      const down = kf(t, [[0, 0], [0.5, 1, "io"], [1.7, 1], [2.2, 0, "io"], [3, 0]]);
+      return { ...life(t, 3), expr: "deadpan", lookY: 1.2 * down, headY: 3 * down, headTilt: 3 * down, blink: blinkAt(t, [2.4]) };
+    } },
+    // tatapan datar ke kamera (jeda komedi)
+    deadpan: { duration: 3, view: "front", pose: (t) => ({ ...life(t, 3), expr: "deadpan", blink: blinkAt(t, [1.9]) }) },
+    // mata berkedut menahan kesal (wajah datar + garis suram)
+    eye_twitch: { duration: 2.4, view: "front", smooth: 0.008, pose: (t) => ({ ...life(t, 2.4), sit: 1, expr: "deadpan", gloom: true,
+      blink: blinkAt(t, [0.6, 0.72, 1.7, 1.78, 1.86], 0.07) * 0.7, headY: 1, armL: -8, elbowL: 35, armR: -8, elbowR: 35 }) },
+    // tengok balik kaget (double take): lihat ke samping, buang muka, lalu SADAR dan melompat kaget
+    double_take: { once: true, duration: 2.4, view: "front", smooth: 0.012, pose: (t) => {
+      const look = kf(t, [[0, 0], [0.35, 1, "io"], [0.75, 1], [0.95, -0.6, "io"], [1.15, -0.6], [1.25, 0, "out"], [2.4, 0]]);
+      const jump = kf(t, [[0, 0], [1.2, 0], [1.3, -0.2, "out"], [1.42, 1, "out"], [1.75, 0, "in"], [1.85, -0.15, "out"], [2.05, 0, "io"], [2.4, 0]]);
+      const shock = t > 1.25;
+      return { ...life(t, 2.4), expr: shock ? "surprised" : "neutral", lookX: look, headX: 4 * look,
+        bodyY: -16 * Math.max(0, jump), squash: jump < 0 ? -jump * 1.2 : -0.25 * jump, armL: shock ? 50 * Math.max(0, jump) + 10 : 0,
+        armR: shock ? 50 * Math.max(0, jump) + 10 : 0, fx: t / 1.2 };
+    } },
+    // tendangan andalan: ancang-ancang panjang (mundur, jongkok, tangan naik) -> TENDANG -> follow-through -> mendarat
+    big_kick: { once: true, duration: 2.4, view: "side", smooth: 0.012, pose: (t) => {
+      const wind = kf(t, [[0, 0], [0.9, 1, "io"], [1.0, 1], [1.08, 0, "in"], [2.4, 0]]);
+      const kick = kf(t, [[0, 0], [1.0, 0], [1.12, 1, "out"], [1.6, 0.8, "io"], [2.1, 0, "io"], [2.4, 0]]);
+      const hop = kf(t, [[0, 0], [1.1, 0], [1.3, 1, "out"], [1.55, 0, "in"], [1.65, -0.3, "out"], [1.9, 0, "io"], [2.4, 0]]);
+      return { expr: t < 1.0 ? "angry" : t < 1.7 ? "furious" : "happy", mouth: t > 0.95 && t < 1.7 ? "shout" : undefined,
+        legR: -42 * wind + 80 * kick, legL: 10 * wind - 8 * kick, armL: 70 * wind - 30 * kick, armR: -40 * wind + 60 * kick,
+        elbowL: 40 * wind, elbowR: 20, lean: 9 * wind - 10 * kick, squash: 0.28 * wind - 0.12 * kick + 0.2 * Math.max(0, -hop),
+        bodyY: -14 * Math.max(0, hop) + 4 * wind, headY: 2 * wind, hairSway: -4 * kick, fx: t / 1.2 };
+    } },
+    // mendongak mengikuti sesuatu yang terbang tinggi
+    look_up: { once: true, duration: 2.4, view: "front", smooth: 0.03, pose: (t) => {
+      const up = kf(t, [[0, 0], [0.6, 1, "out"], [2.4, 1]]);
+      return { ...life(t, 2.4), eyes: "wide", mouth: "o", lookY: -1.2 * up, headY: -5 * up, headTilt: -3 * up, bodyY: 1 * up, sweat: false };
+    } },
+    // berhenti mendadak setelah lari (rem kaki, badan condong ke belakang, follow-through)
+    skid: { once: true, duration: 1, view: "side", smooth: 0.015, pose: (t) => {
+      const k = kf(t, [[0, 1], [0.35, 0.7, "out"], [0.6, -0.25, "io"], [0.8, 0.08, "io"], [1, 0, "io"]]);
+      return { expr: "surprised", lean: 12 * k, legL: -22 * Math.max(0, k), legR: 10 * Math.max(0, k), armL: 40 * k, armR: 30 * k,
+        bodyY: 2 * Math.abs(k), hairSway: 4 * k, fx: t };
+    } },
+    // malu-malu nyengir sambil garuk kepala
+    sheepish: { duration: 2.4, view: "front", pose: (t) => ({ ...life(t, 1.2), eyes: "happy", mouth: "smile", blush: 1, sweat: true,
+      armR: 140, elbowR: -(85 + 12 * wave(t, 0.3)), headTilt: 6, bodyY: -1 * Math.abs(wave(t, 0.6)), fx: t / 1.2 }) },
+    // marah meledak: berdiri, tinju gemetar, tanda marah
+    angry_shake: { duration: 1.2, view: "front", pose: (t) => ({ expr: "furious", armL: 22, armR: 22, elbowL: 105, elbowR: 105,
+      bodyX: 1.5 * wave(t, 0.1), bodyY: -2 - 1 * Math.abs(wave(t, 0.2)), squash: -0.06, headY: -1, fx: t / 0.6 }) },
+    // tertawa terbahak: badan membungkuk & berguncang, tangan memegang perut, tangan lain menepuk paha
+    laugh_hard: { duration: 1.2, view: "front", pose: (t) => ({ expr: "laugh", eyes: "cry", mouth: "grin", tears: "stream", blush: 1,
+      armL: -30, elbowL: 80, armR: 10 + 22 * Math.max(0, wave(t, 0.4)), elbowR: 10, headY: 5, squash: 0.12,
+      bodyY: 3 - 3 * Math.abs(wave(t, 0.2)), headTilt: 5 * wave(t, 0.6), fx: t / 0.3 }) },
+    // lari panik (tangan melambai-lambai ke atas, keringat)
+    run_panic: { duration: 0.5, view: "side", pose: (t) => {
+      const sv = wave(t, 0.5);
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: 40 * sv, legR: -40 * sv,
+        armL: 130 + 30 * sv, armR: 120 - 30 * sv, elbowL: -20, elbowR: -20, lean: -9, bodyY: -7 * Math.abs(Math.cos(TAU * t / 0.5)),
+        hairSway: -4 + wave(t, 0.25), fx: t / 0.25 };
+    } },
+    // lari mengejar dengan marah
+    run_angry: { duration: 0.6, view: "side", pose: (t) => ({ ...CLIPS.run.pose(t), expr: "furious", mouth: "shout", fx: t / 0.3 }) },
+    // menyeka wajah dengan punggung tangan (masih duduk)
+    wipe_face: { once: true, duration: 2, view: "front", smooth: 0.03, pose: (t) => {
+      const up = kf(t, [[0, 0], [0.4, 1, "io"], [1.6, 1], [2, 0, "io"]]);
+      return { ...life(t, 2), sit: 1, expr: "deadpan", armR: 120 * up - 8, elbowR: -95 * up + 35 * (1 - up) + 18 * up * wave(t, 0.4),
+        armL: -8, elbowL: 35, headTilt: 4 * up * wave(t, 0.8), eyes: up > 0.5 ? "closed" : "half" };
     } },
     // mengangguk sambil mendengarkan (serong) — pasangan ngobrol berdiri
     listen: { duration: 2.4, view: "three", pose: (t) => ({ ...life(t, 2.4), expr: "smile", headY: 2.5 * Math.max(0, wave(t, 1.2)), armL: 0, armR: 0, blink: blinkAt(t, [1.6]) }) },
@@ -326,7 +428,8 @@
 
   function samplePose(clip, t, resolvePose) {
     const D = clip.duration;
-    const wrap = (x) => ((x % D) + D) % D;
+    // klip sekali-jalan (once): waktu dijepit, bukan diulang -> tepi awal/akhir tidak tercampur
+    const wrap = clip.once ? (x) => Math.max(0, Math.min(D, x)) : (x) => ((x % D) + D) % D;
     const raw = (x) => resolvePose(Object.assign({ view: clip.view }, clip.pose(wrap(x))));
     const sigma = clip.smooth ?? 0.03;
     const OFF = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];

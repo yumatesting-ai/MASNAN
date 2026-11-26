@@ -251,3 +251,22 @@ tendang, sesekali gol ke gawang lalu bersorak. Bola (`P.ball`) bermotif segilima
 melambung saat dioper jauh, dan punya bayangan. Entri figuran boleh `motion: (t) => ({ x, z, clip, ct, faceRight })`
 untuk gerak terskrip. `--t0 <detik>` menggeser waktu lingkungan & figuran (mis. agar gol jatuh di tengah adegan;
 di episode: `"t0": 11.7`).
+
+## Teknik animasi profesional
+
+| Teknik | Cara pakai |
+|---|---|
+| **Walk cycle** | `walk`, `walk_front`, `walk_three`: pose kontak → turun → melintas → naik, badan memantul 2x per siklus, lengan berlawanan kaki dan tertinggal sedikit (overlap), siku menekuk saat lengan ke depan, bobot badan bergeser kiri-kanan (tampak depan), kepala memantul terlambat. Lengan jauh di tampak samping tidak lagi "patah". |
+| **Lip sync** | `dialog` di adegan / `--dialog '[{"who":"hasan","at":1.2,"text":"..."}]'`. `engine/lipsync.js` mengubah tiap huruf jadi bentuk mulut (a=terbuka, i/e=lebar, o/u=bulat, m/b/p=rapat, teriak/kapital=berteriak), berjeda di koma/titik, plus anggukan penekanan. Subtitle: "Nama: kalimat". |
+| **Anticipation & follow-through** | Otomatis di timeline: sebelum jalan/lari, karakter merendah dan condong ke belakang; saat berhenti, badan terayun ke depan lalu mantap dan rambut ikut tertinggal. Klip komedi berpola ancang-ancang → aksi → follow-through (`big_kick`, `double_take`, `spit_take`, `skid`). |
+| **Kamera sinematik** | `camkeys`: `[{t, x, y, z, f, horizon, ease?, track?, dx?}]`. Pan = x, tilt = horizon/y, zoom = f, dolly = z, tracking = `"track":"hasan"`, snap zoom = dua key berdekatan, `"ease":"cut"` = potong. Guncangan: fx `shake`. |
+| **Parallax / kedalaman** | Dunia 3D perspektif: objek dekat bergerak lebih cepat saat kamera bergeser. `fg`: latar depan buram dekat kamera (`grass`, `bush`, `post`, `leaves`) untuk depth of field. |
+| **Efek komik** | `fx`: `text` (onomatope "BYURR!", muncul membesar), `burst` (garis kejut), `splash` (cipratan kopi), `spray` (semburan), `ball` (bola melambung, `rFly` membesar saat terbang), `shake`. |
+
+Klip ekspresif baru: `blow`, `spit_take`, `hot_fan`, `pat_belly`, `deadpan`, `deadpan_look`, `eye_twitch`,
+`double_take`, `big_kick`, `look_up`, `skid`, `sheepish`, `angry_shake`, `laugh_hard`, `run_panic`, `run_angry`,
+`wipe_face`. Pose baru: `dirty` (wajah kecipratan kopi, 0..1), mulut `tongue` (melet kepanasan).
+Klip sekali-jalan memakai `once: true` (tidak diulang, tepi tidak tercampur).
+
+Pratinjau komposisi cepat sebelum render: `node tools/episode.js episodes/kopi-pak-hasan.json --preview out/cek.png --at "0.2,0.5,0.8"`.
+Contoh episode komedi lengkap: `episodes/kopi-pak-hasan.json` (8 adegan, dialog, variasi shot, efek).

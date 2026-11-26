@@ -18,7 +18,7 @@ const { CLIPS, samplePose } = require("./clips.js");
 const BLEND = 0.35;
 const NUM_SKIP = new Set(["fx"]);
 // kecepatan alami (m/dtk untuk karakter skala 1) per keluarga klip gerak
-const GAIT = { walk: 0.8, run: 2.2 };
+const GAIT = { walk: 0.8, run: 2.2, run_panic: 2.6, run_angry: 2.4 };
 
 function parseOverrides(txt) {
   const o = {};
@@ -115,13 +115,34 @@ function createTimeline(spec, spotOf, resolvePose, o = {}) {
     return { pose, x, z, y: spot.y || 0 };
   }
 
+  // ANTISIPASI & FOLLOW-THROUGH otomatis di batas diam <-> bergerak:
+  //  - sebelum mulai jalan/lari: jongkok sedikit + condong ke belakang (ancang-ancang 0,3 dtk), lalu dorongan maju
+  //  - saat berhenti: badan terayun ke depan lalu kembali (overshoot meluruh), rambut ikut tertinggal
+  const moving = (ph) => ph && ph.to && ph.dist > 0.02;
+  function accent(i, lt, r) {
+    const ph = phases[i], nx = phases[i + 1], pv = phases[i - 1], p = r.pose;
+    const side = p.view === "side" || p.view === "three";
+    const add = (k, v) => { p[k] = (p[k] || 0) + v; };
+    if (!moving(ph) && moving(nx) && lt > ph.dur - 0.3) { // ancang-ancang
+      const k = Math.sin(((lt - (ph.dur - 0.3)) / 0.3) * Math.PI * 0.5);
+      add("squash", 0.14 * k); add("bodyY", 3 * k); if (side) add("lean", 5 * k);
+    }
+    if (moving(ph) && !moving(pv) && lt < 0.35) { const k = 1 - lt / 0.35; if (side) add("lean", -4 * k); add("squash", -0.06 * k); }
+    if (!moving(ph) && moving(pv) && lt < 0.7) { // follow-through berhenti
+      const d = Math.exp(-5 * lt) * Math.cos(lt * 11);
+      if (side) add("lean", -6 * d); else { add("squash", 0.08 * d); add("bodyY", 2 * d); }
+      add("hairSway", (side ? -3 : 2) * d); add("ahoge", 10 * d);
+    }
+    return r;
+  }
+
   function at(t) {
     let i = phases.length - 1;
     for (let k = 0; k < phases.length; k++) if (t < phases[k].start + phases[k].dur) { i = k; break; }
     const lt = t - phases[i].start;
-    const cur = rawAt(i, lt);
+    const cur = accent(i, lt, rawAt(i, lt));
     if (i === 0 || lt >= BLEND) return cur;
-    const prev = rawAt(i - 1, phases[i - 1].dur);
+    const prev = accent(i - 1, phases[i - 1].dur, rawAt(i - 1, phases[i - 1].dur));
     const kk = lt / BLEND, k = kk * kk * (3 - 2 * kk);
     const out = { pose: {}, x: cur.x, z: cur.z, y: prev.y + (cur.y - prev.y) * k };
     for (const key of new Set([...Object.keys(prev.pose), ...Object.keys(cur.pose)])) {

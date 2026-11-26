@@ -25,6 +25,8 @@ const { createWorld } = require("../engine/world3d.js");
 const { createTimeline } = require("../engine/timeline.js");
 const { figuran } = require("../engine/extras.js");
 const { CLIPS, samplePose } = require("../engine/clips.js");
+const { lineDuration, mouthAt } = require("../engine/lipsync.js");
+const FX = require("../engine/fx.js");
 
 const o = { loc: "kampung", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
@@ -61,9 +63,18 @@ const cast = (o.cast ? o.cast.split(/,(?=\s*[a-z_]+:)/) : []).map((s) => {
   }
   const rig = require(path.join(__dirname, "..", "characters", who, "rig.js"));
   const tl = createTimeline(spec, spotOf, rig.resolvePose, { flip: flag === "flip", seconds: o.seconds ? +o.seconds : null, scale: (rig.CANVAS && rig.CANVAS.scale) || 1 });
-  return { rig, tl };
+  return { who, rig, tl };
 });
 const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.total));
+// --dialog '[{"who":"hasan","at":1.2,"text":"Bu, kopi satu!"}]' -> LIP SYNC: mulut mengikuti huruf (bukan satu bentuk)
+const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d));
+// --camkeys '[{"t":0,"x":0,"z":-1,"f":1300},{"t":3,"f":1800,"track":"hasan","dx":0.3}]' -> kamera sinematik:
+//   pan/tilt (x/y/horizon), zoom in/out (f), dolly (z), tracking (track=nama tokoh, dx/dz offset). Antar key: ease in-out.
+const camkeys = o.camkeys ? JSON.parse(o.camkeys) : null;
+// --fx '[{"type":"shake","t":2,"dur":0.5,"amp":0.08}, {"type":"text","t":2,"text":"BYUR!"}, ...]' (lihat engine/fx.js)
+const fxList = o.fx ? JSON.parse(o.fx) : [];
+// --fg '[{"kind":"leaves","x":-1,"z":1.5}]' -> latar depan buram dekat kamera (parallax & kedalaman)
+const fgList = o.fg ? JSON.parse(o.fg) : [];
 // figuran: karakter latar acak yang beraktivitas sendiri (diulang). --extras off untuk mematikan.
 const extras = o.extras === "off" ? [] : (LOC.extras || []).map((e) => {
   const rig = figuran(e.seed, e.kind);
@@ -92,10 +103,31 @@ function frame(t) {
     const L = (k) => A[k] + (B[k] - A[k]) * u;
     camOpt.cam = { x: L("x"), y: L("y"), z: L("z") }; camOpt.f = L("f"); camOpt.horizon = L("horizon");
   }
+  const states = cast.map((m) => m.tl.at(t));
+  if (camkeys) {
+    const base = Object.assign({}, camOpt.cam || { x: 0, y: 1.5, z: 0 }, { f: camOpt.f || 1300, horizon: camOpt.horizon ?? 0.42 });
+    const keys = []; let prev = base;
+    for (const k of camkeys) {
+      const full = Object.assign({}, prev, k);
+      if (k.track) { const i = cast.findIndex((m) => m.who === k.track); if (i >= 0) { full.x = states[i].x + (k.dx || 0); if (k.dz != null) full.z = states[i].z + k.dz; } }
+      if (!k.track) delete full.track;
+      keys.push(full); prev = Object.assign({}, full, { track: undefined });
+    }
+    let a = keys[0], b = keys[0];
+    for (let i = 0; i < keys.length; i++) { if (keys[i].t <= t) { a = keys[i]; b = keys[i + 1] || keys[i]; } }
+    const u0 = b === a ? 0 : Math.min(1, Math.max(0, (t - a.t) / (b.t - a.t)));
+    const u = a.ease === "cut" ? 0 : a.ease === "lin" ? u0 : u0 < 0.5 ? 4 * u0 ** 3 : 1 - Math.pow(-2 * u0 + 2, 3) / 2;
+    const L = (k) => a[k] + (b[k] - a[k]) * u;
+    camOpt.cam = { x: L("x"), y: L("y"), z: L("z") }; camOpt.f = L("f"); camOpt.horizon = L("horizon");
+  }
+  const sh = FX.shake(fxList, t);
+  if (sh) camOpt.cam = { x: camOpt.cam.x + sh[0], y: camOpt.cam.y + sh[1], z: camOpt.cam.z };
   const w = createWorld(Object.assign({ W, H }, camOpt));
   const te = t + (+o.t0 || 0); // --t0: geser waktu lingkungan & figuran (mis. agar gol terjadi di tengah adegan)
   w.t = te; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
-  LOC.build(w, { t: te });
+  LOC.build(w, { t: te, extras: o.extras !== "off" });
+  FX.draw(w, fxList, t);
+  FX.foreground(w, fgList, t);
   // kabut jarak untuk karakter: makin jauh makin pudar (filter warna menuju warna langit)
   const fogIds = new Set();
   const fogFilter = (k) => {
@@ -129,7 +161,12 @@ function frame(t) {
   };
   for (const m of [...extras, ...cast]) {
     const tt = m.extra ? (te + m.phase) % m.tl.total : t;
-    const { pose, x, z, y } = m.tl.at(tt);
+    const { pose, x, z, y } = m.extra ? m.tl.at(tt) : states[cast.indexOf(m)];
+    // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
+    if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {
+      const mo = mouthAt(d.text, t - d.at);
+      if (mo) { pose.mouth = mo; pose.headY = (pose.headY || 0) + 1.2 * Math.abs(Math.sin((t - d.at) * 7)); }
+    }
     // bayangan matahari karakter (searah bayangan lingkungan)
     const hS = 0.55 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1) + (pose.sit ? (pose.seat || 0.45) * 0.6 : 0);
     w.castBlob(x, z, hS, 0.24 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1), { trunk: 0.12, strength: m.extra ? 0.6 : 0.9 });

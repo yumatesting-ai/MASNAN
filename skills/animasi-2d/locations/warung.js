@@ -14,7 +14,7 @@ module.exports = {
     duduk_meja: { x: -2.85, z: 7.28, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
     duduk_depan_meja: { x: -0.35, z: 7.1, seat: 0.48 },   // bangku depan meja jualan (membelakangi kamera)
     duduk_depan_meja2: { x: 0.2, z: 7.1, seat: 0.48 },
-    pesan: { x: 0.95, z: 7.95 },                          // berdiri di depan meja jualan untuk memesan (hadap Bu Atin)
+    pesan: { x: 1.3, z: 7.95 },                            // berdiri di depan meja jualan untuk memesan (hadap Bu Atin)
     // titik belok agar jalan tidak menembus meja/bangku/tiang
     belok_masuk: { x: 0.9, z: 6.6 }, belok_meja: { x: -1.55, z: 6.3 }, celah_meja: { x: -1.85, z: 7.22 },
     jalan_kiri: { x: -2.4, z: 4.2 }, jalan_kanan: { x: 3.0, z: 4.4 }, samping: { x: 3.4, z: 7.6 },

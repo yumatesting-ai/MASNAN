@@ -24,7 +24,7 @@ module.exports = {
     { seed: 36, kind: "ibu", spec: "chat_a{face=r}@9.8,25" },
     { seed: 37, kind: "bapak", spec: "chat_b{face=l}@10.7,25.3" },
   ],
-  build(w, { t = 0 } = {}) {
+  build(w, { t = 0, extras = true } = {}) {
     P.sky(w, { groundColor: P.PAL.dirt });
     const X0 = -12, X1 = 12, Z0 = 3.5, Z1 = 32;
     // rumput belang (bekas potong)
@@ -47,7 +47,7 @@ module.exports = {
       for (const z of [zA, zB]) w.line3([[gx, gh - 0.2, z - 0.05], [gx, gh + 0.05, z + 0.2]], "#555555", null, { bias: -0.1 }); // ikatan tali
     }
     // bola yang sedang dimainkan figuran
-    { const b = MATCH.ball(t); P.ball(w, b.x, b.z, { y: b.y, spin: b.spin }); }
+    if (extras !== false) { const b = MATCH.ball(t); P.ball(w, b.x, b.z, { y: b.y, spin: b.spin }); } // tanpa figuran = tanpa bola pertandingan
     P.groundDetail(w, -11, 11, 3.6, 14, 40, 51);
     // sandal sebagai tanda (khas lapangan kampung)
     for (const [x, z] of [[-1.2, 4.2], [-0.8, 4.3], [4.8, 4.1], [5.2, 4.2], [-6, 9.2], [-6, 10.4]]) w.ground([[x, 0.01, z], [x + 0.28, 0.01, z], [x + 0.28, 0.01, z + 0.12], [x, 0.01, z + 0.12]], "#5a5a5a", { bias: -0.5 });

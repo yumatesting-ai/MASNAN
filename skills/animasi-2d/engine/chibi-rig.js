@@ -17,7 +17,7 @@
 
 const BASE_DEFAULT_POSE = {
   view: null, flip: false, expr: null,
-  eyes: "normal", mouth: "cat", blink: 0, lookX: 0, lookY: 0, blush: 0, sweat: true,
+  eyes: "normal", mouth: "cat", blink: 0, lookX: 0, lookY: 0, blush: 0, dirty: 0, sweat: true,
   tears: "none", anger: false, gloom: false, above: null, fx: 0,
   headTilt: 0, headX: 0, headY: 0, hairSway: 0, ahoge: 0,
   breathe: 0, armL: 0, armR: 0, legL: 0, legR: 0, bodyX: 0, bodyY: 0, lean: 0, squash: 0, scaleX: 1,
@@ -256,6 +256,9 @@ function createRig(design) {
               <path fill="${C.tongue}" d="M-5,11.6 Q0,5 5,11.6 Q0,13.4 -5,11.6 Z"/>
               <path fill="none" ${st} d="M-10,-4 L10,-4 L6,12 Q0,14 -6,12 Z"/>`,
       smirk: `<path fill="none" ${st} d="M-7,1 Q1,4 8,-3"/>`,
+      // melet kepanasan: mulut terbuka + lidah menjulur
+      tongue: `<path fill="${C.mouthIn}" ${st} d="M-9,-4 L9,-4 Q8,7 0,7 Q-8,7 -9,-4 Z"/>
+               <path fill="${C.tongue}" ${st} d="M-5,3 Q-6,16 0,17 Q6,16 5,3 Z"/><path fill="none" ${st} d="M0,6 L0,13"/>`,
     };
     return `<g transform="translate(${m.x} ${m.y}) scale(${m.s})">${shapes[p.mouth] || shapes.cat}</g>`;
   }
@@ -287,6 +290,18 @@ function createRig(design) {
           d="M${x - 6},${y} C${x - 7},${y + 14} ${x - 9},${y + 28} ${x - 6 + wob},${y + 44}
              L${x + 6 + wob},${y + 44} C${x + 9},${y + 28} ${x + 7},${y + 14} ${x + 6},${y} Z"/>`;
       }).join("");
+    }
+    // wajah kecipratan kopi: noda gelap + tetesan yang mengalir (p.dirty 0..1, p.fx menggerakkan tetesan)
+    if (p.dirty > 0) {
+      const k = Math.min(1, p.dirty), dy = (p.fx * 14) % 14;
+      out += `<g clip-path="url(#${ID}-${faceClip})" opacity="${(0.85 * k).toFixed(2)}" fill="#5c5c5c">
+        <path d="M96,120 C110,104 132,112 140,126 C146,140 128,146 116,140 C104,150 90,138 96,120 Z"/>
+        <path d="M170,112 C186,104 204,116 200,132 C196,146 178,140 174,150 C164,146 160,124 170,112 Z"/>
+        <path d="M128,176 C140,168 162,170 168,182 C172,196 150,200 140,196 C126,198 120,186 128,176 Z"/>
+        <circle cx="152" cy="132" r="6"/><circle cx="110" cy="168" r="4"/><circle cx="190" cy="168" r="5"/>
+        <path d="M112,140 L110,${160 + dy} C110,${166 + dy} 118,${166 + dy} 117,${160 + dy} L116,142 Z"/>
+        <path d="M184,146 L183,${170 + dy * 0.7} C183,${176 + dy * 0.7} 190,${176 + dy * 0.7} 189,${170 + dy * 0.7} L188,148 Z"/>
+        <path d="M146,196 L145,${212 + dy * 0.5} C145,${218 + dy * 0.5} 152,${218 + dy * 0.5} 151,${212 + dy * 0.5} L150,198 Z"/></g>`;
     }
     if (p.sweat && L.sweat) {
       const { x, y } = L.sweat;
@@ -884,7 +899,10 @@ function createRig(design) {
         <path fill="#f6f6f6" ${LINE} d="M176,206 L206,200 L210,284 L180,290 Z"/>
         <path fill="none" stroke="#9a9a9a" stroke-width="2" d="M184,222 L202,218 M184,232 L203,228 M185,242 L204,238 M185,252 L204,248 M186,262 L205,258"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="180" cy="246" rx="7" ry="8.5"/></g>` : "";
-    return `${up(arm(p.armR, true, p.elbowR, p.holdR))}${leg(-p.legR, true)}${up(hairBackG)}${leg(-p.legL, false)}${up(torso)}
+    // lengan jauh (di balik badan) saat berayun ke depan: ayunan dikurangi agar ujung lengan baju tidak
+    // menyembul terpisah dari lengannya di depan dada (garis lengan terlihat "patah")
+    const farSwing = !p.holdR && Math.abs(p.elbowR) < 25 && p.armR > 0 ? p.armR * 0.35 : p.armR;
+    return `${up(arm(farSwing, true, p.elbowR, p.holdR))}${leg(-p.legR, true)}${up(hairBackG)}${leg(-p.legL, false)}${up(torso)}
       ${up(arm(p.armL, false, p.elbowL, p.holdL))}${up(head)}${up(paperS)}`;
   }
 

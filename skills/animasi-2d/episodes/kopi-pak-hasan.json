@@ -1,0 +1,521 @@
+{
+  "title": "Kopi Pak Hasan",
+  "format": "portrait",
+  "scenes": [
+    {
+      "judul": "Ritual pagi (WIDE, push-in pelan)",
+      "loc": "warung",
+      "seconds": 8,
+      "cast": "hasan:walk@jalan_kiri>belok_masuk>pesan+wait_back/3, atin:idle@balik_etalase",
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -0.7,
+          "y": 1.45,
+          "z": -0.6,
+          "f": 1150,
+          "horizon": 0.42
+        },
+        {
+          "t": 8,
+          "x": 0.5,
+          "z": 0.2,
+          "f": 1300
+        }
+      ],
+      "fg": [
+        {
+          "kind": "bush",
+          "x": -1.4,
+          "z": 1.2,
+          "s": 0.55
+        },
+        {
+          "kind": "post",
+          "x": 0.02,
+          "z": 1.2,
+          "s": 1.0
+        },
+        {
+          "kind": "grass",
+          "x": -0.9,
+          "z": 1.2,
+          "s": 0.9
+        }
+      ],
+      "visual": "Pagi di Warkop Bu Atin. Pak Hasan datang dan berdiri di depan meja jualan. Daun & rumput buram di latar depan, kamera mendorong pelan (parallax).",
+      "narasi": "Setiap pagi, Pak Hasan punya satu ritual suci: ngopi di Warkop Bu Atin."
+    },
+    {
+      "judul": "Diet (MEDIUM dua tokoh -> SNAP ZOOM ke Bu Atin)",
+      "loc": "warung",
+      "seconds": 13.5,
+      "cast": "hasan:order@pesan/3+wait_back/5.2+pat_belly/2.7+idle/2.6, atin:idle@balik_etalase/4.8+deadpan_look/3+idle/3.1+deadpan/3",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.3,
+          "text": "Bu, kopi hitam satu. Gulanya dikit aja..."
+        },
+        {
+          "who": "hasan",
+          "at": 3.7,
+          "text": "Saya lagi diet."
+        },
+        {
+          "who": "atin",
+          "at": 6.4,
+          "text": "Diet... dari mana, Pak?"
+        },
+        {
+          "who": "hasan",
+          "at": 8.5,
+          "text": "Ini bukan lemak, Bu. Ini tabungan!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.2,
+          "y": 1.35,
+          "z": 4.2,
+          "f": 1200,
+          "horizon": 0.45
+        },
+        {
+          "t": 8.2,
+          "x": 0.25,
+          "z": 4.5
+        },
+        {
+          "t": 11.0,
+          "x": 0.25,
+          "z": 4.5,
+          "f": 1250
+        },
+        {
+          "t": 11.25,
+          "x": 0.75,
+          "y": 1.5,
+          "z": 4.6,
+          "f": 2500,
+          "horizon": 0.4
+        },
+        {
+          "t": 13.5,
+          "f": 2550
+        }
+      ],
+      "visual": "Pak Hasan memesan (membelakangi kamera). Bu Atin melirik perutnya dari atas ke bawah. Pak Hasan berbalik, menepuk perut dengan bangga. SNAP ZOOM ke wajah datar Bu Atin.",
+      "narasi": ""
+    },
+    {
+      "judul": "PANAS! (CLOSE-UP, push-in kaget + guncang)",
+      "loc": "warung",
+      "seconds": 9,
+      "cast": "hasan:blow@duduk_meja/2+spit_take/3.2+hot_fan/3.8",
+      "dialog": [
+        {
+          "who": "atin",
+          "at": 5.6,
+          "text": "Baru mendidih, Pak..."
+        },
+        {
+          "who": "hasan",
+          "at": 7.2,
+          "text": "BILANG DONG!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.85,
+          "y": 1.0,
+          "z": 4.4,
+          "f": 1450,
+          "horizon": 0.42
+        },
+        {
+          "t": 2.85,
+          "z": 4.5
+        },
+        {
+          "t": 3.05,
+          "z": 4.9,
+          "f": 1650
+        },
+        {
+          "t": 9,
+          "z": 5.0
+        }
+      ],
+      "fx": [
+        {
+          "type": "spray",
+          "t": 2.92,
+          "x": -2.85,
+          "y": 1.02,
+          "z": 7.0,
+          "dz": -1,
+          "n": 26
+        },
+        {
+          "type": "text",
+          "t": 2.92,
+          "text": "PFFFT!",
+          "sx": 0.5,
+          "sy": 0.17,
+          "size": 0.15
+        },
+        {
+          "type": "shake",
+          "t": 2.92,
+          "dur": 0.55,
+          "amp": 0.05
+        }
+      ],
+      "visual": "Pak Hasan meniup kopi, menyeruput... lalu kaget kepanasan dan menyemburkan kopi ke arah kamera (PFFFT!). Melet sambil mengipas mulut.",
+      "narasi": ""
+    },
+    {
+      "judul": "Tendangan Halilintar (MEDIUM -> TILT UP ikuti bola)",
+      "loc": "lapangan",
+      "seconds": 10.5,
+      "extras": "off",
+      "cast": "bima:idle_three{face=r}@-0.8,6.2/1.2+big_kick/2.4+look_up/3.2+sheepish/3.7, rara:idle_three{face=l}@1.6,7.4/2.4+look_up/3.6+deadpan/4.5",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 0.1,
+          "text": "Tendangan... HALILINTAAAR!"
+        },
+        {
+          "who": "rara",
+          "at": 6.9,
+          "text": "Bim... itu arahnya ke warkop."
+        },
+        {
+          "who": "bima",
+          "at": 9.1,
+          "text": "...Waduh."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.3,
+          "y": 1.15,
+          "z": 2.0,
+          "f": 1300,
+          "horizon": 0.5
+        },
+        {
+          "t": 2.3,
+          "x": 0.3,
+          "z": 2.2
+        },
+        {
+          "t": 3.6,
+          "x": 1.2,
+          "y": 2.2,
+          "z": 2.2,
+          "f": 1100,
+          "horizon": 0.95
+        },
+        {
+          "t": 4.6,
+          "x": 1.2,
+          "y": 2.2,
+          "horizon": 0.95
+        },
+        {
+          "t": 5.6,
+          "x": 0.2,
+          "y": 1.15,
+          "z": 2.4,
+          "f": 1250,
+          "horizon": 0.5
+        }
+      ],
+      "fx": [
+        {
+          "type": "ball",
+          "t0": 2.32,
+          "t1": 4.3,
+          "from": [
+            -0.45,
+            0,
+            6.15
+          ],
+          "to": [
+            6,
+            22,
+            34
+          ],
+          "h": 6,
+          "hold": "start",
+          "rFly": 0.45
+        },
+        {
+          "type": "text",
+          "t": 2.32,
+          "text": "DUAKK!",
+          "sx": 0.38,
+          "sy": 0.28,
+          "size": 0.13,
+          "rot": -12
+        },
+        {
+          "type": "burst",
+          "t": 2.32,
+          "sx": 0.36,
+          "sy": 0.66
+        },
+        {
+          "type": "shake",
+          "t": 2.32,
+          "dur": 0.35,
+          "amp": 0.03
+        }
+      ],
+      "visual": "Bima ancang-ancang panjang lalu menendang sekuat tenaga. Kamera mendongak mengikuti bola yang melesat tinggi menghilang. Rara menatap datar.",
+      "narasi": ""
+    },
+    {
+      "judul": "Akhirnya tenang (MEDIUM -> slow push dramatis)",
+      "loc": "warung",
+      "seconds": 9,
+      "cast": "hasan:sit_read@duduk_meja/3.05+eye_twitch{dirty=1}/6",
+      "dialog": [
+        {
+          "who": "hasan",
+          "at": 0.4,
+          "text": "Akhirnya... tenang juga."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.7,
+          "y": 1.15,
+          "z": 3.4,
+          "f": 1300,
+          "horizon": 0.45
+        },
+        {
+          "t": 3.0,
+          "z": 3.4
+        },
+        {
+          "t": 4.6,
+          "z": 3.5
+        },
+        {
+          "t": 9,
+          "x": -2.85,
+          "y": 1.05,
+          "z": 4.3,
+          "f": 1700
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 1.9,
+          "dur": 1.0,
+          "text": "wuuussh...",
+          "sx": 0.62,
+          "sy": 0.12,
+          "size": 0.07,
+          "rot": 6
+        },
+        {
+          "type": "ball",
+          "t0": 2.45,
+          "t1": 3.0,
+          "from": [
+            -2.2,
+            8,
+            3.8
+          ],
+          "to": [
+            -3.15,
+            0.84,
+            6.75
+          ],
+          "h": 0,
+          "hold": "end",
+          "r": 0.16
+        },
+        {
+          "type": "splash",
+          "t": 3.0,
+          "x": -3.15,
+          "y": 0.86,
+          "z": 6.75,
+          "n": 22,
+          "size": 1.2
+        },
+        {
+          "type": "text",
+          "t": 3.0,
+          "text": "BYURR!",
+          "sx": 0.5,
+          "sy": 0.2,
+          "size": 0.16
+        },
+        {
+          "type": "shake",
+          "t": 3.0,
+          "dur": 0.5,
+          "amp": 0.05
+        }
+      ],
+      "visual": "Pak Hasan santai membaca koran. Bola jatuh dari langit tepat ke gelas kopinya: BYURR! Koran turun, wajahnya penuh kopi. Hening. Mata berkedut.",
+      "narasi": ""
+    },
+    {
+      "judul": "Dicatat (CLOSE-UP Bu Atin)",
+      "loc": "warung",
+      "seconds": 5.5,
+      "cast": "atin:talk@balik_etalase/3+smug/2.5",
+      "dialog": [
+        {
+          "who": "atin",
+          "at": 0.3,
+          "text": "Kopinya nambah satu ya, Pak. Saya catat."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.75,
+          "y": 1.75,
+          "z": 5.6,
+          "f": 1700,
+          "horizon": 0.33
+        },
+        {
+          "t": 5.5,
+          "z": 5.8
+        }
+      ],
+      "visual": "Bu Atin, datar tanpa ampun, mencatat utang kopi.",
+      "narasi": ""
+    },
+    {
+      "judul": "BIMAAA! (WIDE -> tracking kejar-kejaran)",
+      "loc": "warung",
+      "seconds": 11,
+      "cast": "bima:run@3.6,5.2>-1.1,5.6+skid/1+sheepish/3.2+run_panic@-1.1,5.6>7,5.0, hasan:eye_twitch{dirty=1}@duduk_meja/6.2+angry_shake{dirty=1}/1.4+run_angry{dirty=1}@duduk_meja>celah_meja>belok_meja>7,5.4",
+      "dialog": [
+        {
+          "who": "bima",
+          "at": 3.3,
+          "text": "Pak... bolanya boleh diambil?"
+        },
+        {
+          "who": "hasan",
+          "at": 6.3,
+          "text": "BIMAAAAA!!!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -1.0,
+          "y": 1.35,
+          "z": 0.6,
+          "f": 1200,
+          "horizon": 0.43
+        },
+        {
+          "t": 6.2,
+          "x": -1.6,
+          "z": 1.4,
+          "f": 1300
+        },
+        {
+          "t": 6.5,
+          "x": -2.4,
+          "z": 2.6,
+          "f": 1500
+        },
+        {
+          "t": 7.6,
+          "x": -2.0,
+          "z": 1.0,
+          "f": 1150
+        },
+        {
+          "t": 10.5,
+          "track": "hasan",
+          "dx": 0.6,
+          "z": 0.6,
+          "f": 1150
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 6.3,
+          "dur": 1.4,
+          "text": "BIMAAA!!",
+          "sx": 0.5,
+          "sy": 0.16,
+          "size": 0.15
+        },
+        {
+          "type": "shake",
+          "t": 6.3,
+          "dur": 1.0,
+          "amp": 0.06
+        }
+      ],
+      "visual": "Bima berlari masuk, mengerem mendadak, nyengir malu. Pak Hasan meledak marah lalu mengejar; Bima kabur panik. Kamera mengikuti kejar-kejaran.",
+      "narasi": ""
+    },
+    {
+      "judul": "Penutup (Nana ngakak)",
+      "loc": "kampung",
+      "seconds": 9,
+      "cast": "nana:idle@depan/1.2+look_around/2.6+laugh_hard/3.6+deadpan/1.6, bima:run_panic@-4.5,7.6>4.5,7.6, hasan:idle{dirty=1}@-9,7.8/1.1+run_angry{dirty=1}@-4.5,7.8>4.5,7.8",
+      "dialog": [
+        {
+          "who": "nana",
+          "at": 7.3,
+          "text": "Besok pasti kejadian lagi."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.1,
+          "y": 1.3,
+          "z": 0.2,
+          "f": 1300,
+          "horizon": 0.45
+        },
+        {
+          "t": 9,
+          "z": 1.0,
+          "f": 1400
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 7.9,
+          "dur": 1.1,
+          "text": "BERSAMBUNG...",
+          "sx": 0.5,
+          "sy": 0.12,
+          "size": 0.08,
+          "rot": 0
+        }
+      ],
+      "visual": "Bima lari panik melintas, disusul Pak Hasan yang wajahnya masih penuh kopi. Nana tertawa terbahak-bahak, lalu menatap kamera datar.",
+      "narasi": ""
+    }
+  ]
+}
