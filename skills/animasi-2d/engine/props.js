@@ -137,33 +137,171 @@ function bush(w, x, z, r = 0.55) {
       <circle cx="0" cy="${-R * 1.15}" r="${R * 0.6}" fill="${fog(PAL.leaf)}"/></g>`;
   });
 }
+// ---------- pohon (sprite berarsir, bergoyang tertiup angin) ----------
+// kind: "round" (pohon rindang/mangga), "palm" (kelapa), "banana" (pisang). Waktu animasi diambil dari w.t.
+function treeRng(seed) {
+  let s = (Math.abs(Math.round(seed * 1000)) * 2654435761) >>> 0 || 7;
+  return () => { s ^= s << 13; s >>>= 0; s ^= s >> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; };
+}
+// garis luar bergelombang seperti awan (tajuk daun)
+function cloudPath(cx, cy, rx, ry, n, r, amp = 0.16) {
+  const pts = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2 + r() * 0.2;
+    const k = 1 - amp * 0.5 + r() * amp * 0.6;
+    pts.push([cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]);
+  }
+  let d = `M${pts[0][0].toFixed(1)},${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const [x0, y0] = pts[i], [x1, y1] = pts[(i + 1) % n];
+    const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+    const ox = (mx - cx) * (0.22 + r() * 0.12), oy = (my - cy) * (0.22 + r() * 0.12);
+    d += ` Q${(mx + ox).toFixed(1)},${(my + oy).toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`;
+  }
+  return d + " Z";
+}
 function tree(w, x, z, o = {}) {
   const h = o.h || 5.5, kind = o.kind || "round";
+  const seed = x * 13.7 + z * 7.3 + h;
+  const T = w.t || 0;
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
-    const t = (v) => (v * p).toFixed(1);
-    let top = "";
+    const r = treeRng(seed);
+    const id = `tr${Math.round(Math.abs(seed) * 100)}`;
+    const P = (v) => (v * p).toFixed(1);
+    const sway = Math.sin(T * 1.3 + seed) * 1.6 + Math.sin(T * 2.7 + seed * 2) * 0.5; // derajat
+    const shadow = `<ellipse cx="0" cy="0" rx="${P(h * (kind === "round" ? 0.32 : 0.2))}" ry="${P(0.16)}" fill="rgba(0,0,0,0.13)" stroke="none"/>`;
+    const L = `stroke="${lc}" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="round"`;
+    let out = "";
+
     if (kind === "round") {
-      top = [[0, -h * 0.74, h * 0.26], [-h * 0.18, -h * 0.62, h * 0.19], [h * 0.18, -h * 0.63, h * 0.2], [-h * 0.03, -h * 0.9, h * 0.17]]
-        .map(([bx, by, r], i) => `<circle cx="${t(bx)}" cy="${t(by)}" r="${t(r)}" fill="${fog(i % 2 ? PAL.leafB : PAL.leaf)}"/>`).join("")
-        + `<circle cx="${t(h * 0.08)}" cy="${t(-h * 0.6)}" r="${t(h * 0.2)}" fill="${fog(mul(PAL.leaf, 0.86))}" opacity="0.7"/>`;
+      const tw = h * 0.055, th = h * 0.42;
+      const trunkD = `M${P(-tw * 1.9)},0 C${P(-tw * 1.1)},${P(-0.12)} ${P(-tw)},${P(-h * 0.12)} ${P(-tw * 0.85)},${P(-th)}
+        L${P(tw * 0.85)},${P(-th)} C${P(tw)},${P(-h * 0.12)} ${P(tw * 1.1)},${P(-0.12)} ${P(tw * 1.9)},0 Z`;
+      const branches = `M0,${P(-th * 0.92)} C${P(-h * 0.05)},${P(-h * 0.48)} ${P(-h * 0.12)},${P(-h * 0.55)} ${P(-h * 0.2)},${P(-h * 0.66)}
+        M0,${P(-th * 0.95)} C${P(h * 0.05)},${P(-h * 0.5)} ${P(h * 0.11)},${P(-h * 0.57)} ${P(h * 0.17)},${P(-h * 0.7)}
+        M0,${P(-th)} L${P(h * 0.01)},${P(-h * 0.72)}`;
+      const bark = Array.from({ length: 5 }, (_, i) => `M${P((r() - 0.5) * tw * 1.2)},${P(-h * (0.08 + i * 0.09))} l0,${P(-h * 0.05)}`).join(" ");
+      const cx = 0, cy = -h * 0.75, rx = h * 0.38, ry = h * 0.26;
+      const canopy = cloudPath(cx * p, cy * p, rx * p, ry * p, 13, r);
+      const dark = cloudPath((cx + rx * 0.25) * p, (cy + ry * 0.35) * p, rx * 0.85 * p, ry * 0.75 * p, 11, r, 0.2);
+      const lite = cloudPath((cx - rx * 0.3) * p, (cy - ry * 0.35) * p, rx * 0.5 * p, ry * 0.42 * p, 9, r, 0.2);
+      const tufts = Array.from({ length: 22 }, () => {
+        const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.85;
+        const px = (cx + Math.cos(a) * rx * d) * p, py = (cy + Math.sin(a) * ry * d) * p, s = h * 0.035 * p;
+        return `M${(px - s).toFixed(1)},${py.toFixed(1)} q${s.toFixed(1)},${(-s * 1.2).toFixed(1)} ${(s * 2).toFixed(1)},0`;
+      }).join(" ");
+      const fruits = o.fruit === false ? "" : Array.from({ length: 4 }, () => {
+        const fx = (cx + (r() - 0.5) * rx * 1.2) * p, fy = (cy + ry * (0.25 + r() * 0.45)) * p, fr = h * 0.022 * p;
+        return `<path d="M${fx.toFixed(1)},${(fy - fr).toFixed(1)} l0,${(-fr * 0.8).toFixed(1)}" ${L} fill="none"/>
+          <ellipse cx="${fx.toFixed(1)}" cy="${fy.toFixed(1)}" rx="${(fr * 0.8).toFixed(1)}" ry="${fr.toFixed(1)}" fill="${fog("#6f6f6f")}" ${L}/>`;
+      }).join("");
+      out = `${shadow}
+        <path d="${trunkD}" fill="${fog("#7d7d7d")}" ${L}/>
+        <clipPath id="${id}t"><path d="${trunkD}"/></clipPath>
+        <rect clip-path="url(#${id}t)" x="0" y="${P(-h)}" width="${P(tw * 2)}" height="${P(h)}" fill="${fog("#5f5f5f")}" opacity="0.7"/>
+        <path d="${bark}" fill="none" stroke="${fog("#555555")}" stroke-width="${sw * 0.7}" stroke-linecap="round"/>
+        <path d="${branches}" fill="none" stroke="${lc}" stroke-width="${(tw * 0.9 * p + sw * 2).toFixed(1)}" stroke-linecap="round"/>
+        <path d="${branches}" fill="none" stroke="${fog("#7d7d7d")}" stroke-width="${(tw * 0.9 * p).toFixed(1)}" stroke-linecap="round"/>
+        <g transform="rotate(${sway.toFixed(2)} 0 ${P(-th)})">
+          <clipPath id="${id}c"><path d="${canopy}"/></clipPath>
+          <path d="${canopy}" fill="${fog("#9e9e9e")}"/>
+          <path clip-path="url(#${id}c)" d="${dark}" fill="${fog("#858585")}"/>
+          <path clip-path="url(#${id}c)" d="${lite}" fill="${fog("#b4b4b4")}"/>
+          <path clip-path="url(#${id}c)" d="${tufts}" fill="none" stroke="${fog("#6e6e6e")}" stroke-width="${sw * 0.75}" stroke-linecap="round"/>
+          <path d="${canopy}" fill="none" ${L}/>
+          ${fruits}
+        </g>`;
     } else if (kind === "palm") {
-      top = [-60, -25, 15, 50, 85, 120, 160].map((a) => {
-        const r = (a * Math.PI) / 180, L2 = h * 0.42;
-        return `<path d="M0,${t(-h)} Q${t(Math.cos(r) * L2 * 0.6)},${t(-h - 0.5 - Math.sin(r) * 0.6)} ${t(Math.cos(r) * L2)},${t(-h + Math.abs(Math.sin(r)) * 0.4 + 0.6)}" fill="none" stroke="${fog(PAL.leaf)}" stroke-width="${t(0.28)}" stroke-linecap="round"/>`;
-      }).join("") + `<circle cx="${t(0.15)}" cy="${t(-h + 0.25)}" r="${t(0.18)}" fill="${fog("#7a7a7a")}"/><circle cx="${t(-0.15)}" cy="${t(-h + 0.3)}" r="${t(0.18)}" fill="${fog("#7a7a7a")}"/>`;
+      const lean = (o.lean ?? (r() - 0.5) * 0.5) * h, tb = h * 0.05, tt = h * 0.032;
+      const top = [lean + Math.sin(T * 1.1 + seed) * h * 0.008, -h];
+      const bez = (t) => { const u = 1 - t; return [3 * u * t * t * lean * 0.9 + t * t * t * top[0], -(3 * u * u * t * h * 0.3 + 3 * u * t * t * h * 0.75 + t * t * t * h)]; };
+      const left = [], right = [];
+      for (let i = 0; i <= 12; i++) { const t = i / 12, [bx, by] = bez(t), wd = tb + (tt - tb) * t; left.push([bx - wd, by]); right.push([bx + wd, by]); }
+      const trunkD = "M" + [...left, ...right.reverse()].map(([a, b]) => `${P(a)},${P(b)}`).join(" L") + " Z";
+      const rings = Array.from({ length: 11 }, (_, i) => { const t = (i + 0.6) / 12, [bx, by] = bez(t), wd = tb + (tt - tb) * t; return `M${P(bx - wd)},${P(by)} Q${P(bx)},${P(by + 0.06)} ${P(bx + wd)},${P(by)}`; }).join(" ");
+      // pelepah: pita melengkung meruncing + celah antar anak daun (garis warna langit)
+      const frond = (ang, len, droop, col) => {
+        const a = (ang * Math.PI) / 180, segs = 14, pts = [];
+        for (let i = 0; i <= segs; i++) {
+          const t = i / segs;
+          pts.push([top[0] + Math.cos(a) * len * t, top[1] - Math.sin(a) * len * t * (1 - 0.35 * t) + droop * t * t]);
+        }
+        const L1 = [], R1 = [], cuts = [];
+        for (let i = 0; i <= segs; i++) {
+          const [x0, y0] = pts[Math.max(0, i - 1)], [x1, y1] = pts[Math.min(segs, i + 1)];
+          const dx = x1 - x0, dy = y1 - y0, m = Math.hypot(dx, dy) || 1, nx = -dy / m, ny = dx / m;
+          const t = i / segs, wd = len * 0.13 * Math.sin(Math.PI * Math.min(1, t * 1.15)) + len * 0.01;
+          const [px, py] = pts[i];
+          L1.push([px + nx * wd, py + ny * wd + wd * 0.5]); R1.push([px - nx * wd, py - ny * wd + wd * 0.5]);
+          if (i > 1 && i < segs) cuts.push(`M${P(px)},${P(py)} L${P(px + nx * wd * 1.05 - dx * 0.1)},${P(py + ny * wd * 1.05 + wd * 0.5)} M${P(px)},${P(py)} L${P(px - nx * wd * 1.05 - dx * 0.1)},${P(py - ny * wd * 1.05 + wd * 0.5)}`);
+        }
+        const body = "M" + [...L1, ...R1.reverse()].map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L") + " Z";
+        const mid = "M" + pts.map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L");
+        return `<path d="${body}" fill="${fog(col)}" ${L} stroke-width="${sw * 0.8}"/>
+          <path d="${cuts.join(" ")}" fill="none" stroke="${fog("#eeeeee")}" stroke-width="${sw * 0.9}"/>
+          <path d="${mid}" fill="none" stroke="${fog("#5a5a5a")}" stroke-width="${sw * 0.8}"/>`;
+      };
+      const sw2 = Math.sin(T * 1.4 + seed) * 6;
+      const back = [[140 + sw2, h * 0.34, h * 0.08], [40 + sw2, h * 0.34, h * 0.08], [92 + sw2 * 0.5, h * 0.24, h * 0.02]].map(([a, l, d]) => frond(a, l, d, "#7f7f7f")).join("");
+      const front = [[175 + sw2, h * 0.42, h * 0.26], [5 + sw2, h * 0.42, h * 0.26], [205 + sw2, h * 0.32, h * 0.3], [-25 + sw2, h * 0.32, h * 0.3]]
+        .map(([a, l, d], i) => frond(a, l, d, i % 2 ? "#9a9a9a" : "#a8a8a8")).join("");
+      const nuts = [[-0.11, 0.1], [0.1, 0.12], [0, 0.17], [-0.05, 0.05]].map(([dx, dy]) =>
+        `<circle cx="${P(top[0] + dx * h * 0.5)}" cy="${P(top[1] + dy * h * 0.35)}" r="${P(h * 0.03)}" fill="${fog("#5c5c5c")}" ${L} stroke-width="${sw * 0.8}"/>`).join("");
+      out = `${shadow}<path d="${trunkD}" fill="${fog("#8a8a8a")}" ${L}/>
+        <path d="${rings}" fill="none" stroke="${fog("#5f5f5f")}" stroke-width="${sw * 0.7}"/>
+        ${back}${nuts}${front}`;
     } else if (kind === "banana") {
-      top = [[-1, -0.2], [1, -0.1], [-0.7, 0.5], [0.8, 0.6], [0.1, -0.8]].map(([dx, dy], i) => {
-        const ex = dx * h * 0.42, ey = -h * 0.82 + dy * h * 0.18;
-        return `<path d="M0,${t(-h * 0.78)} Q${t(ex * 0.5)},${t(ey - h * 0.22)} ${t(ex)},${t(ey)} Q${t(ex * 0.6)},${t(ey - h * 0.05)} 0,${t(-h * 0.72)} Z" fill="${fog(i % 2 ? PAL.banana : PAL.leafB)}"/>
-          <path d="M0,${t(-h * 0.76)} Q${t(ex * 0.5)},${t(ey - h * 0.16)} ${t(ex)},${t(ey)}" fill="none" stroke="${lc}" stroke-width="${sw * 0.6}"/>`;
-      }).join("") + `<path d="M${t(0.1)},${t(-h * 0.66)} q${t(0.3)},${t(0.2)} ${t(0.2)},${t(0.6)} l${t(-0.2)},${t(0.05)} Z" fill="${fog("#7d7d7d")}"/>`;
+      const sh = h * 0.62, sw0 = h * 0.07;
+      const stem = `M${P(-sw0)},0 C${P(-sw0)},${P(-sh * 0.4)} ${P(-sw0 * 0.75)},${P(-sh * 0.8)} ${P(-sw0 * 0.6)},${P(-sh)} L${P(sw0 * 0.6)},${P(-sh)} C${P(sw0 * 0.75)},${P(-sh * 0.8)} ${P(sw0)},${P(-sh * 0.4)} ${P(sw0)},0 Z`;
+      const sheaths = `M${P(-sw0 * 0.4)},0 C${P(-sw0 * 0.3)},${P(-sh * 0.4)} ${P(-sw0 * 0.2)},${P(-sh * 0.7)} ${P(-sw0 * 0.1)},${P(-sh)}
+        M${P(sw0 * 0.35)},0 C${P(sw0 * 0.3)},${P(-sh * 0.5)} ${P(sw0 * 0.25)},${P(-sh * 0.75)} ${P(sw0 * 0.2)},${P(-sh * 0.95)}`;
+      // daun pisang: lebar, melengkung menjuntai, tulang daun, sobekan (celah warna langit)
+      const leaf = (ang, len, droop, col, torn, dead) => {
+        const a = (ang * Math.PI) / 180, base = [0, -sh * 0.97], segs = 12, mid = [];
+        for (let i = 0; i <= segs; i++) {
+          const t = i / segs;
+          mid.push([base[0] + Math.cos(a) * len * t, base[1] - Math.sin(a) * len * t + droop * t * t * 1.4 - len * 0.25 * Math.sin(Math.PI * t) * Math.max(0, Math.sin(a))]);
+        }
+        const up = [], dn = [], cuts = [];
+        for (let i = 0; i <= segs; i++) {
+          const [x0, y0] = mid[Math.max(0, i - 1)], [x1, y1] = mid[Math.min(segs, i + 1)];
+          const dx = x1 - x0, dy = y1 - y0, m = Math.hypot(dx, dy) || 1, nx = -dy / m, ny = dx / m;
+          const t = i / segs, wd = len * (dead ? 0.07 : 0.17) * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.05)), 0.7);
+          const [px, py] = mid[i];
+          up.push([px + nx * wd, py + ny * wd]); dn.push([px - nx * wd, py - ny * wd]);
+          if (torn && i > 2 && i < segs - 1 && i % 2 === 0) {
+            const sgn = i % 4 === 0 ? 1 : -1;
+            cuts.push(`M${P(px + nx * wd * 1.1 * sgn)},${P(py + ny * wd * 1.1 * sgn)} L${P(px + nx * wd * 0.2 * sgn - dx * 0.15)},${P(py + ny * wd * 0.2 * sgn - dy * 0.15)}`);
+          }
+        }
+        const body = "M" + [...up, ...dn.reverse()].map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L") + " Z";
+        const rib = "M" + mid.map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L");
+        const veins = mid.filter((_, i) => i > 0 && i < segs && i % 2).map(([px, py], k) => `M${P(px)},${P(py)} l${P(0.06)},${P(-0.08)}`).join(" ");
+        return `<path d="${body}" fill="${fog(col)}" ${L}/>
+          <path d="${rib}" fill="none" stroke="${fog(dead ? "#4f4f4f" : "#6a6a6a")}" stroke-width="${sw * 0.9}"/>
+          ${cuts.length ? `<path d="${cuts.join(" ")}" fill="none" stroke="${fog("#eeeeee")}" stroke-width="${sw * 1.3}"/>` : ""}`;
+      };
+      const s2 = Math.sin(T * 1.5 + seed) * 4;
+      // tandan pisang + jantung
+      const bx = h * 0.1, by = -sh * 0.78;
+      const fingers = [];
+      for (let row = 0; row < 3; row++) for (let k = 0; k < 4; k++) {
+        const fx = bx + (k - 1.5) * h * 0.028, fy = by + row * h * 0.05;
+        fingers.push(`<path d="M${P(fx)},${P(fy)} q${P(-h * 0.015)},${P(h * 0.04)} ${P(h * 0.006)},${P(h * 0.06)} q${P(h * 0.01)},${P(-h * 0.03)} ${P(h * 0.012)},${P(-h * 0.06)} Z" fill="${fog(row % 2 ? "#9a9a9a" : "#a8a8a8")}" ${L} stroke-width="${sw * 0.7}"/>`);
+      }
+      const hy = by + h * 0.2;
+      out = `${shadow}
+        ${leaf(-60 + s2 * 0.3, h * 0.4, h * 0.25, "#777777", false, true)}
+        ${leaf(150 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}${leaf(30 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}
+        <path d="${stem}" fill="${fog("#a3a3a3")}" ${L}/>
+        <path d="${sheaths}" fill="none" stroke="${fog("#7a7a7a")}" stroke-width="${sw * 0.7}"/>
+        <path d="M${P(bx)},${P(-sh * 0.95)} L${P(bx)},${P(hy)}" fill="none" ${L} stroke-width="${sw * 1.6}"/>
+        ${fingers.join("")}
+        <path d="M${P(bx)},${P(hy)} c${P(-h * 0.035)},${P(h * 0.02)} ${P(-h * 0.03)},${P(h * 0.09)} 0,${P(h * 0.11)} c${P(h * 0.03)},${P(-h * 0.02)} ${P(h * 0.035)},${P(-h * 0.09)} 0,${P(-h * 0.11)} Z" fill="${fog("#555555")}" ${L}/>
+        ${leaf(125 + s2, h * 0.5, h * 0.18, "#a3a3a3", true)}${leaf(55 + s2, h * 0.5, h * 0.18, "#a3a3a3", false)}
+        ${leaf(95 + s2 * 0.5, h * 0.4, h * 0.02, "#b2b2b2", true)}`;
     }
-    const trunkTop = kind === "palm" ? 1 : kind === "banana" ? 0.78 : 0.6, tw = kind === "banana" ? 0.16 : 0.13;
-    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})" stroke="${lc}" stroke-width="${sw}" stroke-linejoin="round">
-      <ellipse cx="0" cy="0" rx="${t(h * 0.2)}" ry="${t(0.12)}" fill="rgba(0,0,0,0.12)" stroke="none"/>
-      <path d="M${t(-tw)},0 L${t(-tw * 0.7)},${t(-h * trunkTop)} L${t(tw * 0.7)},${t(-h * trunkTop)} L${t(tw)},0 Z" fill="${fog(kind === "banana" ? "#9a9a9a" : PAL.trunk)}"/>
-      ${kind === "palm" ? [0.2, 0.4, 0.6, 0.8].map((k) => `<path d="M${t(-tw * 0.8)},${t(-h * k)} L${t(tw * 0.8)},${t(-h * k)}" stroke-width="${sw * 0.5}"/>`).join("") : ""}
-      ${top}</g>`;
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})">${out}</g>`;
   }, { bias: o.bias || 0 });
 }
 // jemuran: dua tiang bambu + tali + pakaian

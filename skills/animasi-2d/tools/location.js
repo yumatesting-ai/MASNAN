@@ -71,6 +71,7 @@ function frame(t) {
   const camOpt = Object.assign({}, LOC.camera, portrait ? LOC.cameraPortrait || {} : {});
   if (portrait && !LOC.cameraPortrait) { camOpt.f = (camOpt.f || 1300) * 1.3; camOpt.horizon = 0.4; } // vertikal: lebih dekat
   const w = createWorld(Object.assign({ W, H }, camOpt));
+  w.t = t; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
   LOC.build(w, { t });
   // kabut jarak untuk karakter: makin jauh makin pudar (filter warna menuju warna langit)
   const fogIds = new Set();
