@@ -6,7 +6,7 @@
 //   node tools/location.js --loc komplek --cast "nana:walk_front@jauh>depan" --seconds 4 --out out/pulang.mp4
 //   node tools/location.js --list
 //
-// Format cast: karakter:klip@titik[:flip]   — titik dari spots lokasi, atau "x,z" (meter).
+// Format cast: karakter:klip@titik[:flip]   — titik dari spots lokasi, atau "x,z" (meter). Spot boleh punya y (lantai tinggi).
 //   "a>b" = berjalan dari titik a ke titik b selama durasi video.
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
 
@@ -66,10 +66,11 @@ function frame(t) {
     const z = m.from.z + ((m.to ? m.to.z : m.from.z) - m.from.z) * k;
     const pose = samplePose(m.clip, t % m.clip.duration, m.rig.resolvePose);
     if (m.flip) pose.flip = !pose.flip;
+    const y = m.from.y || 0;
     w.sprite(x, z, (sx, sy, p) => {
       const s = p / KID_UNITS_PER_M;
       return `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(m.clip.view, pose)}</g>`;
-    }, { bias: -0.05 });
+    }, { bias: -0.05, y });
   }
   return w.render();
 }

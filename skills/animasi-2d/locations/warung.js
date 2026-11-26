@@ -1,96 +1,114 @@
-// Lokasi: WARUNG BUK ATIN — warung kampung semi-permanen: dinding papan, atap seng, emperan terpal belang,
-// renceng sachet kopi, etalase kayu berkaca, rak barang, termos es, bale bambu & bangku kayu, galon & tabung gas.
+// Lokasi: WARUNG BU ATIN — mengikuti referensi kreator: warung tembok plester kusam beratap seng satu sisi
+// (miring ke depan, tepi bergelombang, menjorok jauh, ditopang tiang kayu), renceng sachet panjang dua warna
+// di depan dinding kiri, meja tembok dengan deretan toples + pagar besi kecil, rak kayu berisi toples di dalam,
+// lampu gantung, bangku kayu panjang, pohon besar di kiri depan, rumah tetangga + pagar bata + tanaman.
 const P = require("../engine/props.js");
+const { mul } = require("../engine/world3d.js");
 
 module.exports = {
   id: "warung",
-  name: "Warung Buk Atin",
-  camera: { cam: { x: 0.3, y: 1.5, z: -3.2 }, f: 1250, horizon: 0.44 },
+  name: "Warung Bu Atin",
+  camera: { cam: { x: -0.3, y: 2.7, z: 1.2 }, f: 980, horizon: 0.3 },
   spots: {
-    balik_etalase: { x: 0.7, z: 9.25 }, // di belakang etalase (badan bawah tertutup etalase)
-    depan: { x: 0.4, z: 5.2 }, bangku: { x: -2.6, z: 5.4 }, meja: { x: -1.2, z: 5.0 },
-    jalan_kiri: { x: -3.6, z: 2.6 }, jalan_kanan: { x: 3.4, z: 2.8 }, samping: { x: 3.6, z: 7 },
+    balik_etalase: { x: 3.45, z: 9.75, y: 0.3 }, // di belakang meja tembok (kepala & bahu terlihat)
+    depan: { x: 1.6, z: 6.4 }, bangku: { x: -1.5, z: 6.3 }, meja: { x: 0.2, z: 6.0 },
+    jalan_kiri: { x: -3.0, z: 5.0 }, jalan_kanan: { x: 3.8, z: 5.2 }, samping: { x: 5.8, z: 8.2 },
   },
   build(w, { t = 0 } = {}) {
-    P.sky(w, { clouds: [[0.2, 0.1, 1], [0.78, 0.08, 1.2]] });
-    // jalan cor melintang di depan + tanah halaman
-    w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 3.4], [-30, 0, 3.4]], P.PAL.concrete, { stroke: false });
-    for (let x = -30; x < 30; x += 3) w.line3([[x, 0.002, 0.6], [x, 0.002, 3.4]], P.PAL.crack, null, { layer: "ground", bias: -0.1, swk: 0.5 });
-    w.ground([[-30, 0, 3.4], [30, 0, 3.4], [30, 0, 40], [-30, 0, 40]], P.PAL.dirt, { stroke: false, bias: -0.04 });
-    w.ground([[-5, 0.01, 6.6], [5, 0.01, 6.6], [5, 0.01, 12], [-5, 0.01, 12]], "#c0c0c0", { bias: -0.2 });
+    P.sky(w, { clouds: [[0.55, 0.06, 1.1], [0.9, 0.12, 0.9]] });
+    // halaman tanah + jalan setapak
+    w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false });
+    w.ground([[-1, 0.003, 0.6], [2.5, 0.003, 0.6], [3.2, 0.003, 8.9], [-0.4, 0.003, 8.9]], "#cfcfcf", { stroke: false, bias: -0.2 });
+    for (let k = 0; k < 14; k++) P.grassTuft(w, -4 + ((k * 37) % 11), 2.5 + ((k * 13) % 6));
 
-    // rumah tetangga & pepohonan
-    P.house(w, { side: 1, fx: 7.2, z: 6, width: 7, wall: "plank", roof: "seng" });
-    P.house(w, { side: -1, fx: -7.2, z: 5, width: 7, wall: "plaster", wallColor: "#d6d6d6" });
-    P.tree(w, -6.2, 4.2, { h: 3.6, kind: "banana" });
-    P.tree(w, -8.5, 16, { h: 7.5, kind: "palm" });
-    P.tree(w, 9.5, 18, { h: 5.5 });
-    P.poles(w, 6.0, [2.2, 30], 7);
-    P.chicken(w, 4.8, 4.2, { t, kind: "betina", flip: true });
+    // ---- latar: rumah tetangga + pagar bata + tanaman ----
+    P.house(w, { side: 1, fx: -9.5, z: 15, width: 6, depth: 6, wall: "plaster", wallColor: "#d6d6d6" });
+    w.box(-11, 0, 11.5, 7.6, 1.3, 0.25, "#a9a9a9");
+    w.texture((u, v) => [-11 + u, v, 11.49], 7.6, 1.3, "brick", { color: "#7f7f7f" });
+    w.box(-11.1, 1.3, 11.45, 7.8, 0.1, 0.35, "#9a9a9a");
+    for (const [x, z] of [[-6, 10.8], [-5, 10.6], [-3.8, 10.7], [-3, 9.6]]) P.bush(w, x, z, 0.5);
+    P.tree(w, -10, 20, { h: 7 });
+    P.tree(w, 9, 22, { h: 8, kind: "palm" });
 
     // ---- bangunan warung ----
-    const x0 = -4.5, x1 = 4.5, z0 = 8, z1 = 12.5, H = 3.0;
-    const plank = P.PAL.plank;
-    // dinding belakang (bagian dalam) + rak kayu berisi barang
-    w.face([[x0, 0, z1 - 0.3], [x1, 0, z1 - 0.3], [x1, H, z1 - 0.3], [x0, H, z1 - 0.3]], "#9e9e9e");
-    w.texture((u, v) => [x0 + u, v, z1 - 0.31], x1 - x0, H, "plank", { color: "#7d7d7d" });
-    for (let r = 0; r < 4; r++) {
-      const y = 0.6 + r * 0.55;
-      w.box(x0 + 0.3, y, z1 - 0.8, x1 - x0 - 0.6, 0.05, 0.5, "#7f7f7f");
-      for (let k = 0; k < 16; k++) {
-        const bx = x0 + 0.45 + k * 0.5, bh = 0.22 + ((k * 7 + r * 3) % 4) * 0.06;
-        w.box(bx, y + 0.05, z1 - 0.7, 0.32, bh, 0.3, ["#f0f0f0", "#c4c4c4", "#d8d8d8", "#a9a9a9"][(k + r) % 4], { swk: 0.5 });
+    const xL = -2.6, xR = 4.6, zF = 9, zB = 13, Hf = 2.82;
+    const wall = "#e3e3e3", stain = "#d2d2d2";
+    // dinding belakang bagian dalam (gelap) + rak kayu berisi toples
+    w.face([[xL, 0, zB - 0.25], [xR, 0, zB - 0.25], [xR, 3.2, zB - 0.25], [xL, 3.2, zB - 0.25]], "#9e9e9e");
+    for (const y of [1.25, 1.85, 2.45]) {
+      w.box(-0.2, y, zB - 0.9, 4.6, 0.06, 0.6, "#6f6f6f");
+      for (let k = 0; k < 7; k++) {
+        const jx = -0.0 + k * 0.62, jh = 0.3 + ((k + Math.round(y * 3)) % 3) * 0.05;
+        w.prism(jx + 0.2, zB - 0.6, 0.15, y + 0.06, y + 0.06 + jh, 8, "#dcdcdc", { capColor: ["#5a5a5a", "#8a8a8a", "#b0b0b0"][k % 3], swk: 0.5 });
       }
     }
-    // dinding samping papan
-    w.box(x0, 0, z0, 0.2, H, z1 - z0, plank);
-    w.box(x1 - 0.2, 0, z0, 0.2, H, z1 - z0, plank);
-    w.texture((u, v) => [x1 - 0.21, v, z0 + u], z1 - z0, H, "plank", { color: "#7d7d7d" });
-    // tiang kayu depan
-    w.box(x0, 0, z0, 0.25, H, 0.25, P.PAL.wood);
-    w.box(x1 - 0.25, 0, z0, 0.25, H, 0.25, P.PAL.wood);
-    w.gable(x0, H, z0, x1 - x0, z1 - z0, 1.3, P.PAL.seng, { ridge: "x", overhang: 0.4, wall: plank, seng: true });
-    // papan nama kayu tulisan tangan
-    w.box(-2.6, H - 0.05, z0 - 0.3, 5.2, 0.7, 0.06, "#f0f0f0");
-    w.text(-2.5, H, 2.5, H + 0.6, z0 - 0.31, "WARUNG BU ATIN", { size: 0.62 });
-    // emperan terpal belang
-    const ty0 = H - 0.2, ty1 = 2.15, tz1 = 5.6;
-    for (let i = 0; i < 12; i++) {
-      const a = x0 + ((x1 - x0) * i) / 12, b = x0 + ((x1 - x0) * (i + 1)) / 12;
-      w.face([[a, ty0, z0 - 0.06], [b, ty0, z0 - 0.06], [b, ty1, tz1], [a, ty1, tz1]], i % 2 ? "#f0f0f0" : "#9c9c9c", { swk: 0.6, bias: 0.4 });
-    }
-    w.box(x0 + 0.05, 0, tz1 - 0.05, 0.1, ty1, 0.1, P.PAL.bambooPole);
-    w.box(x1 - 0.15, 0, tz1 - 0.05, 0.1, ty1, 0.1, P.PAL.bambooPole);
-    // renceng sachet kopi bergantungan di emperan
-    for (let i = 0; i < 9; i++) {
-      const sx = x0 + 0.8 + i * 0.95, zs = z0 - 0.15;
-      for (let j = 0; j < 5; j++) {
-        const y = H - 0.35 - j * 0.2;
-        w.face([[sx - 0.12, y, zs], [sx + 0.12, y, zs], [sx + 0.12, y - 0.18, zs], [sx - 0.12, y - 0.18, zs]], j % 2 ? "#5d5d5d" : "#dcdcdc", { swk: 0.4 });
+    // lantai dalam lebih tinggi 30 cm (penjual berdiri di atasnya)
+    w.box(0, 0, zF + 0.35, xR - 0.25, 0.3, zB - zF - 0.6, "#bdbdbd");
+    // dinding samping kiri & kanan
+    w.box(xL, 0, zF, 0.25, Hf, zB - zF, wall);
+    w.box(xR - 0.25, 0, zF, 0.25, Hf, zB - zF, wall);
+    // dinding depan kiri (penuh) — tempat renceng
+    w.box(xL, 0, zF, 2.6, Hf, 0.25, wall);
+    w.face([[xL, 0.1, zF - 0.01], [xL + 2.6, 0.1, zF - 0.01], [xL + 2.6, 0.7, zF - 0.01], [xL, 0.45, zF - 0.01]], stain, { stroke: false, bias: -0.01 });
+    // meja tembok (counter) + lis atas
+    w.box(0, 0, zF, xR - 0.25, 0.95, 0.35, wall);
+    w.face([[0, 0.1, zF - 0.01], [xR - 0.25, 0.1, zF - 0.01], [xR - 0.25, 0.5, zF - 0.01], [0, 0.35, zF - 0.01]], stain, { stroke: false, bias: -0.01 });
+    w.box(-0.05, 0.95, zF - 0.05, xR - 0.15, 0.06, 0.45, "#cfcfcf");
+    // toples bertutup di atas meja + pagar besi kecil
+    const lids = ["#4a4a4a", "#8a8a8a", "#6a6a6a", "#a5a5a5", "#555555", "#9a9a9a"];
+    for (let k = 0; k < 5; k++) w.prism(0.35 + k * 0.55, zF + 0.15, 0.17, 1.01, 1.36, 10, "#e9e9e9", { capColor: lids[k], swk: 0.6 });
+    for (let k = 0; k < 5; k++) w.box(0.35 + k * 0.55 - 0.16, 1.36, zF + 0.0, 0.32, 0.05, 0.3, lids[k], { swk: 0.6 });
+    w.line3([[0.05, 1.5, zF + 0.32], [xR - 0.35, 1.5, zF + 0.32]], "#4a4a4a", null, { bias: 0.05 });
+    for (let x = 0.1; x < xR - 0.3; x += 0.55) w.line3([[x, 1.01, zF + 0.32], [x, 1.5, zF + 0.32]], "#4a4a4a", null, { bias: 0.05 });
+
+    // ---- atap seng satu sisi: tinggi di belakang, rendah & menjorok di depan ----
+    const rx0 = xL - 0.9, rx1 = xR + 0.5, rzB = zB + 0.3, ryB = 3.45, rzF = 5.6, ryF = 2.5;
+    w.face([[rx0, ryF, rzF], [rx1, ryF, rzF], [rx1, ryB, rzB], [rx0, ryB, rzB]], "#a8a8a8", { bias: -3 }); // digambar setelah dinding di bawahnya
+    const U = rx1 - rx0, V = Math.hypot(rzB - rzF, ryB - ryF);
+    w.texture((u, v) => [rx0 + u, ryF + (ryB - ryF) * (v / V), rzF + (rzB - rzF) * (v / V)], U, V, "seng", { color: "#7c7c7c", bias: -3.05 });
+    // tepi depan bergelombang (penampang seng) + bayangan karat
+    const wave = [];
+    for (let x = rx0; x <= rx1 + 1e-6; x += 0.075) wave.push([x, ryF - 0.03 - 0.04 * (1 + Math.sin(((x - rx0) / 0.15) * Math.PI)), rzF]);
+    w.poly([...wave, [rx1, ryF + 0.02, rzF], [rx0, ryF + 0.02, rzF]], "#8e8e8e", { swk: 0.7, bias: -0.2 });
+    // noda karat tipis
+    for (let x = rx0 + 0.6; x < rx1; x += 1.7) w.line3([[x, ryF + 0.03, rzF + 0.05], [x + 0.05, ryF + 0.25, rzF + 1.9]], "#8d8d8d", null, { bias: -3.06, swk: 1.6 });
+    // tiang kayu penopang di depan kiri + balok
+    w.box(xL - 0.6, 0, rzF + 0.2, 0.16, ryF, 0.16, P.PAL.wood);
+    w.box(rx0, ryF - 0.12, rzF + 0.15, U, 0.1, 0.1, "#7a7a7a");
+    // papan nama kecil di dinding kiri
+    // papan nama kayu berdiri di samping kanan warung
+    for (const x of [2.15, 3.25]) w.box(x, 0, 6.7, 0.07, 1.5, 0.07, P.PAL.wood);
+    w.box(2.0, 1.0, 6.65, 1.4, 0.55, 0.05, "#f2f2f2");
+    w.text(2.04, 1.26, 3.36, 1.52, 6.64, "WARUNG", { size: 0.8 });
+    w.text(2.04, 1.02, 3.36, 1.27, 6.64, "BU ATIN", { size: 0.8 });
+
+    // ---- renceng sachet panjang, dua warna selang-seling ----
+    const tones = [["#4f4f4f", "#3c3c3c"], ["#9b9b9b", "#858585"]];
+    for (let i = 0; i < 7; i++) {
+      const sx = xL + 0.2 + i * 0.32, zs = zF - 0.12, top = 2.12, n = 9 + ((i * 5) % 4);
+      const [a, b] = tones[i < 4 ? 0 : 1];
+      w.line3([[sx, top, zs], [sx, ryF + 0.4, zs]], "#555555", null, { bias: -0.1 });
+      for (let j = 0; j < n; j++) {
+        const y = top - j * 0.17;
+        w.face([[sx - 0.13, y, zs], [sx + 0.13, y, zs], [sx + 0.13, y - 0.16, zs], [sx - 0.13, y - 0.16, zs]], j % 2 ? a : b, { swk: 0.45, bias: -0.15 });
+        w.face([[sx - 0.05, y - 0.05, zs - 0.005], [sx + 0.05, y - 0.05, zs - 0.005], [sx + 0.05, y - 0.11, zs - 0.005], [sx - 0.05, y - 0.11, zs - 0.005]], "#e8e8e8", { stroke: false, bias: -0.16 });
       }
     }
-    // etalase kayu berkaca
-    w.box(-2.6, 0, 8.6, 5.2, 0.78, 0.7, P.PAL.woodLight, { faces: { front: "#c7c7c7" } });
-    w.box(-2.6, 0, 8.58, 5.2, 0.25, 0.02, P.PAL.wood);
-    w.box(-2.6, 0.78, 8.6, 5.2, 0.06, 0.7, P.PAL.wood);
-    for (let k = 0; k < 6; k++) w.box(-2.3 + k * 0.85, 0.3, 8.75, 0.5, 0.3, 0.3, k % 2 ? "#ededed" : "#9a9a9a", { swk: 0.4 });
-    // toples kerupuk di atas etalase
-    for (const kx of [-2.2, -1.5, 2.1]) w.prism(kx, 8.95, 0.2, 0.84, 1.28, 8, "#e9e9e9", { capColor: "#6a6a6a" });
-    // termos es (cooler) & galon & tabung gas
-    w.box(3.0, 0, 9.2, 0.8, 0.6, 0.55, "#e9e9e9");
-    w.box(2.95, 0.6, 9.15, 0.9, 0.1, 0.65, "#9a9a9a");
-    w.prism(-3.6, 9.3, 0.18, 0, 0.5, 10, "#7a7a7a");
-    w.prism(-3.6, 9.3, 0.2, 0.5, 0.95, 10, "#d9d9d9");
-    w.prism(-3.1, 9.3, 0.17, 0, 0.42, 10, "#9a9a9a");
-    // teras: bale bambu, meja & bangku kayu, kopi
-    P.bale(w, -4.2, 6.2, 1.8, 0.9);
-    P.table(w, -1.9, 6.3, 1.5, 0.6);
-    P.bench(w, -1.9, 5.5, 1.6);
-    P.glassOfCoffee(w, -1.5, 0.78, 6.6);
-    P.glassOfCoffee(w, -0.9, 0.78, 6.55);
-    // papan menu kapur
-    w.box(2.5, 0, 6.2, 1.1, 1.25, 0.06, "#4a4a4a");
-    w.text(2.55, 0.82, 3.55, 1.15, 6.19, "KOPI 3RB", { size: 0.6, color: "#f4f4f4" });
-    w.text(2.55, 0.42, 3.55, 0.76, 6.19, "MIE · ES", { size: 0.6, color: "#f4f4f4" });
+    // ---- lampu gantung di dalam ----
+    w.line3([[3.7, 3.2, 10.4], [3.7, 2.55, 10.4]], "#3a3a3a", null, { bias: -0.2 });
+    w.sprite(3.7, 10.4, (sx, sy, p, fog, lc, sw) => {
+      const r = 0.2 * p;
+      return `<g transform="translate(${sx} ${sy - 2.55 * p})" stroke="${lc}" stroke-width="${sw}" stroke-linejoin="round">
+        <path d="M${-r * 0.4},0 L${r * 0.4},0 L${r},${r * 0.9} L${-r},${r * 0.9} Z" fill="${fog("#3a3a3a")}"/>
+        <path d="M${-r * 0.8},${r * 0.9} L${r * 0.8},${r * 0.9} L${r * 0.6},${r * 1.9} L${-r * 0.6},${r * 1.9} Z" fill="#f4f4f4"/>
+        <path d="M0,${r * 0.9} L0,${r * 1.9} M${-r * 0.7},${r * 1.4} L${r * 0.7},${r * 1.4}" stroke-width="${sw * 0.7}"/>
+        <path d="M${-r * 0.7},${r * 1.9} L${r * 0.7},${r * 1.9} L0,${r * 2.3} Z" fill="${fog("#3a3a3a")}"/></g>`;
+    }, { bias: -0.3 });
+
+    // ---- bangku kayu panjang di depan ----
+    P.bench(w, -2.9, 6.6, 2.6, { color: "#7d7d7d" });
+    // pohon besar di kiri depan (membingkai adegan)
+    P.tree(w, -4.6, 7.4, { h: 7.5, bias: -4 });
+    P.chicken(w, 3.6, 5.0, { t, kind: "betina", flip: true });
   },
 };

@@ -97,7 +97,7 @@ pada posisi 3D — ukurannya otomatis sesuai jarak dan urutan depan-belakang ben
 | id | Lokasi | Titik berdiri (spots) |
 |---|---|---|
 | `kampung` | Jalan kampung: jalan cor retak, rumah tembok/papan/bilik bambu, atap genteng & seng, teras + bale, pagar bambu/tanaman, pisang-kelapa-mangga, jemuran, tiang listrik kayu, ayam, gapura "SELAMAT DATANG" | depan, kiri, kanan, tengah, jauh, pinggir_kiri, pinggir_kanan |
-| `warung` | Warung Bu Atin: papan kayu, atap seng, emperan terpal belang, renceng sachet, etalase, bale, meja kopi | balik_etalase, depan, bangku, meja, jalan_kiri, jalan_kanan, samping |
+| `warung` | Warung Bu Atin (mengikuti referensi kreator): tembok plester kusam, atap seng satu sisi bergelombang + tiang kayu, renceng sachet panjang dua warna, meja tembok + toples & pagar besi kecil, rak toples, lampu gantung, bangku kayu, pohon besar, pagar bata. Lantai dalam lebih tinggi (spot `y`) | balik_etalase, depan, bangku, meja, jalan_kiri, jalan_kanan, samping |
 | `lapangan` | Lapangan bola kampung: tanah berumput, gawang bambu, sandal, pagar bambu, masjid jauh | tengah, kiri, kanan, pinggir, gawang_kiri, gawang_kanan, jauh |
 | `masjid` | Masjid kampung beratap tumpang + mustaka, serambi, bedug, kentongan, toa | gerbang, setapak, halaman_kiri, halaman_kanan, serambi, depan, bedug |
 | `posronda` | Pos ronda bambu: bale, atap seng, kentongan, papan catur & kopi, lampu bohlam | depan, kiri, kanan, jalan, jalan_kanan, samping |
@@ -110,6 +110,8 @@ node tools/location.js --loc kampung --cast "nana:walk_front@jauh>depan" --secon
 node tools/location.js --loc kampung --format portrait --cast "nana:idle@depan" --png out/reels.png        # 9:16
 ```
 Cast: `karakter:klip@titik[:flip]`; titik bisa nama spot atau `"x,z"` (meter); `a>b` = bergerak dari a ke b.
+Spot boleh punya `y` (berdiri di lantai yang lebih tinggi). Bidang besar yang menaungi benda lain (atap) diberi
+`bias` negatif agar digambar setelah dinding di bawahnya; sprite di depannya (pohon) diberi bias lebih negatif.
 
 Menambah lokasi: buat `locations/<id>.js` dengan `{ id, name, camera, spots, build(w) }`. Bangun dengan
 primitif `engine/world3d.js` (`box`, `gable` (genteng/`seng`), `hip` (limas/tajug, `top` untuk bertingkat),

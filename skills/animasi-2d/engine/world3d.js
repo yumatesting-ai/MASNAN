@@ -204,6 +204,13 @@ function createWorld(opt = {}) {
     const col = o.color || "#9a9a9a", segs = [];
     if (kind === "plank") for (let v = 0.25; v < V; v += 0.25) segs.push([map(0, v), map(U, v)]);
     if (kind === "seng") for (let u = 0.15; u < U; u += 0.15) segs.push([map(u, 0), map(u, V)]);
+    if (kind === "brick") {
+      let row = 0;
+      for (let v = 0; v < V; v += 0.2, row++) {
+        if (v > 0) segs.push([map(0, v), map(U, v)]);
+        for (let u = (row % 2) * 0.2 + 0.4; u < U; u += 0.4) segs.push([map(u, v), map(u, Math.min(V, v + 0.2))]);
+      }
+    }
     if (kind === "bamboo") {
       const st = 0.32;
       for (let c = -V; c < U; c += st) {

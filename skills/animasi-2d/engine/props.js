@@ -164,7 +164,7 @@ function tree(w, x, z, o = {}) {
       <path d="M${t(-tw)},0 L${t(-tw * 0.7)},${t(-h * trunkTop)} L${t(tw * 0.7)},${t(-h * trunkTop)} L${t(tw)},0 Z" fill="${fog(kind === "banana" ? "#9a9a9a" : PAL.trunk)}"/>
       ${kind === "palm" ? [0.2, 0.4, 0.6, 0.8].map((k) => `<path d="M${t(-tw * 0.8)},${t(-h * k)} L${t(tw * 0.8)},${t(-h * k)}" stroke-width="${sw * 0.5}"/>`).join("") : ""}
       ${top}</g>`;
-  });
+  }, { bias: o.bias || 0 });
 }
 // jemuran: dua tiang bambu + tali + pakaian
 function jemuran(w, x, za, zb) {
