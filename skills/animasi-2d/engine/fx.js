@@ -93,12 +93,7 @@ function draw(w, list, t) {
     } else if (e.type === "cat") { // kucing (duduk) yang muncul pada detik t, opsional menggigit gorengan
       if (t < (e.t || 0)) continue;
       const LIFE = require("./life.js"), dir = e.flip ? -1 : 1;
-      LIFE.cat(w, e.x, e.z, { mode: "sit", flip: e.flip, color: e.color, stripe: e.stripe });
-      if (e.food) w.sprite(e.x - 0.1 * dir, e.z - 0.01, (sx, sy, p, fog, lc, sw) => { // gorengan menggantung dari mulut
-        const rx = p * 0.085, ry = p * 0.045;
-        return `<g transform="rotate(${dir * 25} ${sx} ${sy})"><ellipse cx="${sx}" cy="${sy}" rx="${rx}" ry="${ry}" fill="${fog(LIFE.col("#d99a3f"))}" stroke="${lc}" stroke-width="${sw * 0.7}"/>
-          <path d="M${sx - rx * 0.6},${sy} q${rx * 0.3},${-ry * 0.6} ${rx * 0.6},0 q${rx * 0.3},${ry * 0.6} ${rx * 0.6},0" fill="none" stroke="${fog(LIFE.col("#b0702a"))}" stroke-width="${sw * 0.6}"/></g>`;
-      }, { y: 0.24, bias: -0.08 });
+      LIFE.cat(w, e.x, e.z, { mode: e.mode || "sit", flip: e.flip, color: e.color, stripe: e.stripe, food: !!e.food });
     } else if (e.type === "burst") {
       const dur = e.dur || 0.35, tau = t - e.t;
       if (tau < 0 || tau > dur) continue;

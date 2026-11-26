@@ -46,45 +46,80 @@ const lerp = (a, b, k) => a + (b - a) * k;
 
 // ---------------- HEWAN ----------------
 function cat(w, x, z, o = {}) {
-  const T = w.t || 0, mode = o.mode || "sleep", c = col(o.color || "#e59a4c"), c2 = col(o.stripe || "#b8692c");
-  let px = x, pz = z, dir = o.flip ? -1 : 1;
+  const T = (w.t || 0) + (o.phase || 0), mode = o.mode || "sleep";
+  const c = col(o.color || "#e59a4c"), c2 = col(o.stripe || "#b8692c"), cream = col(o.belly || "#f8ecd9"), pink = col("#f2a3ae");
+  let px = x, pz = z, dir = o.flip ? -1 : 1, moving = false;
   if (mode === "walk" && o.to) { // bolak-balik dengan jeda
-    const L = Math.hypot(o.to[0] - x, o.to[1] - z), sp = o.speed || 0.35, per = (2 * L) / sp + 4, u = ((T + (o.phase || 0)) % per);
-    const go = L / sp;
+    const L = Math.hypot(o.to[0] - x, o.to[1] - z), sp = o.speed || 0.35, per = (2 * L) / sp + 4, u = T % per, go = L / sp;
     const k = u < go ? u / go : u < go + 2 ? 1 : u < 2 * go + 2 ? 1 - (u - go - 2) / go : 0;
     px = lerp(x, o.to[0], k); pz = lerp(z, o.to[1], k);
-    dir = (u < go + 2 ? 1 : -1) * Math.sign(o.to[0] - x || 1);
-    var moving = (u < go) || (u > go + 2 && u < 2 * go + 2);
+    dir = (u < go + 2 ? -1 : 1) * Math.sign(o.to[0] - x || 1);
+    moving = u < go || (u > go + 2 && u < 2 * go + 2);
   }
   if (mode === "walk") mover(w, "kucing", px, pz, 0.25);
   if (w.castBlob) w.castBlob(px, pz, 0.15 + (o.y || 0), 0.2, { strength: 0.6 });
+  // kedip & kedut telinga sesekali (deterministik)
+  const blink = (Math.sin(T * 0.9 + x * 3) > 0.985 || ((T + x) % 3.7) < 0.12) ? 1 : 0;
+  const earT = Math.max(0, Math.sin(T * 1.7 + z)) > 0.97 ? -14 : 0;
   spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
-    const s = p * 0.01, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
-    if (mode === "sleep") { // meringkuk, napas, ekor melingkar, zzz kecil
-      const br = 1 + 0.04 * Math.sin(T * 2.4);
-      return `<g transform="translate(${sx} ${sy}) scale(${dir * s} ${s})">
-        <ellipse cx="0" cy="${-9 * br}" rx="${21}" ry="${10 * br}" fill="${fog(c)}" ${L}/>
-        <path d="M-8,${-17 * br} q4,4 0,9 M0,${-18 * br} q4,4 0,10 M8,${-17 * br} q4,4 0,9" stroke="${fog(c2)}" stroke-width="2.5" fill="none"/>
-        <path d="M18,-4 Q28,-2 22,-12 Q14,-18 8,-12" fill="none" ${L} stroke-width="${sw * 1.6}" stroke="${fog(c)}"/>
-        <circle cx="-16" cy="${-12 * br}" r="8" fill="${fog(c)}" ${L}/><path d="M-22,${-18 * br} l1,-7 l5,5 M-14,${-19 * br} l3,-6 l3,6" fill="${fog(c)}" ${L}/>
-        <path d="M-20,${-12 * br} q2,2 4,0" fill="none" ${L}/>
-        <text x="-20" y="${-30 - 4 * Math.sin(T * 1.2)}" font-size="9" font-family="DejaVu Sans" fill="${lc}" opacity="${0.5 + 0.5 * Math.sin(T * 1.2)}">z</text></g>`;
+    const s = p * 0.01, Lw = (sw * 0.65).toFixed(2), L = `stroke="${lc}" stroke-width="${Lw}" stroke-linejoin="round" stroke-linecap="round"`;
+    const F = (h) => fog(h);
+    const eye = (ex, ey, closed) => closed
+      ? `<path d="M${ex - 2.6},${ey} q2.6,2.2 5.2,0" fill="none" ${L}/>`
+      : `<ellipse cx="${ex}" cy="${ey}" rx="2.4" ry="3" fill="${lc}"/><circle cx="${ex - 0.8}" cy="${ey - 1.1}" r="0.9" fill="#ffffff"/>`;
+    const head = (hx, hy, closed, food) => `
+      <g transform="translate(${hx} ${hy})">
+        <g transform="rotate(${earT} -7 -8)"><path d="M-11,-5 L-8,-17 L-1,-9 Z" fill="${F(c)}" ${L}/><path d="M-9,-7 L-7.5,-13.5 L-3.5,-9 Z" fill="${F(pink)}"/></g>
+        <path d="M3,-9 L9,-17 L11,-5 Z" fill="${F(c)}" ${L}/><path d="M4.5,-9 L8.5,-13.5 L9.5,-7 Z" fill="${F(pink)}"/>
+        <ellipse cx="0" cy="0" rx="12.5" ry="10.5" fill="${F(c)}" ${L}/>
+        <path d="M-3,-10 q1,4 0,6 M1,-10.5 q1,4 0,6 M5,-10 q-0.5,3.5 -1,5.5" fill="none" stroke="${F(c2)}" stroke-width="1.6" stroke-linecap="round"/>
+        <ellipse cx="-3" cy="5" rx="7" ry="4.6" fill="${F(cream)}"/>
+        ${eye(-7.2, -0.5, closed)}${eye(1.8, -0.5, closed)}
+        <path d="M-3.6,2.6 l1.4,1.3 l1.4,-1.3 Z" fill="${F(pink)}" ${L} stroke-width="${(sw * 0.4).toFixed(2)}"/>
+        ${food ? "" : `<path d="M-4.9,4.6 q1.2,1.5 2.7,0 q1.5,1.5 2.7,0" fill="none" ${L} stroke-width="${(sw * 0.45).toFixed(2)}"/>`}
+        <path d="M-10,2.5 l-7,-1.3 M-10,4.2 l-7,1.2 M5,2.5 l7,-1.3 M5,4.2 l7,1.2" stroke="${lc}" stroke-width="${(sw * 0.3).toFixed(2)}" opacity="0.7"/>
+        <ellipse cx="-8.5" cy="3.6" rx="2" ry="1.1" fill="${F(pink)}" opacity="0.6"/><ellipse cx="3.5" cy="3.6" rx="2" ry="1.1" fill="${F(pink)}" opacity="0.6"/>
+        ${food ? `<g transform="rotate(28 -6 7)"><ellipse cx="-9" cy="9" rx="6" ry="3.2" fill="${F(col("#d99a3f"))}" ${L}/>
+          <path d="M-13,9 q2,-1.6 4,0 q2,1.6 4,0" fill="none" stroke="${F(col("#b0702a"))}" stroke-width="1"/></g>
+          <path d="M-4.6,4.4 q1.6,2 3.4,0.2" fill="${F(col("#7a2f35"))}" ${L} stroke-width="${(sw * 0.4).toFixed(2)}"/>` : ""}
+      </g>`;
+    let body;
+    if (mode === "sleep") { // meringkuk: napas, ekor melingkar ke depan, kepala bersandar
+      const br = 1 + 0.035 * Math.sin(T * 2.2);
+      body = `<g transform="translate(0 0) scale(1 ${br.toFixed(3)})" transform-origin="0 0">
+        <ellipse cx="2" cy="-9" rx="22" ry="10.5" fill="${F(c)}" ${L}/>
+        <path d="M-6,-18 q3,4 0,8 M2,-19.5 q3,4 0,9 M10,-18 q3,4 0,8" fill="none" stroke="${F(c2)}" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M20,-5 Q28,2 14,3 L-14,3 Q-22,2 -20,-3" fill="${F(c)}" ${L}/>
+        <path d="M-14,2 Q-4,5 8,2" fill="none" stroke="${F(c2)}" stroke-width="2" stroke-linecap="round" opacity="0.8"/></g>
+        <g transform="scale(0.85) translate(-16 -10)">${head(0, 0, true, false)}</g>
+        <ellipse cx="-24" cy="-2" rx="4" ry="2.6" fill="${F(c)}" ${L}/>
+        <text x="-22" y="${-30 - 3 * Math.sin(T * 1.2)}" font-size="9" font-family="DejaVu Sans" font-weight="700" fill="${lc}" opacity="${(0.4 + 0.5 * Math.abs(Math.sin(T * 1.2))).toFixed(2)}">z</text>`;
+    } else if (mode === "walk") { // tampak samping menghadap kiri: 4 kaki bergantian, ekor tegak bergoyang
+      const g = moving ? T * 9 : 0, A = moving ? 7 : 0, bob = moving ? Math.abs(Math.sin(g)) * 1.2 : 0;
+      const leg = (lx, ph, back) => { const a = Math.sin(g + ph) * A; return `<path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${F(back ? c2 : c)}" stroke-width="${(sw * 2.6).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${lc}" stroke-width="${(sw * 2.6 + sw * 1.3).toFixed(2)}" stroke-linecap="round" opacity="0" />`; };
+      const sway = Math.sin(T * 3) * 6;
+      body = `<g transform="translate(0 ${-bob})">
+        ${leg(12, Math.PI, true)}${leg(-6, 0, true)}
+        <path d="M17,-17 Q30,-22 ${30 + sway * 0.4},${-36 + Math.abs(sway) * 0.3} Q${32 + sway * 0.6},${-44} ${27 + sway},${-46}" fill="none" stroke="${lc}" stroke-width="${(sw * 3.4).toFixed(2)}" stroke-linecap="round"/>
+        <path d="M17,-17 Q30,-22 ${30 + sway * 0.4},${-36 + Math.abs(sway) * 0.3} Q${32 + sway * 0.6},${-44} ${27 + sway},${-46}" fill="none" stroke="${F(c)}" stroke-width="${(sw * 2.2).toFixed(2)}" stroke-linecap="round"/>
+        <path d="M-12,-14 C-12,-24 18,-24 20,-15 C21,-8 14,-6 4,-6 L-6,-6 C-11,-6 -12,-9 -12,-14 Z" fill="${F(c)}" ${L}/>
+        <path d="M-2,-21 q2,4 0,7 M5,-21.5 q2,4 0,7 M12,-20.5 q2,4 0,6.5" fill="none" stroke="${F(c2)}" stroke-width="2" stroke-linecap="round"/>
+        <path d="M-10,-9 Q0,-5 12,-8" fill="none" stroke="${F(cream)}" stroke-width="2.4" stroke-linecap="round"/>
+        ${leg(15, 0, false)}${leg(-9, Math.PI, false)}
+        ${head(-17, -24 + bob * 0.5, blink, o.food)}</g>`;
+    } else { // duduk menghadap kamera (serong kiri): ekor melingkar & mengibas, dada krem
+      const tail = Math.sin(T * 2.2 + x) * 10, br = 0.6 * Math.sin(T * 2);
+      body = `
+        <path d="M10,-3 Q24,-2 ${24 + tail * 0.3},${-12} Q${25 + tail * 0.5},${-22 - Math.abs(tail) * 0.2} ${18 + tail},${-24}" fill="none" stroke="${lc}" stroke-width="${(sw * 3.6).toFixed(2)}" stroke-linecap="round"/>
+        <path d="M10,-3 Q24,-2 ${24 + tail * 0.3},${-12} Q${25 + tail * 0.5},${-22 - Math.abs(tail) * 0.2} ${18 + tail},${-24}" fill="none" stroke="${F(c)}" stroke-width="${(sw * 2.3).toFixed(2)}" stroke-linecap="round"/>
+        <path d="M-11,-2 C-15,-12 -12,-26 -3,-29 C6,-31 13,-24 14,-13 C15,-5 12,0 5,0 L-6,0 C-10,0 -12,-1 -11,-2 Z" fill="${F(c)}" ${L} transform="translate(0 ${-br})"/>
+        <path d="M5,-25 q3,3 3,7 M9,-20 q3,3 3,7" fill="none" stroke="${F(c2)}" stroke-width="2" stroke-linecap="round"/>
+        <path d="M-8,-4 C-10,-14 -6,-24 0,-24 C4,-22 4,-12 2,-4 Z" fill="${F(cream)}" transform="translate(0 ${-br})"/>
+        <ellipse cx="-6.5" cy="-1.5" rx="3.6" ry="2.4" fill="${F(cream)}" ${L}/><ellipse cx="0.5" cy="-1.5" rx="3.6" ry="2.4" fill="${F(cream)}" ${L}/>
+        ${head(-3, -36 - br, blink, o.food)}`;
     }
-    const tail = mode === "sit" ? 18 * Math.sin(T * 2.2 + x) : 10 * Math.sin(T * 6);
-    const step = moving ? Math.sin(T * 10) * 5 : 0, look = mode === "sit" ? 3 * Math.sin(T * 0.7 + z) : 0;
-    if (mode === "sit") return `<g transform="translate(${sx} ${sy}) scale(${dir * s} ${s})">
-        <path d="M10,-2 Q${26 + tail * 0.3},${-6} ${22 + tail * 0.4},${-22 - tail * 0.3}" fill="none" stroke="${fog(c)}" stroke-width="${sw * 1.8}" stroke-linecap="round"/>
-        <ellipse cx="0" cy="-14" rx="12" ry="15" fill="${fog(c)}" ${L}/><path d="M-6,-24 q6,3 12,0" stroke="${fog(c2)}" stroke-width="2.5" fill="none"/>
-        <g transform="translate(${look} 0)"><circle cx="-2" cy="-33" r="9" fill="${fog(c)}" ${L}/>
-        <path d="M-10,-38 l1,-9 l6,5 M2,-41 l4,-7 l3,8" fill="${fog(c)}" ${L}/>
-        <circle cx="-6" cy="-34" r="1.4" fill="${lc}"/><circle cx="1" cy="-34" r="1.4" fill="${lc}"/></g>
-        <path d="M-7,-2 l0,2 M5,-2 l0,2" ${L}/></g>`;
-    return `<g transform="translate(${sx} ${sy}) scale(${dir * s} ${s})">
-        <path d="M18,-14 Q30,${-20 - tail} 34,${-30 - tail}" fill="none" stroke="${fog(c)}" stroke-width="${sw * 1.8}" stroke-linecap="round"/>
-        <path d="M-12,-8 l${step * 0.6},8 M-4,-8 l${-step * 0.6},8 M10,-8 l${-step * 0.6},8 M16,-8 l${step * 0.6},8" ${L} stroke-width="${sw * 1.4}" stroke="${fog(c2)}"/>
-        <ellipse cx="2" cy="-14" rx="20" ry="9" fill="${fog(c)}" ${L}/><path d="M-4,-21 q2,4 0,7 M4,-22 q2,4 0,8" stroke="${fog(c2)}" stroke-width="2.5" fill="none"/>
-        <circle cx="-20" cy="${-22 + Math.abs(step) * 0.2}" r="8" fill="${fog(c)}" ${L}/><path d="M-26,-27 l0,-8 l5,5 M-18,-29 l3,-7 l2,7" fill="${fog(c)}" ${L}/>
-        <circle cx="-24" cy="-23" r="1.3" fill="${lc}"/></g>`;
+    return `<g transform="translate(${sx} ${sy}) scale(${dir * s} ${s})">${body}</g>`;
   }, { bias: -0.05, y: o.y || 0 });
 }
 
