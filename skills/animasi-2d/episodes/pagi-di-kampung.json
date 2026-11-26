@@ -38,7 +38,7 @@
       "judul": "Seruput pertama",
       "loc": "warung",
       "seconds": 11,
-      "cast": "hasan:walk{holdR=coffee;armR=-25;elbowR=85}@belok_masuk>belok_meja>celah_meja>duduk_meja+sit_drink/6, atin:talk@balik_etalase/2.4+idle/3+talk/6",
+      "cast": "hasan:walk{holdR=coffee;armR=-25;elbowR=85}@belok_masuk>belok_meja>celah_meja>celah_dalam>duduk_meja+sit_drink/6, atin:talk@balik_etalase/2.4+idle/3+talk/6",
       "camera": {
         "x": -1.3,
         "z": 0.4,

@@ -11,12 +11,12 @@ module.exports = {
   spots: {
     balik_etalase: { x: 0.75, z: 9.15, y: 0.15 }, // penjual di balik meja (lantai sedikit lebih tinggi)
     depan: { x: 1.3, z: 6.0 }, bangku: { x: -0.7, z: 6.3 }, meja: { x: -2.0, z: 5.8 },
-    duduk_meja: { x: -2.85, z: 7.28, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
+    duduk_meja: { x: -2.85, z: 7.46, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
     duduk_depan_meja: { x: -0.35, z: 7.1, seat: 0.48 },   // bangku depan meja jualan (membelakangi kamera)
     duduk_depan_meja2: { x: 0.2, z: 7.1, seat: 0.48 },
     pesan: { x: 1.3, z: 7.95 },                            // berdiri di depan meja jualan untuk memesan (hadap Bu Atin)
     // titik belok agar jalan tidak menembus meja/bangku/tiang
-    belok_masuk: { x: 0.9, z: 6.6 }, belok_meja: { x: -1.55, z: 6.3 }, celah_meja: { x: -1.85, z: 7.22 },
+    belok_masuk: { x: 0.9, z: 6.6 }, belok_meja: { x: -1.55, z: 6.3 }, celah_meja: { x: -1.85, z: 7.3 }, celah_dalam: { x: -2.6, z: 7.3 }, keluar_kanan: { x: 3.6, z: 4.1 },
     jalan_kiri: { x: -2.4, z: 4.2 }, jalan_kanan: { x: 3.0, z: 4.4 }, samping: { x: 3.4, z: 7.6 },
   },
   extras: [
@@ -28,10 +28,23 @@ module.exports = {
     { seed: 26, kind: "bapak", spec: "chat_a{face=r}@3.7,11.2" },
     { seed: 27, kind: "kakek", spec: "chat_b{face=l}@4.5,11.5" },
     // orang lewat di jalan belakang
-    { seed: 23, kind: "pemudi", spec: "walk@-8,14.5>8,14.5+walk@8,14.5>-8,14.5" },
+    { seed: 23, kind: "pemudi", spec: "walk@-5,17>4.9,17+walk@4.9,17>-5,17" },
   ],
 
   seatsExtra: true,
+  // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
+  obstacles: [
+    { name: "meja jualan", x0: -1.6, x1: 1.6, z0: 8.2, z1: 8.75 }, { name: "dinding kios kiri", x0: -1.85, x1: -1.7, z0: 8.6, z1: 10.6 },
+    { name: "dinding kios kanan", x0: 1.7, x1: 1.85, z0: 8.6, z1: 10.6 }, { name: "meja kompor", x0: 1.95, x1: 2.65, z0: 8.3, z1: 8.8 },
+    { name: "galon", x: 2.85, z: 8.3, r: 0.17 }, { name: "bangku depan meja jualan", x0: -1.5, x1: 0.5, z0: 7.15, z1: 7.57 },
+    { name: "meja kayu", x0: -3.5, x1: -2.2, z0: 6.5, z1: 7.1 }, { name: "bangku meja kayu", x0: -3.5, x1: -2.2, z0: 7.5, z1: 7.92 },
+    { name: "kursi plastik", x: 2.2, z: 6.4, r: 0.22 }, { name: "kursi plastik 2", x: 2.75, z: 6.9, r: 0.22 },
+    { name: "tiang atap kiri", x: -1.95, z: 6.75, r: 0.06 }, { name: "tiang atap kanan", x: 1.97, z: 6.75, r: 0.06 },
+    { name: "pagar bambu", x0: 3.92, x1: 4.08, z0: 4.5, z1: 8.8 }, { name: "pohon besar", x: -5.0, z: 9.2, r: 0.35 },
+    { name: "semak", x: -4.8, z: 10.5, r: 0.55 }, { name: "rumah kiri", x0: -12.5, x1: -5.5, z0: 10, z1: 16 },
+    { name: "rumah kanan", x0: 5.2, x1: 12.2, z0: 9, z1: 15 }, { name: "tabung gas", x: -2.2, z: 9.6, r: 0.2 },
+    { name: "ayam betina", x: 2.6, z: 7.6, r: 0.22 }, { name: "ayam jago", x: -3.0, z: 5.3, r: 0.22 },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.22, 0.08, 1], [0.8, 0.12, 0.9]] });
     w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false });
@@ -132,7 +145,7 @@ module.exports = {
     P.bench(w, -1.5, 7.15, 2.0, { color: "#7d7d7d" }); // bangku di depan meja jualan (ujung kanan kosong: tempat memesan)
     // meja + bangku di bawah pohon (kiri)
     P.table(w, -3.5, 6.5, 1.3, 0.6);
-    P.bench(w, -3.5, 7.32, 1.3, { color: "#8a8a8a" });
+    P.bench(w, -3.5, 7.5, 1.3, { color: "#8a8a8a" }); // celah meja-bangku 0,4 m: badan muat saat masuk duduk
     P.glassOfCoffee(w, -3.15, 0.78, 6.75);
     // kursi plastik
     for (const [x, z] of [[2.2, 6.4], [2.75, 6.9]]) {

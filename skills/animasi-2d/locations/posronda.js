@@ -16,11 +16,17 @@ module.exports = {
     { seed: 54, kind: "bapak", spec: "sweep{face=l}@4.4,11.8/4.8+sweep{face=r}/4.8" },
     { seed: 51, kind: "ibu", spec: "chat_a{face=r}@-5.6,12.4" },
     { seed: 55, kind: "ibu", spec: "chat_b{face=l}@-4.8,12.7" },
-    { seed: 53, kind: "anak_laki", spec: "run@-7,15>6,15+laugh/1.2+run@6,15>-7,15+idle_three/1" },
-    { seed: 56, kind: "anak_perempuan", spec: "run@-7,15.6>6,15.6+laugh/1.2+run@6,15.6>-7,15.6+idle_three/1", phase: 0.6 },
+    { seed: 53, kind: "anak_laki", spec: "run@-5,16>4.8,16+laugh/1.2+run@4.8,16>-5,16+idle_three/1" },
+    { seed: 56, kind: "anak_perempuan", spec: "run@-5,16.6>4.8,16.6+laugh/1.2+run@4.8,16.6>-5,16.6+idle_three/1", phase: 0.6 },
     { seed: 52, kind: "petani", spec: "walk@8,17>-8,17+walk@-8,17>8,17", phase: 4 },
   ],
 
+  // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
+  obstacles: [
+    { name: "gardu/bale ronda", x0: -2.4, x1: 2.4, z0: 6.6, z1: 9.6 }, { name: "tiang listrik", x: -4.2, z: 2.5, r: 0.12 },
+    { name: "rumah kanan", x0: 5, x1: 12, z0: 7, z1: 13 }, { name: "rumah kiri", x0: -12.5, x1: -5.5, z0: 9, z1: 15 },
+    { name: "semak", x: 3.4, z: 10.4, r: 0.55 }, { name: "ayam jago", x: 3.6, z: 4.6, r: 0.22 }, { name: "ayam betina", x: 4.3, z: 5.4, r: 0.22 },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan

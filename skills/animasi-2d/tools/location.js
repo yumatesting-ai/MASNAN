@@ -27,6 +27,7 @@ const { figuran } = require("../engine/extras.js");
 const { CLIPS, samplePose } = require("../engine/clips.js");
 const { lineDuration, mouthAt } = require("../engine/lipsync.js");
 const FX = require("../engine/fx.js");
+const { checkTimeline } = require("../engine/collide.js");
 
 const o = { loc: "kampung", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
@@ -66,6 +67,9 @@ const cast = (o.cast ? o.cast.split(/,(?=\s*[a-z_]+:)/) : []).map((s) => {
   return { who, rig, tl };
 });
 const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.total));
+// cek tabrakan rute tokoh dengan benda lokasi -> peringatan (--check: hanya cek, tanpa render)
+const crash = cast.flatMap((m) => checkTimeline(LOC, m.who, m.tl));
+for (const c of crash) console.error(`PERINGATAN TEMBUS: ${c}`);
 // --dialog '[{"who":"hasan","at":1.2,"text":"Bu, kopi satu!"}]' -> LIP SYNC: mulut mengikuti huruf (bukan satu bentuk)
 const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d));
 // --camkeys '[{"t":0,"x":0,"z":-1,"f":1300},{"t":3,"f":1800,"track":"hasan","dx":0.3}]' -> kamera sinematik:
@@ -181,6 +185,12 @@ function frame(t) {
 }
 
 (async () => {
+  if (o.check) {
+    const exCrash = extras.flatMap((m, i) => (m.tl.phases ? checkTimeline(LOC, `figuran#${LOC.extras[i].seed}`, m.tl) : []));
+    for (const c of exCrash) console.error(`PERINGATAN TEMBUS: ${c}`);
+    console.log(crash.length + exCrash.length ? `${crash.length + exCrash.length} rute menembus benda` : "OK: tidak ada rute yang menembus benda");
+    process.exit(crash.length + exCrash.length ? 2 : 0);
+  }
   const b = await chromium.launch();
   const pg = await b.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: o.scale });
   const shot = async (t, file) => {

@@ -19,9 +19,16 @@ module.exports = {
     { seed: 42, kind: "kakek", spec: "sit_read@4.4,10.85" },
     { seed: 43, kind: "anak_laki", spec: "run@-5,8.4>-1.8,8.4+laugh/1.2+run@-1.8,8.4>-5,8.4+idle_three/1" },
     { seed: 47, kind: "anak_laki", spec: "run@-5,9>-1.8,9+laugh/1.2+run@-1.8,9>-5,9+idle_three/1", phase: 0.5 },
-    { seed: 45, kind: "ibu", spec: "walk@-9,15.5>9,15.5+walk@9,15.5>-9,15.5", phase: 5 },
+    { seed: 45, kind: "ibu", spec: "walk@-7.4,5.2>-7.4,10.4+idle/2+walk@-7.4,10.4>-7.4,5.2+idle/1", phase: 5 },
   ],
 
+  // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
+  obstacles: [
+    { name: "pagar tembok kiri", x0: -9, x1: -1.4, z0: 4.1, z1: 4.55 }, { name: "pagar tembok kanan", x0: 1.4, x1: 9, z0: 4.1, z1: 4.55 },
+    { name: "serambi masjid", x0: -6.5, x1: 6.5, z0: 10.9, z1: 23 }, { name: "pohon", x: -8.2, z: 9, r: 0.35 },
+    { name: "pohon pisang", x: 4.2, z: 6.8, r: 0.3 }, { name: "semak kiri", x: -6.5, z: 8.5, r: 0.6 }, { name: "semak kanan", x: 6.2, z: 8.2, r: 0.6 },
+    { name: "tiang toa", x: 7.46, z: 12.06, r: 0.1 },
+  ],
   build(w) {
     P.sky(w, { clouds: [[0.12, 0.1, 1], [0.7, 0.06, 1.1]] });
     // jalan kampung di depan + halaman tanah

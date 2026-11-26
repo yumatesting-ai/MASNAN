@@ -231,7 +231,7 @@ node tools/episode.js episodes/pagi-di-kampung.json --out out/pagi.mp4 --audio v
 - **Kecepatan alami:** tanpa durasi, jalan ±0,8 m/dtk dan lari ±2,2 m/dtk (disesuaikan tinggi karakter);
   siklus langkah mengikuti jarak tempuh, jadi kaki tidak "ngebut".
 - **Rute bertitik belok** agar tidak menembus meja/bangku/tiang: `walk@jalan_kiri>belok_masuk>pesan`.
-  Warung punya titik `pesan`, `belok_masuk`, `belok_meja`, `celah_meja`.
+  Warung punya titik `pesan`, `belok_masuk`, `belok_meja`, `celah_meja`, `celah_dalam`, `keluar_kanan`.
 - **Pengubah pose per fase:** `walk{holdR=coffee;armR=-25;elbowR=85}` (jalan membawa kopi), `chat_a{face=r}`
   (hadap kanan), `sit_read{seat=0.48}` (tinggi duduk di koordinat bebas).
 - **Cerita logis:** contoh pesan kopi:
@@ -270,3 +270,17 @@ Klip sekali-jalan memakai `once: true` (tidak diulang, tepi tidak tercampur).
 
 Pratinjau komposisi cepat sebelum render: `node tools/episode.js episodes/kopi-pak-hasan.json --preview out/cek.png --at "0.2,0.5,0.8"`.
 Contoh episode komedi lengkap: `episodes/kopi-pak-hasan.json` (8 adegan, dialog, variasi shot, efek).
+
+## Cek tembus benda (WAJIB sebelum render)
+
+Tiap lokasi punya `obstacles` (meja, bangku, pagar, tiang, pohon, rumah, ayam, gardu, tembok, gawang).
+`engine/collide.js` mengecek setiap rute bergerak tokoh & figuran (jari-jari badan 0,16 m); ujung rute ke titik
+duduk boleh menempel bangku. Render otomatis mencetak `PERINGATAN TEMBUS: ...` bila ada yang menembus.
+
+```bash
+node tools/episode.js episodes/kopi-pak-hasan.json --check 1     # semua adegan, tanpa render
+node tools/location.js --loc warung --cast "..." --check 1        # satu adegan + figuran lokasi
+```
+
+Bila tembus: tambahkan titik belok (`a>belok>b`) yang mengitari benda, atau geser rute. Menambah benda baru ke
+lokasi = tambahkan juga kotak/lingkarannya ke `obstacles`.

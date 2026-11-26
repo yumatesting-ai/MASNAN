@@ -24,6 +24,13 @@ module.exports = {
     { seed: 36, kind: "ibu", spec: "chat_a{face=r}@9.8,25" },
     { seed: 37, kind: "bapak", spec: "chat_b{face=l}@10.7,25.3" },
   ],
+  // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
+  obstacles: [
+    { name: "bangku pinggir lapangan", x0: -6.8, x1: -4.6, z0: 6.0, z1: 6.42 },
+    { name: "tiang gawang kiri", x: -9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kiri 2", x: -9.6, z: 14.7, r: 0.1 },
+    { name: "tiang gawang kanan", x: 9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kanan 2", x: 9.6, z: 14.7, r: 0.1 },
+    { name: "pohon", x: -15, z: 12, r: 0.35 }, { name: "pagar bambu", x0: -26, x1: 26, z0: 33.9, z1: 34.1 },
+  ],
   build(w, { t = 0, extras = true } = {}) {
     P.sky(w, { groundColor: P.PAL.dirt });
     const X0 = -12, X1 = 12, Z0 = 3.5, Z1 = 32;

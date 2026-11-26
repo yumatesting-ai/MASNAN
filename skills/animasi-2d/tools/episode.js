@@ -73,6 +73,16 @@ function sceneArgs(s, extra) {
   if (s.cameraTo) a.push("--camera-to", JSON.stringify(s.cameraTo));
   return a;
 }
+// --check: cek rute semua adegan (tokoh menembus benda?) tanpa render
+if (opt.check !== undefined || process.argv.includes("--check")) {
+  let bad = 0;
+  ep.scenes.forEach((s, i) => {
+    try { execFileSync("node", [...sceneArgs(s, ["--check", "1"])], { stdio: ["ignore", "pipe", "pipe"] }); console.log(`Adegan ${i + 1} (${s.loc}): OK`); }
+    catch (e) { bad++; console.log(`Adegan ${i + 1} (${s.loc}):\n${String(e.stderr).trim()}`); }
+  });
+  fs.rmSync(tmp, { recursive: true, force: true });
+  process.exit(bad ? 2 : 0);
+}
 // --preview <file.png> [--at "0.2,0.5,0.8"]: lembar kontak gambar diam per adegan (cek komposisi cepat)
 if (opt.preview) {
   const us = (opt.at || "0.15,0.5,0.85").split(",").map(Number), ims = [];
@@ -84,8 +94,8 @@ if (opt.preview) {
   const n = us.length, rows = ep.scenes.length;
   const inputs = ims.flatMap((f) => ["-i", f]);
   const fc = ims.map((_, k) => `[${k}]scale=240:-1[v${k}]`).join(";") + ";" +
-    Array.from({ length: rows }, (_, r) => Array.from({ length: n }, (_, c) => `[v${r * n + c}]`).join("") + `hstack=inputs=${n}[r${r}]`).join(";") + ";" +
-    Array.from({ length: rows }, (_, r) => `[r${r}]`).join("") + `vstack=inputs=${rows}`;
+    Array.from({ length: rows }, (_, r) => (n > 1 ? Array.from({ length: n }, (_, c) => `[v${r * n + c}]`).join("") + `hstack=inputs=${n}` : `[v${r * n}]null`) + `[r${r}]`).join(";") + ";" +
+    (rows > 1 ? Array.from({ length: rows }, (_, r) => `[r${r}]`).join("") + `vstack=inputs=${rows}` : "[r0]null");
   execFileSync("ffmpeg", ["-loglevel", "error", "-y", ...inputs, "-filter_complex", fc, opt.preview]);
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log("Pratinjau:", opt.preview);

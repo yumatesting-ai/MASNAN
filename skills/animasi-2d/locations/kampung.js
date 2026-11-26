@@ -25,9 +25,18 @@ module.exports = {
     { seed: 14, kind: "anak_perempuan", spec: "run@-2.6,20.6>2.4,20.6+laugh/1.2+run@2.4,20.6>-2.6,20.6+idle_three/1", phase: 0.55 },
     // orang lewat: bapak pulang dari jauh lalu kembali, petani menyeberang di kejauhan
     { seed: 18, kind: "bapak", spec: "walk@-0.9,30>-0.9,12+look_around/3+walk@-0.9,12>-0.9,30" },
-    { seed: 17, kind: "petani", spec: "walk@-7,34>7,34+walk@7,34>-7,34", phase: 3 },
+    { seed: 17, kind: "petani", spec: "walk@-5.2,34>5,34+walk@5,34>-5.2,34", phase: 3 },
   ],
 
+  // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
+  obstacles: [
+    { name: "bangku pinggir jalan", x0: -4.0, x1: -2.0, z0: 7.6, z1: 8.02 }, { name: "bangku kakek", x0: 3.2, x1: 4.8, z0: 22.5, z1: 22.92 },
+    { name: "pohon pisang", x: -3.4, z: 9.6, r: 0.3 }, { name: "pohon kelapa", x: -3.6, z: 17.5, r: 0.25 }, { name: "pohon mangga", x: 3.6, z: 11.8, r: 0.35 },
+    { name: "pohon pisang 2", x: 3.4, z: 19.5, r: 0.3 }, { name: "pohon", x: -3.8, z: 33, r: 0.35 }, { name: "pohon kelapa 2", x: 3.8, z: 36, r: 0.25 },
+    { name: "tiang listrik", x: 2.9, z: 3.5, r: 0.12 }, { name: "tiang listrik 2", x: 2.9, z: 20, r: 0.12 }, { name: "tiang lampu", x: -2.9, z: 14, r: 0.1 },
+    { name: "ayam jago", x: -2.3, z: 9.2, r: 0.22 }, { name: "ayam betina", x: -2.9, z: 10.2, r: 0.22 }, { name: "ayam betina 2", x: -3.3, z: 9.0, r: 0.22 },
+    { name: "rumah kiri", x0: -14, x1: -5.8, z0: 0, z1: 70 }, { name: "rumah kanan", x0: 5.6, x1: 14, z0: 0, z1: 70 },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w);
     P.villageRoad(w);
