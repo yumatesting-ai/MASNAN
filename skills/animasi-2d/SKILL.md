@@ -97,7 +97,7 @@ pada posisi 3D — ukurannya otomatis sesuai jarak dan urutan depan-belakang ben
 | id | Lokasi | Titik berdiri (spots) |
 |---|---|---|
 | `kampung` | Jalan kampung: jalan cor retak, rumah tembok/papan/bilik bambu, atap genteng & seng, teras + bale, pagar bambu/tanaman, pisang-kelapa-mangga, jemuran, tiang listrik kayu, ayam, gapura "SELAMAT DATANG" | depan, kiri, kanan, tengah, jauh, pinggir_kiri, pinggir_kanan |
-| `warung` | Warung Bu Atin (mengikuti referensi kreator): tembok plester kusam, atap seng satu sisi bergelombang + tiang kayu, renceng sachet panjang dua warna, meja tembok + toples & pagar besi kecil, rak toples, lampu gantung, bangku kayu, pohon besar, pagar bata. Lantai dalam lebih tinggi (spot `y`) | balik_etalase, depan, bangku, meja, jalan_kiri, jalan_kanan, samping |
+| `warung` | Warkop Bu Atin (warkop kampung sederhana): kios papan kecil beratap seng + tiang kayu, spanduk "WARKOP BU ATIN", meja jualan kayu (toples kerupuk, termos, gelas kopi, gorengan), kompor + ceret, renceng kopi bergoyang, rak & kalender, bangku panjang pelanggan, meja di bawah pohon, kursi plastik, galon & gas | balik_etalase (y 0.15), depan, bangku, meja, jalan_kiri, jalan_kanan, samping |
 | `lapangan` | Lapangan bola kampung: tanah berumput, gawang bambu, sandal, pagar bambu, masjid jauh | tengah, kiri, kanan, pinggir, gawang_kiri, gawang_kanan, jauh |
 | `masjid` | Masjid kampung beratap tumpang + mustaka, serambi, bedug, kentongan, toa | gerbang, setapak, halaman_kiri, halaman_kanan, serambi, depan, bedug |
 | `posronda` | Pos ronda bambu: bale, atap seng, kentongan, papan catur & kopi, lampu bohlam | depan, kiri, kanan, jalan, jalan_kanan, samping |
