@@ -75,9 +75,8 @@ module.exports = {
     w.sprite(7.46, 12.06, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 8.2})" stroke="${lc}" stroke-width="${sw}">
         <path d="M0,0 L${-p * 0.6},${-p * 0.25} L${-p * 0.6},${p * 0.3} Z" fill="${fog("#e6e6e6")}"/>
         <path d="M0,${p * 0.5} L${p * 0.6},${p * 0.25} L${p * 0.6},${p * 0.8} Z" fill="${fog("#e6e6e6")}"/></g>`);
-    // bunga & semak di halaman
-    for (const [x, z] of [[-2.6, 4.7], [2.6, 4.7], [-4, 10.2], [4.2, 10.4]]) P.flowerClump(w, x, z);
-    for (const [x, z] of [[-6.5, 8.5], [6.2, 8.2]]) P.bush(w, x, z, 0.65, { flowers: true });
+    // semak
+    for (const [x, z] of [[-6.5, 8.5], [6.2, 8.2]]) P.bush(w, x, z, 0.65);
     // pepohonan & rumah tetangga
     P.tree(w, -8.2, 9, { h: 5.8 });
     P.tree(w, 9.5, 16, { h: 8.5, kind: "palm" });

@@ -120,9 +120,8 @@ primitif `engine/world3d.js` (`box`, `gable` (genteng/`seng`), `hip` (limas/taju
 `prism`, `dome`, `arch`, `texture` (`plank`/`bamboo`/`seng`), `ground`, `line3` (kabel: `sag`), `sprite`, `text`)
 dan perlengkapan `engine/props.js` (`house` dengan `wall: plaster|plank|bamboo`, `roof: genteng|seng`, `teras`,
 `bale`, `fence: bamboo|bush`, `jemuran`; `villageRoad`, `tree` (`round|palm|banana`), `bush`, `poles`, `bulbLamp`,
-`gapura`, `bench`, `table`, `bale`, `glassOfCoffee`, `chicken`; tanaman: `bush` (semak berarsir, `flowers`),
-`flowerClump` (rumpun bunga liar), `grassTuft` (rumput melengkung), `potPlant` (pot kaleng/ember)). Pohon, semak, rumput
-& bunga bergoyang tertiup angin memakai `w.t` (diisi otomatis oleh `tools/location.js`). Gaya: kampung sederhana, jangan terlalu modern.
+`gapura`, `bench`, `table`, `bale`, `glassOfCoffee`, `chicken`; tanaman: `bush` (semak berarsir), `grassTuft` (rumput melengkung)).
+Pohon, semak & rumput bergoyang tertiup angin memakai `w.t` (diisi otomatis oleh `tools/location.js`). Gaya: kampung sederhana, jangan terlalu modern.
 Sumbu: X kanan, Y atas, Z menjauh dari kamera; jalan kampung di sekitar x=0. Anak tinggi ±1.15 m.
 
 ## Aksi sehari-hari & rangkaian aksi

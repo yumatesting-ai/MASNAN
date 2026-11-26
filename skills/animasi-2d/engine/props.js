@@ -66,11 +66,11 @@ function villageRoad(w, o = {}) {
   for (const s of [-1, 1]) {
     strip(w, Math.min(s * hw, s * (hw + 1.2)), Math.max(s * hw, s * (hw + 1.2)), z0, z1, PAL.dirtDark, { bias: -0.05 });
     strip(w, Math.min(s * (hw + 1.2), s * 40), Math.max(s * (hw + 1.2), s * 40), z0, z1, PAL.grass, { bias: -0.04 });
-    // tepi jalan: rumput liar, rumpun bunga liar, sesekali semak
+    // tepi jalan: rumput liar, sesekali semak
     let k = 0;
     for (let z = z0 + 2.4; z < Math.min(z1, 40); z += 1.4 + ((z * 7) % 3) * 0.35, k++) {
       const ex = s * (hw + 0.25 + ((z * 13) % 10) / 12);
-      if (k % 3 === 1) flowerClump(w, ex, z); else grassTuft(w, ex, z);
+      grassTuft(w, ex, z);
       if (k % 5 === 2 && z > 5) bush(w, s * (hw + 1.6 + ((z * 3) % 5) / 10), z + 0.4, 0.45 + ((z * 7) % 3) * 0.08);
     }
   }
@@ -116,8 +116,6 @@ function house(w, o) {
     const px = side < 0 ? fx + 2.05 : fx - 2.15;
     for (const pz of [z0 + 0.45, z0 + Wd - 0.55]) w.box(px, 0.3, pz, 0.12, 2.05, 0.12, PAL.wood);
     if (o.bale) bale(w, side < 0 ? fx + 0.4 : fx - 1.9, z0 + 2.2, 1.5, 1.0);
-    // pot tanaman di tepi teras
-    for (const pz of [z0 + 0.9, z0 + Wd - 1.1]) potPlant(w, side < 0 ? fx + 1.9 : fx - 1.9, pz, { y: 0.3, size: 0.32 });
   }
   if (o.fence === "bamboo") bambooFence(w, side < 0 ? fx + 3.2 : fx - 3.2, z0, z0 + Wd);
   if (o.fence === "bush") for (let z = z0 + 0.4; z < z0 + Wd; z += 0.9) bush(w, side < 0 ? fx + 3.2 : fx - 3.2, z);
@@ -149,7 +147,7 @@ function grassTuft(w, x, z, o = {}) {
 function bush(w, x, z, r0 = 0.55, o = {}) {
   const seed = x * 11.1 + z * 3.7 + r0, T = w.t || 0;
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
-    const r = treeRng(seed), R = r0 * p, flowers = o.flowers ?? (r() < 0.45);
+    const r = treeRng(seed), R = r0 * p, flowers = !!o.flowers; // bunga dimatikan secara bawaan
     const sway = Math.sin(T * 1.6 + seed) * 1.2;
     const cy = -R * 0.85;
     const body = cloudPath(0, cy, R * 1.15, R * 0.9, 9, r, 0.22);
