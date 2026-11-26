@@ -237,17 +237,70 @@ function glassOfCoffee(w, x, y, z) {
       <path d="M${-s * 0.1},${-s * 1.2} q${s * 0.1},${-s * 0.3} 0,${-s * 0.6}" fill="none" stroke="#bbbbbb" stroke-width="${sw * 0.6}" stroke-linecap="round"/></g>`;
   }, { y, bias: -0.5 });
 }
-// ayam kampung (sprite kecil)
-function chicken(w, x, z, flip = false) {
+// ayam kampung beranimasi (sprite). 1 satuan = 1 cm, menghadap kanan (flip = kiri).
+// o: { flip, t (detik), phase (detik), kind: "jago" | "betina" }
+// Siklus 3.2 dtk: jalan di tempat (kepala maju-mundur) -> mematuk tanah 2x -> diam sambil menengok.
+function chickenPose(t) {
+  const u = ((t % 3.2) + 3.2) % 3.2, TAU = Math.PI * 2;
+  const smooth = (k) => k * k * (3 - 2 * k);
+  let head = 0, bob = 0, legA = 0, legB = 0, nod = 0, look = 1;
+  if (u < 1.0) { // jalan di tempat
+    const s = Math.sin(TAU * u * 2);
+    legA = s; legB = -s; bob = Math.abs(s) * 1.2; nod = 3 * Math.sin(TAU * u * 2 + 0.6);
+  } else if (u < 2.0) { // mematuk 2x
+    const k = (u - 1.0) / 1.0, peck = Math.max(0, Math.sin(Math.PI * ((k * 2) % 1)));
+    head = 62 * smooth(Math.min(1, peck * 1.6));
+  } else { // diam, menengok cepat
+    look = u < 2.5 ? 1 : u < 2.9 ? -1 : 1;
+    head = -6;
+  }
+  return { head, bob, legA, legB, nod, look };
+}
+function chicken(w, x, z, o = {}) {
+  if (typeof o === "boolean") o = { flip: o };
+  const kind = o.kind || "jago", jago = kind === "jago";
+  const pz = chickenPose((o.t || 0) + (o.phase ?? (x * 1.7 + z * 0.9)));
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
-    const s = p * 0.0032, f = flip ? -1 : 1;
-    return `<g transform="translate(${sx} ${sy}) scale(${(s * f).toFixed(4)} ${s.toFixed(4)})" stroke="${lc}" stroke-width="${(sw / s).toFixed(1)}" stroke-linejoin="round">
-      <path d="M-40,-60 C-60,-100 -10,-120 20,-95 C40,-80 60,-90 70,-110 L80,-80 C85,-50 50,-25 10,-25 C-20,-25 -35,-40 -40,-60 Z" fill="${fog("#f2f2f2")}"/>
-      <path d="M-40,-60 L-75,-90 L-60,-55 L-80,-60 L-50,-40 Z" fill="${fog("#6a6a6a")}"/>
-      <path d="M70,-110 l8,-14 l6,10 l6,-8 l2,14 Z" fill="${fog("#8a8a8a")}"/><path d="M84,-96 l14,4 l-12,6 Z" fill="${fog("#9a9a9a")}"/>
-      <circle cx="76" cy="-100" r="3" fill="${LINE}" stroke="none"/>
-      <path d="M0,-25 L-5,0 M20,-25 L25,0" fill="none"/></g>`;
+    const s = p * 0.01 * (jago ? 1 : 0.85), f = (o.flip ? -1 : 1) * pz.look;
+    const W = (sw / s).toFixed(2), Wt = (sw * 0.55 / s).toFixed(2);
+    const body = fog(jago ? "#7a7a7a" : "#c9c9c9"), hackle = fog(jago ? "#c4c4c4" : "#dcdcdc");
+    const tail = fog(jago ? "#3d3d3d" : "#a3a3a3"), wing = fog(jago ? "#5f5f5f" : "#b3b3b3");
+    const comb = fog("#4e4e4e"), leg = fog("#a9a9a9"), beak = fog("#b9b9b9");
+    const footL = (dx) => `<path d="M${dx},0 l5,0 M${dx},0 l3,-2 M${dx},0 l-3,0" fill="none" stroke="${lc}" stroke-width="${Wt}" stroke-linecap="round"/>`;
+    const legSvg = (bx, swing) => {
+      const fx = bx + swing * 4, lift = Math.max(0, swing) * 2.5;
+      return `<path d="M${bx},-9 L${fx},${-lift}" fill="none" stroke="${lc}" stroke-width="${(sw * 1.2 / s).toFixed(2)}" stroke-linecap="round"/>
+        <path d="M${bx},-9 L${fx},${-lift}" fill="none" stroke="${leg}" stroke-width="${(sw * 0.6 / s).toFixed(2)}" stroke-linecap="round"/>
+        <g transform="translate(0 ${-lift})">${footL(fx)}</g>`;
+    };
+    const tailSvg = jago
+      ? `<path d="M-12,-24 C-18,-40 -26,-50 -36,-48 C-30,-44 -24,-36 -20,-22 Z" fill="${tail}"/>
+         <path d="M-13,-22 C-24,-34 -34,-38 -40,-30 C-32,-30 -26,-26 -20,-18 Z" fill="${tail}"/>
+         <path d="M-12,-26 C-14,-38 -18,-46 -24,-50 C-22,-42 -20,-34 -17,-24 Z" fill="${fog("#555555")}"/>
+         <path d="M-26,-46 C-22,-44 -20,-40 -19,-34" fill="none" stroke="${fog("#8a8a8a")}" stroke-width="${Wt}" stroke-linecap="round"/>`
+      : `<path d="M-12,-22 C-16,-30 -20,-36 -24,-38 C-22,-30 -20,-24 -16,-17 Z" fill="${tail}"/>`;
+    const k = Math.max(0, pz.head) / 62; // 0..1 seberapa dalam mematuk
+    const head = `<g transform="translate(${(5 * k).toFixed(2)} ${(13 * k).toFixed(2)}) rotate(${pz.head} 10 -30) translate(${pz.nod * 0.4} 0)">
+        <path d="M6,-30 C7,-38 11,-44 16,-46 C20,-46 23,-43 22,-39 C21,-35 18,-31 16,-26 Z" fill="${hackle}"/>
+        ${jago ? `<path d="M7,-31 l-3,4 l5,-1 l-1,4 l4,-2 l0,4 l4,-3" fill="none" stroke="${lc}" stroke-width="${Wt}" stroke-linejoin="round"/>` : ""}
+        <circle cx="17" cy="-41" r="6" fill="${hackle}"/>
+        <path d="M12,-46 q0,-${jago ? 6 : 3} 3,-${jago ? 3 : 1.5} q1,-${jago ? 5 : 2.5} 3,-${jago ? 1 : 0.5} q2,-${jago ? 4 : 2} 3,${jago ? 1 : 0.5} q2,${jago ? 1 : 0.5} 0,${jago ? 3.5 : 2} Z" fill="${comb}"/>
+        <path d="M22,-42 L28,-40 L22,-38 Z" fill="${beak}"/>
+        <path d="M21,-37 c-1,${jago ? 5 : 3} 3,${jago ? 5 : 3} 2,0 Z" fill="${comb}"/>
+        <circle cx="19" cy="-42.5" r="1.3" fill="${LINE}" stroke="none"/><circle cx="19.4" cy="-43" r="0.4" fill="#fff" stroke="none"/>
+      </g>`;
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)}) scale(${(s * f).toFixed(4)} ${s.toFixed(4)})" stroke="${lc}" stroke-width="${W}" stroke-linejoin="round">
+      <ellipse cx="0" cy="0" rx="16" ry="3" fill="rgba(0,0,0,0.13)" stroke="none"/>
+      ${legSvg(-3, pz.legB)}
+      <g transform="translate(0 ${-pz.bob}) rotate(${(14 * k).toFixed(1)} 0 -9)">
+        ${tailSvg}
+        <path d="M-14,-22 C-16,-33 -5,-38 6,-34 C14,-32 20,-25 18,-17 C15,-9 5,-7 -4,-8 C-12,-10 -14,-15 -14,-22 Z" fill="${body}"/>
+        <path d="M-7,-27 C1,-30 9,-26 10,-20 C4,-14 -5,-15 -10,-20 C-10,-23 -9,-26 -7,-27 Z" fill="${wing}"/>
+        <path d="M-6,-22 C-2,-21 3,-21 7,-22 M-7,-19 C-3,-18 2,-18 6,-19" fill="none" stroke="${fog("#4a4a4a")}" stroke-width="${Wt}" stroke-linecap="round"/>
+        ${head}
+      </g>
+      ${legSvg(3, pz.legA)}</g>`;
   }, { bias: -0.05 });
 }
 
-module.exports = { PAL, sky, strip, villageRoad, grassTuft, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken };
+module.exports = { PAL, sky, strip, villageRoad, grassTuft, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };

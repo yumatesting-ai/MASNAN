@@ -11,7 +11,7 @@ module.exports = {
     depan: { x: 0, z: 4.2 }, kiri: { x: -1.0, z: 4.8 }, kanan: { x: 1.1, z: 4.8 },
     tengah: { x: 0, z: 7.5 }, jauh: { x: 0.3, z: 13 }, pinggir_kiri: { x: -2.4, z: 6 }, pinggir_kanan: { x: 2.5, z: 6 },
   },
-  build(w) {
+  build(w, { t = 0 } = {}) {
     P.sky(w);
     P.villageRoad(w);
     // deretan rumah dengan variasi (jarak, dinding, atap, teras, pagar)
@@ -42,8 +42,9 @@ module.exports = {
     P.tree(w, -3.5, 42, { h: 3.5, kind: "banana" });
     P.poles(w, 2.9, [3.5, 20, 37, 54], 7);
     P.bulbLamp(w, -2.9, 14);
-    P.chicken(w, -2.3, 9.2);
-    P.chicken(w, -2.8, 9.8, true);
+    P.chicken(w, -2.3, 9.2, { t, kind: "jago" });
+    P.chicken(w, -2.9, 10.2, { t, kind: "betina", flip: true, phase: 1.3 });
+    P.chicken(w, -3.3, 9.0, { t, kind: "betina", phase: 2.2 });
     P.gapura(w, 48, "SELAMAT DATANG", "KAMPUNG SUKAMAJU RT 05");
   },
 };

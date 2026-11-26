@@ -10,7 +10,7 @@ module.exports = {
     depan: { x: 0.2, z: 5 }, kiri: { x: -2.6, z: 6 }, kanan: { x: 2.8, z: 6 }, jalan: { x: -0.8, z: 2.4 },
     jalan_kanan: { x: 3.5, z: 2.6 }, samping: { x: 3.4, z: 8.4 },
   },
-  build(w) {
+  build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan
     w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 3.4], [-30, 0, 3.4]], P.PAL.concrete, { stroke: false });
@@ -54,6 +54,7 @@ module.exports = {
     P.house(w, { side: 1, fx: 5, z: 7, width: 6, wall: "plank", roof: "seng", jemuran: false });
     P.house(w, { side: -1, fx: -5.5, z: 9, width: 6, wall: "bamboo" });
     for (const [x, z, h, kind] of [[-7, 18, 6, "round"], [2.5, 20, 8, "palm"], [-3.5, 22, 3.8, "banana"], [8, 24, 5.5, "round"]]) P.tree(w, x, z, { h, kind });
-    P.chicken(w, 3.6, 4.6, true);
+    P.chicken(w, 3.6, 4.6, { t, kind: "jago", flip: true });
+    P.chicken(w, 4.3, 5.4, { t, kind: "betina", phase: 1.6 });
   },
 };
