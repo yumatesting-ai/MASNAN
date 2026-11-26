@@ -23,7 +23,7 @@ const { createWorld } = require("../engine/world3d.js");
 const { createTimeline } = require("../engine/timeline.js");
 const { figuran } = require("../engine/extras.js");
 
-const o = { loc: "komplek", fps: 30, scale: 1, format: "landscape" };
+const o = { loc: "kampung", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
 for (let i = 0; i < args.length; i++) {
   const k = args[i].replace(/^--/, "");
