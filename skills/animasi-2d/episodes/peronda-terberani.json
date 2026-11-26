@@ -566,5 +566,20 @@
       2.9,
       4.3
     ]
-  }
+  },
+  "music": {
+    "style": "kocak",
+    "tense_until": 9.95,
+    "bpm": 112
+  },
+  "sfx": [
+    {
+      "t": 19.45,
+      "type": "dundun"
+    },
+    {
+      "t": 26.2,
+      "type": "wahwah"
+    }
+  ]
 }

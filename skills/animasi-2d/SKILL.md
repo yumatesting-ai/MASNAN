@@ -361,3 +361,15 @@ bicara (baris sebelumnya / berikutnya dari tokoh lain, atau `dialog[].to`), anak
 sebaliknya, lirikan dihaluskan. Close-up satu tokoh: beri `"positions": {"bima":[x,z], ...}` di episode agar tokoh
 melirik ke arah lawan bicara di luar layar. Tanpa dialog: lirikan kecil alami. Matikan per fase dengan `{look=0}`.
 Jangan pakai `lookX` statis di cast untuk adegan ngobrol.
+
+## Backsound (musik + suasana + SFX)
+
+`python3 tools/backsound.py episodes/<ep>.json --out out/bs.wav --vo vo.mp3 --mix out/audio.m4a`
+- Musik orisinal disintesis (petikan pizzicato kartun, bebas hak cipta): bagian tegang/misterius sampai
+  `music.tense_until` lalu ceria-kocak. `"music": {"tense_until": 9.95, "bpm": 112}` di episode.
+- Suasana: malam = jangkrik + angin; siang = burung + angin.
+- SFX otomatis dari `fx`: shake → whoosh+dentum, text → pop (teks "KRESEK" → gesekan semak), kucing melompat → boing,
+  pergantian shot → whoosh halus. Manual: `"sfx": [{"t": 19.45, "type": "dundun"}, {"t": 26.2, "type": "wahwah"}]`
+  (whoosh, thud, pop, boing, rustle, dundun, wahwah).
+- Mix: VO dominan, musik ±-20 dB dan di-duck otomatis saat VO bicara. Gabung ke video tanpa render ulang:
+  `ffmpeg -i video.mp4 -i out/audio.m4a -map 0:v -map 1:a -c copy final.mp4`.

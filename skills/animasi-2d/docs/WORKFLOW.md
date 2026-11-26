@@ -47,7 +47,9 @@ props salah, lengan putus. **Kirim pratinjau + naskah ke kreator, render HANYA s
 ## 8. Render & audio
 - Render ✅ (`WARNA=1 node tools/episode.js <ep>.json --audio vo.mp3 --out x.mp4`), saat ini 900×1600 30 fps
   ⏳ target 1080×1920
-- Musik latar −20 dB di bawah VO, SFX (whoosh transisi, klik checklist, glitch twist) ⏳
+- Musik latar & SFX ✅ `python3 tools/backsound.py <ep>.json --out out/bs.wav --vo vo.mp3 --mix out/audio.m4a`
+  (musik orisinal disintesis, ducking otomatis saat VO, SFX dari fx naskah). Gabung ke video tanpa render ulang:
+  `ffmpeg -i video.mp4 -i out/audio.m4a -map 0:v -map 1:a -c copy final.mp4`
 
 ## 9. Distribusi ⏳
 Satu konten → 3 format: YouTube panjang (16:9, 3–5 mnt), YouTube Shorts, Reels FB/IG.
