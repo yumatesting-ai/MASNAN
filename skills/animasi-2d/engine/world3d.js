@@ -46,8 +46,22 @@ function createWorld(opt = {}) {
   const P = (pts) => pts.map(proj).map(([a, b]) => `${a.toFixed(1)},${b.toFixed(1)}`).join(" ");
 
   // bidang poligon 3D (fill sudah final; fog diterapkan di sini)
-  function poly(pts, fill, o = {}) {
-    const zc = o.z ?? pts.reduce((a, p) => a + p[2], 0) / pts.length;
+  // potong poligon pada bidang dekat kamera (z = cam.z + NEAR) agar bidang yang melewati kamera tidak rusak
+  function clipNear(pts) {
+    const zn = cam.z + NEAR + 0.02;
+    if (pts.every((p) => p[2] >= zn)) return pts;
+    const out = [];
+    for (let i = 0; i < pts.length; i++) {
+      const A = pts[i], B = pts[(i + 1) % pts.length], ina = A[2] >= zn, inb = B[2] >= zn;
+      if (ina) out.push(A);
+      if (ina !== inb) { const k = (zn - A[2]) / (B[2] - A[2]); out.push([A[0] + (B[0] - A[0]) * k, A[1] + (B[1] - A[1]) * k, zn]); }
+    }
+    return out;
+  }
+  function poly(pts0, fill, o = {}) {
+    const zc = o.z ?? pts0.reduce((a, p) => a + Math.max(p[2], cam.z + NEAR), 0) / pts0.length;
+    const pts = clipNear(pts0);
+    if (pts.length < 3) return;
     const zs = o.zLine ?? zc;
     const stroke = o.stroke === false ? 'stroke="none"' : `stroke="${o.stroke || lineCol(zs)}" stroke-width="${o.sw ?? sw(zs, o.swk || 1)}" stroke-linejoin="round"`;
     const svg = `<polygon points="${P(pts)}" fill="${o.noFog ? fill : fog(fill, zc)}" ${stroke} ${o.extra || ""}/>`;

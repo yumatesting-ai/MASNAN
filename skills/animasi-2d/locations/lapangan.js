@@ -32,7 +32,7 @@ module.exports = {
     }
     for (let k = 0; k < 18; k++) P.grassTuft(w, -11 + ((k * 37) % 22), 5 + ((k * 13) % 20));
     // tanah di depan & tanah botak dekat gawang
-    w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, Z0], [-30, 0, Z0]], P.PAL.dirt, { stroke: false });
+    w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, Z0], [-30, 0, Z0]], P.PAL.dirt, { stroke: false });
     for (const s of [-1, 1]) w.ground([[s * 11.5, 0.003, 14.5], [s * 9.2, 0.003, 13.8], [s * 8.8, 0.003, 19.5], [s * 11.5, 0.003, 20.5]], "#cdcdcd", { stroke: false, bias: -0.2 });
     // gawang bambu tanpa jaring di kedua sisi
     for (const sgn of [-1, 1]) {

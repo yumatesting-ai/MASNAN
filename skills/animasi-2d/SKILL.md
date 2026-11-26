@@ -203,3 +203,22 @@ Gaya tampil di `tools/location.js`:
 ## Kanvas
 Per karakter viewBox `300×400`, lantai y≈382. `--scale 3` → 900×1200 px. Adegan: lebar 300 per karakter
 (`--gap` untuk jarak). Untuk video vertikal 9:16 dengan latar/teks, komposisikan di langkah berikutnya.
+
+## Episode berNarasi (konten siap unggah)
+
+Satu episode = file JSON di `episodes/` berisi judul, format, dan daftar adegan (`loc`, `seconds`, `cast`,
+`narasi`, opsional `camera`/`cameraTo` untuk pan/zoom halus, `visual` sebagai catatan naskah).
+
+```bash
+node tools/episode.js episodes/pagi-di-kampung.json --out out/pagi.mp4              # video + subtitle narasi
+node tools/episode.js episodes/pagi-di-kampung.json --script out/naskah.md          # naskah .md + subtitle .srt
+node tools/episode.js episodes/pagi-di-kampung.json --out out/pagi.mp4 --audio vo.mp3  # pasang rekaman suara
+```
+
+- Narasi tiap adegan dipecah per kalimat jadi subtitle; durasinya sebanding jumlah kata (±2,5 kata/detik enak
+  dibacakan). Judul episode muncul 3 detik pertama.
+- Suara narator: rekam sendiri mengikuti `*.srt`/naskah, atau impor `.srt` ke CapCut lalu pakai teks-ke-suara,
+  kemudian render ulang dengan `--audio`. (Layanan TTS online tidak bisa diakses dari container ini.)
+- Kamera: `{"x","y","z","f","horizon"}` — `f` lebih besar = zoom; `cameraTo` membuat push-in/pan pelan.
+  Di format vertikal jaga subjek dalam ±2 m dari `x` kamera pada jarak ±6–7 m.
+- `--cast` boleh memakai koordinat "x,z" (koma di dalam koordinat aman).

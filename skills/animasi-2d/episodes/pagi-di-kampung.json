@@ -1,0 +1,99 @@
+{
+  "title": "Pagi di Kampung",
+  "format": "portrait",
+  "scenes": [
+    {
+      "judul": "Jalan kampung",
+      "loc": "kampung",
+      "seconds": 8,
+      "cast": "nana:walk_front@jauh>depan/5+wave/3",
+      "visual": "Nana berjalan dari ujung jalan kampung menuju kamera, lalu melambai.",
+      "narasi": "Pagi itu, kampung kami sudah ramai seperti biasa. Nana berjalan santai menyusuri jalan, menyapa siapa saja yang ia temui.",
+      "camera": {
+        "z": -2
+      },
+      "cameraTo": {
+        "z": -0.6
+      }
+    },
+    {
+      "judul": "Warkop Bu Atin",
+      "loc": "warung",
+      "seconds": 9,
+      "cast": "hasan:walk@jalan_kiri>duduk_meja/3.5+sit_drink/5.5,atin:talk@balik_etalase",
+      "visual": "Pak Hasan masuk dari kiri, duduk di bangku warkop, lalu menyeruput kopi. Bu Atin mengobrol dari balik etalase.",
+      "narasi": "Di ujung jalan, Pak Hasan sudah mampir ke Warkop Bu Atin. Segelas kopi hitam adalah ritual pagi yang tak pernah ia lewatkan.",
+      "camera": {
+        "x": -1.1,
+        "z": -0.6,
+        "f": 1450
+      },
+      "cameraTo": {
+        "x": -1.3,
+        "z": 0.4,
+        "f": 1450
+      }
+    },
+    {
+      "judul": "Obrolan warkop",
+      "loc": "warung",
+      "seconds": 8,
+      "cast": "hasan:sit_read@duduk_meja,atin:talk@balik_etalase,nana:walk@jalan_kanan>bangku/3.2+scratch_head/4.8:flip",
+      "visual": "Pak Hasan membaca koran. Bu Atin terus bercerita. Nana datang dan menggaruk kepala kebingungan.",
+      "narasi": "Bu Atin, seperti biasa, bercerita soal harga cabai yang naik lagi. Pak Hasan pura-pura sibuk membaca koran.",
+      "camera": {
+        "x": -1,
+        "z": 0.2,
+        "f": 1400
+      }
+    },
+    {
+      "judul": "Lapangan",
+      "loc": "lapangan",
+      "seconds": 8,
+      "cast": "bima:run@-2.2,6.5>1.2,6.2/3.5+jump/4.5,rara:run@2.2,8.5>-0.6,8.2/3.8+happy/4.2",
+      "visual": "Bima dan Rara berlarian di lapangan bola, Bima melompat girang.",
+      "narasi": "Sementara itu di lapangan, Bima dan Rara sudah berlarian mengejar bola. Padahal, mereka belum sarapan.",
+      "camera": {
+        "z": -1.2,
+        "y": 1.5,
+        "f": 1350,
+        "horizon": 0.45
+      },
+      "cameraTo": {
+        "z": -0.2
+      }
+    },
+    {
+      "judul": "Pos ronda",
+      "loc": "posronda",
+      "seconds": 8,
+      "cast": "bima:sit_chat_a@duduk_bale,rara:sit_chat_b@duduk_bale2",
+      "visual": "Bima dan Rara duduk di bale pos ronda sambil mengobrol.",
+      "narasi": "Capek bermain, mereka beristirahat di pos ronda. Ngobrol ngalor-ngidul, dari layangan sampai cita-cita.",
+      "camera": {
+        "z": -1.2,
+        "f": 1250
+      },
+      "cameraTo": {
+        "z": 0.1,
+        "f": 1300
+      }
+    },
+    {
+      "judul": "Masjid",
+      "loc": "masjid",
+      "seconds": 9,
+      "cast": "hasan:walk@gerbang>setapak/5+idle/4,nana:walk@-3.2,9.6>3.2,9.6/9",
+      "visual": "Pak Hasan berjalan masuk ke halaman masjid. Nana lewat di halaman.",
+      "narasi": "Dan saat azan berkumandang, satu per satu kembali ke rumah dan masjid. Begitulah hari-hari sederhana di kampung kami.",
+      "camera": {
+        "z": -3,
+        "f": 1400
+      },
+      "cameraTo": {
+        "z": -1.6
+      }
+    }
+  ]
+}

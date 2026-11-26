@@ -19,7 +19,7 @@ module.exports = {
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan
-    w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 3.4], [-30, 0, 3.4]], P.PAL.concrete, { stroke: false });
+    w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, 3.4], [-30, 0, 3.4]], P.PAL.concrete, { stroke: false });
     for (let x = -30; x < 30; x += 3) w.line3([[x, 0.002, 0.6], [x, 0.002, 3.4]], P.PAL.crack, null, { layer: "ground", bias: -0.1, swk: 0.5 });
     w.ground([[-30, 0, 3.4], [30, 0, 3.4], [30, 0, 60], [-30, 0, 60]], P.PAL.grass, { stroke: false, bias: -0.04 });
     w.ground([[-3.2, 0.005, 5.8], [3.2, 0.005, 5.8], [3.2, 0.005, 10.4], [-3.2, 0.005, 10.4]], P.PAL.dirt, { bias: -0.2 });

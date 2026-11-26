@@ -11,6 +11,7 @@
 //   (lihat engine/timeline.js). Titik dari spots lokasi atau "x,z" (meter); spot boleh punya y (lantai tinggi)
 //   dan seat (tinggi tempat duduk -> klip sit_* otomatis duduk di situ).
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
+// --camera '{"x":1,"z":2,"f":1600}' [--camera-to '{...}']  -> atur/gerakkan kamera (pan, zoom, push-in)
 // --extras off  -> tanpa figuran (karakter latar)
 // --extras-style shadow (default: siluet abu polos + sedikit buram) | blur (bentuk asli diburamkan) | detail
 
@@ -49,7 +50,7 @@ const spotOf = (s) => {
   if (Number.isFinite(x) && Number.isFinite(z)) return { x, z };
   throw new Error(`Titik "${s}" tidak ada di ${LOC.id}. Pilihan: ${Object.keys(LOC.spots).join(", ")}`);
 };
-const cast = (o.cast ? o.cast.split(",") : []).map((s) => {
+const cast = (o.cast ? o.cast.split(/,(?=\s*[a-z_]+:)/) : []).map((s) => {
   const [who, specRaw = "idle", flag] = s.trim().split(":");
   let spec = specRaw;
   if (!spec.split("+")[0].includes("@")) { // fase pertama tanpa titik -> berdiri di "depan"
@@ -70,6 +71,16 @@ const extras = o.extras === "off" ? [] : (LOC.extras || []).map((e) => {
 function frame(t) {
   const camOpt = Object.assign({}, LOC.camera, portrait ? LOC.cameraPortrait || {} : {});
   if (portrait && !LOC.cameraPortrait) { camOpt.f = (camOpt.f || 1300) * 1.3; camOpt.horizon = 0.4; } // vertikal: lebih dekat
+  // --camera / --camera-to: geser & zoom kamera per adegan ({"x","y","z","f","horizon"}); dengan --camera-to kamera
+  // bergerak halus (ease in-out) dari --camera ke --camera-to selama durasi klip (push-in / pan).
+  if (o.camera || o["camera-to"]) {
+    const base = Object.assign({}, camOpt.cam || { x: 0, y: 1.5, z: 0 }, { f: camOpt.f || 1300, horizon: camOpt.horizon ?? 0.42 });
+    const A = Object.assign({}, base, o.camera ? JSON.parse(o.camera) : {});
+    const B = Object.assign({}, A, o["camera-to"] ? JSON.parse(o["camera-to"]) : {});
+    const dur = o.seconds ? +o.seconds : 6, u0 = Math.min(1, Math.max(0, t / dur)), u = u0 * u0 * (3 - 2 * u0);
+    const L = (k) => A[k] + (B[k] - A[k]) * u;
+    camOpt.cam = { x: L("x"), y: L("y"), z: L("z") }; camOpt.f = L("f"); camOpt.horizon = L("horizon");
+  }
   const w = createWorld(Object.assign({ W, H }, camOpt));
   w.t = t; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
   LOC.build(w, { t });

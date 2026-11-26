@@ -21,7 +21,7 @@ module.exports = {
   build(w) {
     P.sky(w, { clouds: [[0.12, 0.1, 1], [0.7, 0.06, 1.1]] });
     // jalan kampung di depan + halaman tanah
-    w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 3.6], [-30, 0, 3.6]], P.PAL.concrete, { stroke: false });
+    w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, 3.6], [-30, 0, 3.6]], P.PAL.concrete, { stroke: false });
     w.ground([[-30, 0, 3.6], [30, 0, 3.6], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false, bias: -0.04 });
     w.ground([[-1.2, 0.005, 4.2], [1.2, 0.005, 4.2], [1.2, 0.005, 11.4], [-1.2, 0.005, 11.4]], "#cfcfcf", { bias: -0.2 }); // jalan setapak
 
