@@ -35,7 +35,7 @@ ep.scenes.forEach((s, i) => {
   // adegan berdialog: narasi tampil di ATAS (gaya narator), dialog di bawah dengan nama tokoh
   const narrStyle = s.dialog && s.dialog.length ? "NarasiAtas" : "Narasi";
   sent.forEach((x, k) => { const d = (avail * words[k]) / total; cues.push({ a: t, b: t + d - 0.08, text: x, scene: i + 1, style: narrStyle }); t += d; });
-  for (const d of s.dialog || []) cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + lineDuration(d.text) + 0.45), text: `${NAME(d.who)}: ${d.text}`, name: NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" });
+  for (const d of s.dialog || []) cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: `${NAME(d.who)}: ${d.text}`, name: NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" });
   s._start = T; T += s.seconds;
 });
 
@@ -131,7 +131,7 @@ fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
 const ff = ["-loglevel", "error", "-y", "-i", joined];
 if (opt.audio) ff.push("-i", opt.audio);
 ff.push("-vf", `ass=${assPath}`, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20");
-if (opt.audio) ff.push("-map", "0:v", "-map", "1:a", "-c:a", "aac", "-shortest");
+if (opt.audio) ff.push("-map", "0:v", "-map", "1:a", "-af", "apad", "-c:a", "aac", "-shortest"); // audio lebih pendek -> diisi senyap
 ff.push(out);
 execFileSync("ffmpeg", ff);
 fs.rmSync(tmp, { recursive: true, force: true });

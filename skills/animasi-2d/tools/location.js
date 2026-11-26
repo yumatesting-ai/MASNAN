@@ -71,7 +71,7 @@ const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.to
 const crash = cast.flatMap((m) => checkTimeline(LOC, m.who, m.tl));
 for (const c of crash) console.error(`PERINGATAN TEMBUS: ${c}`);
 // --dialog '[{"who":"hasan","at":1.2,"text":"Bu, kopi satu!"}]' -> LIP SYNC: mulut mengikuti huruf (bukan satu bentuk)
-const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d));
+const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d, { est: lineDuration(d.text) }));
 // --camkeys '[{"t":0,"x":0,"z":-1,"f":1300},{"t":3,"f":1800,"track":"hasan","dx":0.3}]' -> kamera sinematik:
 //   pan/tilt (x/y/horizon), zoom in/out (f), dolly (z), tracking (track=nama tokoh, dx/dz offset). Antar key: ease in-out.
 const camkeys = o.camkeys ? JSON.parse(o.camkeys) : null;
@@ -168,7 +168,7 @@ function frame(t) {
     const { pose, x, z, y } = m.extra ? m.tl.at(tt) : states[cast.indexOf(m)];
     // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
     if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {
-      const mo = mouthAt(d.text, t - d.at);
+      const mo = mouthAt(d.text, (t - d.at) * (d.est / d.dur)); // diregangkan agar pas dengan durasi audio asli
       if (mo) { pose.mouth = mo; pose.headY = (pose.headY || 0) + 1.2 * Math.abs(Math.sin((t - d.at) * 7)); }
     }
     // bayangan matahari karakter (searah bayangan lingkungan)

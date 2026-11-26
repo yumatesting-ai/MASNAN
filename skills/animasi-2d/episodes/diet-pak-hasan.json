@@ -5,17 +5,19 @@
     {
       "judul": "Shot 1 — Bima menghampiri (MEDIUM, push-in pelan)",
       "loc": "warung",
-      "seconds": 6,
-      "cast": "hasan:sit_drink@duduk_meja/3.2+sit/2.8, bima:walk@0.5,5.0>-1.9,6.0+chat_a{face=l}/4",
+      "seconds": 7.6,
+      "cast": "hasan:sit_drink@duduk_meja/3.6+sit/4.0, bima:walk@0.5,5.0>-1.9,6.0+chat_a{face=l}/5",
       "dialog": [
         {
           "who": "bima",
-          "at": 0.5,
+          "at": 0.15,
+          "dur": 2.94,
           "text": "Pak Hasan, katanya lagi diet?"
         },
         {
           "who": "hasan",
-          "at": 3.3,
+          "at": 3.96,
+          "dur": 3.36,
           "text": "Iya dong. Kopi pahit, tanpa gula."
         }
       ],
@@ -29,10 +31,10 @@
           "horizon": 0.45
         },
         {
-          "t": 6,
+          "t": 7.6,
           "x": -2.2,
-          "z": 3.1,
-          "f": 1260
+          "z": 3.2,
+          "f": 1270
         }
       ],
       "fx": [
@@ -58,17 +60,19 @@
     {
       "judul": "Shot 2 — Ketahuan (CLOSE-UP Pak Hasan, snap zoom)",
       "loc": "warung",
-      "seconds": 6,
-      "cast": "hasan:sit{expr=neutral}@duduk_meja/2.4+sit{expr=nervous;sweat=true}/3.6",
+      "seconds": 6.9,
+      "cast": "hasan:sit{expr=neutral}@duduk_meja/3.2+sit{expr=nervous;sweat=true}/3.7",
       "dialog": [
         {
           "who": "bima",
-          "at": 0.3,
+          "at": 0.44,
+          "dur": 2.42,
           "text": "Terus... gorengan sepuluh itu?"
         },
         {
           "who": "hasan",
-          "at": 3.1,
+          "at": 3.46,
+          "dur": 3.2,
           "text": "Itu... temannya kopi, Bim."
         }
       ],
@@ -82,16 +86,16 @@
           "horizon": 0.42
         },
         {
-          "t": 2.3,
+          "t": 3.0,
           "z": 4.4
         },
         {
-          "t": 2.5,
+          "t": 3.2,
           "z": 4.9,
           "f": 1650
         },
         {
-          "t": 6,
+          "t": 6.9,
           "z": 5.0
         }
       ],
@@ -105,7 +109,7 @@
         },
         {
           "type": "text",
-          "t": 2.45,
+          "t": 3.15,
           "dur": 0.9,
           "text": "GLEK!",
           "sx": 0.72,
@@ -120,22 +124,25 @@
     {
       "judul": "Shot 3 — Punchline (WIDE dua tokoh + Bu Atin)",
       "loc": "warung",
-      "seconds": 8,
-      "cast": "hasan:sit{expr=nervous;sweat=true}@duduk_meja/2.8+sit{expr=shy}/5.2, bima:idle_three{face=l}@-1.9,6.0/5.4+laugh_hard/2.6, atin:deadpan@balik_etalase/5.4+angry_shake/2.6",
+      "seconds": 7.0,
+      "cast": "hasan:sit{expr=nervous;sweat=true}@duduk_meja/2.6+sit{expr=shy}/4.4, bima:idle_three{face=l}@-1.9,6.0/5.5+laugh_hard/1.5, atin:deadpan@balik_etalase/5.0+angry_shake/2.0",
       "dialog": [
         {
           "who": "atin",
-          "at": 0.3,
+          "at": 0.12,
+          "dur": 1.76,
           "text": "Belum dibayar juga, Pak."
         },
         {
           "who": "hasan",
-          "at": 2.8,
+          "at": 2.72,
+          "dur": 1.8,
           "text": "Catat aja, Bu... kayak biasa."
         },
         {
           "who": "atin",
-          "at": 5.4,
+          "at": 5.1,
+          "dur": 1.1,
           "text": "BUKUNYA UDAH PENUH, PAK!"
         }
       ],
@@ -149,17 +156,17 @@
           "horizon": 0.44
         },
         {
-          "t": 5.3,
+          "t": 5.0,
           "z": 1.4
         },
         {
-          "t": 5.5,
+          "t": 5.2,
           "x": -1.2,
           "z": 2.0,
           "f": 1080
         },
         {
-          "t": 8,
+          "t": 7,
           "z": 2.1
         }
       ],
@@ -173,8 +180,8 @@
         },
         {
           "type": "text",
-          "t": 5.5,
-          "dur": 1.6,
+          "t": 5.15,
+          "dur": 1.5,
           "text": "PENUH!",
           "sx": 0.5,
           "sy": 0.17,
@@ -182,7 +189,7 @@
         },
         {
           "type": "shake",
-          "t": 5.5,
+          "t": 5.15,
           "dur": 0.6,
           "amp": 0.05
         }
