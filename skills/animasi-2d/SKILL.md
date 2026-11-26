@@ -373,3 +373,25 @@ Jangan pakai `lookX` statis di cast untuk adegan ngobrol.
   (whoosh, thud, pop, boing, rustle, dundun, wahwah).
 - Mix: VO dominan, musik ±-20 dB dan di-duck otomatis saat VO bicara. Gabung ke video tanpa render ulang:
   `ffmpeg -i video.mp4 -i out/audio.m4a -map 0:v -map 1:a -c copy final.mp4`.
+
+## Emosi saat bicara (`engine/emotion.js`)
+
+Tiap baris dialog punya emosi; wajah, mulut (lip sync) & gerak kepala mengikuti emosi itu.
+Sumber emosi (urutan): `dialog[].emo` → tag ElevenLabs di teks (`[whispering] ...`, tag dibuang dari subtitle)
+→ tebakan teks (HURUF BESAR = marah/teriak, "?" = penasaran).
+
+| emo | wajah | mulut saat bicara | gerak |
+|---|---|---|---|
+| whisper | melirik, pipi merona | kecil (`small`) | condong |
+| scared | mata lebar, garis suram, keringat | gemetar (`wavy`) | gemetar |
+| shock | mata lebar, "!" | teriak (`shout`) | tersentak |
+| angry | alis turun, tanda marah | gigi terkatup / teriak | bergetar, anggukan kuat |
+| badmood | mata setengah, suram | cemberut (`pout`) | lesu |
+| deadpan | datar | minimal | — |
+| sad | alis sedih, air mata | sedih terbuka | kepala tertunduk |
+| happy / excited | mata senang / berbinar | "D" lebar | memantul |
+| laugh | mata terpejam | tertawa | memantul |
+| curious, suspicious, nervous, proud, worried | sesuai nama | dipetakan | miring / gemetar / dagu naik |
+
+Ekspresi baru di rig: `whisper, scared, badmood, worried, suspicious, proud, excited`; mulut baru:
+`small, smallflat, sad_open, teeth, happy_open, pout`. Kedipan otomatis berbeda tiap tokoh (tidak serempak).

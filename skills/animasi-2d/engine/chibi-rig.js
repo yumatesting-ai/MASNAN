@@ -52,6 +52,13 @@ const BASE_EXPRESSIONS = {
   shy:        { eyes: "normal", mouth: "wavy", lookX: -1, blush: 1, sweat: true },
   love:       { eyes: "sparkle", mouth: "smile", blush: 1, sweat: false, above: "heart" },
   nervous:    { eyes: "normal", mouth: "flat", sweat: true },
+  whisper:    { eyes: "normal", mouth: "small", lookX: 0.8, blush: 0.3, sweat: false },        // berbisik (melirik)
+  scared:     { eyes: "wide", mouth: "wavy", sweat: true, gloom: true },                       // takut
+  badmood:    { eyes: "half", mouth: "pout", sweat: false, gloom: true },                      // bad mood / bete
+  worried:    { eyes: "sad", mouth: "wavy", sweat: true },                                     // khawatir
+  suspicious: { eyes: "half", mouth: "smirk", lookX: 0.6, sweat: false },                      // curiga
+  proud:      { eyes: "happy", mouth: "grin", blush: 0.4, sweat: false, above: "sparkles" },   // bangga
+  excited:    { eyes: "sparkle", mouth: "happy_open", blush: 0.8, sweat: false, above: "sparkles" }, // bersemangat
 };
 
 // ---------- warna ----------
@@ -259,6 +266,13 @@ function createRig(design) {
               <path fill="${C.tongue}" d="M-5,11.6 Q0,5 5,11.6 Q0,13.4 -5,11.6 Z"/>
               <path fill="none" ${st} d="M-10,-4 L10,-4 L6,12 Q0,14 -6,12 Z"/>`,
       smirk: `<path fill="none" ${st} d="M-7,1 Q1,4 8,-3"/>`,
+      // --- mulut emosi (lip sync berbeda per emosi) ---
+      small: `<ellipse fill="${C.mouthIn}" ${st} cx="0" cy="1" rx="2.2" ry="1.8"/>`,                       // berbisik
+      smallflat: `<path fill="none" ${st} d="M-3,1 L3,1"/>`,
+      sad_open: `<path fill="${C.mouthIn}" ${st} d="M-7,3 Q0,-3 7,3 Q5,9 0,9 Q-5,9 -7,3 Z"/>`,             // sedih terbuka
+      teeth: `<path fill="#ffffff" ${st} d="M-9,-3 L9,-3 L8,4 L-8,4 Z"/><path fill="none" ${st} stroke-width="${1.4 / m.s}" d="M-8,0.5 L8,0.5 M-4,-3 L-4,4 M0,-3 L0,4 M4,-3 L4,4"/>`, // marah: gigi terkatup
+      happy_open: `<path fill="${C.mouthIn}" ${st} d="M-9,-3 Q0,-2 9,-3 Q8,9 0,10 Q-8,9 -9,-3 Z"/><path fill="${C.tongue}" d="M-4,7.6 Q0,3.8 4,7.6 Q0,9.6 -4,7.6 Z"/>`, // senang: "D"
+      pout: `<path fill="none" ${st} d="M-4,1 Q0,-2.5 4,1"/>`,                                               // cemberut kecil
       // melet kepanasan: mulut terbuka + lidah menjulur
       tongue: `<path fill="${C.mouthIn}" ${st} d="M-9,-4 L9,-4 Q8,7 0,7 Q-8,7 -9,-4 Z"/>
                <path fill="${C.tongue}" ${st} d="M-5,3 Q-6,16 0,17 Q6,16 5,3 Z"/><path fill="none" ${st} d="M0,6 L0,13"/>`,

@@ -28,6 +28,7 @@ const { figuran } = require("../engine/extras.js");
 const { CLIPS, samplePose } = require("../engine/clips.js");
 const { lineDuration, mouthAt } = require("../engine/lipsync.js");
 const FX = require("../engine/fx.js");
+const EMO = require("../engine/emotion.js");
 const { checkTimeline } = require("../engine/collide.js");
 
 const o = { loc: "kampung", fps: 30, scale: 1, format: "landscape" };
@@ -72,7 +73,11 @@ const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.to
 const crash = cast.flatMap((m) => checkTimeline(LOC, m.who, m.tl));
 for (const c of crash) console.error(`PERINGATAN TEMBUS: ${c}`);
 // --dialog '[{"who":"hasan","at":1.2,"text":"Bu, kopi satu!"}]' -> LIP SYNC: mulut mengikuti huruf (bukan satu bentuk)
-const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d) => Object.assign({ dur: lineDuration(d.text) }, d, { est: lineDuration(d.text) }));
+const dialog = (o.dialog ? JSON.parse(o.dialog) : []).map((d0) => {
+  const { emo, clean } = EMO.parse(d0); // emosi dari d.emo / tag ElevenLabs [..] / tebakan teks
+  const d = Object.assign({}, d0, { text: clean, emo });
+  return Object.assign({ dur: lineDuration(clean) }, d, { est: lineDuration(clean) });
+});
 // --positions '{"bima":[-0.4,6.8],"hasan":[2.3,5.3]}' -> posisi tokoh di luar layar (untuk arah pandang saat close-up)
 const positions = o.positions ? JSON.parse(o.positions) : {};
 // ARAH PANDANG OTOMATIS: pendengar menatap pembicara, pembicara menatap lawan bicara (mata + kepala, dihaluskan),
@@ -192,6 +197,13 @@ function frame(t) {
   for (const m of [...extras, ...cast]) {
     const tt = m.extra ? (te + m.phase) % m.tl.total : t;
     const { pose, x, z, y } = m.extra ? m.tl.at(tt) : states[cast.indexOf(m)];
+    // KEDIP ALAMI per tokoh (jadwal berbeda tiap tokoh, sesekali kedip ganda) -> tidak berkedip bersamaan
+    if (!m.extra) {
+      let hsh = 0; for (const ch of m.who) hsh = (hsh * 31 + ch.charCodeAt(0)) % 997;
+      const per = 2.8 + (hsh % 7) * 0.25, off = (hsh % 13) * 0.21, u = (t + off) % per;
+      const bl = (x) => (x >= 0 && x < 0.15 ? Math.sin((Math.PI * x) / 0.15) : 0);
+      pose.blink = Math.max(bl(u), hsh % 3 === 0 ? bl(u - 0.25) : 0);
+    }
     // ARAH PANDANG (rata-rata 3 sampel waktu -> perpindahan lirikan halus)
     if (!m.extra && pose.look !== 0 && pose.view !== "back") {
       const self = { x, z }, g = [0, 0.1, 0.2].map((d) => gazeAt(m, Math.max(0, t - d), self));
@@ -205,7 +217,7 @@ function frame(t) {
     // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
     if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {
       const mo = mouthAt(d.text, (t - d.at) * (d.est / d.dur)); // diregangkan agar pas dengan durasi audio asli
-      if (mo) { pose.mouth = mo; pose.headY = (pose.headY || 0) + 1.2 * Math.abs(Math.sin((t - d.at) * 7)); }
+      EMO.applySpeak(pose, d.emo, mo, t - d.at, m.rig); // wajah + mulut + gerak kepala sesuai emosi baris
     }
     // DUDUK: titik duduk ada di atas permukaan tempat duduk; tokoh digambar DI DEPAN tepi tempat duduknya
     // (pinggul di permukaan, kaki menjuntai di depan sisi bangku/bale) -> tepi tidak menembus badan.

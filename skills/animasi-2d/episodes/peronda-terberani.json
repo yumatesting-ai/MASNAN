@@ -8,13 +8,14 @@
       "loc": "posronda",
       "seconds": 2.85,
       "extras": "off",
-      "cast": "bima:sit{expr=confused}@duduk_dekat, rara:sit{expr=nervous;sweat=true}@duduk_dekat2, hasan:idle@2.3,5.3",
+      "cast": "bima:sit{expr=confused}@duduk_dekat, rara:sit{expr=whisper;handToFace=true;armR=-60;elbowR=140}@duduk_dekat2, hasan:idle@2.3,5.3",
       "dialog": [
         {
           "who": "rara",
           "at": 0.12,
           "dur": 2.56,
-          "text": "Bim... denger nggak? Kresek-kresek..."
+          "text": "Bim... denger nggak? Kresek-kresek...",
+          "emo": "whisper"
         }
       ],
       "camkeys": [
@@ -48,7 +49,8 @@
           "who": "bima",
           "at": 0.15,
           "dur": 2.95,
-          "text": "Ja-jangan-jangan... hantu?"
+          "text": "Ja-jangan-jangan... hantu?",
+          "emo": "scared"
         }
       ],
       "camkeys": [
@@ -82,7 +84,8 @@
           "who": "hasan",
           "at": 0.1,
           "dur": 3.75,
-          "text": "Tenang! Ada Pak Hasan. Saya ini peronda PALING BERANI se-RT!"
+          "text": "Tenang! Ada Pak Hasan. Saya ini peronda PALING BERANI se-RT!",
+          "emo": "proud"
         }
       ],
       "camkeys": [
@@ -128,7 +131,8 @@
           "who": "hasan",
           "at": 0.1,
           "dur": 1.1,
-          "text": "AAAAAA!"
+          "text": "AAAAAA!",
+          "emo": "shock"
         }
       ],
       "camkeys": [
@@ -208,7 +212,8 @@
           "who": "rara",
           "at": 0.05,
           "dur": 1.45,
-          "text": "Pak... itu cuma kucing."
+          "text": "Pak... itu cuma kucing.",
+          "emo": "deadpan"
         }
       ],
       "camkeys": [
@@ -253,7 +258,8 @@
           "who": "bima",
           "at": 0.05,
           "dur": 0.75,
-          "text": "Kucingnya bawa apa tuh?"
+          "text": "Kucingnya bawa apa tuh?",
+          "emo": "curious"
         }
       ],
       "camkeys": [
@@ -287,7 +293,8 @@
           "who": "rara",
           "at": 0.05,
           "dur": 0.85,
-          "text": "Kayak... gorengan."
+          "text": "Kayak... gorengan.",
+          "emo": "suspicious"
         }
       ],
       "camkeys": [
@@ -332,7 +339,8 @@
           "who": "bima",
           "at": 0.1,
           "dur": 4.3,
-          "text": "Gorengan... yang disembunyiin... di semak..."
+          "text": "Gorengan... yang disembunyiin... di semak...",
+          "emo": "suspicious"
         }
       ],
       "camkeys": [
@@ -384,7 +392,8 @@
           "who": "atin",
           "at": 0.05,
           "dur": 2.95,
-          "text": "PAK HASAN! Katanya lagi DIET!"
+          "text": "PAK HASAN! Katanya lagi DIET!",
+          "emo": "angry"
         }
       ],
       "camkeys": [
@@ -439,7 +448,8 @@
           "who": "hasan",
           "at": 0.1,
           "dur": 1.45,
-          "text": "Itu... punya kucingnya, Bu."
+          "text": "Itu... punya kucingnya, Bu.",
+          "emo": "nervous"
         }
       ],
       "camkeys": [
@@ -473,7 +483,8 @@
           "who": "atin",
           "at": 0.05,
           "dur": 1.95,
-          "text": "Kucingnya juga ngutang di warung saya?"
+          "text": "Kucingnya juga ngutang di warung saya?",
+          "emo": "badmood"
         }
       ],
       "camkeys": [
@@ -507,13 +518,15 @@
           "who": "bima",
           "at": 0.05,
           "dur": 2.1,
-          "text": "(tertawa)"
+          "text": "(tertawa)",
+          "emo": "laugh"
         },
         {
           "who": "rara",
           "at": 2.25,
           "dur": 1.15,
-          "text": "(tertawa)"
+          "text": "(tertawa)",
+          "emo": "laugh"
         }
       ],
       "camkeys": [
