@@ -36,12 +36,13 @@ else if (o.mode === "clip") {
 (async () => {
   const cols = Math.min(o.cols, items.length);
   const rows = Math.ceil(items.length / cols);
-  const W = 300 * cols, H = 430 * rows;
+  const CH = rig.CANVAS.height, cellH = CH + 30, CW = rig.CANVAS.width;
+  const W = CW * cols, H = cellH * rows;
   const b = await chromium.launch();
   const pg = await b.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: o.scale });
-  const cells = items.map((it) => `<div style="width:300px;height:430px;text-align:center;font:600 18px sans-serif;color:#555">
+  const cells = items.map((it) => `<div style="width:${CW}px;height:${cellH}px;text-align:center;font:600 18px sans-serif;color:#555">
       ${rig.drawCharacter("front", it.pose, { background: "#fff" })}<div>${it.label}</div></div>`).join("");
-  await pg.setContent(`<body style="margin:0;background:#fff;display:grid;grid-template-columns:repeat(${cols},300px)">${cells}</body>`);
+  await pg.setContent(`<body style="margin:0;background:#fff;display:grid;grid-template-columns:repeat(${cols},${CW}px)">${cells}</body>`);
   const out = o.out || `out/${o.char}-${o.mode}.png`;
   fs.mkdirSync(path.dirname(out), { recursive: true });
   await pg.screenshot({ path: out });

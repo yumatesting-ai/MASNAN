@@ -773,6 +773,15 @@ function createRig(design) {
   }
 
   // isi karakter (tanpa <svg>) dalam kanvas 300x400 — dipakai juga untuk adegan multi-karakter
+  // ---------- tinggi badan ----------
+  // build.scale > 1: karakter diperbesar dari titik pijak (150,382) -> lebih tinggi, kaki tetap di lantai.
+  // Kanvas diperluas ke atas (CANVAS.top negatif) agar kepala tidak terpotong. Ketebalan garis dijaga sama
+  // dengan karakter lain lewat vector-effect: non-scaling-stroke.
+  const SCALE = (design.build && design.build.scale) || 1;
+  const CANVAS_TOP = SCALE > 1 ? -Math.ceil(((SCALE - 1) * 382 + 10) / 10) * 10 : 0;
+  const CANVAS_LEFT = SCALE > 1 ? -Math.ceil(((SCALE - 1) * 160) / 5) * 5 : 0; // ruang tangan terentang
+  const CANVAS = { top: CANVAS_TOP, height: 400 - CANVAS_TOP, left: CANVAS_LEFT, width: 300 - 2 * CANVAS_LEFT, scale: SCALE };
+
   function drawPart(view = "front", pose = {}) {
     const p = resolvePose(pose);
     const v = p.view || view;
@@ -792,20 +801,27 @@ function createRig(design) {
       translate(150 380) scale(${(1 + 0.12 * sq) * p.scaleX} ${1 - 0.12 * sq}) translate(-150 -380)`;
     const lift = Math.max(0, -p.bodyY);
     const ground = `<ellipse fill="${PALETTE.ground}" cx="${150 + dir * p.bodyX}" cy="381" rx="${Math.max(20, 54 - lift * 0.5) * (1 + 0.1 * sq)}" ry="${Math.max(3, 7 - lift * 0.06)}"/>`;
-    return `${defs()}${ground}
+    const inner = `${ground}
       <g transform="${rootT}">
         <g transform="${p.flip ? MIRROR : ""}">${body}</g>
         ${aboveFx(p, { x: ax, y: ay })}
       </g>`;
+    if (SCALE === 1) return `${defs()}${inner}`;
+    const cls = `${ID}-tall`;
+    return `${defs()}<style>.${cls} path,.${cls} ellipse,.${cls} circle,.${cls} rect{vector-effect:non-scaling-stroke}</style>
+      <g class="${cls}" transform="translate(150 382) scale(${SCALE}) translate(-150 -382)">${inner}</g>`;
   }
 
   function drawCharacter(view = "front", pose = {}, opts = {}) {
-    const w = opts.width || 300, h = opts.height || 400;
-    const bg = opts.background ? `<rect width="300" height="400" fill="${opts.background}"/>` : "";
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" width="${w}" height="${h}">${bg}${drawPart(view, pose)}</svg>`;
+    // opts.top: paksa batas atas kanvas (mis. agar sejajar dengan karakter yang lebih tinggi)
+    const top = Math.min(opts.top ?? CANVAS.top, CANVAS.top), ch = 400 - top;
+    const left = CANVAS.left, cw = CANVAS.width;
+    const w = opts.width || cw, h = opts.height || ch;
+    const bg = opts.background ? `<rect x="${left}" y="${top}" width="${cw}" height="${ch}" fill="${opts.background}"/>` : "";
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${left} ${top} ${cw} ${ch}" width="${w}" height="${h}">${bg}${drawPart(view, pose)}</svg>`;
   }
 
-  return { design, drawCharacter, drawPart, resolvePose, DEFAULT_POSE, EXPRESSIONS, PALETTE, VIEWS: ["front", "three", "side", "back"] };
+  return { design, CANVAS, drawCharacter, drawPart, resolvePose, DEFAULT_POSE, EXPRESSIONS, PALETTE, VIEWS: ["front", "three", "side", "back"] };
 }
 
 module.exports = { createRig, BASE_EXPRESSIONS, BASE_DEFAULT_POSE, makePalette };

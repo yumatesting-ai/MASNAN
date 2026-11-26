@@ -14,6 +14,7 @@ Perempuan dewasa, ibu pemilik warung. Desain: `design.js`.
 | Kalimat khas | "Eh, udah denger belum?!" |
 
 ## Ciri wajib
+- **Tinggi**: 1.2× (20% lebih tinggi dari anak-anak), lewat `build.scale`; selalu lebih tinggi dari Nana, Bima, Rara.
 - **Rambut hitam disisir ke belakang dan dicepol** di atas kepala, karet rambut putih; dahi terlihat,
   kedua telinga terlihat.
 - **Kacamata bulat** (`face.glasses`) — mengikuti posisi mata di semua tampak. **Dagu berlipat** (`face.doubleChin`).

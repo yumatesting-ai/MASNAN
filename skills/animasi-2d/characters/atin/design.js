@@ -41,6 +41,6 @@ module.exports = {
   bottom: "none",
   legwear: null,
   shoes: "sandal",
-  build: { armDX: 16, armRest: 5 }, // badan gemuk -> lengan keluar
+  build: { armDX: 16, armRest: 5, scale: 1.2 }, // dewasa: 20% lebih tinggi dari anak-anak // badan gemuk -> lengan keluar
   expr: { neutral: { mouth: "smile", blush: 0.3, sweat: false } },
 };

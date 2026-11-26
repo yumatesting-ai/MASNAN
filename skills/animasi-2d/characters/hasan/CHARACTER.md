@@ -14,6 +14,7 @@ Laki-laki dewasa. Desain: `design.js`.
 | Kalimat khas | "Hidup itu dibawa santai aja, Nak." |
 
 ## Ciri wajib
+- **Tinggi**: 1.28× (28% lebih tinggi dari anak-anak), lewat `build.scale`; selalu lebih tinggi dari Nana, Bima, Rara.
 - **Kepala botak** mengilap (kilau putih di ubun-ubun), sisa rambut tipis abu (`#767676`) di atas telinga dan
   di tengkuk (tampak belakang). Kedua telinga terlihat. Tanpa ahoge.
 - **Kumis tebal hitam** di atas mulut (`face.mustache`). Wajah default: **mata setengah (santai) + mulut datar**.

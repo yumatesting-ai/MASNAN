@@ -28,21 +28,25 @@ const cast = o.cast.split(",").map((s) => {
   if (!c) throw new Error(`Klip "${clip}" tidak ada. Pilihan: ${Object.keys(CLIPS).join(", ")}`);
   return { char, rig, clip: c, flip: flag === "flip" };
 });
-const step = 300 + o.gap;
+// tiap karakter mendapat slot selebar kanvasnya (karakter tinggi/lebar butuh slot lebih lebar)
+const slots = [];
+{ let x = 0; for (const m of cast) { slots.push({ x, w: m.rig.CANVAS.width, left: m.rig.CANVAS.left }); x += m.rig.CANVAS.width + o.gap; } }
 const NAMES = process.argv.includes("--names");
 const nameH = NAMES ? 44 : 0;
-const W = step * cast.length - o.gap, Hh = 400 + nameH + (o.label ? 36 : 0); // ruang nama & label di bawah
+const TOP = Math.min(...cast.map((m) => m.rig.CANVAS.top)); // ruang kepala karakter tertinggi
+const SH = 400 - TOP;
+const W = slots.reduce((a, sl) => a + sl.w, 0) + o.gap * (cast.length - 1), Hh = SH + nameH + (o.label ? 36 : 0); // ruang nama & label di bawah
 const duration = o.seconds ? +o.seconds : Math.max(...cast.map((m) => m.clip.duration));
 
 function frame(t) {
   const parts = cast.map((m, i) => {
     const pose = samplePose(m.clip, t % m.clip.duration, m.rig.resolvePose);
     if (m.flip) pose.flip = !pose.flip;
-    return `<g transform="translate(${i * step} 0)">${m.rig.drawPart(m.clip.view, pose)}</g>`;
+    return `<g transform="translate(${slots[i].x - slots[i].left} 0)">${m.rig.drawPart(m.clip.view, pose)}</g>`;
   }).join("");
-  const names = NAMES ? `<div style="display:flex;gap:${o.gap}px">${cast.map((m) => `<div style="width:300px;text-align:center;font:800 24px sans-serif;color:#333;line-height:${nameH}px">${m.rig.design.name}</div>`).join("")}</div>` : "";
+  const names = NAMES ? `<div style="display:flex;gap:${o.gap}px">${cast.map((m, i) => `<div style="width:${slots[i].w}px;text-align:center;font:800 24px sans-serif;color:#333;line-height:${nameH}px">${m.rig.design.name}</div>`).join("")}</div>` : "";
   const label = o.label ? `<div style="position:fixed;left:0;right:0;bottom:8px;text-align:center;font:700 20px sans-serif;color:#555">${o.label}</div>` : "";
-  return `<body style="margin:0;background:${o.bg}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 400" width="${W}" height="400" style="display:block">${parts}</svg>${names}${label}</body>`;
+  return `<body style="margin:0;background:${o.bg}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 ${TOP} ${W} ${SH}" width="${W}" height="${SH}" style="display:block">${parts}</svg>${names}${label}</body>`;
 }
 
 (async () => {

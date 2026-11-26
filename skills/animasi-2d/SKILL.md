@@ -75,7 +75,10 @@ tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loo
      `legwear`: `null` | `"socks"` | `"kneeSocks"`; `shoes`: `"sneaker"` | `"dark"` | `"sandal"`.
    - `face`: `{ mustache, glasses, doubleChin, baldShine }` — ciri wajah yang mengikuti posisi mata/mulut tiap tampak.
      `hair.bald: true` untuk kepala botak (tampak belakang menggambar kulit kepala).
-   - `build`: `{ armDX, armRest }` — badan lebar: lengan bergeser keluar (px) & membuka saat istirahat (deg).
+   - `build`: `{ armDX, armRest, scale }` — badan lebar: lengan bergeser keluar (px) & membuka saat istirahat (deg);
+     `scale` = tinggi relatif (anak 1, Buk Atin 1.2, Pak Hasan 1.28). Karakter diperbesar dari titik pijak,
+     kanvasnya (`rig.CANVAS`) otomatis melebar ke atas & samping, tebal garis tetap sama. Alat render/sheet/scene
+     menyesuaikan sendiri.
    - `expr`: override preset per karakter (sifat), mis. `{ neutral: { mouth: "smirk", sweat: false } }`.
 3. Koordinat kepala tetap: wajah elips (150,140) rx64 ry58, mata y≈148, poni sebaiknya berakhir y≈110–130.
 4. Cek: `sheet.js --char <id> --mode views`, `--mode expr`, beberapa klip (`wave`, `walk`, `jump`), lalu

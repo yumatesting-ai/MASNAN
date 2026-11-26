@@ -35,7 +35,7 @@ module.exports = {
   bottom: "sarong",
   legwear: null,
   shoes: "sandal",
-  build: { armDX: 14, armRest: 12 },  // perut buncit -> lengan sedikit keluar
+  build: { armDX: 14, armRest: 12, scale: 1.28 }, // dewasa: 28% lebih tinggi dari anak-anak  // perut buncit -> lengan sedikit keluar
   // wajah default: mata setengah (santai/ngantuk), mulut datar di bawah kumis
   expr: { neutral: { eyes: "half", mouth: "flat", sweat: false } },
 };
