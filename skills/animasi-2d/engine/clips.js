@@ -360,6 +360,30 @@
       return { ...life(t, 2), sit: 1, expr: "deadpan", armR: 120 * up - 8, elbowR: -95 * up + 35 * (1 - up) + 18 * up * wave(t, 0.4),
         armL: -8, elbowL: 35, headTilt: 4 * up * wave(t, 0.8), eyes: up > 0.5 ? "closed" : "half" };
     } },
+    // ---------- KONTEN KECANTIKAN ----------
+    // mengoles bibir (lipstik / lip balm): tangan ke mulut, gerakan oles kiri-kanan, mata melirik ke bawah
+    apply_lip: { duration: 1.6, view: "front", smooth: 0.03, pose: (t) => {
+      const up = kf(t, [[0, 0.85], [0.3, 1, "io"], [1.3, 1], [1.6, 0.85, "io"]]);
+      return { ...life(t, 1.6), handToFace: true, holdR: "lipstick", armR: -68 * up, elbowR: 148 * up + 6 * wave(t, 0.4), holdTilt: -14,
+        headTilt: 3 * wave(t, 0.8), headY: 7 * up, lookY: 0.6, eyes: "half", mouth: "o", sweat: false };
+    } },
+    // makan gorengan: gigit -> kunyah (pipi bergerak) -> gigit lagi
+    eat: { duration: 2.4, view: "front", smooth: 0.02, pose: (t) => {
+      const up = kf(t, [[0, 0.3], [0.4, 1, "io"], [0.8, 1], [1.2, 0.35, "io"], [2.4, 0.3]]);
+      const chew = t > 0.8 ? Math.abs(Math.sin(t * 12)) : 0;
+      return { ...life(t, 2.4), handToFace: up > 0.6, holdR: "gorengan", armR: -10 - 52 * up, elbowR: 60 + 85 * up, holdTilt: 10,
+        headY: 7 * up, mouth: t > 0.5 && t < 0.8 ? "open" : chew > 0.5 ? "cat" : "flat", eyes: t > 0.8 && t < 1.6 ? "happy" : undefined,
+        blush: 0.5, sweat: false };
+    } },
+    // presenter menerangkan ke kamera: tangan terbuka bergantian + anggukan
+    explain: { duration: 2.4, view: "front", pose: (t) => {
+      const g = Math.max(0, wave(t, 2.4)), g2 = Math.max(0, -wave(t, 2.4));
+      return { ...life(t, 1.2), expr: "smile", armR: 18 + 30 * g, elbowR: 70 + 20 * g, armL: 18 + 30 * g2, elbowL: 70 + 20 * g2,
+        headTilt: 3 * wave(t, 1.2), headY: 1.2 * Math.abs(wave(t, 0.6)) };
+    } },
+    // memamerkan produk ke kamera (botol di tangan kanan, terangkat)
+    show_product: { duration: 2.4, view: "front", pose: (t) => ({ ...life(t, 1.2), expr: "happy", holdR: "lipstickBottle",
+      armR: 70 + 6 * wave(t, 1.2), elbowR: 70, holdTilt: 0, headTilt: -3 + 2 * wave(t, 1.2), fx: t / 1.2 }) },
     // mengangguk sambil mendengarkan (serong) — pasangan ngobrol berdiri
     listen: { duration: 2.4, view: "three", pose: (t) => ({ ...life(t, 2.4), expr: "smile", headY: 2.5 * Math.max(0, wave(t, 1.2)), armL: 0, armR: 0, blink: blinkAt(t, [1.6]) }) },
     stretch: { duration: 3.6, view: "front", pose: (t) => {

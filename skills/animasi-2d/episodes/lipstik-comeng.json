@@ -1,0 +1,552 @@
+{
+  "title": "Lipstik Comeng?",
+  "format": "portrait",
+  "audio": "vo ElevenLabs 'Indah' 39,6 dtk (paragraf CTA produk belum ada di audio)",
+  "scenes": [
+    {
+      "judul": "1 · Kaget lipstik comeng (CLOSE-UP)",
+      "loc": "kamar",
+      "seconds": 2.9,
+      "extras": "off",
+      "cast": "nana:surprised{lip=#b3263c;lipPatch=1}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.12,
+          "dur": 2.62,
+          "text": "Baru DUA jam, lipstik udah comeng-comeng?"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 1.9,
+          "f": 1600,
+          "horizon": 0.45
+        },
+        {
+          "t": 2.9,
+          "z": 2.3,
+          "f": 1750
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.5,
+          "dur": 1.8,
+          "text": "2 JAM?!",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.12,
+          "rot": -6
+        }
+      ],
+      "visual": "Nana kaget melihat lipstiknya belang (comeng) setelah 2 jam.",
+      "narasi": ""
+    },
+    {
+      "judul": "2 · Eits! (MEDIUM)",
+      "loc": "kamar",
+      "seconds": 3.0,
+      "extras": "off",
+      "cast": "nana:shake_no{lip=#b3263c;lipPatch=1;expr=smile}@depan/1.6+explain{lip=#b3263c;lipPatch=1}/1.4",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.2,
+          "dur": 2.58,
+          "text": "Eits... belum tentu lipstiknya yang jelek!"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.1,
+          "z": 0.9,
+          "f": 1350,
+          "horizon": 0.45
+        },
+        {
+          "t": 3,
+          "z": 1.2
+        }
+      ],
+      "fx": [],
+      "visual": "Nana menggeleng sambil tersenyum: belum tentu lipstiknya.",
+      "narasi": ""
+    },
+    {
+      "judul": "3 · Penyebabnya cara pakai (MEDIUM-WIDE)",
+      "loc": "kamar",
+      "seconds": 4.0,
+      "extras": "off",
+      "cast": "nana:explain{lip=#b3263c;lipPatch=1}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.2,
+          "dur": 3.42,
+          "text": "Ternyata, bibir comeng itu sering gara-gara cara pakainya."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0.2,
+          "y": 1.15,
+          "z": 0.2,
+          "f": 1200,
+          "horizon": 0.45
+        },
+        {
+          "t": 4,
+          "x": 0,
+          "z": 0.7,
+          "f": 1280
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 1.6,
+          "dur": 2.3,
+          "text": "SALAH CARA PAKAI!",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.08,
+          "rot": 0
+        }
+      ],
+      "visual": "Nana menerangkan di kamar.",
+      "narasi": ""
+    },
+    {
+      "judul": "4 · Poin 1: bibir kering (EXTREME CLOSE-UP bibir)",
+      "loc": "kamar",
+      "seconds": 4.4,
+      "extras": "off",
+      "cast": "nana:idle{lip=#b3263c;lipDry=1;lipPatch=0.5}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.2,
+          "dur": 3.72,
+          "text": "Pertama: bibir kering dan ada kulit mati."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 2.1,
+          "f": 1750,
+          "horizon": 0.4
+        },
+        {
+          "t": 4.4,
+          "z": 2.25,
+          "f": 1850
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.25,
+          "dur": 4.0,
+          "text": "1. BIBIR KERING",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.085,
+          "rot": 0
+        }
+      ],
+      "visual": "Close-up bibir kering berkulit mati (serpihan putih).",
+      "narasi": ""
+    },
+    {
+      "judul": "5 · Lipstik ikut kelupas (CLOSE-UP)",
+      "loc": "kamar",
+      "seconds": 4.6,
+      "extras": "off",
+      "cast": "nana:sad{lip=#b3263c;lipDry=1;lipPatch=1}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.16,
+          "dur": 3.78,
+          "text": "Lipstik matte nempelnya ke kulit mati itu... jadi ikut kelupas."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 2.2,
+          "f": 1700,
+          "horizon": 0.45
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 2.6,
+          "dur": 1.9,
+          "text": "IKUT KELUPAS!",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.09,
+          "rot": -4
+        }
+      ],
+      "visual": "Lipstik menempel di kulit mati lalu ikut mengelupas (belang).",
+      "narasi": ""
+    },
+    {
+      "judul": "6 · Poin 2: terlalu tebal (CLOSE-UP oles)",
+      "loc": "kamar",
+      "seconds": 3.4,
+      "extras": "off",
+      "cast": "nana:apply_lip{lip=#b3263c;lipThick=1;lipCrack=1}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.14,
+          "dur": 1.45,
+          "text": "Kedua: dioles terlalu tebal."
+        },
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 1.65,
+          "dur": 1.5,
+          "text": "Lapisannya jadi gampang retak."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 2.0,
+          "f": 1650,
+          "horizon": 0.45
+        },
+        {
+          "t": 3.4,
+          "z": 2.3
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.15,
+          "dur": 1.6,
+          "text": "2. TERLALU TEBAL",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.085,
+          "rot": 0
+        },
+        {
+          "type": "text",
+          "t": 1.7,
+          "dur": 1.6,
+          "text": "RETAK!",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.12,
+          "rot": 6
+        }
+      ],
+      "visual": "Nana mengoles lipstik tebal-tebal; lapisan bibir retak.",
+      "narasi": ""
+    },
+    {
+      "judul": "7 · Poin 3: langsung makan/minum (WARUNG, MEDIUM)",
+      "loc": "warung",
+      "seconds": 3.7,
+      "extras": "off",
+      "cast": "nana:sit_drink{lip=#b3263c}@duduk_meja, atin:idle@balik_etalase",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.18,
+          "dur": 3.02,
+          "text": "Ketiga: belum kering, udah dipakai makan atau minum."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.4,
+          "y": 1.15,
+          "z": 3.2,
+          "f": 1250,
+          "horizon": 0.45
+        },
+        {
+          "t": 3.7,
+          "z": 3.5
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 8
+        },
+        {
+          "type": "text",
+          "t": 0.2,
+          "dur": 1.7,
+          "text": "3. BELUM KERING",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.085,
+          "rot": 0
+        },
+        {
+          "type": "text",
+          "t": 1.9,
+          "dur": 1.8,
+          "text": "SUDAH MAKAN/MINUM",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.075,
+          "rot": 0
+        }
+      ],
+      "visual": "Nana langsung ngopi di warkop padahal lipstik belum kering.",
+      "narasi": ""
+    },
+    {
+      "judul": "8 · Makanan berminyak = musuh (CLOSE-UP makan gorengan)",
+      "loc": "warung",
+      "seconds": 5.0,
+      "extras": "off",
+      "cast": "nana:eat{sit=1;lip=#b3263c;lipShine=1;lipPatch=0.7}@duduk_meja",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.14,
+          "dur": 4.7,
+          "text": "Apalagi makanan berminyak, itu MUSUHNYA lipstik matte."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": -2.85,
+          "y": 1.05,
+          "z": 4.3,
+          "f": 1400,
+          "horizon": 0.4
+        },
+        {
+          "t": 2.5,
+          "z": 4.4
+        },
+        {
+          "t": 2.7,
+          "z": 4.85,
+          "f": 1600
+        },
+        {
+          "t": 5,
+          "z": 4.95
+        }
+      ],
+      "fx": [
+        {
+          "type": "gorengan",
+          "x": -2.75,
+          "y": 0.79,
+          "z": 6.8,
+          "n": 8
+        },
+        {
+          "type": "text",
+          "t": 2.7,
+          "dur": 2.2,
+          "text": "MUSUH LIPSTIK MATTE!",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.075,
+          "rot": -4
+        },
+        {
+          "type": "shake",
+          "t": 2.7,
+          "dur": 0.5,
+          "amp": 0.04
+        }
+      ],
+      "visual": "Nana makan gorengan; bibir berminyak, lipstik luntur.",
+      "narasi": ""
+    },
+    {
+      "judul": "9 · Caranya gini (MEDIUM)",
+      "loc": "kamar",
+      "seconds": 2.0,
+      "extras": "off",
+      "cast": "nana:happy{lip=#e8a6ae}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.22,
+          "dur": 1.28,
+          "text": "Caranya gini:"
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.1,
+          "z": 0.9,
+          "f": 1350,
+          "horizon": 0.45
+        },
+        {
+          "t": 2,
+          "z": 1.1
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.25,
+          "dur": 1.7,
+          "text": "CARANYA:",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.11,
+          "rot": 0
+        }
+      ],
+      "visual": "Nana semangat memberi solusi.",
+      "narasi": ""
+    },
+    {
+      "judul": "10 · Lembapin, tunggu, oles tipis (CLOSE-UP)",
+      "loc": "kamar",
+      "seconds": 5.3,
+      "extras": "off",
+      "cast": "nana:apply_lip{holdR=balm;lip=#e8a6ae;lipShine=0.6}@depan/1.9+idle{lip=#e8a6ae;lipShine=0.3}/1.3+apply_lip{lip=#b3263c}/2.1",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.14,
+          "dur": 4.94,
+          "text": "lembapin bibir dulu, tunggu meresap, oles tipis aja..."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 2.2,
+          "f": 1700,
+          "horizon": 0.45
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.2,
+          "dur": 1.6,
+          "text": "1. LEMBAPIN",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.085,
+          "rot": 0
+        },
+        {
+          "type": "text",
+          "t": 1.9,
+          "dur": 1.3,
+          "text": "2. TUNGGU MERESAP",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.07,
+          "rot": 0
+        },
+        {
+          "type": "text",
+          "t": 3.25,
+          "dur": 2.0,
+          "text": "3. OLES TIPIS",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.085,
+          "rot": 0
+        }
+      ],
+      "visual": "Lip balm dulu, tunggu meresap, lalu oles lipstik tipis.",
+      "narasi": ""
+    },
+    {
+      "judul": "11 · Diamkan sampai set (CLOSE-UP, hasil rapi)",
+      "loc": "kamar",
+      "seconds": 1.7,
+      "extras": "off",
+      "cast": "nana:happy{lip=#b3263c}@depan",
+      "dialog": [
+        {
+          "who": "nana",
+          "noname": true,
+          "at": 0.14,
+          "dur": 1.18,
+          "text": "terus diamkan sampai set."
+        }
+      ],
+      "camkeys": [
+        {
+          "t": 0,
+          "x": 0,
+          "y": 1.0,
+          "z": 2.0,
+          "f": 1650,
+          "horizon": 0.45
+        },
+        {
+          "t": 1.7,
+          "z": 2.2
+        }
+      ],
+      "fx": [
+        {
+          "type": "text",
+          "t": 0.15,
+          "dur": 1.55,
+          "text": "4. DIAMKAN SAMPAI SET",
+          "sx": 0.5,
+          "sy": 0.13,
+          "size": 0.06,
+          "rot": 0
+        }
+      ],
+      "visual": "Hasil lipstik rapi, Nana senang.",
+      "narasi": ""
+    }
+  ]
+}

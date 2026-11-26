@@ -23,7 +23,9 @@ const BASE_DEFAULT_POSE = {
   breathe: 0, armL: 0, armR: 0, legL: 0, legR: 0, bodyX: 0, bodyY: 0, lean: 0, squash: 0, scaleX: 1,
   // --- aksi ---
   elbowL: 0, elbowR: 0,     // tekuk siku (deg, + = lengan bawah naik ke arah dada/wajah)
-  holdL: null, holdR: null, // barang di tangan: "coffee" | "phone" | "broom" (sapu lidi)
+  holdL: null, holdR: null, // barang di tangan: "coffee" | "phone" | "broom" | "lipstick" | "lipstickBottle" | "balm" | "gorengan"
+  handToFace: false, // tangan kanan digambar DI DEPAN wajah (mengoles bibir, makan)
+  lip: null, lipPatch: 0, lipDry: 0, lipCrack: 0, lipThick: 0, lipShine: 0, // bibir berlipstik (konten kecantikan)
   holdTilt: 0,              // kemiringan gelas (minum: negatif = dituang ke mulut)
   hold: null,               // barang dua tangan: "newspaper"
   paperY: 0,                // naik-turun koran (px)
@@ -261,7 +263,29 @@ function createRig(design) {
       tongue: `<path fill="${C.mouthIn}" ${st} d="M-9,-4 L9,-4 Q8,7 0,7 Q-8,7 -9,-4 Z"/>
                <path fill="${C.tongue}" ${st} d="M-5,3 Q-6,16 0,17 Q6,16 5,3 Z"/><path fill="none" ${st} d="M0,6 L0,13"/>`,
     };
-    return `<g transform="translate(${m.x} ${m.y}) scale(${m.s})">${shapes[p.mouth] || shapes.cat}</g>`;
+    return `<g transform="translate(${m.x} ${m.y}) scale(${m.s})">${lips(p, st)}${shapes[p.mouth] || shapes.cat}${lipFx(p)}</g>`;
+  }
+  // BIBIR (konten kecantikan): p.lip = warna lipstik; kondisi: lipPatch (comeng/belang), lipDry (kering, kulit mati),
+  // lipCrack (retak karena terlalu tebal), lipThick (lapisan tebal), lipShine (berminyak). Semua 0..1.
+  function lips(p, st) {
+    if (!p.lip) return "";
+    const col = require("./life.js").col, c = col(p.lip), th = 1 + 0.35 * (p.lipThick || 0);
+    return `<g transform="scale(1 ${th})"><path fill="${c}" ${st} stroke-width="1.6" d="M-12,-1 Q-7,-7 -2,-4.5 Q0,-5.6 2,-4.5 Q7,-7 12,-1 Q0,1.5 -12,-1 Z"/>
+      <path fill="${c}" ${st} stroke-width="1.6" d="M-12,-1 Q0,1.5 12,-1 Q8,9 0,9 Q-8,9 -12,-1 Z"/>
+      <path fill="#ffffff" opacity="0.35" d="M-5,3.6 Q0,5.4 5,3.6 Q0,4.6 -5,3.6 Z"/></g>`;
+  }
+  function lipFx(p) {
+    if (!p.lip) return "";
+    const col = require("./life.js").col, skin = PALETTE.skin;
+    let o = "";
+    const pa = p.lipPatch || 0, dr = p.lipDry || 0, cr = p.lipCrack || 0, sh = p.lipShine || 0;
+    if (pa > 0) o += `<g opacity="${Math.min(1, pa).toFixed(2)}" fill="${skin}">${[[-8, -2, 2.6], [-2, 5, 3], [5, -2.5, 2.2], [8, 3, 2.4], [1, 1, 1.6], [-6, 5, 1.8]].map(([x, y, r2]) => `<ellipse cx="${x}" cy="${y}" rx="${r2}" ry="${(r2 * 0.75).toFixed(2)}"/>`).join("")}</g>`;
+    if (dr > 0) o += `<g opacity="${Math.min(1, dr).toFixed(2)}" stroke="#ffffff" stroke-width="1.1" stroke-linecap="round" fill="none">
+      <path d="M-9,-2 l2,-1.5 M-4,-3.5 l1.5,1 M3,-3 l2,1.2 M8,-1.5 l1.8,-1 M-6,4 l2,1 M0,6.5 l1.6,-1 M6,4.5 l-1.5,1.4"/></g>`;
+    if (cr > 0) o += `<g opacity="${Math.min(1, cr).toFixed(2)}" stroke="${PALETTE.line}" stroke-width="0.8" stroke-linecap="round" fill="none">
+      <path d="M-8,-3 l0.6,2.6 M-4,-4 l-0.4,3 M1,-4.4 l0.5,2.8 M5,-4 l-0.6,2.8 M9,-2.6 l0.3,2 M-7,2 l0.6,3.4 M-2,3 l-0.5,3.6 M3,3 l0.6,3.4 M7,2.4 l-0.4,3"/></g>`;
+    if (sh > 0) o += `<g opacity="${Math.min(1, sh).toFixed(2)}" fill="#ffffff"><ellipse cx="-4" cy="-3" rx="3" ry="1.1"/><ellipse cx="4" cy="5.5" rx="3.6" ry="1.2"/><circle cx="9" cy="8" r="1"/></g>`;
+    return o;
   }
 
   function faceExtras(L, p, faceClip) {
@@ -503,6 +527,26 @@ function createRig(design) {
         <path fill="none" stroke="${C.line}" stroke-width="2.6" d="M${bx - 7},${by + 1} L${bx + 4},${by + 1}"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx}" cy="${hy - 4}" rx="6" ry="7.5"/></g>`;
     }
+    if (kind === "lipstick") return `<g transform="${rot}">
+        <rect fill="#f4f4f4" ${LINE} stroke-width="2" x="${hx - 2.5}" y="${hy - 46}" width="5" height="28" rx="2"/>
+        <path fill="${require("./life.js").col("#b3263c")}" ${LINE} stroke-width="1.8" d="M${hx - 3.5},${hy - 46} Q${hx},${hy - 58} ${hx + 3.5},${hy - 46} Z"/>
+        <rect fill="#2b2b2b" ${LINE} stroke-width="2" x="${hx - 6}" y="${hy - 18}" width="12" height="20" rx="3"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 7}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
+    if (kind === "lipstickBottle") return `<g transform="${rot}">
+        <rect fill="#2b2b2b" ${LINE} stroke-width="2" x="${hx - 7}" y="${hy - 46}" width="14" height="22" rx="3"/>
+        <path fill="${require("./life.js").col("#b3263c")}" ${LINE} stroke-width="2" d="M${hx - 9},${hy - 24} L${hx + 9},${hy - 24} L${hx + 8},${hy + 4} Q${hx},${hy + 8} ${hx - 8},${hy + 4} Z"/>
+        <path fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6" d="M${hx - 5},${hy - 20} L${hx - 5},${hy}"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 9}" cy="${hy - 6}" rx="5.5" ry="7"/></g>`;
+    if (kind === "balm") return `<g transform="${rot}">
+        <path fill="${require("./life.js").col("#f2c9d4")}" ${LINE} stroke-width="2" d="M${hx - 4.5},${hy - 40} Q${hx},${hy - 52} ${hx + 4.5},${hy - 40} Z"/>
+        <rect fill="${require("./life.js").col("#7fb7d9")}" ${LINE} stroke-width="2" x="${hx - 5}" y="${hy - 40}" width="10" height="40" rx="3"/>
+        <path fill="none" stroke="#ffffff" stroke-width="1.6" opacity="0.6" d="M${hx - 2},${hy - 36} L${hx - 2},${hy - 8}"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 7}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
+    if (kind === "gorengan") return `<g transform="${rot}">
+        <path fill="${require("./life.js").col("#c98532")}" ${LINE} stroke-width="1.6" d="M${hx - 3},${hy - 8} L${hx - 2},${hy - 30} L${hx + 3},${hy - 30} L${hx + 3},${hy - 8} Z"/>
+        <ellipse fill="${require("./life.js").col("#d99a3f")}" ${LINE} stroke-width="2" cx="${hx}" cy="${hy - 42}" rx="15" ry="9" transform="rotate(-15 ${hx} ${hy - 42})"/>
+        <path fill="none" stroke="${require("./life.js").col("#b0702a")}" stroke-width="1.5" d="M${hx - 9},${hy - 42} q4,-3 8,0 q4,3 8,-1"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 6}" cy="${hy - 8}" rx="5" ry="6.5"/></g>`;
     if (kind === "phone") return `<g transform="${rot}">
         <rect fill="#3a3a3a" ${LINE} stroke-width="2.4" x="${hx - 8}" y="${hy - 26}" width="16" height="28" rx="3"/>
         <rect fill="#d9d9d9" x="${hx - 5.5}" y="${hy - 23}" width="11" height="20" rx="1.5"/>
@@ -821,11 +865,11 @@ function createRig(design) {
     const paper = p.hold === "newspaper" && !isBack ? newspaper(view, p) : "";
     if (isBack) {
       return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
-        ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}`)}`;
+        ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
     }
     return `${up(hairBackG(false))}${legs}
       ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
-      ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head}${paper}`)}`;
+      ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head}${paper}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
   }
 
   // ================= TAMPAK SAMPING (digambar menghadap kanan, lalu dicerminkan) =================

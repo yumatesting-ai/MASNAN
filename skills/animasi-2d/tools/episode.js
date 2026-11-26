@@ -35,7 +35,7 @@ ep.scenes.forEach((s, i) => {
   // adegan berdialog: narasi tampil di ATAS (gaya narator), dialog di bawah dengan nama tokoh
   const narrStyle = s.dialog && s.dialog.length ? "NarasiAtas" : "Narasi";
   sent.forEach((x, k) => { const d = (avail * words[k]) / total; cues.push({ a: t, b: t + d - 0.08, text: x, scene: i + 1, style: narrStyle }); t += d; });
-  for (const d of s.dialog || []) cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: `${NAME(d.who)}: ${d.text}`, name: NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" });
+  for (const d of s.dialog || []) cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: d.noname ? d.text : `${NAME(d.who)}: ${d.text}`, name: d.noname ? "" : NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" });
   s._start = T; T += s.seconds;
 });
 
@@ -118,7 +118,7 @@ ass += `Style: NarasiAtas,DejaVu Sans,${Math.round(fs1 * 0.85)},&H00F0F0F0,&H00F
 ass += `Style: Judul,DejaVu Sans,${ft},&H00FFFFFF,&H00FFFFFF,&H00202020,&H80000000,1,0,0,0,100,100,0,0,1,${Math.round(ft * 0.12)},${Math.round(ft * 0.05)},8,40,40,${Math.round(H * (portrait ? 0.1 : 0.06))},1\n\n`;
 ass += "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n";
 if (ep.title) ass += `Dialogue: 1,${fmt(0.2)},${fmt(Math.min(3.2, ep.scenes[0].seconds - 0.2))},Judul,,0,0,0,,{\\fad(300,400)}${ep.title}\n`;
-for (const c of cues) ass += `Dialogue: 0,${fmt(c.a)},${fmt(c.b)},${c.style || "Narasi"},,0,0,0,,{\\fad(120,120)}${c.style === "Dialog" ? `{\\c&H00C8C8C8&}${c.name}:{\\c&H00FFFFFF&} ${c.line}` : c.text}\n`;
+for (const c of cues) ass += `Dialogue: 0,${fmt(c.a)},${fmt(c.b)},${c.style || "Narasi"},,0,0,0,,{\\fad(120,120)}${c.style === "Dialog" && c.name ? `{\\c&H00C8C8C8&}${c.name}:{\\c&H00FFFFFF&} ${c.line}` : c.style === "Dialog" ? c.line : c.text}\n`;
 const assPath = path.join(tmp, "sub.ass");
 fs.writeFileSync(assPath, ass);
 
