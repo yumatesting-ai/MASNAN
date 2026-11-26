@@ -16,8 +16,8 @@ module.exports = {
     balik_etalase: { x: 0.75, z: 9.15, y: 0.15 }, // penjual di balik meja (lantai sedikit lebih tinggi)
     depan: { x: 1.3, z: 6.0 }, bangku: { x: -0.7, z: 6.3 }, meja: { x: -2.0, z: 5.8 },
     duduk_meja: { x: -2.85, z: 7.46, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
-    duduk_depan_meja: { x: -0.35, z: 7.1, seat: 0.48 },   // bangku depan meja jualan (membelakangi kamera)
-    duduk_depan_meja2: { x: 0.2, z: 7.1, seat: 0.48 },
+    duduk_depan_meja: { x: -0.35, z: 7.36, seat: 0.48 },   // bangku depan meja jualan (membelakangi kamera)
+    duduk_depan_meja2: { x: 0.2, z: 7.36, seat: 0.48 },
     pesan: { x: 1.3, z: 7.95 },                            // berdiri di depan meja jualan untuk memesan (hadap Bu Atin)
     // titik belok agar jalan tidak menembus meja/bangku/tiang
     belok_masuk: { x: 0.9, z: 6.6 }, belok_meja: { x: -1.55, z: 6.3 }, celah_meja: { x: -1.85, z: 7.3 }, celah_dalam: { x: -2.6, z: 7.3 }, keluar_kanan: { x: 3.6, z: 4.1 },

@@ -84,7 +84,7 @@
       "judul": "Pos ronda",
       "loc": "posronda",
       "seconds": 11.5,
-      "cast": "bima:walk@jalan>duduk_bale+sit_chat_a{face=r}/6, rara:walk@jalan_kanan>duduk_bale2+sit_chat_b{face=l}/6",
+      "cast": "bima:walk@jalan>-1.3,6.2>duduk_bale+sit_chat_a{face=r}/6, rara:walk@jalan_kanan>1.25,6.2>duduk_bale2+sit_chat_b{face=l}/6",
       "camera": {
         "z": -1.2,
         "f": 1150

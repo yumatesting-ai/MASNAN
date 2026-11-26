@@ -11,7 +11,7 @@ module.exports = {
   spots: {
     depan: { x: 0, z: 4.2 }, kiri: { x: -1.0, z: 4.8 }, kanan: { x: 1.1, z: 4.8 },
     tengah: { x: 0, z: 7.5 }, jauh: { x: 0.3, z: 13 }, pinggir_kiri: { x: -2.4, z: 6 }, pinggir_kanan: { x: 2.5, z: 6 },
-    duduk_bangku: { x: -2.55, z: 7.55, seat: 0.48 }, duduk_bangku2: { x: -3.4, z: 7.55, seat: 0.48 },
+    duduk_bangku: { x: -2.55, z: 7.8, seat: 0.48 }, duduk_bangku2: { x: -3.4, z: 7.8, seat: 0.48 },
   },
   // figuran (karakter latar): { seed, kind, spec (rangkaian aksi, diulang), flip?, phase? }
   extras: [

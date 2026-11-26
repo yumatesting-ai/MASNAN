@@ -17,7 +17,7 @@ module.exports = {
   spots: {
     tengah: { x: 0, z: 9 }, kiri: { x: -3.5, z: 7.5 }, kanan: { x: 3.5, z: 7.5 }, pinggir: { x: -1.5, z: 4.8 },
     gawang_kiri: { x: -7.5, z: 13 }, gawang_kanan: { x: 7.5, z: 13 }, jauh: { x: 1, z: 18 },
-    duduk_pinggir: { x: -5.2, z: 5.95, seat: 0.48 }, duduk_pinggir2: { x: -6.2, z: 5.95, seat: 0.48 },
+    duduk_pinggir: { x: -5.2, z: 6.2, seat: 0.48 }, duduk_pinggir2: { x: -6.2, z: 6.2, seat: 0.48 },
   },
   // figuran: anak-anak MAIN BOLA sungguhan (oper, giring, tendang, kejar bola, sesekali tembak ke gawang & sorak),
   // ditambah penonton di pinggir yang mengobrol / bersorak.

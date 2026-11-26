@@ -346,3 +346,10 @@ Langit gelap bergradasi, bulan bercahaya, bintang berkelip; semua benda & tokoh 
 (tetap terbaca), lampu (`w.light(x, y, z, radius)`) digambar di atas filter sehingga tetap menyala hangat
 (bohlam pos ronda, lampu tiang `P.bulbLamp`). Kunang-kunang `LIFE.fireflies`. Kupu-kupu, layangan & burung
 otomatis tidak muncul. Lokasi baru: beri `w.light` pada setiap sumber cahaya bila `w.night`.
+
+## Duduk di tempatnya (aturan titik duduk)
+
+Titik duduk (`seat`) diletakkan di TENGAH kedalaman permukaan duduk (bukan di depan bangku/bale), supaya tepi
+bangku/bale tergambar menutupi pangkal paha dan kaki menjuntai di depannya. Untuk tempat duduk lebih tinggi dari
+panjang kaki (bale ±0,55 m), `tools/location.js` otomatis mengangkat seluruh tokoh & kaki menjuntai.
+Rute jalan menuju titik duduk: lewat titik di depan tempat duduk dulu (mis. `jalan>-1.3,6.2>duduk_bale`).
