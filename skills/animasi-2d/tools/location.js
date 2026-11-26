@@ -107,6 +107,9 @@ function frame(t) {
   for (const m of [...extras, ...cast]) {
     const tt = m.extra ? (t + m.phase) % m.tl.total : t;
     const { pose, x, z, y } = m.tl.at(tt);
+    // bayangan matahari karakter (searah bayangan lingkungan)
+    const hS = 0.55 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1) + (pose.sit ? (pose.seat || 0.45) * 0.6 : 0);
+    w.castBlob(x, z, hS, 0.24 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1), { trunk: 0.12, strength: m.extra ? 0.6 : 0.9 });
     if (m.extra && exStyle === "shadow") Object.assign(pose, { above: null, sweat: false, blush: 0, anger: false }); // siluet: tanpa efek wajah
     w.sprite(x, z, (sx, sy, p) => {
       const s = p / KID_UNITS_PER_M;

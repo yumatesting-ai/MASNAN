@@ -34,9 +34,16 @@ function sky(w, o = {}) {
     else far += `<path d="M${x},${hy} L${x},${hy - bh} L${x + bw / 2},${hy - bh - 12} L${x + bw},${hy - bh} L${x + bw},${hy} Z" fill="#dcdcdc"/>`;
     x += bw + rnd() * 10;
   }
+  // perbukitan berlapis di kejauhan (makin jauh makin terang)
+  const hill = (amp, base, col, ph) => {
+    let d = `M0,${hy}`;
+    for (let i = 0; i <= 24; i++) { const xx = (i / 24) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * (0.5 + 0.5 * Math.sin(i * 0.9 + ph)) * (0.6 + 0.4 * Math.sin(i * 0.37 + ph * 2))).toFixed(1)}`; }
+    return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`;
+  };
+  const hills = o.hills === false ? "" : hill(H * 0.06, H * 0.03, "#e3e3e3", 1.3) + hill(H * 0.04, H * 0.012, "#dbdbdb", 3.1);
   w.add("sky", 1e9, `<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${PAL.skyTop}"/><stop offset="1" stop-color="${PAL.sky}"/></linearGradient></defs>
-    <rect width="${W}" height="${H}" fill="url(#skyg)"/>${clouds}
+    <rect width="${W}" height="${H}" fill="url(#skyg)"/>${clouds}${hills}
     ${o.skyline === false ? "" : far}
     <rect y="${hy}" width="${W}" height="${H - hy}" fill="${o.groundColor || PAL.dirt}"/>`);
 }
@@ -52,6 +59,21 @@ function strip(w, x0, x1, z0, z1, color, o = {}) {
   }
 }
 
+// ---------- detail tanah: kerikil & petak tanah (mengisi area depan yang kosong) ----------
+function groundDetail(w, x0, x1, z0, z1, n = 40, seed = 1) {
+  const r = treeRng(seed + x0 * 3.1 + z0 * 1.7);
+  for (let i = 0; i < n; i++) {
+    const x = x0 + r() * (x1 - x0), z = z0 + r() * (z1 - z0), s = 0.04 + r() * 0.07;
+    const pts = []; for (let k = 0; k < 7; k++) { const a = (k / 7) * Math.PI * 2; pts.push([x + Math.cos(a) * s * (0.8 + r() * 0.4), 0.003, z + Math.sin(a) * s * 0.7]); }
+    w.ground(pts, r() < 0.5 ? "#a9a9a9" : "#d3d3d3", { bias: -0.4, swk: 0.45 });
+  }
+  for (let i = 0; i < Math.max(2, n / 10); i++) {
+    const x = x0 + r() * (x1 - x0), z = z0 + r() * (z1 - z0), rr = 0.3 + r() * 0.5, pts = [];
+    for (let k = 0; k < 10; k++) { const a = (k / 10) * Math.PI * 2; pts.push([x + Math.cos(a) * rr * (0.75 + r() * 0.4), 0.002, z + Math.sin(a) * rr * 0.6 * (0.75 + r() * 0.4)]); }
+    w.ground(pts, "#bdbdbd", { stroke: false, bias: -0.3 });
+  }
+}
+
 // ---------- jalan kampung: cor semen retak, pinggir tanah & rumput liar ----------
 function villageRoad(w, o = {}) {
   const hw = o.halfWidth ?? 1.7, z0 = o.z0 ?? 0.6, z1 = o.z1 ?? 110;
@@ -63,6 +85,8 @@ function villageRoad(w, o = {}) {
     const pts = []; for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2; pts.push([x + r * Math.cos(a) * (1 + 0.2 * Math.sin(a * 3)), 0.004, z + r * 0.6 * Math.sin(a)]); }
     w.ground(pts, "#9e9e9e", { bias: -0.3, swk: 0.6 });
   }
+  groundDetail(w, -hw - 1.2, -hw, z0 + 1, 18, 26, 3);
+  groundDetail(w, hw, hw + 1.2, z0 + 1, 18, 26, 5);
   for (const s of [-1, 1]) {
     strip(w, Math.min(s * hw, s * (hw + 1.2)), Math.max(s * hw, s * (hw + 1.2)), z0, z1, PAL.dirtDark, { bias: -0.05 });
     strip(w, Math.min(s * (hw + 1.2), s * 40), Math.max(s * (hw + 1.2), s * 40), z0, z1, PAL.grass, { bias: -0.04 });
@@ -96,6 +120,10 @@ function house(w, o) {
     w.face([[fxx, 0.35, z0 + 0.2], [fxx, 0.35, z0 + Wd - 0.2], [fxx, 0.9, z0 + Wd - 0.2], [fxx, 0.6, z0 + 0.2]], mul(wallCol, 0.93), { stroke: false, bias: -0.005 });
   }
   const fq = (za, zb, ya, yb, col, extra = {}) => w.face([[fxx, ya, za], [fxx, ya, zb], [fxx, yb, zb], [fxx, yb, za]], col, Object.assign({ swk: 0.8, bias: -0.02 }, extra));
+  // bayangan di bawah tepi atap + gelap di kaki dinding (oklusi) -> bangunan lebih "berdiri"
+  w.poly([[fxx, Hh - 0.5, z0], [fxx, Hh - 0.5, z0 + Wd], [fxx, Hh, z0 + Wd], [fxx, Hh, z0]], mul(wallCol, 0.8), { stroke: false, bias: -0.012 });
+  w.poly([[fxx, 0.35, z0], [fxx, 0.35, z0 + Wd], [fxx, 0.6, z0 + Wd], [fxx, 0.6, z0]], mul(wallCol, 0.9), { stroke: false, bias: -0.011 });
+  if (w.cam.z < z0) w.poly([[x, Hh - 0.45, z0 - 0.015], [x + D, Hh - 0.45, z0 - 0.015], [x + D, Hh, z0 - 0.015], [x, Hh, z0 - 0.015]], mul(wallCol, 0.82), { stroke: false, bias: -0.012 });
   // pintu kayu
   fq(z0 + 1.0, z0 + 1.9, 0.35, 2.3, PAL.door);
   // jendela kayu + daun jendela terbuka
@@ -146,6 +174,7 @@ function grassTuft(w, x, z, o = {}) {
 // semak: tajuk bergelombang berarsir + tekstur daun, opsional berbunga (kembang sepatu / bugenvil)
 function bush(w, x, z, r0 = 0.55, o = {}) {
   const seed = x * 11.1 + z * 3.7 + r0, T = w.t || 0;
+  if (w.castBlob) w.castBlob(x, z, r0 * 0.9, r0 * 1.1, { strength: 0.8 });
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
     const r = treeRng(seed), R = r0 * p, flowers = !!o.flowers; // bunga dimatikan secara bawaan
     const sway = Math.sin(T * 1.6 + seed) * 1.2;
@@ -247,6 +276,11 @@ function tree(w, x, z, o = {}) {
   const h = o.h || 5.5, kind = o.kind || "round";
   const seed = x * 13.7 + z * 7.3 + h;
   const T = w.t || 0;
+  if (w.castBlob) {
+    if (kind === "round") w.castBlob(x, z, h * 0.75, h * 0.34, { trunk: h * 0.05 });
+    else if (kind === "palm") w.castBlob(x, z, h, h * 0.3, { trunk: h * 0.035 });
+    else w.castBlob(x, z, h * 0.75, h * 0.32, { trunk: h * 0.06 });
+  }
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
     const r = treeRng(seed);
     const id = `tr${Math.round(Math.abs(seed) * 100)}`;
@@ -524,4 +558,4 @@ function chicken(w, x, z, o = {}) {
   }, { bias: -0.05 });
 }
 
-module.exports = { PAL, sky, strip, villageRoad, grassTuft, flowerClump, potPlant, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };
+module.exports = { PAL, sky, strip, groundDetail, villageRoad, grassTuft, flowerClump, potPlant, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };

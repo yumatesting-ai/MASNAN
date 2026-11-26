@@ -80,6 +80,34 @@ function createWorld(opt = {}) {
       svg: `<path d="${d}" fill="none" stroke="${fog(stroke, zc)}" stroke-width="${width ?? sw(zc, o.swk || 0.7)}" stroke-linecap="round" ${o.extra || ""}/>` });
   }
 
+  // ---------- bayangan matahari (jatuh ke tanah, searah cahaya: ke kanan-belakang) ----------
+  // titik 3D di ketinggian y diproyeksikan ke tanah sepanjang arah cahaya
+  const SH = [-L[0] / L[1], -L[2] / L[1]]; // geser (x,z) per meter tinggi
+  const toGround = ([x, y, z]) => [x + SH[0] * y, z + SH[1] * y];
+  function hull(pts) {
+    const P2 = pts.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const cross = (o2, a, b) => (a[0] - o2[0]) * (b[1] - o2[1]) - (a[1] - o2[1]) * (b[0] - o2[0]);
+    const lo = [], up = [];
+    for (const p of P2) { while (lo.length >= 2 && cross(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop(); lo.push(p); }
+    for (let i = P2.length - 1; i >= 0; i--) { const p = P2[i]; while (up.length >= 2 && cross(up[up.length - 2], up[up.length - 1], p) <= 0) up.pop(); up.push(p); }
+    return lo.slice(0, -1).concat(up.slice(0, -1));
+  }
+  function shadowPoly(g2, strength = 1) {
+    if (opt.shadows === false || g2.length < 3) return;
+    const zc = g2.reduce((a, p) => a + p[1], 0) / g2.length;
+    const k = (1 - fogK(zc) / Math.max(0.01, fogMax)) * strength;
+    if (k <= 0.02 || zc - cam.z < NEAR) return;
+    items.push({ layer: "shadow", z: zc, svg: `<polygon points="${g2.map(([x, z]) => proj([x, 0.002, z])).map(([a, b]) => `${a.toFixed(1)},${b.toFixed(1)}`).join(" ")}" fill="#000" fill-opacity="${k.toFixed(2)}"/>` });
+  }
+  const castPoints = (pts3, strength) => shadowPoly(hull(pts3.map(toGround)), strength);
+  // bayangan objek tegak berbentuk gumpalan (pohon, semak, karakter): elips di ujung bayangan + "batang"
+  function castBlob(x, z, h, rx, o = {}) {
+    const [cx, cz] = toGround([x, h, z]), pts = [];
+    for (let i = 0; i < 14; i++) { const a = (i / 14) * Math.PI * 2; pts.push([cx + Math.cos(a) * rx, cz + Math.sin(a) * rx * 0.85]); }
+    shadowPoly(pts, o.strength ?? 1);
+    if (o.trunk) { const w2 = o.trunk; shadowPoly(hull([[x - w2, z], [x + w2, z], [cx - w2, cz], [cx + w2, cz]]), o.strength ?? 1); }
+  }
+
   // kotak (badan rumah, tiang, meja...). Hanya bidang yang menghadap kamera yang digambar.
   function box(x, y, z, sx, sy, sz, base, o = {}) {
     const x1 = x + sx, y1 = y + sy, z1 = z + sz;
@@ -89,6 +117,7 @@ function createWorld(opt = {}) {
     if (cam.x > x1) face([[x1, y, z], [x1, y, z1], [x1, y1, z1], [x1, y1, z]], fc.right || base, o);        // sisi kanan
     if (cam.y > y1) face([[x, y1, z], [x1, y1, z], [x1, y1, z1], [x, y1, z1]], fc.top || base, o);          // atas
     if (cam.y < y) face([[x, y, z], [x1, y, z], [x1, y, z1], [x, y, z1]], fc.bottom || base, o);           // bawah
+    if (o.shadow !== false && sy >= 0.12) castPoints([[x, y, z], [x1, y, z], [x1, y, z1], [x, y, z1], [x, y1, z], [x1, y1, z], [x1, y1, z1], [x, y1, z1]]);
   }
 
   // atap pelana. ridge "x": bubungan sejajar X (segitiga di bidang x=const); "z": sejajar Z.
@@ -97,6 +126,7 @@ function createWorld(opt = {}) {
     const gableCol = o.gableColor || o.wall || "#e8e8e8";
     if ((o.ridge || "x") === "x") {
       const zm = (z0 + z1) / 2;
+      if (o.shadow !== false) castPoints([[x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1], [x0, y + h, zm], [x1, y + h, zm]]);
       face([[x0, y, z0], [x1, y, z0], [x1, y + h, zm], [x0, y + h, zm]], base, o);           // lereng depan
       if (cam.y > y + h) face([[x0, y + h, zm], [x1, y + h, zm], [x1, y, z1], [x0, y, z1]], base, o);
       if (cam.x < x) face([[x, y, z], [x, y, z + sz], [x, y + h, zm]], gableCol, o);
@@ -108,6 +138,7 @@ function createWorld(opt = {}) {
       }
     } else {
       const xm = (x0 + x1) / 2;
+      if (o.shadow !== false) castPoints([[x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1], [xm, y + h, z0], [xm, y + h, z1]]);
       if (cam.x < xm) face([[x0, y, z0], [x0, y, z1], [xm, y + h, z1], [xm, y + h, z0]], base, o);
       if (cam.x > xm) face([[x1, y, z0], [x1, y, z1], [xm, y + h, z1], [xm, y + h, z0]], base, o);
       if (cam.z < z) face([[x, y, z], [x + sx, y, z], [xm, y + h, z]], gableCol, o);
@@ -128,6 +159,10 @@ function createWorld(opt = {}) {
   }
   // prisma bersegi-n tegak (menara, tiang bulat)
   function prism(cx, cz, r, y0, y1, n, base, o = {}) {
+    if (o.shadow !== false && y1 - y0 >= 0.12) {
+      const ring = []; for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2; ring.push([cx + r * Math.cos(a), y0, cz + r * Math.sin(a)], [cx + r * Math.cos(a), y1, cz + r * Math.sin(a)]); }
+      castPoints(ring);
+    }
     for (let i = 0; i < n; i++) {
       const a0 = (i / n) * Math.PI * 2, a1 = ((i + 1) / n) * Math.PI * 2;
       const p0 = [cx + r * Math.cos(a0), cz + r * Math.sin(a0)], p1 = [cx + r * Math.cos(a1), cz + r * Math.sin(a1)];
@@ -189,6 +224,7 @@ function createWorld(opt = {}) {
     const ov = o.overhang ?? 0.4, x0 = x - ov, x1 = x + sx + ov, z0 = z - ov, z1 = z + sz + ov;
     const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, tw = (o.top || 0) / 2;
     const T = [[cx - tw, y + h, cz - tw], [cx + tw, y + h, cz - tw], [cx + tw, y + h, cz + tw], [cx - tw, y + h, cz + tw]];
+    if (o.shadow !== false) castPoints([[x0, y, z0], [x1, y, z0], [x1, y, z1], [x0, y, z1], ...T]);
     const q = (pts) => face(tw > 0 ? pts : [pts[0], pts[1], pts[2]], base, o);
     if (cam.z < cz) q([[x0, y, z0], [x1, y, z0], T[1], T[0]]);
     if (cam.x < cx) q([[x0, y, z1], [x0, y, z0], T[0], T[3]]);
@@ -232,13 +268,20 @@ function createWorld(opt = {}) {
   }
 
   function render(background = "") {
-    const order = { sky: 0, far: 1, ground: 2, obj: 3, front: 4 };
+    const order = { sky: 0, far: 1, ground: 2, shadow: 2.5, obj: 3, front: 4 };
     items.sort((a, b) => order[a.layer] - order[b.layer] || b.z - a.z);
+    const shadows = items.filter((i) => i.layer === "shadow").map((i) => i.svg).join("");
+    const before = items.filter((i) => order[i.layer] < 2.5).map((i) => i.svg).join("\n");
+    const after = items.filter((i) => order[i.layer] > 2.5).map((i) => i.svg).join("\n");
+    // vinyet lembut di tepi (sinematik)
+    const vignette = opt.vignette === false ? "" : `<defs><radialGradient id="vgn" cx="50%" cy="48%" r="75%">
+        <stop offset="0.62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.2"/></radialGradient></defs>
+      <rect width="${W}" height="${H}" fill="url(#vgn)" pointer-events="none"/>`;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
-      ${background}${items.map((i) => i.svg).join("\n")}</svg>`;
+      ${background}${before}<g opacity="0.2">${shadows}</g>${after}${vignette}</svg>`;
   }
 
-  return { W, H, cam, f, hy, sky, proj, ppm, fog, fogK, lineCol, sw, poly, face, ground, line3, box, gable, prism, dome, hip, texture, arch, sprite, text, textSide, render, items,
+  return { castPoints, castBlob, toGround, W, H, cam, f, hy, sky, proj, ppm, fog, fogK, lineCol, sw, poly, face, ground, line3, box, gable, prism, dome, hip, texture, arch, sprite, text, textSide, render, items,
     add: (layer, z, svg) => items.push({ layer, z, svg }) };
 }
 

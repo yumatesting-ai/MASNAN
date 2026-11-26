@@ -25,6 +25,7 @@ module.exports = {
     w.ground([[-30, 0, 3.6], [30, 0, 3.6], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false, bias: -0.04 });
     w.ground([[-1.2, 0.005, 4.2], [1.2, 0.005, 4.2], [1.2, 0.005, 11.4], [-1.2, 0.005, 11.4]], "#cfcfcf", { bias: -0.2 }); // jalan setapak
 
+    P.groundDetail(w, -8, 8, 4.4, 12, 44, 41);
     // pagar tembok rendah + gerbang
     for (const s of [-1, 1]) {
       const xa = s < 0 ? -9 : 1.6, len = 7.4;

@@ -49,6 +49,7 @@ module.exports = {
         <circle r="${r}" fill="#f8f8f8" stroke="${lc}" stroke-width="${sw}"/>
         <path d="M0,${-r * 0.35} L${r * 0.33},${-r * 0.1} L${r * 0.2},${r * 0.3} L${-r * 0.2},${r * 0.3} L${-r * 0.33},${-r * 0.1} Z" fill="#3a3a3a"/></g>`;
     });
+    P.groundDetail(w, -11, 11, 3.6, 14, 40, 51);
     // sandal sebagai tanda (khas lapangan kampung)
     for (const [x, z] of [[-1.2, 4.2], [-0.8, 4.3], [4.8, 4.1], [5.2, 4.2], [-6, 14.2], [-6, 15.4]]) w.ground([[x, 0.01, z], [x + 0.28, 0.01, z], [x + 0.28, 0.01, z + 0.12], [x, 0.01, z + 0.12]], "#5a5a5a", { bias: -0.5 });
     // pagar bambu di belakang

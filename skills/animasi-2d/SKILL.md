@@ -98,6 +98,13 @@ figuran) memudar ke abu muda `fogColor` (#dedede), ±50% di 25 m, hampir menyatu
 di kamera lokasi). Tokoh utama hanya terkena 35% kabut agar tetap jelas. Karakter dimasukkan sebagai sprite
 pada posisi 3D — ukurannya otomatis sesuai jarak dan urutan depan-belakang benar.
 
+**Bayangan & pencahayaan.** Matahari dari kiri-atas menjatuhkan bayangan lembut ke tanah: `box/gable/prism/hip`
+otomatis (matikan dengan `{ shadow: false }`), pohon & semak lewat `w.castBlob(x, z, tinggi, radius, {trunk})`,
+bentuk bebas lewat `w.castPoints(titik3D)`. Karakter & figuran juga berbayangan. Bayangan ikut memudar oleh kabut.
+Rumah punya pita gelap di bawah tepi atap dan kaki dinding (oklusi), langit punya siluet bukit berlapis
+(`P.sky(w, { hills: false })` untuk mematikan), tanah depan diberi kerikil/petak tanah lewat
+`P.groundDetail(w, x0, x1, z0, z1, jumlah, seed)`, dan render diberi vinyet halus (`vignette: false` di opsi).
+
 | id | Lokasi | Titik berdiri (spots) |
 |---|---|---|
 | `kampung` | Jalan kampung: jalan cor retak, rumah tembok/papan/bilik bambu, atap genteng & seng, teras + bale, pagar bambu/tanaman, pisang-kelapa-mangga, jemuran, tiang listrik kayu, ayam, gapura "SELAMAT DATANG" | depan, kiri, kanan, tengah, jauh, pinggir_kiri, pinggir_kanan |

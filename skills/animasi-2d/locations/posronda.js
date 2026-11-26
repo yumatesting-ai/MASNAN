@@ -24,6 +24,7 @@ module.exports = {
     w.ground([[-30, 0, 3.4], [30, 0, 3.4], [30, 0, 60], [-30, 0, 60]], P.PAL.grass, { stroke: false, bias: -0.04 });
     w.ground([[-3.2, 0.005, 5.8], [3.2, 0.005, 5.8], [3.2, 0.005, 10.4], [-3.2, 0.005, 10.4]], P.PAL.dirt, { bias: -0.2 });
 
+    P.groundDetail(w, -5, 5, 3.6, 11, 40, 31);
     // ---- gardu ----
     const x0 = -2.4, x1 = 2.4, z0 = 6.6, z1 = 9.6, floorY = 0.55, H = 2.7;
     // tiang bambu

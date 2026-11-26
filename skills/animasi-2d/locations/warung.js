@@ -28,6 +28,7 @@ module.exports = {
     w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false });
     w.ground([[-30, 0.002, 0.6], [30, 0.002, 0.6], [30, 0.002, 3.0], [-30, 0.002, 3.0]], P.PAL.concrete, { stroke: false, bias: -0.1 }); // jalan cor
     for (let x = -30; x < 30; x += 3) w.line3([[x, 0.003, 0.6], [x, 0.003, 3.0]], P.PAL.crack, null, { layer: "ground", bias: -0.2, swk: 0.5 });
+    P.groundDetail(w, -5, 5, 3.2, 9, 46, 21);
     for (let k = 0; k < 12; k++) P.grassTuft(w, -4.5 + ((k * 37) % 10), 3.3 + ((k * 13) % 5) * 0.8);
 
     // ---- latar kampung ----
