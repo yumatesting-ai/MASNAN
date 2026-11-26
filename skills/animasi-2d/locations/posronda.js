@@ -3,6 +3,9 @@
 const P = require("../engine/props.js");
 const LIFE = require("../engine/life.js");
 
+const WARNA_ON = require("../engine/theme.js").COLOR;
+const TWMAP = { "#7a7a7a": "#8a4a2a", "#5a5a5a": "#3a5f8a", "#e8e8e8": "#f3ead6", "#9a9a9a": "#b08a5a", "#8f8f8f": "#9c7a4c", "#f2f2f2": "#fff6dc" };
+const TW = (c) => (WARNA_ON && TWMAP[c]) || c; // abu-abu tertulis langsung -> berwarna (WARNA=1)
 module.exports = {
   id: "posronda",
   name: "Pos Ronda",
@@ -45,31 +48,31 @@ module.exports = {
     for (const x of [x0, x1 - 0.14]) for (const z of [z0, z1 - 0.14]) w.box(x, 0, z, 0.14, H, 0.14, P.PAL.bambooPole);
     // lantai bale bambu
     w.box(x0, floorY - 0.1, z0, x1 - x0, 0.1, z1 - z0, P.PAL.bamboo);
-    for (let k = 1; k < 16; k++) w.line3([[x0 + ((x1 - x0) * k) / 16, floorY + 0.001, z0], [x0 + ((x1 - x0) * k) / 16, floorY + 0.001, z1]], "#8f8f8f", null, { bias: -0.02, swk: 0.5 });
+    for (let k = 1; k < 16; k++) w.line3([[x0 + ((x1 - x0) * k) / 16, floorY + 0.001, z0], [x0 + ((x1 - x0) * k) / 16, floorY + 0.001, z1]], TW("#8f8f8f"), null, { bias: -0.02, swk: 0.5 });
     // dinding belakang bilik bambu setengah tinggi
     w.face([[x0, floorY, z1 - 0.07], [x1, floorY, z1 - 0.07], [x1, floorY + 1.0, z1 - 0.07], [x0, floorY + 1.0, z1 - 0.07]], P.PAL.bamboo);
-    w.texture((u, v) => [x0 + u, floorY + v, z1 - 0.08], x1 - x0, 1.0, "bamboo", { color: "#9a9a9a" });
+    w.texture((u, v) => [x0 + u, floorY + v, z1 - 0.08], x1 - x0, 1.0, "bamboo", { color: TW("#9a9a9a") });
     // balok atas + atap seng pelana
     w.box(x0 - 0.1, H, z0 - 0.1, x1 - x0 + 0.2, 0.12, 0.12, P.PAL.wood);
     w.gable(x0, H + 0.1, z0, x1 - x0, z1 - z0, 1.0, P.PAL.seng, { ridge: "x", overhang: 0.35, wall: P.PAL.bamboo, seng: true });
     // papan nama
-    w.box(-1.4, H - 0.45, z0 - 0.15, 2.8, 0.42, 0.05, "#f2f2f2");
+    w.box(-1.4, H - 0.45, z0 - 0.15, 2.8, 0.42, 0.05, TW("#f2f2f2"));
     w.text(-1.35, H - 0.42, 1.35, H - 0.06, z0 - 0.16, "POS KAMLING RT 05", { size: 0.62 });
     // kentongan tergantung di tiang depan kanan
     w.sprite(x1 - 0.05, z0 - 0.05, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 2.2})" stroke="${lc}" stroke-width="${sw}">
-        <path d="M0,0 L0,${p * 0.2}"/><rect x="${-p * 0.09}" y="${p * 0.2}" width="${p * 0.18}" height="${p * 0.85}" rx="${p * 0.06}" fill="${fog("#7a7a7a")}"/>
+        <path d="M0,0 L0,${p * 0.2}"/><rect x="${-p * 0.09}" y="${p * 0.2}" width="${p * 0.18}" height="${p * 0.85}" rx="${p * 0.06}" fill="${fog(TW("#7a7a7a"))}"/>
         <path d="M${-p * 0.02},${p * 0.35} L${-p * 0.02},${p * 0.9}" stroke-width="${sw * 1.4}"/></g>`, { bias: -0.2 });
     // lampu bohlam di bawah atap
     w.sprite(0, (z0 + z1) / 2, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 2.6})" stroke="${lc}" stroke-width="${sw}">
         <path d="M0,0 L0,${p * 0.25}"/><circle cx="0" cy="${p * 0.33}" r="${p * 0.09}" fill="#ffffff"/></g>`, { bias: -2 });
     if (w.night) { w.light(0, H - 0.4, (z0 + z1) / 2, 4.5, { strength: 1.4 }); w.light(0, 0.6, (z0 + z1) / 2, 3.2, { strength: 0.5, core: 0 }); w.light(-4.2, 6.6, 2.5, 3, { strength: 0.7 }); } // bohlam pos + lampu tiang
     // papan catur + kopi di atas bale
-    w.box(-0.9, floorY, 7.6, 0.5, 0.04, 0.5, "#e8e8e8");
-    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) w.ground([[-0.9 + i * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125], [-0.9 + i * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125]], "#5a5a5a", { stroke: false, layer: "obj", bias: -0.3 });
+    w.box(-0.9, floorY, 7.6, 0.5, 0.04, 0.5, TW("#e8e8e8"));
+    for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) w.ground([[-0.9 + i * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125], [-0.9 + i * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125]], TW("#5a5a5a"), { stroke: false, layer: "obj", bias: -0.3 });
     P.glassOfCoffee(w, 0.2, floorY, 7.5);
     P.glassOfCoffee(w, 0.5, floorY, 7.7);
     // sandal di depan bale
-    for (const [x, z] of [[-1.6, 6.1], [-1.3, 6.15], [0.9, 6.0], [1.2, 6.05]]) w.ground([[x, 0.01, z], [x + 0.26, 0.01, z], [x + 0.26, 0.01, z + 0.11], [x, 0.01, z + 0.11]], "#5a5a5a", { bias: -0.5 });
+    for (const [x, z] of [[-1.6, 6.1], [-1.3, 6.15], [0.9, 6.0], [1.2, 6.05]]) w.ground([[x, 0.01, z], [x + 0.26, 0.01, z], [x + 0.26, 0.01, z + 0.11], [x, 0.01, z + 0.11]], TW("#5a5a5a"), { bias: -0.5 });
 
     // latar: tiang listrik, rumah, pohon
     P.poles(w, -4.2, [2.5, 26], 7);
@@ -81,7 +84,7 @@ module.exports = {
     P.chicken(w, 4.3, 5.4, { t, kind: "betina", phase: 1.6 });
 
     // ---- kehidupan ----
-    LIFE.cat(w, 0.05, 7.7, { mode: "sleep", y: 0.56, color: "#9a9a9a", stripe: "#5a5a5a" });   // kucing tidur di bale
+    LIFE.cat(w, 0.05, 7.7, { mode: "sleep", y: 0.56, color: TW("#9a9a9a"), stripe: TW("#5a5a5a") });   // kucing tidur di bale
     LIFE.ducks(w, [[2.6, 1.6], [7.5, 1.9]], { n: 3 });
     LIFE.flag(w, 2.75, 6.3, { h: 3.6 });
     LIFE.smoke(w, 8.5, 10, { y: 3.4 });

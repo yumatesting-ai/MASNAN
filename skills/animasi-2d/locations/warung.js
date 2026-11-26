@@ -5,6 +5,9 @@
 const P = require("../engine/props.js");
 const LIFE = require("../engine/life.js");
 
+const WARNA_ON = require("../engine/theme.js").COLOR;
+const TWMAP = { "#a6a6a6": "#b8895a", "#9a9a9a": "#c49a6c", "#7a7a7a": "#8a6040", "#6f6f6f": "#7a5236", "#e8e8e8": "#f4ead8", "#8a8a8a": "#9c7048", "#cfcfcf": "#e7d6b8", "#f0f0f0": "#fbf6ea", "#f2f2f2": "#fff8e6", "#9c9c9c": "#d8b56a", "#b3b3b3": "#c8a77c", "#a8a8a8": "#b58756", "#8e8e8e": "#9a6c44", "#5a5a5a": "#3f6a8a", "#ededed": "#eef6f8", "#6a6a6a": "#c0392b", "#555555": "#3a3a3a", "#7d7d7d": "#8a6040", "#bdbdbd": "#2f6b8f", "#4a4a4a": "#3a2a20", "#3c3c3c": "#7a2f2f", "#8d8d8d": "#c9a03a", "#a3a3a3": "#e2b04a", "#e6e6e6": "#fff2c8", "#d9d9d9": "#e8f1f5" };
+const TW = (c) => (WARNA_ON && TWMAP[c]) || c; // abu-abu tertulis langsung -> berwarna (WARNA=1)
 module.exports = {
   id: "warung",
   name: "Warkop Bu Atin",
@@ -65,95 +68,95 @@ module.exports = {
 
     // ---- kios papan kecil ----
     const xL = -1.8, xR = 1.8, zF = 8.6, zB = 10.6, Hw = 2.3;
-    const plank = "#a6a6a6";
+    const plank = TW("#a6a6a6");
     // dinding belakang papan + rak kecil + kalender
-    w.face([[xL, 0, zB], [xR, 0, zB], [xR, Hw, zB], [xL, Hw, zB]], "#9a9a9a");
-    w.texture((u, v) => [xL + u, v, zB - 0.01], xR - xL, Hw, "plank", { color: "#7a7a7a" });
-    w.box(-1.4, 1.45, zB - 0.35, 1.7, 0.05, 0.3, "#6f6f6f");
-    for (let k = 0; k < 6; k++) w.box(-1.3 + k * 0.27, 1.5, zB - 0.3, 0.18, 0.22 + (k % 2) * 0.06, 0.18, ["#e8e8e8", "#8a8a8a", "#cfcfcf"][k % 3], { swk: 0.5 });
-    for (let k = 0; k < 5; k++) w.prism(-1.2 + k * 0.3, zB - 0.2, 0.06, 1.9, 2.05, 8, "#f0f0f0", { swk: 0.4 }); // gelas terbalik
-    w.box(0.6, 1.1, zB - 0.02, 0.55, 0.75, 0.01, "#f2f2f2", { swk: 0.6 }); // kalender
-    w.face([[0.65, 1.55, zB - 0.03], [1.1, 1.55, zB - 0.03], [1.1, 1.8, zB - 0.03], [0.65, 1.8, zB - 0.03]], "#9c9c9c", { swk: 0.4 });
-    for (let r = 0; r < 3; r++) w.line3([[0.67, 1.2 + r * 0.11, zB - 0.03], [1.08, 1.2 + r * 0.11, zB - 0.03]], "#9a9a9a", null, { bias: -0.05, swk: 0.4 });
+    w.face([[xL, 0, zB], [xR, 0, zB], [xR, Hw, zB], [xL, Hw, zB]], TW("#9a9a9a"));
+    w.texture((u, v) => [xL + u, v, zB - 0.01], xR - xL, Hw, "plank", { color: TW("#7a7a7a") });
+    w.box(-1.4, 1.45, zB - 0.35, 1.7, 0.05, 0.3, TW("#6f6f6f"));
+    for (let k = 0; k < 6; k++) w.box(-1.3 + k * 0.27, 1.5, zB - 0.3, 0.18, 0.22 + (k % 2) * 0.06, 0.18, [TW("#e8e8e8"), TW("#8a8a8a"), TW("#cfcfcf")][k % 3], { swk: 0.5 });
+    for (let k = 0; k < 5; k++) w.prism(-1.2 + k * 0.3, zB - 0.2, 0.06, 1.9, 2.05, 8, TW("#f0f0f0"), { swk: 0.4 }); // gelas terbalik
+    w.box(0.6, 1.1, zB - 0.02, 0.55, 0.75, 0.01, TW("#f2f2f2"), { swk: 0.6 }); // kalender
+    w.face([[0.65, 1.55, zB - 0.03], [1.1, 1.55, zB - 0.03], [1.1, 1.8, zB - 0.03], [0.65, 1.8, zB - 0.03]], TW("#9c9c9c"), { swk: 0.4 });
+    for (let r = 0; r < 3; r++) w.line3([[0.67, 1.2 + r * 0.11, zB - 0.03], [1.08, 1.2 + r * 0.11, zB - 0.03]], TW("#9a9a9a"), null, { bias: -0.05, swk: 0.4 });
     // dinding samping papan
     for (const x of [xL, xR - 0.08]) {
       w.box(x, 0, zF, 0.08, Hw, zB - zF, plank);
-      w.texture((u, v) => [x === xL ? xL + 0.081 : xR - 0.081, v, zF + u], zB - zF, Hw, "plank", { color: "#7d7d7d" });
+      w.texture((u, v) => [x === xL ? xL + 0.081 : xR - 0.081, v, zF + u], zB - zF, Hw, "plank", { color: TW("#7d7d7d") });
     }
-    w.box(0, 0, zF + 0.6, xR - 0.1, 0.15, zB - zF - 0.7, "#b3b3b3"); // lantai dalam sedikit tinggi
+    w.box(0, 0, zF + 0.6, xR - 0.1, 0.15, zB - zF - 0.7, TW("#b3b3b3")); // lantai dalam sedikit tinggi
 
     // ---- atap seng kecil miring ke depan, ditopang tiang kayu ----
     const rx0 = xL - 0.45, rx1 = xR + 0.45, rzF = 6.6, ryF = 2.35, rzB = zB + 0.35, ryB = 2.72;
-    w.face([[rx0, ryF, rzF], [rx1, ryF, rzF], [rx1, ryB, rzB], [rx0, ryB, rzB]], "#9a9a9a", { bias: -0.6 });
+    w.face([[rx0, ryF, rzF], [rx1, ryF, rzF], [rx1, ryB, rzB], [rx0, ryB, rzB]], TW("#9a9a9a"), { bias: -0.6 });
     const U = rx1 - rx0, V = Math.hypot(rzB - rzF, ryB - ryF);
     w.texture((u, v) => [rx0 + u, ryF + (ryB - ryF) * (v / V), rzF + (rzB - rzF) * (v / V)], U, V, "seng", { color: "#777777", bias: -0.62 });
     const wave = [];
     for (let x = rx0; x <= rx1 + 1e-6; x += 0.075) wave.push([x, ryF - 0.02 - 0.035 * (1 + Math.sin(((x - rx0) / 0.15) * Math.PI)), rzF]);
-    w.poly([...wave, [rx1, ryF + 0.02, rzF], [rx0, ryF + 0.02, rzF]], "#8e8e8e", { swk: 0.7, bias: -0.7 });
-    for (const x of [xL - 0.2, xR + 0.12]) w.box(x, 0, rzF + 0.1, 0.1, ryF - 0.02, 0.1, "#8a8a8a"); // tiang kayu
-    w.box(rx0, ryF - 0.1, rzF + 0.08, U, 0.08, 0.08, "#7a7a7a");
+    w.poly([...wave, [rx1, ryF + 0.02, rzF], [rx0, ryF + 0.02, rzF]], TW("#8e8e8e"), { swk: 0.7, bias: -0.7 });
+    for (const x of [xL - 0.2, xR + 0.12]) w.box(x, 0, rzF + 0.1, 0.1, ryF - 0.02, 0.1, TW("#8a8a8a")); // tiang kayu
+    w.box(rx0, ryF - 0.1, rzF + 0.08, U, 0.08, 0.08, TW("#7a7a7a"));
     // spanduk kain "WARKOP" di tepi atap (sedikit melendut)
     const by0 = 1.88, by1 = 2.24, bz = rzF + 0.06;
-    w.poly([[xL - 0.1, by1, bz], [xR + 0.1, by1, bz], [xR + 0.1, by0, bz], [0, by0 - 0.04, bz], [xL - 0.1, by0, bz]], "#f2f2f2", { swk: 0.8, bias: -0.8 });
+    w.poly([[xL - 0.1, by1, bz], [xR + 0.1, by1, bz], [xR + 0.1, by0, bz], [0, by0 - 0.04, bz], [xL - 0.1, by0, bz]], TW("#f2f2f2"), { swk: 0.8, bias: -0.8 });
     w.text(xL, by0 + 0.02, xR, by1 - 0.02, bz - 0.01, "WARKOP BU ATIN", { size: 0.68, bias: -0.8 });
     for (const x of [xL - 0.08, xR + 0.08]) w.line3([[x, by1, bz], [x, ryF - 0.08, bz]], "#3a3a3a", null, { bias: -0.85 });
 
     // ---- meja jualan kayu ----
     const cz = 8.2;
-    w.box(-1.6, 0, cz, 3.2, 0.88, 0.55, "#a8a8a8");
-    w.texture((u, v) => [-1.6 + u, v, cz - 0.01], 3.2, 0.88, "plank", { color: "#7d7d7d" });
-    w.box(-1.68, 0.88, cz - 0.05, 3.36, 0.05, 0.65, "#8e8e8e");
+    w.box(-1.6, 0, cz, 3.2, 0.88, 0.55, TW("#a8a8a8"));
+    w.texture((u, v) => [-1.6 + u, v, cz - 0.01], 3.2, 0.88, "plank", { color: TW("#7d7d7d") });
+    w.box(-1.68, 0.88, cz - 0.05, 3.36, 0.05, 0.65, TW("#8e8e8e"));
     // toples kerupuk besar
-    for (const [x, lid] of [[-1.3, "#5a5a5a"], [-0.85, "#8a8a8a"], [-0.4, "#6a6a6a"]]) {
-      w.prism(x, cz + 0.25, 0.17, 0.93, 1.33, 10, "#ededed", { capColor: lid, swk: 0.6 });
+    for (const [x, lid] of [[-1.3, TW("#5a5a5a")], [-0.85, TW("#8a8a8a")], [-0.4, TW("#6a6a6a")]]) {
+      w.prism(x, cz + 0.25, 0.17, 0.93, 1.33, 10, TW("#ededed"), { capColor: lid, swk: 0.6 });
       w.box(x - 0.15, 1.33, cz + 0.1, 0.3, 0.05, 0.3, lid, { swk: 0.5 });
-      for (const dy of [0.1, 0.2, 0.3]) w.line3([[x - 0.12, 0.93 + dy, cz + 0.08], [x + 0.1, 0.93 + dy + 0.03, cz + 0.08]], "#bdbdbd", null, { bias: -0.05, swk: 0.5 });
+      for (const dy of [0.1, 0.2, 0.3]) w.line3([[x - 0.12, 0.93 + dy, cz + 0.08], [x + 0.1, 0.93 + dy + 0.03, cz + 0.08]], TW("#bdbdbd"), null, { bias: -0.05, swk: 0.5 });
     }
     // termos air panas
-    w.prism(0.3, cz + 0.3, 0.12, 0.93, 1.35, 10, "#7a7a7a", { capColor: "#4a4a4a" });
-    w.box(0.22, 1.35, cz + 0.22, 0.16, 0.06, 0.16, "#4a4a4a");
+    w.prism(0.3, cz + 0.3, 0.12, 0.93, 1.35, 10, TW("#7a7a7a"), { capColor: TW("#4a4a4a") });
+    w.box(0.22, 1.35, cz + 0.22, 0.16, 0.06, 0.16, TW("#4a4a4a"));
     // gelas kopi berjajar
     for (let k = 0; k < 4; k++) P.glassOfCoffee(w, -0.05 + k * 0.17 - 0.3, 0.93, cz + 0.05);
     // piring gorengan
     w.sprite(1.15, cz + 0.2, (sx, sy, p, fog, lc, sw) => {
       const r = p * 0.2;
       return `<g transform="translate(${sx} ${sy})" stroke="${lc}" stroke-width="${sw * 0.7}">
-        <ellipse cx="0" cy="0" rx="${r}" ry="${r * 0.28}" fill="${fog("#f2f2f2")}"/>
-        ${[[-0.45, -0.25], [0.05, -0.35], [0.45, -0.2], [-0.15, -0.6], [0.3, -0.55]].map(([dx, dy]) => `<ellipse cx="${dx * r}" cy="${dy * r * 0.6}" rx="${r * 0.32}" ry="${r * 0.14}" fill="${fog("#9a9a9a")}" transform="rotate(${dx * 30} ${dx * r} ${dy * r * 0.6})"/>`).join("")}</g>`;
+        <ellipse cx="0" cy="0" rx="${r}" ry="${r * 0.28}" fill="${fog(TW("#f2f2f2"))}"/>
+        ${[[-0.45, -0.25], [0.05, -0.35], [0.45, -0.2], [-0.15, -0.6], [0.3, -0.55]].map(([dx, dy]) => `<ellipse cx="${dx * r}" cy="${dy * r * 0.6}" rx="${r * 0.32}" ry="${r * 0.14}" fill="${fog(TW("#9a9a9a"))}" transform="rotate(${dx * 30} ${dx * r} ${dy * r * 0.6})"/>`).join("")}</g>`;
     }, { y: 0.93, bias: -0.1 });
     // meja samping: kompor + ceret
-    w.box(1.95, 0, 8.3, 0.7, 0.75, 0.5, "#9a9a9a");
-    w.box(2.0, 0.75, 8.35, 0.6, 0.1, 0.4, "#5a5a5a"); // kompor
-    w.prism(2.3, 8.55, 0.15, 0.85, 1.12, 10, "#cfcfcf", { capColor: "#9a9a9a" }); // ceret
-    w.line3([[2.42, 1.0, 8.5], [2.6, 1.12, 8.5]], "#5a5a5a", null, { bias: -0.1, swk: 1.6 });
+    w.box(1.95, 0, 8.3, 0.7, 0.75, 0.5, TW("#9a9a9a"));
+    w.box(2.0, 0.75, 8.35, 0.6, 0.1, 0.4, TW("#5a5a5a")); // kompor
+    w.prism(2.3, 8.55, 0.15, 0.85, 1.12, 10, TW("#cfcfcf"), { capColor: TW("#9a9a9a") }); // ceret
+    w.line3([[2.42, 1.0, 8.5], [2.6, 1.12, 8.5]], TW("#5a5a5a"), null, { bias: -0.1, swk: 1.6 });
     // galon & tabung gas di bawah meja samping
-    w.prism(2.85, 8.3, 0.17, 0, 0.42, 10, "#9a9a9a");
-    w.prism(-2.2, 9.6, 0.17, 0, 0.48, 10, "#7a7a7a");
-    w.prism(-2.2, 9.6, 0.19, 0.48, 0.9, 10, "#d9d9d9");
+    w.prism(2.85, 8.3, 0.17, 0, 0.42, 10, TW("#9a9a9a"));
+    w.prism(-2.2, 9.6, 0.17, 0, 0.48, 10, TW("#7a7a7a"));
+    w.prism(-2.2, 9.6, 0.19, 0.48, 0.9, 10, TW("#d9d9d9"));
 
     // ---- renceng kopi yang bergoyang tertiup angin ----
     for (let i = 0; i < 6; i++) {
       const sx = -1.6 + i * 0.26, zs = 7.3, top = 2.2, n = 5 + ((i * 3) % 4);
       const dark = i % 3 !== 1;
-      w.line3([[sx, top, zs], [sx, ryF - 0.06, zs]], "#555555", null, { bias: -0.9 });
+      w.line3([[sx, top, zs], [sx, ryF - 0.06, zs]], TW("#555555"), null, { bias: -0.9 });
       for (let j = 0; j < n; j++) {
         const sway = 0.03 * j * Math.sin(t * 2.2 + i * 0.9);
         const y = top - j * 0.15, x = sx + sway;
-        w.face([[x - 0.1, y, zs], [x + 0.1, y, zs], [x + 0.1, y - 0.14, zs], [x - 0.1, y - 0.14, zs]], j % 2 ? (dark ? "#4a4a4a" : "#8d8d8d") : (dark ? "#3c3c3c" : "#a3a3a3"), { swk: 0.45, bias: -0.9 });
-        w.face([[x - 0.04, y - 0.04, zs - 0.005], [x + 0.04, y - 0.04, zs - 0.005], [x + 0.04, y - 0.09, zs - 0.005], [x - 0.04, y - 0.09, zs - 0.005]], "#e6e6e6", { stroke: false, bias: -0.91 });
+        w.face([[x - 0.1, y, zs], [x + 0.1, y, zs], [x + 0.1, y - 0.14, zs], [x - 0.1, y - 0.14, zs]], j % 2 ? (dark ? TW("#4a4a4a") : TW("#8d8d8d")) : (dark ? TW("#3c3c3c") : TW("#a3a3a3")), { swk: 0.45, bias: -0.9 });
+        w.face([[x - 0.04, y - 0.04, zs - 0.005], [x + 0.04, y - 0.04, zs - 0.005], [x + 0.04, y - 0.09, zs - 0.005], [x - 0.04, y - 0.09, zs - 0.005]], TW("#e6e6e6"), { stroke: false, bias: -0.91 });
       }
     }
 
     // ---- tempat duduk pelanggan ----
-    P.bench(w, -1.5, 7.15, 2.0, { color: "#7d7d7d" }); // bangku di depan meja jualan (ujung kanan kosong: tempat memesan)
+    P.bench(w, -1.5, 7.15, 2.0, { color: TW("#7d7d7d") }); // bangku di depan meja jualan (ujung kanan kosong: tempat memesan)
     // meja + bangku di bawah pohon (kiri)
     P.table(w, -3.5, 6.5, 1.3, 0.6);
-    P.bench(w, -3.5, 7.5, 1.3, { color: "#8a8a8a" }); // celah meja-bangku 0,4 m: badan muat saat masuk duduk
+    P.bench(w, -3.5, 7.5, 1.3, { color: TW("#8a8a8a") }); // celah meja-bangku 0,4 m: badan muat saat masuk duduk
     P.glassOfCoffee(w, -3.15, 0.78, 6.75);
     // kursi plastik
     for (const [x, z] of [[2.2, 6.4], [2.75, 6.9]]) {
-      w.box(x - 0.2, 0.42, z - 0.2, 0.4, 0.05, 0.4, "#cfcfcf");
-      w.prism(x, z, 0.17, 0, 0.42, 8, "#bdbdbd", { cap: false });
+      w.box(x - 0.2, 0.42, z - 0.2, 0.4, 0.05, 0.4, TW("#cfcfcf"));
+      w.prism(x, z, 0.17, 0, 0.42, 8, TW("#bdbdbd"), { cap: false });
     }
     // pohon besar di kiri (referensi)
     P.tree(w, -5.0, 9.2, { h: 7.2, bias: -2 });

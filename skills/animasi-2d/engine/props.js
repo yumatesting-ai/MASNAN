@@ -586,8 +586,8 @@ function table(w, x, z, sx = 1.2, sz = 0.7) {
 function glassOfCoffee(w, x, y, z) {
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.11;
-    return `<g transform="translate(${sx} ${sy})"><path d="M${-s * 0.35},${-s} L${s * 0.35},${-s} L${s * 0.28},0 L${-s * 0.28},0 Z" fill="${fog("#5a5a5a")}" stroke="${lc}" stroke-width="${sw * 0.6}"/>
-      <path d="M${-s * 0.1},${-s * 1.2} q${s * 0.1},${-s * 0.3} 0,${-s * 0.6}" fill="none" stroke="#bbbbbb" stroke-width="${sw * 0.6}" stroke-linecap="round"/></g>`;
+    return `<g transform="translate(${sx} ${sy})"><path d="M${-s * 0.35},${-s} L${s * 0.35},${-s} L${s * 0.28},0 L${-s * 0.28},0 Z" fill="${fog(THEME.COLOR ? "#5a3520" : "#5a5a5a")}" stroke="${lc}" stroke-width="${sw * 0.6}"/>
+      <path d="M${-s * 0.1},${-s * 1.2} q${s * 0.1},${-s * 0.3} 0,${-s * 0.6}" fill="none" stroke=THEME.COLOR ? "#d6eef5" : "#bbbbbb" stroke-width="${sw * 0.6}" stroke-linecap="round"/></g>`;
   }, { y, bias: -0.5 });
 }
 // ayam kampung beranimasi (sprite). 1 satuan = 1 cm, menghadap kanan (flip = kiri).
@@ -644,9 +644,10 @@ function chicken(w, x, z, o = {}) {
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
     const s = p * 0.01 * (jago ? 1 : 0.85), f = (o.flip ? -1 : 1) * pz.look;
     const W = (sw / s).toFixed(2), Wt = (sw * 0.55 / s).toFixed(2);
-    const body = fog(jago ? "#7a7a7a" : "#c9c9c9"), hackle = fog(jago ? "#c4c4c4" : "#dcdcdc");
-    const tail = fog(jago ? "#3d3d3d" : "#a3a3a3"), wing = fog(jago ? "#5f5f5f" : "#b3b3b3");
-    const comb = fog("#4e4e4e"), leg = fog("#a9a9a9"), beak = fog("#b9b9b9");
+    const K = THEME.COLOR; // ayam kampung: jago merah-coklat ekor hijau gelap; betina coklat muda
+    const body = fog(K ? (jago ? "#b5562c" : "#c99a63") : jago ? "#7a7a7a" : "#c9c9c9"), hackle = fog(K ? (jago ? "#e39a3a" : "#dfc08f") : jago ? "#c4c4c4" : "#dcdcdc");
+    const tail = fog(K ? (jago ? "#1f4a3a" : "#8a6440") : jago ? "#3d3d3d" : "#a3a3a3"), wing = fog(K ? (jago ? "#7a3a1f" : "#a97a4a") : jago ? "#5f5f5f" : "#b3b3b3");
+    const comb = fog(K ? "#d8343a" : "#4e4e4e"), leg = fog(K ? "#e3b23c" : "#a9a9a9"), beak = fog(K ? "#efb23a" : "#b9b9b9");
     const footL = (dx) => `<path d="M${dx},0 l5,0 M${dx},0 l3,-2 M${dx},0 l-3,0" fill="none" stroke="${lc}" stroke-width="${Wt}" stroke-linecap="round"/>`;
     const legSvg = (bx, swing) => {
       const fx = bx + swing * 4, lift = Math.max(0, swing) * 2.5;
@@ -657,7 +658,7 @@ function chicken(w, x, z, o = {}) {
     const tailSvg = jago
       ? `<path d="M-12,-24 C-18,-40 -26,-50 -36,-48 C-30,-44 -24,-36 -20,-22 Z" fill="${tail}"/>
          <path d="M-13,-22 C-24,-34 -34,-38 -40,-30 C-32,-30 -26,-26 -20,-18 Z" fill="${tail}"/>
-         <path d="M-12,-26 C-14,-38 -18,-46 -24,-50 C-22,-42 -20,-34 -17,-24 Z" fill="${fog("#555555")}"/>
+         <path d="M-12,-26 C-14,-38 -18,-46 -24,-50 C-22,-42 -20,-34 -17,-24 Z" fill="${fog(THEME.COLOR ? "#2d5f48" : "#555555")}"/>
          <path d="M-26,-46 C-22,-44 -20,-40 -19,-34" fill="none" stroke="${fog("#8a8a8a")}" stroke-width="${Wt}" stroke-linecap="round"/>`
       : `<path d="M-12,-22 C-16,-30 -20,-36 -24,-38 C-22,-30 -20,-24 -16,-17 Z" fill="${tail}"/>`;
     const k = Math.max(0, pz.head) / 62; // 0..1 seberapa dalam mematuk

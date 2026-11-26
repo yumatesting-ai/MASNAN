@@ -3,6 +3,9 @@
 const P = require("../engine/props.js");
 const LIFE = require("../engine/life.js");
 
+const WARNA_ON = require("../engine/theme.js").COLOR;
+const TWMAP = { "#8a8a8a": "#3f6e52", "#d8d8d8": "#e9d9b0", "#7a7a7a": "#8a5a34", "#e6e6e6": "#e8f0f4", "#bdbdbd": "#d9b44a", "#a9a9a9": "#7fb0c8", "#c9c9c9": "#d6c7ad", "#ececec": "#f4efe2", "#d2d2d2": "#cdbb9c", "#e2e2e2": "#efe6d0", "#eeeeee": "#f6f0e0", "#f4f4f4": "#ffffff", "#e4e4e4": "#efe2c4" };
+const TW = (c) => (WARNA_ON && TWMAP[c]) || c; // abu-abu tertulis langsung -> berwarna (WARNA=1)
 module.exports = {
   id: "masjid",
   name: "Masjid Kampung",
@@ -41,34 +44,34 @@ module.exports = {
     // pagar tembok rendah + gerbang
     for (const s of [-1, 1]) {
       const xa = s < 0 ? -9 : 1.6, len = 7.4;
-      w.box(xa, 0, 4.2, len, 0.8, 0.25, "#e2e2e2");
-      w.box(s < 0 ? -1.9 : 1.4, 0, 4.1, 0.5, 1.6, 0.45, "#eeeeee");
+      w.box(xa, 0, 4.2, len, 0.8, 0.25, TW("#e2e2e2"));
+      w.box(s < 0 ? -1.9 : 1.4, 0, 4.1, 0.5, 1.6, 0.45, TW("#eeeeee"));
       w.hip(s < 0 ? -1.9 : 1.4, 1.6, 4.1, 0.5, 0.45, 0.4, P.PAL.roof, { overhang: 0.06 });
     }
 
     // ---- bangunan masjid ----
     const x0 = -6, x1 = 6, zf = 13.5, zb = 23, H = 3.6;
-    w.box(x0, 0, zf, x1 - x0, 0.45, zb - zf, "#c9c9c9"); // lantai panggung
-    w.box(x0, 0.45, zf, x1 - x0, H - 0.45, zb - zf, "#ececec");
+    w.box(x0, 0, zf, x1 - x0, 0.45, zb - zf, TW("#c9c9c9")); // lantai panggung
+    w.box(x0, 0.45, zf, x1 - x0, H - 0.45, zb - zf, TW("#ececec"));
     // jendela & pintu lengkung di dinding depan
-    for (const cx of [-4.4, -2.2, 2.2, 4.4]) w.arch(cx - 0.55, cx + 0.55, 1.2, 2.9, zf - 0.02, "#a9a9a9", { swk: 0.8, bias: -0.05 });
-    w.arch(-0.8, 0.8, 0.45, 3.0, zf - 0.02, "#8a8a8a", { swk: 0.9, bias: -0.05 });
+    for (const cx of [-4.4, -2.2, 2.2, 4.4]) w.arch(cx - 0.55, cx + 0.55, 1.2, 2.9, zf - 0.02, TW("#a9a9a9"), { swk: 0.8, bias: -0.05 });
+    w.arch(-0.8, 0.8, 0.45, 3.0, zf - 0.02, TW("#8a8a8a"), { swk: 0.9, bias: -0.05 });
     // serambi: lantai + atap emperan + tiang kayu
-    w.box(x0 - 0.5, 0, zf - 2.6, x1 - x0 + 1, 0.4, 2.6, "#d2d2d2");
+    w.box(x0 - 0.5, 0, zf - 2.6, x1 - x0 + 1, 0.4, 2.6, TW("#d2d2d2"));
     w.face([[x0 - 0.8, H - 0.1, zf], [x1 + 0.8, H - 0.1, zf], [x1 + 0.8, 2.75, zf - 2.9], [x0 - 0.8, 2.75, zf - 2.9]], P.PAL.roof, { swk: 0.9 });
     // papan nama di tepi atap serambi
-    w.box(-2.4, 2.35, zf - 2.95, 4.8, 0.55, 0.08, "#f4f4f4");
+    w.box(-2.4, 2.35, zf - 2.95, 4.8, 0.55, 0.08, TW("#f4f4f4"));
     w.text(-2.35, 2.4, 2.35, 2.85, zf - 2.96, "MASJID AL-IKHLAS", { size: 0.66 });
     for (let k = 0; k <= 6; k++) w.box(x0 - 0.3 + (k * (x1 - x0 + 0.6)) / 6 - 0.08, 0.4, zf - 2.5, 0.16, 2.35, 0.16, P.PAL.wood);
     // atap tumpang (tajug) dua tingkat + mustaka
     w.hip(x0, H, zf, x1 - x0, zb - zf, 2.6, P.PAL.roof, { overhang: 0.9, top: 4.2, tiles: 5 });
-    w.box(-2.1, H + 2.6, (zf + zb) / 2 - 2.1, 4.2, 0.9, 4.2, "#e4e4e4");
+    w.box(-2.1, H + 2.6, (zf + zb) / 2 - 2.1, 4.2, 0.9, 4.2, TW("#e4e4e4"));
     w.hip(-2.1, H + 3.5, (zf + zb) / 2 - 2.1, 4.2, 4.2, 2.6, P.PAL.roof, { overhang: 0.6, tiles: 4 });
     w.sprite(0, (zf + zb) / 2, (sx, sy, p, fog, lc, sw) => {
       const s = p;
       return `<g transform="translate(${sx} ${sy})" stroke="${lc}" stroke-width="${sw}">
-        <path d="M0,${-s * 0.35} L${s * 0.18},${-s * 0.05} L0,0 L${-s * 0.18},${-s * 0.05} Z" fill="${fog("#8a8a8a")}"/>
-        <circle cx="0" cy="${-s * 0.5}" r="${s * 0.12}" fill="${fog("#bdbdbd")}"/></g>`;
+        <path d="M0,${-s * 0.35} L${s * 0.18},${-s * 0.05} L0,0 L${-s * 0.18},${-s * 0.05} Z" fill="${fog(TW("#8a8a8a"))}"/>
+        <circle cx="0" cy="${-s * 0.5}" r="${s * 0.12}" fill="${fog(TW("#bdbdbd"))}"/></g>`;
     }, { y: H + 6.1, bias: -3 });
     // bedug & kentongan di serambi
     w.box(-5.2, 0.4, zf - 1.6, 0.1, 1.4, 0.1, P.PAL.wood);
@@ -76,18 +79,18 @@ module.exports = {
     w.sprite(-4.55, zf - 1.55, (sx, sy, p, fog, lc, sw) => {
       const r = p * 0.42, L2 = p * 0.62;
       return `<g transform="translate(${sx} ${sy - p * 1.3})" stroke="${lc}" stroke-width="${sw}">
-        <rect x="${-L2}" y="${-r}" width="${L2 * 2}" height="${r * 2}" rx="${r * 0.3}" fill="${fog("#8a8a8a")}"/>
-        <ellipse cx="${-L2}" cy="0" rx="${r * 0.35}" ry="${r}" fill="${fog("#d8d8d8")}"/>
+        <rect x="${-L2}" y="${-r}" width="${L2 * 2}" height="${r * 2}" rx="${r * 0.3}" fill="${fog(TW("#8a8a8a"))}"/>
+        <ellipse cx="${-L2}" cy="0" rx="${r * 0.35}" ry="${r}" fill="${fog(TW("#d8d8d8"))}"/>
         ${[-0.6, -0.3, 0, 0.3, 0.6].map((k) => `<circle cx="${-L2 + r * 0.25}" cy="${k * r}" r="${r * 0.05}" fill="${lc}"/>`).join("")}</g>`;
     }, { y: 0.4, bias: -0.3 });
     w.sprite(5.1, zf - 1.55, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 2.2})" stroke="${lc}" stroke-width="${sw}">
-        <path d="M0,0 L0,${p * 0.25}" /><rect x="${-p * 0.08}" y="${p * 0.25}" width="${p * 0.16}" height="${p * 0.8}" rx="${p * 0.05}" fill="${fog("#7a7a7a")}"/>
+        <path d="M0,0 L0,${p * 0.25}" /><rect x="${-p * 0.08}" y="${p * 0.25}" width="${p * 0.16}" height="${p * 0.8}" rx="${p * 0.05}" fill="${fog(TW("#7a7a7a"))}"/>
         <path d="M${-p * 0.02},${p * 0.4} L${-p * 0.02},${p * 0.9}" stroke-width="${sw * 1.4}"/></g>`, { y: 0.4, bias: -0.3 });
     // toa di tiang bambu
     w.box(7.4, 0, 12, 0.12, 8.5, 0.12, P.PAL.bambooPole);
     w.sprite(7.46, 12.06, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 8.2})" stroke="${lc}" stroke-width="${sw}">
-        <path d="M0,0 L${-p * 0.6},${-p * 0.25} L${-p * 0.6},${p * 0.3} Z" fill="${fog("#e6e6e6")}"/>
-        <path d="M0,${p * 0.5} L${p * 0.6},${p * 0.25} L${p * 0.6},${p * 0.8} Z" fill="${fog("#e6e6e6")}"/></g>`);
+        <path d="M0,0 L${-p * 0.6},${-p * 0.25} L${-p * 0.6},${p * 0.3} Z" fill="${fog(TW("#e6e6e6"))}"/>
+        <path d="M0,${p * 0.5} L${p * 0.6},${p * 0.25} L${p * 0.6},${p * 0.8} Z" fill="${fog(TW("#e6e6e6"))}"/></g>`);
     // semak
     for (const [x, z] of [[-6.5, 8.5], [6.2, 8.2]]) P.bush(w, x, z, 0.65);
     // pepohonan & rumah tetangga
