@@ -482,12 +482,15 @@ function tree(w, x, z, o = {}) {
 function jemuran(w, x, za, zb) {
   for (const z of [za, zb]) w.box(x - 0.04, 0, z, 0.08, 1.9, 0.08, PAL.bambooPole);
   w.line3([[x, 1.85, za], [x, 1.85, zb]], "#4a4a4a", null, { sag: 0.12 });
-  const clothes = [["#f2f2f2", 0.6, 0.7], ["#7a7a7a", 0.45, 0.5], ["#cfcfcf", 0.7, 0.8], ["#9e9e9e", 0.5, 0.55]];
+  const clothes = THEME.COLOR ? [["#f2f2f2", 0.6, 0.7], ["#d84a4a", 0.45, 0.5], ["#4a7fc4", 0.7, 0.8], ["#f2c14e", 0.5, 0.55], ["#3f8a5a", 0.55, 0.9]]
+    : [["#f2f2f2", 0.6, 0.7], ["#7a7a7a", 0.45, 0.5], ["#cfcfcf", 0.7, 0.8], ["#9e9e9e", 0.5, 0.55]];
+  const T = w.t || 0;
   let z = za + 0.3;
   for (const [c, wd, ht] of clothes) {
     if (z + wd > zb - 0.1) break;
     const y = 1.82 - 0.06 * Math.sin(((z - za) / (zb - za)) * Math.PI);
-    w.face([[x, y, z], [x, y, z + wd], [x, y - ht, z + wd], [x, y - ht, z]], c, { swk: 0.6, bias: -0.03 });
+    const sw2 = 0.07 * Math.sin(T * 2.1 + z * 1.7); // baju bergoyang tertiup angin
+    w.face([[x, y, z], [x, y, z + wd], [x + sw2, y - ht, z + wd + sw2 * 0.5], [x + sw2, y - ht, z + sw2 * 0.5]], c, { swk: 0.6, bias: -0.03 });
     z += wd + 0.2;
   }
 }

@@ -1,6 +1,7 @@
 // Lapangan bola kampung: tanah berumput tidak rata, gawang bambu tanpa jaring, sandal sebagai tanda,
 // pagar bambu, pohon pisang/kelapa, rumah kampung di belakang, masjid beratap tumpang di kejauhan.
 const P = require("../engine/props.js");
+const LIFE = require("../engine/life.js");
 const WARNA = require("../engine/theme.js").COLOR;
 const FIELD = WARNA ? { grass: "#8fc067", bare: "#d9c49c", bare2: "#d4bd92" } : { grass: "#a4a4a4", bare: "#cbcbcb", bare2: "#cdcdcd" };
 const { createMatch } = require("../engine/football.js");
@@ -28,6 +29,7 @@ module.exports = {
   ],
   // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
   obstacles: [
+    { name: "sepeda", x0: -8.2, x1: -7.0, z0: 5.2, z1: 5.6 }, { name: "ember", x: -4.2, z: 5.7, r: 0.16 },
     { name: "bangku pinggir lapangan", x0: -6.8, x1: -4.6, z0: 6.0, z1: 6.42 },
     { name: "tiang gawang kiri", x: -9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kiri 2", x: -9.6, z: 14.7, r: 0.1 },
     { name: "tiang gawang kanan", x: 9.6, z: 11.3, r: 0.1 }, { name: "tiang gawang kanan 2", x: 9.6, z: 14.7, r: 0.1 },
@@ -81,5 +83,13 @@ module.exports = {
     w.hip(-1.5, 4, 70, 9, 8, 2.4, P.PAL.roof, { overhang: 0.8, top: 3.2 });
     w.box(1.4, 6.4, 72.4, 3.2, 1.0, 3.2, "#e0e0e0");
     w.hip(1.4, 7.4, 72.4, 3.2, 3.2, 2.0, P.PAL.roof, { overhang: 0.5 });
+
+    // ---- kehidupan ----
+    LIFE.kite(w, -4, 42, { y: 16 }); LIFE.kite(w, 6, 50, { y: 21, phase: 2, color: "#3a9a5a", color2: "#f4d23c" });
+    LIFE.cyclist(w, [-12, 36], [12, 36], { period: 22 });
+    LIFE.smoke(w, -10, 49, { y: 3.4 });
+    LIFE.butterfly(w, -5.6, 5.4, { y: 0.8 });
+    LIFE.perchBirds(w, -9.6, 13, { y: 1.97, n: 3, len: 2.6, axis: "z" });     // burung di mistar gawang
+    LIFE.bike(w, -7.6, 5.4); LIFE.bucket(w, -4.2, 5.7, { color: "#d84a4a" });
   },
 };

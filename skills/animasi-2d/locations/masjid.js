@@ -1,6 +1,7 @@
 // Lokasi: MASJID KAMPUNG — masjid sederhana beratap tumpang (tajug) bertingkat dengan mustaka, serambi
 // bertiang kayu, bedug & kentongan, toa di tiang bambu, halaman tanah + pohon sawo, pagar tembok rendah.
 const P = require("../engine/props.js");
+const LIFE = require("../engine/life.js");
 
 module.exports = {
   id: "masjid",
@@ -96,5 +97,14 @@ module.exports = {
     P.tree(w, 4.2, 6.8, { h: 3.2, kind: "banana" });
     P.house(w, { side: 1, fx: 11, z: 5, width: 6, wall: "plank", roof: "seng" });
     P.house(w, { side: -1, fx: -11.5, z: 3.5, width: 6, wall: "plaster" });
+
+    // ---- kehidupan ----
+    LIFE.cart(w, [-10, 2.0], [10, 2.0], { period: 36 });                      // gerobak bakso lewat di jalan depan
+    LIFE.cyclist(w, [10, 3.0], [-10, 3.0], { period: 20, phase: 5 });
+    LIFE.cat(w, 2.6, 6.2, { mode: "walk", to: [5.6, 7.2], color: "#3a3a3a", stripe: "#1f1f1f" });
+    LIFE.butterfly(w, -6.3, 8.3, { y: 0.9 }); LIFE.butterfly(w, 6.0, 8.0, { y: 1.0, phase: 1.5, color: "#f7f3e8", color2: "#5a8ad0" });
+    LIFE.perchBirds(w, 0, 13.5, { y: 3.7, n: 5, len: 6 });                    // burung di tepi atap masjid
+    LIFE.kite(w, 8, 45, { y: 20 });
+    LIFE.leaves(w, -8.2, 9, { y: 4.4, spread: 2 });
   },
 };

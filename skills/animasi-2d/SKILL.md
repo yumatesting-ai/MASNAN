@@ -314,3 +314,17 @@ close-up), kamera `camkeys`, latar depan buram (`fg`) untuk parallax, efek komik
 2. `node tools/episode.js <ep>.json --preview out/cek.png` → komposisi tiap adegan (tidak terpotong, tokoh tidak tertutup).
 3. Pose baru → `tools/sheet.js` diperbesar (lengan, tangan, prop).
 4. Render: `WARNA=1 node tools/episode.js <ep>.json --out out/x.mp4`.
+
+## Lingkungan hidup (`engine/life.js`) — WAJIB ada di setiap lokasi
+
+Latar tidak boleh sepi/statis. Setiap lokasi minimal punya: 1–2 hewan, 2–3 benda bergerak, beberapa benda kampung.
+Semua bergerak menurut waktu dan otomatis abu-abu di mode abu-abu.
+
+| Jenis | Fungsi |
+|---|---|
+| Hewan | `cat` (mode `sleep` / `sit` / `walk` bolak-balik, bisa di atas bangku `y`), `ducks` (berbaris menyusuri rute), `butterfly`, `perchBirds` (di kabel/atap/mistar, `axis:"z"`), ayam (`P.chicken`) |
+| Bergerak | `kite` (layangan + benang), `flag` (merah-putih berkibar), `smoke` (asap dapur / uap ceret), `leaves` (daun berguguran), jemuran bergoyang, `cyclist` (sepeda ontel lewat), `cart` (gerobak bakso didorong) |
+| Benda kampung | `bike` (sepeda bersandar), `bucket`, `trashBin`, `sack` (karung beras), `firewood`, `waterJar` (gentong) |
+
+Aturan penempatan: benda diam yang bisa ditabrak WAJIB ditambahkan ke `obstacles` lokasi; jangan taruh di rute
+figuran/tokoh (jalankan `--check`). Kendaraan lewat di jalan melintang/jauh (bergerak sumbu x) atau jalan depan.

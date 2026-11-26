@@ -2,6 +2,7 @@
 // teras dengan bale-bale, pagar bambu & tanaman, pohon pisang-kelapa-mangga, jemuran, tiang listrik kayu,
 // ayam kampung, gapura "SELAMAT DATANG".
 const P = require("../engine/props.js");
+const LIFE = require("../engine/life.js");
 
 module.exports = {
   id: "kampung",
@@ -30,6 +31,9 @@ module.exports = {
 
   // benda penghalang (dicek engine/collide.js agar karakter tidak menembus benda)
   obstacles: [
+    { name: "tiang bendera", x: -3.0, z: 11.4, r: 0.08 }, { name: "sepeda bersandar", x0: -5.6, x1: -4.5, z0: 9.4, z1: 9.8 },
+    { name: "ember", x: -4.9, z: 11.0, r: 0.16 }, { name: "gentong", x: -4.9, z: 4.2, r: 0.25 }, { name: "tong sampah", x: 3.3, z: 5.6, r: 0.24 },
+    { name: "karung", x: 4.9, z: 8.4, r: 0.25 }, { name: "kayu bakar", x0: 4.45, x1: 5.15, z0: 9.1, z1: 9.5 },
     { name: "bangku pinggir jalan", x0: -4.0, x1: -2.0, z0: 7.6, z1: 8.02 }, { name: "bangku kakek", x0: 3.2, x1: 4.8, z0: 22.5, z1: 22.92 },
     { name: "pohon pisang", x: -3.4, z: 9.6, r: 0.3 }, { name: "pohon kelapa", x: -3.6, z: 17.5, r: 0.25 }, { name: "pohon mangga", x: 3.6, z: 11.8, r: 0.35 },
     { name: "pohon pisang 2", x: 3.4, z: 19.5, r: 0.3 }, { name: "pohon", x: -3.8, z: 33, r: 0.35 }, { name: "pohon kelapa 2", x: 3.8, z: 36, r: 0.25 },
@@ -74,5 +78,20 @@ module.exports = {
     P.chicken(w, -2.9, 10.2, { t, kind: "betina", flip: true, phase: 1.3 });
     P.chicken(w, -3.3, 9.0, { t, kind: "betina", phase: 2.2 });
     P.gapura(w, 48, "SELAMAT DATANG", "KAMPUNG SUKAMAJU RT 05");
+
+    // ---- kehidupan: hewan, benda bergerak, benda kampung ----
+    LIFE.cat(w, -3.0, 7.82, { mode: "sleep", y: 0.49 });                       // kucing tidur di bangku
+    LIFE.cat(w, 2.75, 8.6, { mode: "walk", to: [2.75, 15.5], color: "#f4f1ea", stripe: "#3a3a3a" });
+    LIFE.ducks(w, [[-2.2, 25.2], [2.2, 25.8]], { n: 4 });                      // bebek menyeberang jalan
+    LIFE.butterfly(w, -2.5, 6.3, { y: 0.9 }); LIFE.butterfly(w, 2.4, 9.5, { y: 1.1, phase: 2, color: "#f7f3e8", color2: "#5a8ad0" });
+    LIFE.kite(w, 7, 45, { y: 17 }); LIFE.kite(w, -9, 60, { y: 22, phase: 3, color: "#3a7fd0", color2: "#ffffff" });
+    LIFE.flag(w, -3.0, 11.4, { h: 4 });
+    LIFE.smoke(w, -9, 21, { y: 3.4 }); LIFE.smoke(w, 8.5, 15, { y: 3.6, phase: 1.3 });
+    LIFE.leaves(w, 3.6, 11.8, { y: 4, spread: 2 });
+    LIFE.perchBirds(w, 2.9, 11, { y: 6.45, n: 4, len: 2.4, axis: "z" });     // burung di kabel listrik
+    LIFE.cyclist(w, [-5.2, 30.6], [5, 30.6], { period: 16 });
+    LIFE.cart(w, [-5.2, 38], [5, 38], { period: 34, phase: 8 });
+    LIFE.bike(w, -5.05, 9.6, { flip: true }); LIFE.bucket(w, -4.9, 11.0); LIFE.waterJar(w, -4.9, 4.2);
+    LIFE.trashBin(w, 3.3, 5.6); LIFE.sack(w, 4.9, 8.4); LIFE.firewood(w, 4.8, 9.1);
   },
 };
