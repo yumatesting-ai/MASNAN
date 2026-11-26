@@ -57,6 +57,7 @@ const parts = ep.scenes.map((s, i) => {
   const a = [path.join(__dirname, "location.js"), "--loc", s.loc, "--format", portrait ? "portrait" : "landscape", "--seconds", String(s.seconds), "--out", out];
   if (s.cast) a.push("--cast", s.cast);
   if (s.extras) a.push("--extras", s.extras);
+  if (s.t0) a.push("--t0", String(s.t0));
   if (s.camera) a.push("--camera", JSON.stringify(s.camera));
   if (s.cameraTo) a.push("--camera-to", JSON.stringify(s.cameraTo));
   process.stdout.write(`Adegan ${i + 1}/${ep.scenes.length} (${s.loc})...\n`);

@@ -205,6 +205,61 @@
     sit_chat_b: { duration: 4.8, view: "three", pose: (t) => chatPose(t, false, 1) },
     // ---------- gerak lain ----------
     walk_back: { duration: 1, view: "back", pose: (t) => ({ ...CLIPS.walk_front.pose(t) }) },
+    // jalan serong (mendekat diagonal): kaki terangkat seperti tampak depan + ayunan lengan sedang
+    walk_three: { duration: 1, view: "three", pose: (t) => {
+      const s = wave(t, 1);
+      return { breathe: 0.5, legL: Math.max(0, 14 * s), legR: Math.max(0, -14 * s), armL: -12 * s, armR: 12 * s,
+        bodyY: -2.6 * Math.abs(s), headTilt: 1.2 * s, hairSway: -1 + 1.0 * wave(t, 1, 0.2), lean: -1 };
+    } },
+    run_front: { duration: 0.6, view: "front", pose: (t) => {
+      const s = wave(t, 0.6);
+      return { expr: "smile", legL: Math.max(0, 22 * s), legR: Math.max(0, -22 * s), armL: 6 + 10 * s, armR: 6 - 10 * s,
+        elbowL: 45, elbowR: 45, bodyY: -6 * Math.abs(s), headTilt: 2.5 * s, hairSway: 2 * wave(t, 0.3) };
+    } },
+    run_back: { duration: 0.6, view: "back", pose: (t) => ({ ...CLIPS.run_front.pose(t) }) },
+    run_three: { duration: 0.6, view: "three", pose: (t) => {
+      const s = wave(t, 0.6);
+      return { expr: "smile", legL: Math.max(0, 26 * s), legR: Math.max(0, -26 * s), armL: -30 * s, armR: 30 * s,
+        elbowL: 55, elbowR: 55, lean: -4, bodyY: -6 * Math.abs(s), hairSway: -2.5 + 0.8 * wave(t, 0.3) };
+    } },
+    // ---------- KEGIATAN SEHARI-HARI ----------
+    // menyapu halaman dengan sapu lidi (tampak samping): sapuan pendek berirama, sesekali melangkah
+    sweep: { duration: 1.6, view: "side", smooth: 0.04, pose: (t) => {
+      const sw = wave(t, 0.8);
+      return { ...life(t, 1.6), holdL: "broom", holdTilt: 8 * sw, armL: -16 + 12 * sw, elbowL: 22, armR: -26 + 8 * sw, elbowR: 40,
+        lean: -7, headY: 3, lookY: 1, bodyX: 2 * sw, legL: 6 * wave(t, 1.6), legR: -6 * wave(t, 1.6), mouth: "flat", sweat: false };
+    } },
+    // memesan di warung (membelakangi kamera, menghadap penjual): bicara + gestur menunjuk ke etalase
+    order: { duration: 3, view: "back", pose: (t) => {
+      const g = kf(t, [[0, 0], [0.4, 1, "out"], [1.8, 1], [2.3, 0, "io"], [3, 0]]);
+      return { ...life(t, 1.5), armR: 55 * g, elbowR: 25 * g + 8 * g * wave(t, 0.5), headTilt: 3 * wave(t, 1.5), headY: 1.2 * Math.abs(wave(t, 0.5)) };
+    } },
+    // menunggu pesanan sambil mengangguk kecil (membelakangi kamera)
+    wait_back: { duration: 2, view: "back", pose: (t) => ({ ...life(t, 2), headY: 1.5 * Math.max(0, wave(t, 1)), armL: 2, armR: 2 }) },
+    // menyerahkan gelas kopi ke depan (penjual di balik meja)
+    give: { duration: 2.4, view: "front", pose: (t) => {
+      const g = kf(t, [[0, 0], [0.6, 1, "io"], [1.7, 1], [2.2, 0, "io"], [2.4, 0]]);
+      return { ...life(t, 1.2), expr: "smile", mouth: t > 0.5 && t < 1.6 ? "open" : "smile", holdR: t < 1.75 ? "coffee" : null,
+        armR: -10 - 25 * g, elbowR: 30 + 60 * g, bodyY: -1.5 * g, headY: 2 * g, headTilt: 4 * g, blink: blinkAt(t, [0.3]) };
+    } },
+    // menerima sesuatu (membelakangi kamera): tangan terulur lalu kembali membawa barang
+    receive: { duration: 2.4, view: "back", pose: (t) => {
+      const g = kf(t, [[0, 0], [0.6, 1, "io"], [1.7, 1], [2.2, 0.35, "io"], [2.4, 0.35]]);
+      return { ...life(t, 1.2), holdR: t > 1.5 ? "coffee" : null, armR: 25 * g, elbowR: 45 * g, headY: 1.5 * g };
+    } },
+    // menendang bola (tampak samping): ancang-ancang, tendang, kembali
+    kick: { duration: 0.9, view: "side", smooth: 0.015, pose: (t) => {
+      const leg = kf(t, [[0, 0], [0.25, 28, "out"], [0.42, -55, "out"], [0.65, -20, "io"], [0.9, 0, "io"]]);
+      return { expr: "smile", legR: leg, legL: -0.2 * leg, armL: 0.6 * leg, armR: -0.6 * leg, lean: -3 - 0.08 * leg, bodyY: -2 * Math.abs(leg) / 55 };
+    } },
+    // bersorak (gol!): lompat kecil, kedua tangan ke atas
+    cheer: { duration: 1.2, view: "front", pose: (t) => {
+      const h = Math.abs(Math.sin((TAU * t) / 1.2));
+      return { expr: "happy", mouth: "open", armL: 150 - 15 * h, armR: 150 - 15 * h, elbowL: -20, elbowR: -20, bodyY: -10 * h,
+        squash: 0.25 * Math.pow(clamp(1 - h / 0.3), 2), headTilt: 3 * wave(t, 1.2), fx: t / 0.6 };
+    } },
+    // mengangguk sambil mendengarkan (serong) — pasangan ngobrol berdiri
+    listen: { duration: 2.4, view: "three", pose: (t) => ({ ...life(t, 2.4), expr: "smile", headY: 2.5 * Math.max(0, wave(t, 1.2)), armL: 0, armR: 0, blink: blinkAt(t, [1.6]) }) },
     stretch: { duration: 3.6, view: "front", pose: (t) => {
       const up = kf(t, [[0, 0], [0.2, 0], [1.0, 1, "io"], [2.2, 1], [3.0, 0, "io"], [3.6, 0]]);
       const yawn = t > 1.0 && t < 2.3;

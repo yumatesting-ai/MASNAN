@@ -12,12 +12,16 @@ module.exports = {
     duduk_serambi: { x: -1.8, z: 10.85, seat: 0.4 }, duduk_serambi2: { x: 1.6, z: 10.85, seat: 0.4 },
   },
   extras: [
-    { seed: 41, kind: "bapak", spec: "walk@0.2,5.4>0.3,11.6/5+idle/2.5+walk@0.3,11.6>0.2,5.4/5" },
-    { seed: 42, kind: "kakek", spec: "sit@4.4,10.85" },
-    { seed: 43, kind: "anak_laki", spec: "run@-5,8.2>-1.8,8.2/1.6+run@-1.8,8.2>-5,8.2/1.6", phase: 0.4 },
-    { seed: 44, kind: "pemuda", spec: "walk@0.3,11.6>0.2,5.4/5+idle/2+walk@0.2,5.4>0.3,11.6/5", phase: 3 },
-    { seed: 45, kind: "ibu", spec: "walk@-9,3>9,3/9+walk@9,3>-9,3/9", phase: 5 },
+    // marbot menyapu halaman, jamaah datang & pulang lewat setapak, kakek duduk di serambi, anak kejar-kejaran
+    { seed: 46, kind: "bapak", spec: "sweep{face=r}@-4.6,7.6/4.8+sweep{face=l}/4.8" },
+    { seed: 41, kind: "bapak", spec: "walk@-0.6,5.4>-0.6,10.4+idle/2+walk@-0.6,10.4>-0.6,5.4+idle/1" },
+    { seed: 44, kind: "pemuda", spec: "walk@-0.6,10.4>-0.6,5.4+look_around/2+walk@-0.6,5.4>-0.6,10.4+idle/1", phase: 3 },
+    { seed: 42, kind: "kakek", spec: "sit_read@4.4,10.85" },
+    { seed: 43, kind: "anak_laki", spec: "run@-5,8.4>-1.8,8.4+laugh/1.2+run@-1.8,8.4>-5,8.4+idle_three/1" },
+    { seed: 47, kind: "anak_laki", spec: "run@-5,9>-1.8,9+laugh/1.2+run@-1.8,9>-5,9+idle_three/1", phase: 0.5 },
+    { seed: 45, kind: "ibu", spec: "walk@-9,15.5>9,15.5+walk@9,15.5>-9,15.5", phase: 5 },
   ],
+
   build(w) {
     P.sky(w, { clouds: [[0.12, 0.1, 1], [0.7, 0.06, 1.1]] });
     // jalan kampung di depan + halaman tanah

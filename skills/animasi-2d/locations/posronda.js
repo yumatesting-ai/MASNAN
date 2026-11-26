@@ -12,10 +12,15 @@ module.exports = {
     duduk_bale: { x: -1.3, z: 6.5, seat: 0.55 }, duduk_bale2: { x: 1.25, z: 6.5, seat: 0.55 },
   },
   extras: [
-    { seed: 51, kind: "ibu", spec: "walk@-8,12.5>8,12.5/9+walk@8,12.5>-8,12.5/9" },
-    { seed: 52, kind: "petani", spec: "walk@8,14>-8,14/10+walk@-8,14>8,14/10", phase: 4 },
-    { seed: 53, kind: "anak_laki", spec: "run@-7,11>7,11/4+idle/1.5+run@7,11>-7,11/4", phase: 2 },
+    // bapak menyapu halaman rumah, ibu-ibu ngobrol, anak kejar-kejaran, petani lewat
+    { seed: 54, kind: "bapak", spec: "sweep{face=l}@4.4,11.8/4.8+sweep{face=r}/4.8" },
+    { seed: 51, kind: "ibu", spec: "chat_a{face=r}@-5.6,12.4" },
+    { seed: 55, kind: "ibu", spec: "chat_b{face=l}@-4.8,12.7" },
+    { seed: 53, kind: "anak_laki", spec: "run@-7,15>6,15+laugh/1.2+run@6,15>-7,15+idle_three/1" },
+    { seed: 56, kind: "anak_perempuan", spec: "run@-7,15.6>6,15.6+laugh/1.2+run@6,15.6>-7,15.6+idle_three/1", phase: 0.6 },
+    { seed: 52, kind: "petani", spec: "walk@8,17>-8,17+walk@-8,17>8,17", phase: 4 },
   ],
+
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan

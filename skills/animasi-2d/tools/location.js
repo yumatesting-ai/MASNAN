@@ -12,6 +12,7 @@
 //   dan seat (tinggi tempat duduk -> klip sit_* otomatis duduk di situ).
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
 // --camera '{"x":1,"z":2,"f":1600}' [--camera-to '{...}']  -> atur/gerakkan kamera (pan, zoom, push-in)
+// --t0 12        -> waktu lingkungan & figuran dimulai dari detik 12 (tokoh utama tetap dari 0)
 // --extras off  -> tanpa figuran (karakter latar)
 // --extras-style shadow (default: siluet abu polos + sedikit buram) | blur (bentuk asli diburamkan) | detail
 
@@ -23,6 +24,7 @@ const { chromium } = require("playwright");
 const { createWorld } = require("../engine/world3d.js");
 const { createTimeline } = require("../engine/timeline.js");
 const { figuran } = require("../engine/extras.js");
+const { CLIPS, samplePose } = require("../engine/clips.js");
 
 const o = { loc: "kampung", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
@@ -58,14 +60,23 @@ const cast = (o.cast ? o.cast.split(/,(?=\s*[a-z_]+:)/) : []).map((s) => {
     parts[0] = `${c0}@${LOC.spots.depan ? "depan" : Object.keys(LOC.spots)[0]}${d0 ? "/" + d0 : ""}`; spec = parts.join("+");
   }
   const rig = require(path.join(__dirname, "..", "characters", who, "rig.js"));
-  const tl = createTimeline(spec, spotOf, rig.resolvePose, { flip: flag === "flip", seconds: o.seconds ? +o.seconds : null });
+  const tl = createTimeline(spec, spotOf, rig.resolvePose, { flip: flag === "flip", seconds: o.seconds ? +o.seconds : null, scale: (rig.CANVAS && rig.CANVAS.scale) || 1 });
   return { rig, tl };
 });
 const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.total));
 // figuran: karakter latar acak yang beraktivitas sendiri (diulang). --extras off untuk mematikan.
 const extras = o.extras === "off" ? [] : (LOC.extras || []).map((e) => {
   const rig = figuran(e.seed, e.kind);
-  return { rig, tl: createTimeline(e.spec, spotOf, rig.resolvePose, { flip: !!e.flip }), phase: e.phase || 0, extra: true };
+  // motion(t) -> { x, z, clip, ct, faceRight } : gerak terskrip (mis. main bola, engine/football.js)
+  if (e.motion) return { rig, phase: 0, extra: true, tl: { total: 1e9, at(t) {
+    const m = e.motion(t), clip = CLIPS[m.clip];
+    const pose = samplePose(clip, m.ct, rig.resolvePose);
+    const v = pose.view || clip.view;
+    if ((v === "side" || v === "three") && m.faceRight) pose.flip = !pose.flip;
+    pose.view = v;
+    return { pose, x: m.x, z: m.z, y: 0 };
+  } } };
+  return { rig, tl: createTimeline(e.spec, spotOf, rig.resolvePose, { flip: !!e.flip, scale: (rig.CANVAS && rig.CANVAS.scale) || 1 }), phase: e.phase || 0, extra: true };
 });
 
 function frame(t) {
@@ -82,8 +93,9 @@ function frame(t) {
     camOpt.cam = { x: L("x"), y: L("y"), z: L("z") }; camOpt.f = L("f"); camOpt.horizon = L("horizon");
   }
   const w = createWorld(Object.assign({ W, H }, camOpt));
-  w.t = t; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
-  LOC.build(w, { t });
+  const te = t + (+o.t0 || 0); // --t0: geser waktu lingkungan & figuran (mis. agar gol terjadi di tengah adegan)
+  w.t = te; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
+  LOC.build(w, { t: te });
   // kabut jarak untuk karakter: makin jauh makin pudar (filter warna menuju warna langit)
   const fogIds = new Set();
   const fogFilter = (k) => {
@@ -106,7 +118,7 @@ function frame(t) {
     const k = Math.round(Math.min(0.6, w.fogK(z)) * 10) / 10, id = `fig_${exStyle}_${Math.round(k * 10)}`;
     if (!fogIds.has(id)) {
       fogIds.add(id);
-      const g = (0.62 + k * 0.45).toFixed(3); // siluet makin terang (pudar) bila jauh
+      const g = (0.5 + k * 0.6).toFixed(3); // siluet makin terang (pudar) bila jauh
       const body = exStyle === "shadow"
         ? `<feColorMatrix type="matrix" values="0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0.85 0"/><feGaussianBlur stdDeviation="1.6"/>`
         : `<feGaussianBlur stdDeviation="3.2"/><feComponentTransfer><feFuncR type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/>
@@ -116,7 +128,7 @@ function frame(t) {
     return `filter="url(#${id})"`;
   };
   for (const m of [...extras, ...cast]) {
-    const tt = m.extra ? (t + m.phase) % m.tl.total : t;
+    const tt = m.extra ? (te + m.phase) % m.tl.total : t;
     const { pose, x, z, y } = m.tl.at(tt);
     // bayangan matahari karakter (searah bayangan lingkungan)
     const hS = 0.55 * ((m.rig.CANVAS && m.rig.CANVAS.scale) || 1) + (pose.sit ? (pose.seat || 0.45) * 0.6 : 0);

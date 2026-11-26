@@ -12,16 +12,25 @@ module.exports = {
     balik_etalase: { x: 0.75, z: 9.15, y: 0.15 }, // penjual di balik meja (lantai sedikit lebih tinggi)
     depan: { x: 1.3, z: 6.0 }, bangku: { x: -0.7, z: 6.3 }, meja: { x: -2.0, z: 5.8 },
     duduk_meja: { x: -2.85, z: 7.28, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
-    duduk_depan_meja: { x: -0.6, z: 7.1, seat: 0.48 },    // bangku depan meja jualan (membelakangi kamera)
-    duduk_depan_meja2: { x: 0.6, z: 7.1, seat: 0.48 },
+    duduk_depan_meja: { x: -0.35, z: 7.1, seat: 0.48 },   // bangku depan meja jualan (membelakangi kamera)
+    duduk_depan_meja2: { x: 0.2, z: 7.1, seat: 0.48 },
+    pesan: { x: 0.95, z: 7.95 },                          // berdiri di depan meja jualan untuk memesan (hadap Bu Atin)
+    // titik belok agar jalan tidak menembus meja/bangku/tiang
+    belok_masuk: { x: 0.9, z: 6.6 }, belok_meja: { x: -1.55, z: 6.3 }, celah_meja: { x: -1.85, z: 7.22 },
     jalan_kiri: { x: -2.4, z: 4.2 }, jalan_kanan: { x: 3.0, z: 4.4 }, samping: { x: 3.4, z: 7.6 },
   },
   extras: [
-    { seed: 21, kind: "pemuda", spec: "sit_back@1.05,7.1" },
+    // pelanggan: duduk membelakangi kamera di bangku depan meja jualan, bapak main HP di kursi plastik
+    { seed: 21, kind: "pemuda", spec: "sit_back@-1.1,7.1" },
     { seed: 22, kind: "bapak", spec: "sit_phone@2.75,6.85" },
-    { seed: 23, kind: "pemudi", spec: "walk@-8,13.5>8,13.5/8+walk@8,13.5>-8,13.5/8" },
-    { seed: 24, kind: "bapak", spec: "walk@8,15>-8,15/9+idle/2+walk@-8,15>8,15/9", phase: 4 },
+    // tetangga menyapu halaman, dua bapak ngobrol di depan rumah seberang
+    { seed: 25, kind: "ibu", spec: "sweep{face=r}@-3.4,12.2/4.8+sweep{face=l}/4.8" },
+    { seed: 26, kind: "bapak", spec: "chat_a{face=r}@3.7,11.2" },
+    { seed: 27, kind: "kakek", spec: "chat_b{face=l}@4.5,11.5" },
+    // orang lewat di jalan belakang
+    { seed: 23, kind: "pemudi", spec: "walk@-8,14.5>8,14.5+walk@8,14.5>-8,14.5" },
   ],
+
   seatsExtra: true,
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.22, 0.08, 1], [0.8, 0.12, 0.9]] });
@@ -120,7 +129,7 @@ module.exports = {
     }
 
     // ---- tempat duduk pelanggan ----
-    P.bench(w, -1.5, 7.15, 3.0, { color: "#7d7d7d" }); // bangku panjang di depan meja jualan
+    P.bench(w, -1.5, 7.15, 2.0, { color: "#7d7d7d" }); // bangku di depan meja jualan (ujung kanan kosong: tempat memesan)
     // meja + bangku di bawah pohon (kiri)
     P.table(w, -3.5, 6.5, 1.3, 0.6);
     P.bench(w, -3.5, 7.32, 1.3, { color: "#8a8a8a" });
@@ -135,6 +144,6 @@ module.exports = {
     // semak
     P.bush(w, -4.8, 10.5, 0.6);
     P.chicken(w, 2.6, 7.6, { t, kind: "betina", flip: true });
-    P.chicken(w, -1.2, 6.2, { t, kind: "jago", phase: 1.4 });
+    P.chicken(w, -3.0, 5.3, { t, kind: "jago", phase: 1.4 });
   },
 };

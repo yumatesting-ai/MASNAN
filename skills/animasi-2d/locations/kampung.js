@@ -14,14 +14,20 @@ module.exports = {
   },
   // figuran (karakter latar): { seed, kind, spec (rangkaian aksi, diulang), flip?, phase? }
   extras: [
-    { seed: 11, kind: "ibu", spec: "walk@-0.8,27>-0.8,9/9+idle/1.5+walk@-0.8,9>-0.8,27/9" },
-    { seed: 12, kind: "kakek", spec: "walk@0.9,10>0.9,30/10+idle/1+walk@0.9,30>0.9,10/10", phase: 6 },
-    { seed: 13, kind: "anak_laki", spec: "run@-6,20>6,20/3.2+happy/1+run@6,20>-6,20/3.2+idle/1" },
-    { seed: 14, kind: "anak_perempuan", spec: "run@-6.5,21>5.5,21/3.4+laugh/1.2+run@5.5,21>-6.5,21/3.4", phase: 0.6 },
-    { seed: 15, kind: "ibu", spec: "chat_a@2.3,13", flip: true },
-    { seed: 16, kind: "ibu", spec: "chat_b@3.1,13.4" },
-    { seed: 17, kind: "petani", spec: "walk@-7,34>7,34/11+walk@7,34>-7,34/11", phase: 3 },
+    // ibu menyapu halaman (berganti arah sapuan), dua ibu ngobrol di depan rumah
+    { seed: 11, kind: "ibu", spec: "sweep{face=l}@4.2,14.6/4.8+sweep{face=r}/4.8" },
+    { seed: 15, kind: "ibu", spec: "chat_a{face=r}@-4.6,13.2" },
+    { seed: 16, kind: "ibu", spec: "chat_b{face=l}@-3.8,13.5" },
+    // kakek membaca koran di bangku depan rumah
+    { seed: 12, kind: "kakek", spec: "sit_read{seat=0.48}@3.9,22.45" },
+    // dua anak kejar-kejaran menyeberang jalan
+    { seed: 13, kind: "anak_laki", spec: "run@-2.6,20>2.4,20+laugh/1.2+run@2.4,20>-2.6,20+idle_three/1" },
+    { seed: 14, kind: "anak_perempuan", spec: "run@-2.6,20.6>2.4,20.6+laugh/1.2+run@2.4,20.6>-2.6,20.6+idle_three/1", phase: 0.55 },
+    // orang lewat: bapak pulang dari jauh lalu kembali, petani menyeberang di kejauhan
+    { seed: 18, kind: "bapak", spec: "walk@-0.9,30>-0.9,12+look_around/3+walk@-0.9,12>-0.9,30" },
+    { seed: 17, kind: "petani", spec: "walk@-7,34>7,34+walk@7,34>-7,34", phase: 3 },
   ],
+
   build(w, { t = 0 } = {}) {
     P.sky(w);
     P.villageRoad(w);
@@ -54,6 +60,7 @@ module.exports = {
     P.poles(w, 2.9, [3.5, 20, 37, 54], 7);
     P.bulbLamp(w, -2.9, 14);
     P.bench(w, -4.0, 7.6, 2.0); // bangku kayu di pinggir jalan
+    P.bench(w, 3.2, 22.5, 1.6); // bangku depan rumah (kakek baca koran)
     P.chicken(w, -2.3, 9.2, { t, kind: "jago" });
     P.chicken(w, -2.9, 10.2, { t, kind: "betina", flip: true, phase: 1.3 });
     P.chicken(w, -3.3, 9.0, { t, kind: "betina", phase: 2.2 });

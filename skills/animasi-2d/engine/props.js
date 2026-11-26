@@ -511,6 +511,34 @@ function chickenPose(t) {
   }
   return { head, bob, legA, legB, nod, look };
 }
+// ---------- bola sepak (segilima hitam + jahitan, berputar saat menggelinding, bayangan di tanah) ----------
+let ballId = 0;
+function ball(w, x, z, o = {}) {
+  const R = o.r || 0.11, y = o.y || 0, spin = o.spin || 0;
+  // bayangan kontak di tanah: mengecil & memudar saat bola melambung
+  const sk = 1 / (1 + y * 1.5), pts = [];
+  for (let k = 0; k < 12; k++) { const a = (k / 12) * Math.PI * 2; pts.push([x + Math.cos(a) * R * 1.05 * sk, 0.004, z + Math.sin(a) * R * 0.5 * sk]); }
+  w.ground(pts, "#000000", { stroke: false, bias: -0.6, extra: `fill-opacity="${(0.28 * sk).toFixed(2)}"` });
+  const id = `ball${ballId++}`;
+  w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    const r = p * R, deg = ((spin * 180) / Math.PI) % 360;
+    const pent = (cx, cy, s, rot) => { let d = ""; for (let k = 0; k < 5; k++) { const a = rot + (k * 2 * Math.PI) / 5 - Math.PI / 2; d += `${k ? "L" : "M"}${(cx + s * Math.cos(a)).toFixed(2)},${(cy + s * Math.sin(a)).toFixed(2)} `; } return d + "Z"; };
+    const outer = [0, 1, 2, 3, 4].map((k) => { const a = (k * 2 * Math.PI) / 5 + Math.PI / 2; return [Math.cos(a) * r * 0.98, Math.sin(a) * r * 0.98, a]; });
+    const seams = [0, 1, 2, 3, 4].map((k) => { const a = (k * 2 * Math.PI) / 5 + Math.PI / 2, b = a + Math.PI / 5;
+      return `M${(Math.cos(b) * r * 0.36).toFixed(2)},${(Math.sin(b) * r * 0.36).toFixed(2)} L${(Math.cos(b) * r * 0.72).toFixed(2)},${(Math.sin(b) * r * 0.72).toFixed(2)} L${(Math.cos(a) * r * 0.68).toFixed(2)},${(Math.sin(a) * r * 0.68).toFixed(2)} M${(Math.cos(b) * r * 0.72).toFixed(2)},${(Math.sin(b) * r * 0.72).toFixed(2)} L${(Math.cos(b) * r * 1.02).toFixed(2)},${(Math.sin(b) * r * 1.02).toFixed(2)}`; }).join(" ");
+    return `<g transform="translate(${sx.toFixed(1)} ${(sy - r).toFixed(1)})">
+      <defs><clipPath id="${id}"><circle r="${r.toFixed(2)}"/></clipPath></defs>
+      <circle r="${r.toFixed(2)}" fill="${fog("#fbfbfb")}"/>
+      <g clip-path="url(#${id})"><g transform="rotate(${deg.toFixed(1)})">
+        <path d="${pent(0, 0, r * 0.36, Math.PI)}" fill="${fog("#262626")}"/>
+        ${outer.map(([cx, cy, a]) => `<path d="${pent(cx, cy, r * 0.34, a + Math.PI)}" fill="${fog("#262626")}"/>`).join("")}
+        <path d="${seams}" fill="none" stroke="${fog("#8a8a8a")}" stroke-width="${(sw * 0.45).toFixed(2)}"/></g>
+        <circle cx="${(r * 0.35).toFixed(2)}" cy="${(r * 0.4).toFixed(2)}" r="${(r * 1.05).toFixed(2)}" fill="none" stroke="#000" stroke-opacity="0.16" stroke-width="${(r * 0.5).toFixed(2)}" transform="translate(${(r * 0.25).toFixed(2)} ${(r * 0.25).toFixed(2)})"/>
+        <ellipse cx="${(-r * 0.4).toFixed(2)}" cy="${(-r * 0.45).toFixed(2)}" rx="${(r * 0.28).toFixed(2)}" ry="${(r * 0.16).toFixed(2)}" fill="#ffffff" fill-opacity="0.85" transform="rotate(-35 ${(-r * 0.4).toFixed(2)} ${(-r * 0.45).toFixed(2)})"/></g>
+      <circle r="${r.toFixed(2)}" fill="none" stroke="${lc}" stroke-width="${(sw * 0.9).toFixed(2)}"/></g>`;
+  }, { y, bias: o.bias ?? -0.06 });
+}
+
 function chicken(w, x, z, o = {}) {
   if (typeof o === "boolean") o = { flip: o };
   const kind = o.kind || "jago", jago = kind === "jago";
@@ -558,4 +586,4 @@ function chicken(w, x, z, o = {}) {
   }, { bias: -0.05 });
 }
 
-module.exports = { PAL, sky, strip, groundDetail, villageRoad, grassTuft, flowerClump, potPlant, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };
+module.exports = { PAL, ball, sky, strip, groundDetail, villageRoad, grassTuft, flowerClump, potPlant, house, bambooFence, bush, tree, jemuran, bale, poles, bulbLamp, gapura, bench, table, glassOfCoffee, chicken, chickenPose };

@@ -222,3 +222,32 @@ node tools/episode.js episodes/pagi-di-kampung.json --out out/pagi.mp4 --audio v
 - Kamera: `{"x","y","z","f","horizon"}` — `f` lebih besar = zoom; `cameraTo` membuat push-in/pan pelan.
   Di format vertikal jaga subjek dalam ±2 m dari `x` kamera pada jarak ±6–7 m.
 - `--cast` boleh memakai koordinat "x,z" (koma di dalam koordinat aman).
+
+## Gerak yang masuk akal (aturan timeline)
+
+- **Arah otomatis:** `walk`/`run` memilih tampak dari arah gerak: samping (kiri/kanan), serong (`*_three`,
+  mendekat diagonal), depan (`*_front`, mendekat), belakang (`*_back`, menjauh). Tidak ada lagi jalan mundur atau
+  geser menyamping. `:flip` pada cast hanya mengatur arah hadap awal saat diam, tidak membalik arah jalan.
+- **Kecepatan alami:** tanpa durasi, jalan ±0,8 m/dtk dan lari ±2,2 m/dtk (disesuaikan tinggi karakter);
+  siklus langkah mengikuti jarak tempuh, jadi kaki tidak "ngebut".
+- **Rute bertitik belok** agar tidak menembus meja/bangku/tiang: `walk@jalan_kiri>belok_masuk>pesan`.
+  Warung punya titik `pesan`, `belok_masuk`, `belok_meja`, `celah_meja`.
+- **Pengubah pose per fase:** `walk{holdR=coffee;armR=-25;elbowR=85}` (jalan membawa kopi), `chat_a{face=r}`
+  (hadap kanan), `sit_read{seat=0.48}` (tinggi duduk di koordinat bebas).
+- **Cerita logis:** contoh pesan kopi:
+  `hasan:walk@jalan_kiri>belok_masuk>pesan+order/3+wait_back/1.2+receive/2.4+walk{holdR=coffee;armR=-25;elbowR=85}@pesan>belok_masuk>belok_meja>celah_meja>duduk_meja+sit_drink/5`
+  dengan `atin:idle@balik_etalase/6.2+nod/1.6+talk/2.4+give/2.4+idle/2` (serah-terima pas di detik ke-10).
+
+Klip kegiatan baru: `sweep` (menyapu dengan sapu lidi), `order` (memesan, membelakangi kamera), `wait_back`,
+`give` (menyerahkan kopi), `receive`, `kick` (menendang bola), `cheer` (bersorak), `listen`, `walk_three`,
+`run_front`, `run_back`, `run_three`.
+
+## Figuran berkegiatan
+
+Figuran tidak lagi hanya mondar-mandir: menyapu halaman, ngobrol berpasangan (`chat_a{face=r}` + `chat_b{face=l}`),
+membaca koran di bangku, main HP, anak kejar-kejaran, orang lewat dengan arah jalan yang benar.
+Di **lapangan**, enam anak **main bola** lewat `engine/football.js` (`createMatch`): oper, giring, kejar bola,
+tendang, sesekali gol ke gawang lalu bersorak. Bola (`P.ball`) bermotif segilima, berputar saat menggelinding,
+melambung saat dioper jauh, dan punya bayangan. Entri figuran boleh `motion: (t) => ({ x, z, clip, ct, faceRight })`
+untuk gerak terskrip. `--t0 <detik>` menggeser waktu lingkungan & figuran (mis. agar gol jatuh di tengah adegan;
+di episode: `"t0": 11.7`).

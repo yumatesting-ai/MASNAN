@@ -23,7 +23,7 @@ const BASE_DEFAULT_POSE = {
   breathe: 0, armL: 0, armR: 0, legL: 0, legR: 0, bodyX: 0, bodyY: 0, lean: 0, squash: 0, scaleX: 1,
   // --- aksi ---
   elbowL: 0, elbowR: 0,     // tekuk siku (deg, + = lengan bawah naik ke arah dada/wajah)
-  holdL: null, holdR: null, // barang di tangan: "coffee" | "phone"
+  holdL: null, holdR: null, // barang di tangan: "coffee" | "phone" | "broom" (sapu lidi)
   holdTilt: 0,              // kemiringan gelas (minum: negatif = dituang ke mulut)
   hold: null,               // barang dua tangan: "newspaper"
   paperY: 0,                // naik-turun koran (px)
@@ -477,6 +477,16 @@ function createRig(design) {
         <path fill="#4a4a4a" d="M${hx - 9},${hy - 14} L${hx + 9},${hy - 14} L${hx + 7.6},${hy + 4.5} L${hx - 7.6},${hy + 4.5} Z"/>
         <path fill="none" stroke="#bdbdbd" stroke-width="2" stroke-linecap="round" d="M${hx - 3},${hy - 28} q3,-5 0,-10 M${hx + 4},${hy - 27} q3,-4 0,-8"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 9}" cy="${hy - 4}" rx="5.5" ry="7"/></g>`;
+    if (kind === "broom") { // sapu lidi: gagang miring ke depan-bawah, ikatan lidi mengembang menyentuh tanah
+      const bx = hx + 64, by = hy + 60;
+      return `<g transform="rotate(${(upright + tilt).toFixed(1)} ${hx} ${hy})">
+        <path fill="none" stroke="${C.line}" stroke-width="7" stroke-linecap="round" d="M${hx - 14},${hy - 26} L${bx - 2},${by}"/>
+        <path fill="none" stroke="#9a9a9a" stroke-width="3.6" stroke-linecap="round" d="M${hx - 14},${hy - 26} L${bx - 2},${by}"/>
+        <path fill="#d0d0d0" ${LINE} stroke-width="2" stroke-linejoin="round" d="M${bx - 6},${by - 3} L${bx + 26},${by + 20} L${bx - 16},${by + 22} L${bx + 1},${by - 5} Z"/>
+        <path fill="none" stroke="#8a8a8a" stroke-width="1.3" d="M${bx - 2},${by} L${bx + 16},${by + 20} M${bx - 2},${by} L${bx + 5},${by + 21} M${bx - 2},${by} L${bx - 7},${by + 21}"/>
+        <path fill="none" stroke="${C.line}" stroke-width="2.6" d="M${bx - 7},${by + 1} L${bx + 4},${by + 1}"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx}" cy="${hy - 4}" rx="6" ry="7.5"/></g>`;
+    }
     if (kind === "phone") return `<g transform="${rot}">
         <rect fill="#3a3a3a" ${LINE} stroke-width="2.4" x="${hx - 8}" y="${hy - 26}" width="16" height="28" rx="3"/>
         <rect fill="#d9d9d9" x="${hx - 5.5}" y="${hy - 23}" width="11" height="20" rx="1.5"/>

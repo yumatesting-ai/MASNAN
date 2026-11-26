@@ -1,6 +1,11 @@
 // Lapangan bola kampung: tanah berumput tidak rata, gawang bambu tanpa jaring, sandal sebagai tanda,
 // pagar bambu, pohon pisang/kelapa, rumah kampung di belakang, masjid beratap tumpang di kejauhan.
 const P = require("../engine/props.js");
+const { createMatch } = require("../engine/football.js");
+const MATCH = createMatch({
+  seed: 7, homes: [[-5, 11], [-2, 13.5], [1.5, 11], [4.5, 14], [6.5, 11.5], [-6.5, 14.5]],
+  bounds: { x0: -8, x1: 8, z0: 10, z1: 16 }, goals: [{ x: -9.4, z: 13 }, { x: 9.4, z: 13 }],
+});
 
 module.exports = {
   id: "lapangan",
@@ -8,17 +13,16 @@ module.exports = {
   camera: { cam: { x: 0, y: 1.7, z: 0 }, f: 1050, horizon: 0.4 },
   spots: {
     tengah: { x: 0, z: 9 }, kiri: { x: -3.5, z: 7.5 }, kanan: { x: 3.5, z: 7.5 }, pinggir: { x: -1.5, z: 4.8 },
-    gawang_kiri: { x: -8.5, z: 15 }, gawang_kanan: { x: 8.5, z: 15 }, jauh: { x: 1, z: 18 },
+    gawang_kiri: { x: -7.5, z: 13 }, gawang_kanan: { x: 7.5, z: 13 }, jauh: { x: 1, z: 18 },
     duduk_pinggir: { x: -5.2, z: 5.95, seat: 0.48 }, duduk_pinggir2: { x: -6.2, z: 5.95, seat: 0.48 },
   },
+  // figuran: anak-anak MAIN BOLA sungguhan (oper, giring, tendang, kejar bola, sesekali tembak ke gawang & sorak),
+  // ditambah penonton di pinggir yang mengobrol / bersorak.
   extras: [
-    { seed: 31, kind: "anak_laki", spec: "run@-6,11>6,11/3+run@6,11>-6,11/3" },
-    { seed: 32, kind: "anak_laki", spec: "run@6,13>-6,13/3.2+run@-6,13>6,13/3.2", phase: 0.7 },
-    { seed: 33, kind: "anak_perempuan", spec: "run@-5,15>5,15/3.4+happy/1+run@5,15>-5,15/3.4", phase: 1.3 },
-    { seed: 34, kind: "anak_laki", spec: "run@4,17.5>-7,17.5/3.6+run@-7,17.5>4,17.5/3.6", phase: 2.1 },
-    { seed: 35, kind: "anak_laki", spec: "idle@9.6,17.5+happy/1+idle/2", flip: true },
-    { seed: 36, kind: "anak_perempuan", spec: "happy@-3,31+laugh/1.2" },
-    { seed: 37, kind: "bapak", spec: "idle@2,31.5" },
+    ...[[31, "anak_laki"], [32, "anak_laki"], [33, "anak_perempuan"], [34, "anak_laki"], [38, "anak_laki"], [39, "anak_laki"]].map(([seed, kind], i) => ({ seed, kind, motion: (t) => MATCH.player(i, t) })),
+    { seed: 35, kind: "anak_perempuan", spec: "idle_three{face=r}@-10.2,24+cheer/1.2+idle_three/3" },
+    { seed: 36, kind: "ibu", spec: "chat_a{face=r}@9.8,25" },
+    { seed: 37, kind: "bapak", spec: "chat_b{face=l}@10.7,25.3" },
   ],
   build(w, { t = 0 } = {}) {
     P.sky(w, { groundColor: P.PAL.dirt });
@@ -33,25 +37,20 @@ module.exports = {
     for (let k = 0; k < 18; k++) P.grassTuft(w, -11 + ((k * 37) % 22), 5 + ((k * 13) % 20));
     // tanah di depan & tanah botak dekat gawang
     w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, Z0], [-30, 0, Z0]], P.PAL.dirt, { stroke: false });
-    for (const s of [-1, 1]) w.ground([[s * 11.5, 0.003, 14.5], [s * 9.2, 0.003, 13.8], [s * 8.8, 0.003, 19.5], [s * 11.5, 0.003, 20.5]], "#cdcdcd", { stroke: false, bias: -0.2 });
+    for (const s of [-1, 1]) w.ground([[s * 9.8, 0.003, 10], [s * 7.6, 0.003, 9.3], [s * 7.2, 0.003, 15], [s * 9.8, 0.003, 16]], "#cdcdcd", { stroke: false, bias: -0.2 });
     // gawang bambu tanpa jaring di kedua sisi
     for (const sgn of [-1, 1]) {
-      const gx = sgn * 11.4, zA = 15.8, zB = 19.2, gh = 1.9;
+      const gx = sgn * 9.6, zA = 11.3, zB = 14.7, gh = 1.9;
       w.box(gx - 0.07, 0, zA, 0.14, gh, 0.14, P.PAL.bambooPole);
       w.box(gx - 0.07, 0, zB, 0.14, gh, 0.14, P.PAL.bambooPole);
       w.box(gx - 0.06, gh - 0.05, zA - 0.1, 0.12, 0.12, zB - zA + 0.35, P.PAL.bambooPole);
       for (const z of [zA, zB]) w.line3([[gx, gh - 0.2, z - 0.05], [gx, gh + 0.05, z + 0.2]], "#555555", null, { bias: -0.1 }); // ikatan tali
     }
-    // bola
-    w.sprite(2.2, 8.2, (sx, sy, p, fog, lc, sw) => {
-      const r = p * 0.11;
-      return `<g transform="translate(${sx} ${sy - r})"><ellipse cx="0" cy="${r}" rx="${r}" ry="${r * 0.25}" fill="rgba(0,0,0,0.15)"/>
-        <circle r="${r}" fill="#f8f8f8" stroke="${lc}" stroke-width="${sw}"/>
-        <path d="M0,${-r * 0.35} L${r * 0.33},${-r * 0.1} L${r * 0.2},${r * 0.3} L${-r * 0.2},${r * 0.3} L${-r * 0.33},${-r * 0.1} Z" fill="#3a3a3a"/></g>`;
-    });
+    // bola yang sedang dimainkan figuran
+    { const b = MATCH.ball(t); P.ball(w, b.x, b.z, { y: b.y, spin: b.spin }); }
     P.groundDetail(w, -11, 11, 3.6, 14, 40, 51);
     // sandal sebagai tanda (khas lapangan kampung)
-    for (const [x, z] of [[-1.2, 4.2], [-0.8, 4.3], [4.8, 4.1], [5.2, 4.2], [-6, 14.2], [-6, 15.4]]) w.ground([[x, 0.01, z], [x + 0.28, 0.01, z], [x + 0.28, 0.01, z + 0.12], [x, 0.01, z + 0.12]], "#5a5a5a", { bias: -0.5 });
+    for (const [x, z] of [[-1.2, 4.2], [-0.8, 4.3], [4.8, 4.1], [5.2, 4.2], [-6, 9.2], [-6, 10.4]]) w.ground([[x, 0.01, z], [x + 0.28, 0.01, z], [x + 0.28, 0.01, z + 0.12], [x, 0.01, z + 0.12]], "#5a5a5a", { bias: -0.5 });
     // pagar bambu di belakang
     const fz = 34;
     w.box(-26, 0.9, fz, 52, 0.1, 0.1, "#9e9e9e");
