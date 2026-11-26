@@ -457,43 +457,47 @@ function tree(w, x, z, o = {}) {
           ${cuts.length ? `<path d="${cuts.join(" ")}" fill="none" stroke="${fog("#eeeeee")}" stroke-width="${sw * 1.3}"/>` : ""}`;
       };
       const s2 = Math.sin(T * 1.5 + seed) * 4;
-      // TANDAN PISANG: tangkai melengkung keluar dari pucuk lalu menjuntai; sisir bertingkat (makin bawah makin kecil),
-      // buah berbentuk sabit melengkung KE ATAS dengan ujung gelap & kilap; jantung pisang di ujung tangkai.
-      const sway2 = Math.sin(T * 1.2 + seed) * h * 0.004;
-      const top0 = [0, -sh * 0.95], hang = [h * 0.15 + sway2, -sh * 0.86], tip = [h * 0.16 + sway2 * 2, -sh * 0.86 + h * 0.21];
-      const stalk = `M${P(top0[0])},${P(top0[1])} Q${P(h * 0.13)},${P(-sh * 1.02)} ${P(hang[0])},${P(hang[1])} Q${P(h * 0.17)},${P(-sh * 0.86 + h * 0.1)} ${P(tip[0])},${P(tip[1])}`;
-      const finger = (bx0, by0, dir, len, back) => { // sabit: pangkal di tangkai, melengkung keluar lalu ke atas
-        const tx = bx0 + dir * len * 0.6, ty = by0 - len * 0.66, th = len * 0.34;
-        const c1x = bx0 + dir * len * 0.72, c1y = by0 + len * 0.1;            // tepi luar (perut buah)
-        const c2x = bx0 + dir * len * 0.28, c2y = by0 - len * 0.18;           // tepi dalam
+      // TANDAN PISANG (ukuran wajar, ±70% versi lama): tangkai ramping melengkung keluar dari pucuk lalu menjuntai;
+      // 4 sisir rapat bertingkat (makin bawah makin kecil), buah gemuk melengkung KE ATAS dengan variasi panjang/sudut,
+      // sisi bawah lebih gelap, kilap, ujung gelap; jantung pisang kecil dengan satu kelopak terbuka.
+      const BS = 0.7, sway2 = Math.sin(T * 1.2 + seed) * h * 0.003;
+      const top0 = [0, -sh * 0.96], hang = [h * 0.11 + sway2, -sh * 0.9], tip = [h * 0.115 + sway2 * 2, -sh * 0.9 + h * 0.15 * BS + h * 0.03];
+      const stalk = `M${P(top0[0])},${P(top0[1])} Q${P(h * 0.1)},${P(-sh * 1.0)} ${P(hang[0])},${P(hang[1])} Q${P(h * 0.125)},${P(-sh * 0.9 + h * 0.07)} ${P(tip[0])},${P(tip[1])}`;
+      const jit = (n) => { const v = Math.sin(seed * 12.9898 + n * 78.233) * 43758.5453; return v - Math.floor(v) - 0.5; };
+      const finger = (bx0, by0, dir, len, back, n) => {
+        len *= 1 + 0.14 * jit(n);
+        const lean = 0.6 + 0.12 * jit(n + 9);
+        const tx = bx0 + dir * len * lean, ty = by0 - len * 0.66, th = len * 0.34;
+        const c1x = bx0 + dir * len * 0.72, c1y = by0 + len * 0.1, c2x = bx0 + dir * len * 0.28, c2y = by0 - len * 0.18;
         const body = `M${P(bx0)},${P(by0 + th * 0.35)} Q${P(c1x)},${P(c1y)} ${P(tx)},${P(ty)} Q${P(c2x)},${P(c2y)} ${P(bx0)},${P(by0 - th * 0.45)} Z`;
-        const hl = `M${P(bx0 + dir * len * 0.14)},${P(by0 + th * 0.05)} Q${P(c1x - dir * len * 0.12)},${P(c1y - len * 0.1)} ${P(tx - dir * len * 0.06)},${P(ty + len * 0.16)}`;
-        return `<path d="${body}" fill="${fog(back ? "#a5a5a5" : "#b9b9b9")}" ${L} stroke-width="${sw * 0.7}"/>
-          ${back ? "" : `<path d="${hl}" fill="none" stroke="${fog("#d6d6d6")}" stroke-width="${sw * 0.6}" stroke-linecap="round" opacity="0.8"/>`}
-          <circle cx="${P(tx)}" cy="${P(ty)}" r="${P(len * 0.035)}" fill="${fog("#4c4c4c")}"/>`;
+        const belly = `M${P(bx0 + dir * len * 0.1)},${P(by0 + th * 0.22)} Q${P(c1x - dir * len * 0.04)},${P(c1y - len * 0.03)} ${P(tx - dir * len * 0.04)},${P(ty + len * 0.08)}`;
+        const hl = `M${P(bx0 + dir * len * 0.16)},${P(by0 - th * 0.12)} Q${P(c2x + dir * len * 0.16)},${P(c2y + len * 0.1)} ${P(tx - dir * len * 0.1)},${P(ty + len * 0.2)}`;
+        return `<path d="${body}" fill="${fog(back ? "#a5a5a5" : "#b9b9b9")}" ${L} stroke-width="${sw * 0.6}"/>
+          <path d="${belly}" fill="none" stroke="${fog("#a5a5a5")}" stroke-width="${sw * 1.1}" stroke-linecap="round" opacity="${back ? 0 : 0.75}"/>
+          ${back ? "" : `<path d="${hl}" fill="none" stroke="${fog("#d6d6d6")}" stroke-width="${sw * 0.5}" stroke-linecap="round"/>`}
+          <circle cx="${P(tx)}" cy="${P(ty)}" r="${P(len * 0.04)}" fill="${fog("#4c4c4c")}"/>`;
       };
-      let backF = "", frontF = "";
-      const tiers = 4;
-      for (let r2 = 0; r2 < tiers; r2++) {
-        const k = r2 / (tiers - 1), ty0 = hang[1] + h * (0.035 + 0.036 * r2), tx0 = hang[0] + (tip[0] - hang[0]) * (0.1 + 0.3 * k);
-        const len = h * (0.085 - 0.013 * r2);
-        for (const [dx, dir, back] of [[-0.016, -1, true], [0.016, 1, true], [-0.004, -1, true], [0.004, 1, true], [-0.011, -1, false], [0.011, 1, false], [-0.002, -1, false], [0.003, 1, false]]) {
-          const f = finger(tx0 + dx * h, ty0, dir, len * (back ? 0.9 : 1), back);
+      let backF = "", frontF = "", n = 0;
+      for (let r2 = 0; r2 < 4; r2++) {
+        const k = r2 / 3, ty0 = hang[1] + h * (0.025 + 0.027 * r2) * BS / 0.7, tx0 = hang[0] + (tip[0] - hang[0]) * (0.1 + 0.3 * k);
+        const len = h * (0.07 - 0.009 * r2) * BS / 0.7;
+        for (const [dx, dir, back] of [[-0.012, -1, true], [0.012, 1, true], [-0.003, -1, true], [0.003, 1, true], [-0.008, -1, false], [0.008, 1, false], [-0.0015, -1, false], [0.002, 1, false]]) {
+          const f = finger(tx0 + dx * h * BS, ty0, dir, len, back, n++);
           if (back) backF += f; else frontF += f;
         }
       }
-      // jantung pisang (merah keunguan) + kelopak
-      const hx = tip[0], hyy = tip[1];
-      const heart = `<path d="M${P(hx)},${P(hyy - h * 0.025)} c${P(-h * 0.048)},${P(h * 0.03)} ${P(-h * 0.042)},${P(h * 0.11)} 0,${P(h * 0.135)} c${P(h * 0.042)},${P(-h * 0.025)} ${P(h * 0.048)},${P(-h * 0.105)} 0,${P(-h * 0.135)} Z" fill="${fog("#5e5e5e")}" ${L}/>
-        <path d="M${P(hx)},${P(hyy + h * 0.005)} c${P(-h * 0.03)},${P(h * 0.03)} ${P(-h * 0.02)},${P(h * 0.07)} ${P(h * 0.002)},${P(h * 0.09)} M${P(hx)},${P(hyy + h * 0.03)} c${P(h * 0.025)},${P(h * 0.02)} ${P(h * 0.02)},${P(h * 0.05)} 0,${P(h * 0.075)}" fill="none" stroke="${fog("#6c6c6c")}" stroke-width="${sw * 0.7}"/>`;
+      const hx = tip[0], hyy = tip[1], HS = 0.75;
+      const heart = `<path d="M${P(hx)},${P(hyy - h * 0.018 * HS)} c${P(-h * 0.04 * HS)},${P(h * 0.03 * HS)} ${P(-h * 0.035 * HS)},${P(h * 0.1 * HS)} 0,${P(h * 0.125 * HS)} c${P(h * 0.035 * HS)},${P(-h * 0.025 * HS)} ${P(h * 0.04 * HS)},${P(-h * 0.1 * HS)} 0,${P(-h * 0.125 * HS)} Z" fill="${fog("#5e5e5e")}" ${L} stroke-width="${sw * 0.8}"/>
+        <path d="M${P(hx)},${P(hyy)} c${P(-h * 0.025 * HS)},${P(h * 0.025 * HS)} ${P(-h * 0.018 * HS)},${P(h * 0.06 * HS)} 0,${P(h * 0.08 * HS)}" fill="none" stroke="${fog("#6c6c6c")}" stroke-width="${sw * 0.6}"/>
+        <path d="M${P(hx + h * 0.004)},${P(hyy + h * 0.004)} q${P(h * 0.03 * HS)},${P(h * 0.005)} ${P(h * 0.034 * HS)},${P(h * 0.035 * HS)} q${P(-h * 0.02 * HS)},${P(-h * 0.004)} ${P(-h * 0.03 * HS)},${P(-h * 0.02 * HS)} Z" fill="${fog("#6c6c6c")}" ${L} stroke-width="${sw * 0.5}"/>`;
       out = `${shadow}
         ${leaf(-60 + s2 * 0.3, h * 0.4, h * 0.25, "#777777", false, true)}
         ${leaf(150 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}${leaf(30 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}
         <path d="${stem}" fill="${fog("#a3a3a3")}" ${L}/>
         <path d="${sheaths}" fill="none" stroke="${fog("#7a7a7a")}" stroke-width="${sw * 0.7}"/>
         ${backF}
-        <path d="${stalk}" fill="none" stroke="${lc}" stroke-width="${(sw * 3.2).toFixed(2)}" stroke-linecap="round"/>
-        <path d="${stalk}" fill="none" stroke="${fog("#8b8b8b")}" stroke-width="${(sw * 1.8).toFixed(2)}" stroke-linecap="round"/>
+        <path d="${stalk}" fill="none" stroke="${lc}" stroke-width="${(sw * 2.4).toFixed(2)}" stroke-linecap="round"/>
+        <path d="${stalk}" fill="none" stroke="${fog("#8b8b8b")}" stroke-width="${(sw * 1.2).toFixed(2)}" stroke-linecap="round"/>
         ${frontF}${heart}
         ${leaf(125 + s2, h * 0.5, h * 0.18, "#a3a3a3", true)}${leaf(55 + s2, h * 0.5, h * 0.18, "#a3a3a3", false)}
         ${leaf(95 + s2 * 0.5, h * 0.4, h * 0.02, "#b2b2b2", true)}`;

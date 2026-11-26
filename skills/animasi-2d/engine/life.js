@@ -24,7 +24,7 @@ const col = (h) => {
 };
 
 // objek JAUH dibuat seperti figuran: siluet abu-abu buram, makin jauh makin pudar (selaras gaya figuran)
-const FAR_FROM = 0.1; // fogK mulai berubah jadi siluet
+const FAR_FROM = 0.25; // fogK mulai berubah jadi siluet (±15 m dari kamera)
 function farWrap(w, z, svg) {
   const k = w.fogK ? w.fogK(z) : 0;
   if (k < FAR_FROM) return svg;
