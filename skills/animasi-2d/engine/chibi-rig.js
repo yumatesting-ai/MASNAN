@@ -69,7 +69,7 @@ function makePalette(c) {
     shoe: c.shoe, shoeShade: mul(c.shoe, 0.87),
     sock: c.sock || "#fafafa", sockShade: mul(c.sock || "#fafafa", 0.88),
     accent: c.accent || "#ffffff",
-    eyeWhite: "#ffffff", mouthIn: "#3a3a3a", tongue: "#9a9a9a", blush: "#cfcfcf", ground: "rgba(0,0,0,0.13)",
+    eyeWhite: "#ffffff", ...require("./theme.js").face, ground: "rgba(0,0,0,0.13)",
   };
 }
 
@@ -156,7 +156,8 @@ const AHOGE_PATHS = {
 
 function createRig(design) {
   const ID = design.id;
-  const PALETTE = makePalette(design.colors);
+  const THEME = require("./theme.js");
+  const PALETTE = makePalette(THEME.COLOR && design.colorsWarna ? design.colorsWarna : design.colors);
   const H = design.hair;
   const SHAPE = Object.assign({}, BODY_SHAPES, H.shapes);
   const EXPRESSIONS = {};

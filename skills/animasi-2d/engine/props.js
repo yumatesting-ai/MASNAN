@@ -3,7 +3,7 @@
 // atap genteng atau seng, pagar bambu / tanaman, pohon pisang-kelapa-mangga, jemuran, tiang listrik kayu.
 const { mul, mix, LINE } = require("./world3d.js");
 
-const PAL = {
+const PAL_ABU = {
   sky: "#eeeeee", skyTop: "#d9d9d9", cloud: "#fbfbfb",
   concrete: "#b4b4b4", crack: "#8e8e8e", dirt: "#c6c6c6", dirtDark: "#b6b6b6", grass: "#b9b9b9", grassDark: "#adadad",
   asphalt: "#8c8c8c", gutter: "#7a7a7a", paving: "#cdcdcd",
@@ -13,6 +13,32 @@ const PAL = {
   trunk: "#6b6b6b", leaf: "#949494", leafB: "#a3a3a3", banana: "#9c9c9c", wood: "#8a8a8a", woodLight: "#a8a8a8",
   bambooPole: "#b0b0b0",
 };
+// palet berwarna (WARNA=1): kampung tropis cerah
+const PAL_WARNA = {
+  sky: "#d6ecf8", skyTop: "#86c1ea", cloud: "#ffffff",
+  concrete: "#c4beb2", crack: "#938c7f", dirt: "#dcc6a0", dirtDark: "#cdb48c", grass: "#97c46c", grassDark: "#80b157",
+  asphalt: "#6f7275", gutter: "#5f6366", paving: "#ddd3c4",
+  wallA: "#f3e7cf", wallB: "#e8d4b2", wallC: "#dac9a6", plank: "#b88c5e", bamboo: "#dcc489",
+  roof: "#b9573a", roofB: "#c8693f", seng: "#9eabb3",
+  door: "#7b5336", shutter: "#8fa2ae", glass: "#a8d0e2", frame: "#4b3a2b",
+  trunk: "#7c5a3a", leaf: "#5c9d47", leafB: "#78b75a", banana: "#7bb95a", wood: "#8d5f3c", woodLight: "#b3845b",
+  bambooPole: "#cbab6b",
+};
+const THEME = require("./theme.js");
+const PAL = THEME.COLOR ? PAL_WARNA : PAL_ABU;
+const SKYC = THEME.COLOR
+  ? { cloudLine: "#bcd6e8", farTree: "#b7d2bf", farPalm: "#b2cdb9", farRoof: "#d8c9b8", hill1: "#c6dccf", hill2: "#b9d3c3" }
+  : { cloudLine: "#cfcfcf", farTree: "#d6d6d6", farPalm: "#d2d2d2", farRoof: "#dcdcdc", hill1: "#e3e3e3", hill2: "#dbdbdb" };
+
+
+// mode warna: abu-abu bawaan pohon/semak/rumput dipetakan ke hijau daun & coklat batang (fungsi fog dibungkus)
+const TREE_TINT = { "#7d7d7d": "#8a6240", "#5f5f5f": "#6e4a2e", "#555555": "#5a3d26", "#8a8a8a": "#9c7b52", "#6f6f6f": "#e2a33a",
+  "#5c5c5c": "#7a5a2e", "#9e9e9e": "#5f9f48", "#858585": "#4a8a3a", "#b4b4b4": "#82bf60", "#6e6e6e": "#3f7a32", "#7f7f7f": "#4f8f3c",
+  "#9a9a9a": "#62a44a", "#a8a8a8": "#76b358", "#6a6a6a": "#3f7a32", "#4f4f4f": "#8a7a42", "#5a5a5a": "#3f7a32",
+  "#a3a3a3": "#6fb052", "#8c8c8c": "#579a43", "#b2b2b2": "#86c463", "#777777": "#8a6a44", "#7a7a7a": "#7f6340" };
+const BUSH_TINT = { "#6e6e6e": "#3f7a32", "#828282": "#4c8c3c", "#999999": "#5f9f48", "#b0b0b0": "#7cba5b" };
+const GRASS_TINT = { "#9c9c9c": "#6aa84a", "#ababab": "#7fbb59" };
+const tint = (fog, map) => (THEME.COLOR ? (c) => fog(map[c] || c) : fog);
 
 // ---------- langit & latar jauh ----------
 function sky(w, o = {}) {
@@ -21,17 +47,17 @@ function sky(w, o = {}) {
     const x = cx * W, y = cy * H, r = 38 * s;
     return `<path d="M${x - r * 2.2},${y + r * 0.6} C${x - r * 2.4},${y - r * 0.2} ${x - r * 1.4},${y - r * 0.6} ${x - r * 0.9},${y - r * 0.2}
         C${x - r * 0.6},${y - r * 1.1} ${x + r * 0.7},${y - r * 1.1} ${x + r * 0.9},${y - r * 0.2}
-        C${x + r * 1.6},${y - r * 0.5} ${x + r * 2.5},${y} ${x + r * 2.2},${y + r * 0.6} Z" fill="${PAL.cloud}" stroke="#cfcfcf" stroke-width="2"/>`;
+        C${x + r * 1.6},${y - r * 0.5} ${x + r * 2.5},${y} ${x + r * 2.2},${y + r * 0.6} Z" fill="${PAL.cloud}" stroke="${SKYC.cloudLine}" stroke-width="2"/>`;
   }).join("");
   // siluet pepohonan (kelapa, rimbun) & atap jauh di garis cakrawala
   let far = "", x = -20, seed = o.seed || 7;
   const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
   while (x < W + 20) {
     const bw = 30 + rnd() * 50, bh = 14 + rnd() * 26, r = rnd();
-    if (r < 0.45) far += `<circle cx="${x + bw / 2}" cy="${hy - bh * 0.7}" r="${bh}" fill="#d6d6d6"/>`;
-    else if (r < 0.65) far += `<path d="M${x + bw / 2},${hy} L${x + bw / 2},${hy - bh * 2.4}" stroke="#d2d2d2" stroke-width="3"/>
-      <path d="M${x + bw / 2},${hy - bh * 2.4} q-18,-4 -30,10 M${x + bw / 2},${hy - bh * 2.4} q18,-4 30,10 M${x + bw / 2},${hy - bh * 2.4} q-6,-14 -22,-14 M${x + bw / 2},${hy - bh * 2.4} q6,-14 22,-14" stroke="#d2d2d2" stroke-width="5" fill="none" stroke-linecap="round"/>`;
-    else far += `<path d="M${x},${hy} L${x},${hy - bh} L${x + bw / 2},${hy - bh - 12} L${x + bw},${hy - bh} L${x + bw},${hy} Z" fill="#dcdcdc"/>`;
+    if (r < 0.45) far += `<circle cx="${x + bw / 2}" cy="${hy - bh * 0.7}" r="${bh}" fill="${SKYC.farTree}"/>`;
+    else if (r < 0.65) far += `<path d="M${x + bw / 2},${hy} L${x + bw / 2},${hy - bh * 2.4}" stroke="${SKYC.farPalm}" stroke-width="3"/>
+      <path d="M${x + bw / 2},${hy - bh * 2.4} q-18,-4 -30,10 M${x + bw / 2},${hy - bh * 2.4} q18,-4 30,10 M${x + bw / 2},${hy - bh * 2.4} q-6,-14 -22,-14 M${x + bw / 2},${hy - bh * 2.4} q6,-14 22,-14" stroke="${SKYC.farPalm}" stroke-width="5" fill="none" stroke-linecap="round"/>`;
+    else far += `<path d="M${x},${hy} L${x},${hy - bh} L${x + bw / 2},${hy - bh - 12} L${x + bw},${hy - bh} L${x + bw},${hy} Z" fill="${SKYC.farRoof}"/>`;
     x += bw + rnd() * 10;
   }
   // perbukitan berlapis di kejauhan (makin jauh makin terang)
@@ -40,7 +66,7 @@ function sky(w, o = {}) {
     for (let i = 0; i <= 24; i++) { const xx = (i / 24) * W; d += ` L${xx.toFixed(0)},${(hy - base - amp * (0.5 + 0.5 * Math.sin(i * 0.9 + ph)) * (0.6 + 0.4 * Math.sin(i * 0.37 + ph * 2))).toFixed(1)}`; }
     return `<path d="${d} L${W},${hy} Z" fill="${col}"/>`;
   };
-  const hills = o.hills === false ? "" : hill(H * 0.06, H * 0.03, "#e3e3e3", 1.3) + hill(H * 0.04, H * 0.012, "#dbdbdb", 3.1);
+  const hills = o.hills === false ? "" : hill(H * 0.06, H * 0.03, SKYC.hill1, 1.3) + hill(H * 0.04, H * 0.012, SKYC.hill2, 3.1);
   w.add("sky", 1e9, `<defs><linearGradient id="skyg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="${PAL.skyTop}"/><stop offset="1" stop-color="${PAL.sky}"/></linearGradient></defs>
     <rect width="${W}" height="${H}" fill="url(#skyg)"/>${clouds}${hills}
@@ -159,6 +185,7 @@ function bambooFence(w, x, za, zb) {
 function grassTuft(w, x, z, o = {}) {
   const T = w.t || 0, seed = x * 17.3 + z * 5.1;
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    fog = tint(fog, GRASS_TINT);
     const r = treeRng(seed), H = (o.h || 0.22 + r() * 0.12) * p, n = 5 + Math.floor(r() * 3);
     const sway = Math.sin(T * 2 + seed) * 0.12;
     let blades = "";
@@ -176,6 +203,7 @@ function bush(w, x, z, r0 = 0.55, o = {}) {
   const seed = x * 11.1 + z * 3.7 + r0, T = w.t || 0;
   if (w.castBlob) w.castBlob(x, z, r0 * 0.9, r0 * 1.1, { strength: 0.8 });
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    fog = tint(fog, BUSH_TINT);
     const r = treeRng(seed), R = r0 * p, flowers = !!o.flowers; // bunga dimatikan secara bawaan
     const sway = Math.sin(T * 1.6 + seed) * 1.2;
     const cy = -R * 0.85;
@@ -282,6 +310,7 @@ function tree(w, x, z, o = {}) {
     else w.castBlob(x, z, h * 0.75, h * 0.32, { trunk: h * 0.06 });
   }
   w.sprite(x, z, (sx, sy, p, fog, lc, sw) => {
+    fog = tint(fog, TREE_TINT);
     const r = treeRng(seed);
     const id = `tr${Math.round(Math.abs(seed) * 100)}`;
     const P = (v) => (v * p).toFixed(1);

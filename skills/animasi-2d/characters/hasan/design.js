@@ -11,6 +11,7 @@ module.exports = {
   hobbies: "ngopi, main catur, pelihara burung",
   catchphrase: "Hidup itu dibawa santai aja, Nak.",
   colors: { hair: "#767676", top: "#f6f6f6", bottom: "#6e6e6e", shoe: "#4a4a4a", skin: "#efefef", accent: "#cfcfcf" },
+  colorsWarna: { hair: "#6e6e6e", top: "#fbfbf4", bottom: "#2e6b4f", shoe: "#5a3b2a", skin: "#e8b88d", accent: "#d8d8d0" },  // dipakai saat WARNA=1
   hair: {
     long: false,
     bald: true,

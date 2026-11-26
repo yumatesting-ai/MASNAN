@@ -10,6 +10,7 @@ module.exports = {
   hobbies: "main game, basket, jahilin teman",
   catchphrase: "Santai aja, beres kok!",
   colors: { hair: "#2f2f2f", top: "#7a7a7a", bottom: "#4a4a4a", shoe: "#fafafa", skin: "#efefef", sock: "#fafafa", accent: "#fafafa" },
+  colorsWarna: { hair: "#1f1b1a", top: "#e2683c", bottom: "#34495e", shoe: "#ffffff", skin: "#f0c6a0", sock: "#ffffff", accent: "#ffffff" },  // dipakai saat WARNA=1
   hair: {
     long: false,
     shapes: {

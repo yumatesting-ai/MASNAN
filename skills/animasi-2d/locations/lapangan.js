@@ -1,6 +1,8 @@
 // Lapangan bola kampung: tanah berumput tidak rata, gawang bambu tanpa jaring, sandal sebagai tanda,
 // pagar bambu, pohon pisang/kelapa, rumah kampung di belakang, masjid beratap tumpang di kejauhan.
 const P = require("../engine/props.js");
+const WARNA = require("../engine/theme.js").COLOR;
+const FIELD = WARNA ? { grass: "#8fc067", bare: "#d9c49c", bare2: "#d4bd92" } : { grass: "#a4a4a4", bare: "#cbcbcb", bare2: "#cdcdcd" };
 const { createMatch } = require("../engine/football.js");
 const MATCH = createMatch({
   seed: 7, homes: [[-5, 11], [-2, 13.5], [1.5, 11], [4.5, 14], [6.5, 11.5], [-6.5, 14.5]],
@@ -35,16 +37,16 @@ module.exports = {
     P.sky(w, { groundColor: P.PAL.dirt });
     const X0 = -12, X1 = 12, Z0 = 3.5, Z1 = 32;
     // rumput belang (bekas potong)
-    P.strip(w, X0, X1, Z0, Z1, "#a4a4a4");
+    P.strip(w, X0, X1, Z0, Z1, FIELD.grass);
     // petak tanah gundul tidak beraturan
     for (const [cx, cz, r] of [[-4, 9, 2.2], [3, 13, 2.8], [0, 18, 2.4], [-7, 22, 2], [6, 25, 2.5], [-1, 6, 1.6]]) {
       const pts = []; for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2; pts.push([cx + r * Math.cos(a) * (1 + 0.25 * Math.sin(a * 3)), 0.002, cz + r * 0.7 * Math.sin(a)]); }
-      w.ground(pts, "#cbcbcb", { stroke: false, bias: -0.1 });
+      w.ground(pts, FIELD.bare, { stroke: false, bias: -0.1 });
     }
     for (let k = 0; k < 18; k++) P.grassTuft(w, -11 + ((k * 37) % 22), 5 + ((k * 13) % 20));
     // tanah di depan & tanah botak dekat gawang
     w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, Z0], [-30, 0, Z0]], P.PAL.dirt, { stroke: false });
-    for (const s of [-1, 1]) w.ground([[s * 9.8, 0.003, 10], [s * 7.6, 0.003, 9.3], [s * 7.2, 0.003, 15], [s * 9.8, 0.003, 16]], "#cdcdcd", { stroke: false, bias: -0.2 });
+    for (const s of [-1, 1]) w.ground([[s * 9.8, 0.003, 10], [s * 7.6, 0.003, 9.3], [s * 7.2, 0.003, 15], [s * 9.8, 0.003, 16]], FIELD.bare2, { stroke: false, bias: -0.2 });
     // gawang bambu tanpa jaring di kedua sisi
     for (const sgn of [-1, 1]) {
       const gx = sgn * 9.6, zA = 11.3, zB = 14.7, gh = 1.9;

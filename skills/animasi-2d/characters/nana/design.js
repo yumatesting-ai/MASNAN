@@ -10,6 +10,7 @@ module.exports = {
   hobbies: "menggambar, ngemil, rebahan",
   catchphrase: "E-eh… aku harus ngapain?",
   colors: { hair: "#5b5b5b", top: "#f8f8f8", bottom: "#4e4e4e", shoe: "#fafafa", skin: "#efefef" },
+  colorsWarna: { hair: "#3b2a22", top: "#f6c7d3", bottom: "#3d5a80", shoe: "#ffffff", skin: "#ffe0c8" },  // dipakai saat WARNA=1
   hair: {
     long: true, // rambut panjang sampai pinggang, poni runcing, helai kiri menutup telinga
     shapes: {

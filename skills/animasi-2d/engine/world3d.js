@@ -29,7 +29,7 @@ function createWorld(opt = {}) {
   const sky = opt.sky || "#eeeeee";
   // perspektif atmosfer: makin jauh makin pudar menuju abu-abu muda (fogColor)
   const fogStart = opt.fogStart ?? 5, fogRange = opt.fogRange ?? 40, fogMax = opt.fogMax ?? 0.82;
-  const fogColor = opt.fogColor || "#dedede";
+  const fogColor = opt.fogColor || require("./theme.js").fogColor;
   const NEAR = 0.3;
   const items = []; // { layer, z, svg }
 

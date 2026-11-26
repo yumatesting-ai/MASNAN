@@ -11,6 +11,7 @@ module.exports = {
   hobbies: "jaga warung, nonton sinetron, arisan",
   catchphrase: "Eh, udah denger belum?!",
   colors: { hair: "#3c3c3c", top: "#a9a9a9", bottom: "#4a4a4a", shoe: "#5a5a5a", skin: "#efefef", accent: "#f2f2f2" },
+  colorsWarna: { hair: "#2b2220", top: "#c45482", bottom: "#4a4a4a", shoe: "#6b4a33", skin: "#f0c7a4", accent: "#ffd6e6" },  // dipakai saat WARNA=1
   hair: {
     long: false,
     shapes: {
