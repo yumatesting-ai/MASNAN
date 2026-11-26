@@ -28,6 +28,7 @@ Pakai profil itu saat menulis dialog/cerita agar kepribadian konsisten. Data pro
 ```
 engine/chibi-rig.js   createRig(design) -> { drawCharacter, drawPart, resolvePose, EXPRESSIONS, ... }
 engine/clips.js       CLIPS bersama + samplePose (penghalusan & follow-through) + kf/EASE
+engine/timeline.js    rangkaian aksi per karakter (fase berurutan + blend + gerak antar titik)
 characters/<nama>/
   design.js           desain karakter (lihat format di bawah)
   CHARACTER.md        model sheet: ciri wajib, palet, sifat
@@ -120,6 +121,35 @@ dan perlengkapan `engine/props.js` (`house` dengan `wall: plaster|plank|bamboo`,
 `bale`, `fence: bamboo|bush`, `jemuran`; `villageRoad`, `tree` (`round|palm|banana`), `bush`, `poles`, `bulbLamp`,
 `gapura`, `bench`, `table`, `bale`, `glassOfCoffee`, `chicken`). Gaya: kampung sederhana, jangan terlalu modern.
 Sumbu: X kanan, Y atas, Z menjauh dari kamera; jalan kampung di sekitar x=0. Anak tinggi ±1.15 m.
+
+## Aksi sehari-hari & rangkaian aksi
+Rig mendukung **siku** (`elbowL/elbowR`), **barang di tangan** (`holdL/holdR`: `coffee`, `phone`; `hold: "newspaper"`
+dua tangan; `holdTilt` untuk menyeruput), dan **duduk** (`sit` 0..1 + `seat` tinggi kursi dalam meter: badan naik ke
+kursi, kaki memendek/menggantung; tampak samping: paha mendatar, betis turun dari lutut).
+
+| Kategori | Klip |
+|---|---|
+| Duduk | `sit`, `sit_side`, `sit_back` (membelakangi kamera), `sit_sleepy` |
+| Ngopi | `sit_drink` (angkat gelas -> seruput mata terpejam -> "ahh"), `sit_drink_side`, `drink` (berdiri) |
+| Baca / HP | `sit_read`, `read` (koran: sesekali diturunkan untuk melirik, balik halaman), `phone`, `sit_phone` |
+| Ngobrol | `chat_a` + `chat_b` (berdiri), `sit_chat_a` + `sit_chat_b` (duduk): A bicara dengan gestur lalu B; yang mendengar mengangguk/tertawa. Pasang A & B saling berhadapan (`:flip` untuk menghadap kanan) |
+| Lain | `walk_back`, `stretch` (ngulet + menguap), `scratch_head` (garuk kepala), `point` (menunjuk) |
+
+**Rangkaian aksi** (`engine/timeline.js`) — di `tools/location.js`, tiap karakter boleh punya beberapa fase:
+```bash
+node tools/location.js --loc warung --out out/ngopi.mp4 --cast \
+  "hasan:walk@jalan_kiri>duduk_meja/3+sit_drink/4.8+sit_read/6,atin:chat_b@balik_etalase/14:flip"
+node tools/location.js --loc posronda --out out/ronda.mp4 --cast \
+  "hasan:sit_read@duduk_bale/6+sit_chat_b/9.6:flip,bima:walk@jalan_kanan>duduk_bale2/2.6+sit_drink_side/3.4+sit_chat_a/9.6"
+```
+- Fase: `klip[@titik | @dari>ke][/detik]`, dipisah `+`. Tanpa titik = tetap di posisi terakhir.
+- `walk` memilih otomatis jalan samping (dan arah hadapnya), `walk_front` (mendekat) atau `walk_back` (menjauh).
+- Antar fase di-blend 0.35 dtk -> berdiri ke duduk menjadi gerakan duduk yang halus.
+- Titik duduk punya `seat`: warung `duduk_meja` (menghadap kamera, di balik meja), `duduk_depan_meja(2)` (pakai
+  `sit_back`); posronda `duduk_bale(2)`; kampung `duduk_bangku(2)`; masjid `duduk_serambi(2)`; lapangan `duduk_pinggir(2)`.
+- Agar dua karakter ngobrol bergantian, mulai fase `chat_a`/`chat_b` pada detik yang sama.
+- Pose siku: + = lengan bawah naik ke dada/wajah untuk lengan yang menggantung; untuk lengan terangkat (>90°) pakai
+  nilai negatif agar tangan mengarah ke kepala (garuk kepala, ngulet).
 
 ## Menambah klip (engine/clips.js)
 `{ duration, view, smooth?, pose(t) }`. Aturan agar gerak halus dan tidak "error":

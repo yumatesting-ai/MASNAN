@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 // Render lokasi 2.5D (+ karakter di dalamnya) ke PNG atau MP4.
 //
-//   node tools/location.js --loc komplek --png out/komplek.png
-//   node tools/location.js --loc warung --cast "atin:talk@etalase,hasan:laugh@bangku" --out out/warung.mp4 --seconds 3
-//   node tools/location.js --loc komplek --cast "nana:walk_front@jauh>depan" --seconds 4 --out out/pulang.mp4
+//   node tools/location.js --loc kampung --png out/kampung.png
+//   node tools/location.js --loc warung --cast "atin:talk@balik_etalase,hasan:sit_drink@duduk_meja" --out out/warung.mp4
+//   node tools/location.js --loc kampung --cast "nana:walk_front@jauh>depan" --seconds 4 --out out/pulang.mp4
+//   node tools/location.js --loc warung --cast "hasan:walk@jalan_kiri>duduk_meja/3+sit_drink/5+sit_read/6" --out out/ngopi.mp4
 //   node tools/location.js --list
 //
-// Format cast: karakter:klip@titik[:flip]   — titik dari spots lokasi, atau "x,z" (meter). Spot boleh punya y (lantai tinggi).
-//   "a>b" = berjalan dari titik a ke titik b selama durasi video.
+// Format cast: karakter:rangkaian[:flip], dipisah koma. Rangkaian = fase "klip[@titik|@a>b][/detik]" dipisah "+"
+//   (lihat engine/timeline.js). Titik dari spots lokasi atau "x,z" (meter); spot boleh punya y (lantai tinggi)
+//   dan seat (tinggi tempat duduk -> klip sit_* otomatis duduk di situ).
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
 
 const path = require("path");
@@ -16,7 +18,7 @@ const os = require("os");
 const { execFileSync } = require("child_process");
 const { chromium } = require("playwright");
 const { createWorld } = require("../engine/world3d.js");
-const { CLIPS, samplePose } = require("../engine/clips.js");
+const { createTimeline } = require("../engine/timeline.js");
 
 const o = { loc: "komplek", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
@@ -45,15 +47,17 @@ const spotOf = (s) => {
   throw new Error(`Titik "${s}" tidak ada di ${LOC.id}. Pilihan: ${Object.keys(LOC.spots).join(", ")}`);
 };
 const cast = (o.cast ? o.cast.split(",") : []).map((s) => {
-  const [who, rest] = s.trim().split(":").length > 1 ? [s.trim().split(":")[0], s.trim().split(":").slice(1).join(":")] : [s, "idle"];
-  const [clipPart, flag] = rest.split(":");
-  const [clip, where = "depan"] = clipPart.split("@");
-  const [a, b] = where.split(">");
+  const [who, specRaw = "idle", flag] = s.trim().split(":");
+  let spec = specRaw;
+  if (!spec.split("+")[0].includes("@")) { // fase pertama tanpa titik -> berdiri di "depan"
+    const parts = spec.split("+"); const [c0, d0] = parts[0].split("/");
+    parts[0] = `${c0}@${LOC.spots.depan ? "depan" : Object.keys(LOC.spots)[0]}${d0 ? "/" + d0 : ""}`; spec = parts.join("+");
+  }
   const rig = require(path.join(__dirname, "..", "characters", who, "rig.js"));
-  if (!CLIPS[clip]) throw new Error(`Klip "${clip}" tidak ada.`);
-  return { rig, clip: CLIPS[clip], from: spotOf(a), to: b ? spotOf(b) : null, flip: flag === "flip" };
+  const tl = createTimeline(spec, spotOf, rig.resolvePose, { flip: flag === "flip", seconds: o.seconds ? +o.seconds : null });
+  return { rig, tl };
 });
-const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.clip.duration));
+const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.total));
 
 function frame(t) {
   const camOpt = Object.assign({}, LOC.camera, portrait ? LOC.cameraPortrait || {} : {});
@@ -61,15 +65,10 @@ function frame(t) {
   const w = createWorld(Object.assign({ W, H }, camOpt));
   LOC.build(w, { t });
   for (const m of cast) {
-    const k = m.to ? Math.min(1, t / duration) : 0;
-    const x = m.from.x + ((m.to ? m.to.x : m.from.x) - m.from.x) * k;
-    const z = m.from.z + ((m.to ? m.to.z : m.from.z) - m.from.z) * k;
-    const pose = samplePose(m.clip, t % m.clip.duration, m.rig.resolvePose);
-    if (m.flip) pose.flip = !pose.flip;
-    const y = m.from.y || 0;
+    const { pose, x, z, y } = m.tl.at(t);
     w.sprite(x, z, (sx, sy, p) => {
       const s = p / KID_UNITS_PER_M;
-      return `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(m.clip.view, pose)}</g>`;
+      return `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(pose.view, pose)}</g>`;
     }, { bias: -0.05, y });
   }
   return w.render();

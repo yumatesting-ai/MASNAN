@@ -9,6 +9,7 @@ module.exports = {
   spots: {
     gerbang: { x: 0, z: 5.2 }, halaman_kiri: { x: -4.6, z: 9.5 }, halaman_kanan: { x: 4.4, z: 9.5 }, setapak: { x: 0.2, z: 8.5 },
     serambi: { x: 1.2, z: 12.4 }, depan: { x: 0.6, z: 3.2 }, bedug: { x: -3.2, z: 12.6 },
+    duduk_serambi: { x: -1.8, z: 10.85, seat: 0.4 }, duduk_serambi2: { x: 1.6, z: 10.85, seat: 0.4 },
   },
   build(w) {
     P.sky(w, { clouds: [[0.12, 0.1, 1], [0.7, 0.06, 1.1]] });

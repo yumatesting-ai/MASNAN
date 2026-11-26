@@ -21,6 +21,14 @@ const BASE_DEFAULT_POSE = {
   tears: "none", anger: false, gloom: false, above: null, fx: 0,
   headTilt: 0, headX: 0, headY: 0, hairSway: 0, ahoge: 0,
   breathe: 0, armL: 0, armR: 0, legL: 0, legR: 0, bodyX: 0, bodyY: 0, lean: 0, squash: 0, scaleX: 1,
+  // --- aksi ---
+  elbowL: 0, elbowR: 0,     // tekuk siku (deg, + = lengan bawah naik ke arah dada/wajah)
+  holdL: null, holdR: null, // barang di tangan: "coffee" | "phone"
+  holdTilt: 0,              // kemiringan gelas (minum: negatif = dituang ke mulut)
+  hold: null,               // barang dua tangan: "newspaper"
+  paperY: 0,                // naik-turun koran (px)
+  sit: 0,                   // 0 = berdiri, 1 = duduk (bisa di-blend: gerakan duduk/berdiri)
+  seat: 0.42,               // tinggi tempat duduk (meter) — bangku 0.42, bale 0.5
 };
 
 const BASE_EXPRESSIONS = {
@@ -168,7 +176,10 @@ function createRig(design) {
 
   function defs() {
     const clip = (id, d) => `<clipPath id="${ID}-${id}"><path d="${d}"/></clipPath>`;
-    return `<defs>${Object.entries(SHAPE).map(([k, d]) => clip(k, d)).join("")}</defs>`;
+    const rect = (id, y0, y1) => `<clipPath id="${ID}-${id}"><rect x="-200" y="${y0}" width="700" height="${y1 - y0}"/></clipPath>`;
+    return `<defs>${Object.entries(SHAPE).map(([k, d]) => clip(k, d)).join("")}
+      ${rect("armU", -200, 273)}${rect("armD", 271, 600)}${rect("armUL", -200, 269)}${rect("armDL", 267, 600)}
+      ${rect("hipU", -200, 283)}${rect("hipD", 281, 600)}${rect("kneeU", -200, 327)}${rect("kneeD", 324, 600)}</defs>`;
   }
 
   // ================= WAJAH =================
@@ -455,6 +466,40 @@ function createRig(design) {
     return `<g clip-path="url(#${ID}-${key})" fill="${C.accent}" stroke="${C.shirtDeep}" stroke-width="1.2">${dots}</g>`;
   }
 
+  // ---------- barang di tangan (koordinat lokal tangan; gambar tetap tegak) ----------
+  function handProp(kind, hx, hy, upright, tilt) {
+    if (!kind) return "";
+    const C = PALETTE;
+    const lift = Math.min(14, Math.abs(tilt) * 0.4); // gelas terangkat sedikit saat dimiringkan ke mulut
+    const rot = `rotate(${(upright + tilt).toFixed(1)} ${hx} ${hy}) translate(0 ${-lift})`;
+    if (kind === "coffee") return `<g transform="${rot}">
+        <path fill="#f4f4f4" ${LINE} stroke-width="2.4" d="M${hx - 10},${hy - 22} L${hx + 10},${hy - 22} L${hx + 8},${hy + 6} L${hx - 8},${hy + 6} Z"/>
+        <path fill="#4a4a4a" d="M${hx - 9},${hy - 14} L${hx + 9},${hy - 14} L${hx + 7.6},${hy + 4.5} L${hx - 7.6},${hy + 4.5} Z"/>
+        <path fill="none" stroke="#bdbdbd" stroke-width="2" stroke-linecap="round" d="M${hx - 3},${hy - 28} q3,-5 0,-10 M${hx + 4},${hy - 27} q3,-4 0,-8"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 9}" cy="${hy - 4}" rx="5.5" ry="7"/></g>`;
+    if (kind === "phone") return `<g transform="${rot}">
+        <rect fill="#3a3a3a" ${LINE} stroke-width="2.4" x="${hx - 8}" y="${hy - 26}" width="16" height="28" rx="3"/>
+        <rect fill="#d9d9d9" x="${hx - 5.5}" y="${hy - 23}" width="11" height="20" rx="1.5"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 8}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
+    return "";
+  }
+  // koran dipegang dua tangan di depan dada
+  function newspaper(view, p) {
+    const C = PALETTE;
+    const three = view === "three", y = 214 + p.paperY;
+    const x0 = three ? 96 : 100, x1 = three ? 180 : 200, h = 78;
+    const lines = [];
+    for (let k = 0; k < 6; k++) lines.push(`M${x0 + 8},${y + 30 + k * 7} L${(x0 + x1) / 2 - 5},${y + 30 + k * 7} M${(x0 + x1) / 2 + 5},${y + 30 + k * 7} L${x1 - 8},${y + 30 + k * 7}`);
+    return `<g id="koran">
+      <path fill="#f6f6f6" ${LINE} d="M${x0},${y} L${x1},${y - 3} L${x1 + 2},${y + h} L${x0 - 2},${y + h + 3} Z"/>
+      <path fill="none" stroke="#bdbdbd" stroke-width="2" d="M${(x0 + x1) / 2},${y - 1} L${(x0 + x1) / 2},${y + h + 1}"/>
+      <rect fill="#3c3c3c" x="${x0 + 8}" y="${y + 7}" width="${(x1 - x0) * 0.5}" height="9"/>
+      <rect fill="#9a9a9a" x="${x1 - (x1 - x0) * 0.38}" y="${y + 7}" width="${(x1 - x0) * 0.3}" height="16"/>
+      <path fill="none" stroke="#9a9a9a" stroke-width="2" stroke-linecap="round" d="${lines.join(" ")}"/>
+      <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${x0 + 2}" cy="${y + 30}" rx="7" ry="8.5"/>
+      <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${x1 - 2}" cy="${y + 28}" rx="7" ry="8.5"/></g>`;
+  }
+
   // ================= TAMPAK DEPAN / 3-4 / BELAKANG =================
   function frontish(p, view) {
     const C = PALETTE;
@@ -483,9 +528,13 @@ function createRig(design) {
       </g></g>`;
     };
 
+    // duduk: badan naik/turun ke tinggi kursi, kaki memendek (paha mengarah ke kamera), telapak menggantung
+    const SIT = p.sit, seatU = (p.seat * 270) / SCALE;
+    const sitDy = SIT * (382 - seatU - 282);
+    const kS = 1 - 0.45 * SIT;
     const leg = (side, lift) => {
       const l = side === "l";
-      const k = 1 - Math.max(0, lift) / 95;
+      const k = (1 - Math.max(0, lift) / 95) * kS;
       const skinKey = l ? "legLs" : "legRs";
       const gKey = B === "pants" ? (l ? "legL" : "legR") : B === "shorts" ? (l ? "shortsL" : "shortsR") : null;
       const skinLeg = SLIM ? `
@@ -499,12 +548,17 @@ function createRig(design) {
           ${shade(gKey, C.pantsShade, l ? "M139,300 L152,300 L152,372 L137,372 Z" : "M148,300 L161,300 L163,372 L148,372 Z")}
           ${B === "pants" ? socks(gKey) : ""}
           ${outline(SHAPE[gKey])}` : "";
+      const shoeDy = -Math.max(0, lift) * kS - (1 - kS) * 88;
       return `<g id="leg-${side}">
         <g transform="translate(0 282) scale(1 ${k}) translate(0 -282)">${skinLeg}${garment}</g>
-        <g transform="translate(${l ? 0 : 42} ${-Math.max(0, lift)})">${shoeSvg("shoe", isBack, false)}</g></g>`;
+        <g transform="translate(${l ? 0 : 42} ${shoeDy.toFixed(2)})">${shoeSvg("shoe", isBack, false)}</g></g>`;
     };
-    const legs = `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""}">
-      ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}</g>`;
+    // pangkuan (paha yang mengarah ke kamera) saat duduk
+    const lapCol = B === "pants" || B === "shorts" ? C.pants : C.skin;
+    const lap = SIT > 0.35 && !isBack && B !== "sarong" && design.top !== "daster"
+      ? `<path fill="${lapCol}" ${LINE} opacity="${clamp01((SIT - 0.35) / 0.4).toFixed(2)}" d="M112,281 L188,281 C191,292 189,302 182,306 L154,306 L150,300 L146,306 L118,306 C111,302 109,292 112,281 Z"/>` : "";
+    const legs = `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""} translate(0 ${sitDy.toFixed(2)})">
+      ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}${lap}</g>`;
 
     // ---------- lengan ----------
     const LONG = design.sleeves === "long", NOSLEEVE = design.sleeves === "none";
@@ -513,6 +567,13 @@ function createRig(design) {
     const SLEEVE_K = LONG || NOSLEEVE ? 1 : 0.6; // lengan baju pendek ikut 60% -> tidak "mengepak"
     const armLayer = (side, deg0, part) => {
       const deg = deg0 + ARM_REST;
+      const elbow = side === -1 ? p.elbowL : p.elbowR;
+      const holdK = side === -1 ? p.holdL : p.holdR;
+      const EL = LONG ? [104, 268] : [106, 272];
+      const cU = LONG ? "armUL" : "armU", cD = LONG ? "armDL" : "armD";
+      const forearmT = `rotate(${(-elbow).toFixed(1)} ${EL[0]} ${EL[1]})`;
+      const hand = LONG ? [103, 297] : [105, 300];
+      const prop = (rotTotal) => (p.hold === "newspaper" ? "" : handProp(holdK, hand[0], hand[1], -rotTotal, side === -1 ? -p.holdTilt : -p.holdTilt));
       const mirror = side === 1 ? MIRROR : "";
       const far = isThree && side === -1;
       const shift = `translate(${(far ? 7 : 0) - ARM_DX} 0)`;
@@ -521,23 +582,30 @@ function createRig(design) {
       let shape;
       if (NOSLEEVE) {
         // tanpa lengan baju: lengan utuh di BELAKANG badan (bahu milik badan) -> tidak ada garis melintang di dada
-        shape = part === "sleeve" ? "" : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
+        const full = `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
            ${shade("armFull", C.skinShade, "M108,226 L122,226 L122,310 L109,310 C111,290 110,256 108,226 Z")}
            ${outline(SHAPE.armFull)}`;
+        shape = part === "arm"
+          ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="${EL[0]}" cy="${EL[1]}" r="9"/><g clip-path="url(#${ID}-${cU})">${full}</g>`
+          : `<g transform="${forearmT}"><g clip-path="url(#${ID}-${cD})">${full}</g>${prop(deg - elbow)}</g>`;
       } else if (part === "arm") {
         shape = LONG
-          ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="103" cy="297" r="8.5"/>`
-          : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.arm}"/>
-             ${shade("arm", C.skinShade, "M90,236 L120,236 L120,266 C110,262 100,262 90,264 Z M108,236 L120,236 L120,310 L109,310 C111,290 110,262 108,236 Z")}
-             ${outline(SHAPE.arm)}`;
+          ? ""
+          : `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="${EL[0]}" cy="${EL[1]}" r="8.6"/>
+             <g clip-path="url(#${ID}-${cU})">${skinArm(far)}</g>`;
       } else if (LONG) {
-        shape = `<path fill="${C.shirt}" d="${SHAPE.longSleeve}"/>
+        const sleeveAll = `<path fill="${C.shirt}" d="${SHAPE.longSleeve}"/>
            ${shade("longSleeve", C.shirtShade, "M108,230 L122,230 L122,300 L109,300 C111,280 110,250 108,230 Z")}
            ${outline("M114,205.5 C110,206.4 106,207.8 102,210", `opacity="${clamp01(1 - (Math.abs(deg) - 8) / 22).toFixed(2)}"`)}
            ${outline("M102,210 C99,213 96,220 93,232 C91,252 90,272 91,291 C98,295 108,295 115,291")}
            ${outline("M115,291 C115,276 116,262 117,248")}
            ${outline("M92,284 C99,287 108,287 115,284", 'stroke-width="2.2"')}
            ${seamOp > 0 ? outline("M117,248 C118,232 121,216 128,206", `opacity="${seamOp.toFixed(2)}"`) : ""}`;
+        shape = `<circle fill="${C.shirt}" ${LINE} cx="${EL[0]}" cy="${EL[1]}" r="11"/>
+           <g clip-path="url(#${ID}-${cU})">${sleeveAll}</g>
+           <g transform="${forearmT}">
+             <circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="103" cy="297" r="8.5"/>
+             <g clip-path="url(#${ID}-${cD})">${sleeveAll}</g>${prop(deg - elbow)}</g>`;
       } else {
         shape = `<path fill="${C.shirt}" d="${SHAPE.sleeve}"/>
            ${shade("sleeve", C.shirtShade, "M121,222 C117,236 108,246 86,247 L86,262 L124,262 Z")}
@@ -547,11 +615,25 @@ function createRig(design) {
            ${seamOp > 0 ? outline("M117,235 C118,225 121,214 128,206", `opacity="${seamOp.toFixed(2)}"`) : ""}`;
       }
       const rs = deg * SLEEVE_K;
-      const inner = part === "arm" && !LONG
-        ? `<g transform="rotate(${rs} ${SHOULDER})"><g transform="rotate(${deg - rs} ${ARM_ROOT})">${shape}</g></g>`
-        : `<g transform="rotate(${part === "arm" ? deg : rs} ${SHOULDER})">${shape}</g>`;
+      let inner;
+      if (!LONG && !NOSLEEVE) {
+        // lengan pendek: kulit lengan atas di belakang badan; lengan baju + lengan bawah (siku) di depan badan
+        const armT = `rotate(${rs} ${SHOULDER}) rotate(${deg - rs} ${ARM_ROOT})`;
+        inner = part === "arm"
+          ? `<g transform="${armT}">${shape}</g>`
+          : `<g transform="${armT} ${forearmT}"><g clip-path="url(#${ID}-${cD})">${skinArm(far)}</g>${prop(deg - elbow)}</g>
+             <g transform="rotate(${rs} ${SHOULDER})">${shape}</g>`;
+      } else {
+        inner = `<g transform="rotate(${deg} ${SHOULDER})">${shape}</g>`;
+      }
       return `<g id="${id}" transform="${mirror} ${shift}">${inner}</g>`;
     };
+
+    function skinArm(far) {
+      return `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.arm}"/>
+        ${shade("arm", C.skinShade, "M90,236 L120,236 L120,266 C110,262 100,262 90,264 Z M108,236 L120,236 L120,310 L109,310 C111,290 110,262 108,236 Z")}
+        ${outline(SHAPE.arm)}`;
+    }
 
     // ---------- badan ----------
     const top = design.top;
@@ -595,8 +677,7 @@ function createRig(design) {
         ${fillLine(C.accent, "M150,207 C156,216 170,218 176,208 C172,202 165,200 161,200 Q155,206 150,207 Z")}`}`;
     }
     const neck = isBack && H.long ? "" : fillLine(C.skinShade, "M141,186 L159,186 L159,208 L141,208 Z");
-    const torso = `
-      <g id="torso" transform="translate(150 286) scale(${(isThree ? 0.95 : 1) * breatheScale} ${breatheScale}) translate(-150 -286)">
+    const torsoInner = `
         ${neck}
         ${sarong}
         ${skirt}
@@ -606,7 +687,14 @@ function createRig(design) {
         ${shade(tKey, C.shirtShade, "M104,240 C114,250 120,268 119,300 L100,300 Z M196,240 C186,250 180,268 181,300 L200,300 Z")}
         ${isThree ? shade(tKey, C.shirtShade, "M100,200 C118,220 124,260 122,300 L100,300 Z") : ""}
         ${outline(torsoD)}
-        ${topExtra}
+        ${topExtra}`;
+    const torsoSplit = SIT > 0.01
+      ? `<g clip-path="url(#${ID}-hipU)">${torsoInner}</g>
+         <g transform="translate(0 282) scale(1 ${kS.toFixed(3)}) translate(0 -282)"><g clip-path="url(#${ID}-hipD)">${torsoInner}</g></g>`
+      : torsoInner;
+    const torso = `
+      <g id="torso" transform="translate(150 286) scale(${(isThree ? 0.95 : 1) * breatheScale} ${breatheScale}) translate(-150 -286)">
+        ${torsoSplit}
       </g>`;
 
     let head;
@@ -649,13 +737,15 @@ function createRig(design) {
       </g>`;
     }
 
+    const up = (svg) => `<g transform="translate(0 ${sitDy.toFixed(2)})">${svg}</g>`;
+    const paper = p.hold === "newspaper" && !isBack ? newspaper(view, p) : "";
     if (isBack) {
-      return `${legs}${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
-        ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}`;
+      return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
+        ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}`)}`;
     }
-    return `${hairBackG(false)}${legs}
-      ${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
-      ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head}`;
+    return `${up(hairBackG(false))}${legs}
+      ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}
+      ${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${head}${paper}`)}`;
   }
 
   // ================= TAMPAK SAMPING (digambar menghadap kanan, lalu dicerminkan) =================
@@ -676,6 +766,8 @@ function createRig(design) {
         ${strokeLines(H.sideBackStrands, C.hairShade, 2, "hairBackSide")}
       </g></g>`;
 
+    const SIT = p.sit, seatU = (p.seat * 270) / SCALE;
+    const sitDy = SIT * (382 - seatU - 282);
     const leg = (deg, far) => {
       const skin = SLIM ? `
         <path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.legSideS}"/>
@@ -688,10 +780,17 @@ function createRig(design) {
         ${far ? "" : shade(gKey, C.pantsShade, "M130,274 L172,274 L172,294 L130,294 Z")}
         ${B === "pants" ? socks(gKey) : ""}
         ${outline(SHAPE[gKey])}` : "";
-      return `<g transform="rotate(${deg} 150 284)">${skin}${garment}${shoeSvg("shoeSide", false, true)}</g>`;
+      const content = `${skin}${garment}${shoeSvg("shoeSide", false, true)}`;
+      if (SIT < 0.01) return `<g transform="rotate(${deg} 150 284)">${content}</g>`;
+      // duduk: paha mendatar ke depan, betis menggantung dari lutut
+      const kneeCol = B === "pants" || B === "shorts" ? (far ? C.pantsShade : C.pants) : far ? C.skinFar : C.skin;
+      return `<g transform="translate(0 ${sitDy.toFixed(2)}) rotate(${(deg - 90 * SIT).toFixed(1)} 150 284)">
+        <circle fill="${kneeCol}" ${LINE} cx="150" cy="326" r="${B === "pants" ? 14 : 10}"/>
+        <g clip-path="url(#${ID}-kneeU)">${content}</g>
+        <g transform="rotate(${(90 * SIT).toFixed(1)} 150 326)"><g clip-path="url(#${ID}-kneeD)">${content}</g></g></g>`;
     };
 
-    const arm = (deg, far) => {
+    const arm = (deg, far, elbow = 0, holdK = null) => {
       const body = NOSLEEVE
         ? `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armSideFull}"/>
            ${shade("armSideFull", C.skinShade, "M136,226 L164,226 L164,250 C154,246 146,246 136,248 Z", 'opacity="0.6"')}
@@ -708,7 +807,16 @@ function createRig(design) {
            <path fill="${far ? C.shirtShade : C.shirt}" d="${SHAPE.sleeveSide}"/>
            ${far ? "" : shade("sleeveSide", C.shirtShade, "M128,240 C140,248 160,248 172,240 L172,262 L128,262 Z")}
            ${outline(SHAPE.sleeveSide)}`;
-      return `<g transform="translate(${far ? 5 + ARM_DX * 0.3 : -ARM_DX * 0.3} 0) rotate(${-deg} 150 212)">${body}</g>`;
+      const pos = `translate(${far ? 5 + ARM_DX * 0.3 : -ARM_DX * 0.3} 0) rotate(${-deg} 150 212)`;
+      if (Math.abs(elbow) < 0.5 && !holdK) return `<g transform="${pos}">${body}</g>`;
+      // siku: lengan bawah berputar ke depan di (150,268)
+      const E = LONG ? 266 : 270;
+      const hand = LONG ? [151, 298] : [150, 300];
+      const joint = `<circle fill="${LONG ? (far ? C.shirtShade : C.shirt) : far ? C.skinFar : C.skin}" ${LINE} cx="150" cy="${E}" r="${LONG ? 12 : 9}"/>`;
+      return `<g transform="${pos}">${joint}
+        <g clip-path="url(#${ID}-${LONG ? "armUL" : "armU"})">${body}</g>
+        <g transform="rotate(${-elbow} 150 ${E})"><g clip-path="url(#${ID}-${LONG ? "armDL" : "armD"})">${body}</g>
+          ${handProp(holdK, hand[0], hand[1], deg + elbow, -p.holdTilt)}</g></g>`;
     };
 
     const tKey = design.top + "Side";
@@ -725,7 +833,7 @@ function createRig(design) {
     const torso = `
       <g id="torso" transform="translate(150 286) scale(${breatheScale}) translate(-150 -286)">
         ${fillLine(C.skinShade, "M144,186 L160,186 L160,208 L144,208 Z")}
-        ${sarongS}
+        ${SIT > 0.01 && sarongS ? `<g transform="translate(0 278) scale(1 ${(1 - 0.5 * SIT).toFixed(3)}) translate(0 -278)">${sarongS}</g>` : sarongS}
         ${skirt}
         ${bodySkinS}
         <path fill="${C.shirt}" d="${SHAPE[tKey]}"/>
@@ -761,7 +869,13 @@ function createRig(design) {
         ${AHOGE(p)}
       </g>`;
 
-    return `${arm(p.armR, true)}${leg(-p.legR, true)}${hairBackG}${leg(-p.legL, false)}${torso}${arm(p.armL, false)}${head}`;
+    const up = (svg) => `<g transform="translate(0 ${sitDy.toFixed(2)})">${svg}</g>`;
+    const paperS = p.hold === "newspaper" ? `<g transform="translate(0 ${p.paperY})">
+        <path fill="#f6f6f6" ${LINE} d="M176,206 L206,200 L210,284 L180,290 Z"/>
+        <path fill="none" stroke="#9a9a9a" stroke-width="2" d="M184,222 L202,218 M184,232 L203,228 M185,242 L204,238 M185,252 L204,248 M186,262 L205,258"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="180" cy="246" rx="7" ry="8.5"/></g>` : "";
+    return `${up(arm(p.armR, true, p.elbowR, p.holdR))}${leg(-p.legR, true)}${up(hairBackG)}${leg(-p.legL, false)}${up(torso)}
+      ${up(arm(p.armL, false, p.elbowL, p.holdL))}${up(head)}${up(paperS)}`;
   }
 
   // ================= RAKIT =================

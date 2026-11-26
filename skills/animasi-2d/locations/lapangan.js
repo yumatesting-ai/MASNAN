@@ -9,6 +9,7 @@ module.exports = {
   spots: {
     tengah: { x: 0, z: 9 }, kiri: { x: -3.5, z: 7.5 }, kanan: { x: 3.5, z: 7.5 }, pinggir: { x: -1.5, z: 4.8 },
     gawang_kiri: { x: -8.5, z: 15 }, gawang_kanan: { x: 8.5, z: 15 }, jauh: { x: 1, z: 18 },
+    duduk_pinggir: { x: -5.2, z: 5.95, seat: 0.48 }, duduk_pinggir2: { x: -6.2, z: 5.95, seat: 0.48 },
   },
   build(w, { t = 0 } = {}) {
     P.sky(w, { groundColor: P.PAL.dirt });
@@ -49,6 +50,7 @@ module.exports = {
     // pohon & rumah di belakang pagar
     for (const [x, z, h] of [[-14, 38, 6], [-6, 40, 5.5], [3, 39, 6.5], [11, 37, 5.8], [17, 41, 6]]) P.tree(w, x, z, { h });
     P.tree(w, -15, 12, { h: 6.5 });
+    P.bench(w, -6.8, 6.0, 2.2); // bangku kayu di pinggir lapangan
     P.tree(w, 15.5, 9, { h: 5.8, kind: "palm" });
     for (const [x, wall, seng] of [[-20, P.PAL.plank, true], [-10, P.PAL.wallB, false], [8, P.PAL.bamboo, true], [18, P.PAL.wallA, false]]) {
       w.box(x - 3.5, 0, 46, 7, 2.8, 6, wall);

@@ -10,7 +10,10 @@ module.exports = {
   camera: { cam: { x: 0.5, y: 1.45, z: 1.2 }, f: 1150, horizon: 0.47 },
   spots: {
     balik_etalase: { x: 0.75, z: 9.15, y: 0.15 }, // penjual di balik meja (lantai sedikit lebih tinggi)
-    depan: { x: 1.3, z: 6.0 }, bangku: { x: -0.7, z: 6.3 }, meja: { x: -2.5, z: 6.7 },
+    depan: { x: 1.3, z: 6.0 }, bangku: { x: -0.7, z: 6.3 }, meja: { x: -2.0, z: 5.8 },
+    duduk_meja: { x: -2.85, z: 7.28, seat: 0.48 },        // bangku di belakang meja (menghadap kamera)
+    duduk_depan_meja: { x: -0.6, z: 7.1, seat: 0.48 },    // bangku depan meja jualan (membelakangi kamera)
+    duduk_depan_meja2: { x: 0.6, z: 7.1, seat: 0.48 },
     jalan_kiri: { x: -2.4, z: 4.2 }, jalan_kanan: { x: 3.0, z: 4.4 }, samping: { x: 3.4, z: 7.6 },
   },
   build(w, { t = 0 } = {}) {
@@ -111,9 +114,9 @@ module.exports = {
     // ---- tempat duduk pelanggan ----
     P.bench(w, -1.5, 7.15, 3.0, { color: "#7d7d7d" }); // bangku panjang di depan meja jualan
     // meja + bangku di bawah pohon (kiri)
-    P.table(w, -3.5, 7.8, 1.3, 0.6);
-    P.bench(w, -3.5, 7.15, 1.3, { color: "#8a8a8a" });
-    P.glassOfCoffee(w, -3.1, 0.78, 8.05);
+    P.table(w, -3.5, 6.5, 1.3, 0.6);
+    P.bench(w, -3.5, 7.32, 1.3, { color: "#8a8a8a" });
+    P.glassOfCoffee(w, -3.15, 0.78, 6.75);
     // kursi plastik
     for (const [x, z] of [[2.2, 6.4], [2.75, 6.9]]) {
       w.box(x - 0.2, 0.42, z - 0.2, 0.4, 0.05, 0.4, "#cfcfcf");

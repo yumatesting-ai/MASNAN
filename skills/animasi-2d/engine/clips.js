@@ -170,11 +170,104 @@
       bodyY: 0.6 * wave(t, 0.2), headTilt: -3, armL: -3, armR: -3, blink: blinkAt(t, [0.9, 2.2]) }) },
     smug: { duration: 3, view: "three", pose: (t) => ({
       ...life(t, 3, 0.6), expr: "smug", headTilt: -6 + 1.5 * wave(t, 3), headY: -1, armL: -3, armR: -3, lean: -1.5 }) },
+
+    // ================= AKSI SEHARI-HARI =================
+    // ---------- duduk ----------
+    sit: { duration: 4, view: "front", pose: (t) => ({
+      ...life(t), sit: 1, legL: 7 * Math.max(0, wave(t, 2)), legR: 7 * Math.max(0, wave(t, 2, 0.5)),
+      armL: -8, armR: -8, elbowL: 35, elbowR: 35, headY: 1 * wave(t, 2, 0.15),
+      lookX: kf(t, [[0, 0], [1.6, 0], [1.9, -0.8, "out"], [2.6, -0.8], [2.9, 0, "io"], [4, 0]]), blink: blinkAt(t, [1.2, 3.3]) }) },
+    sit_side: { duration: 4, view: "side", pose: (t) => ({
+      ...life(t), sit: 1, legL: 8 * wave(t, 2), legR: -6 * wave(t, 2), armL: 18, armR: 14, elbowL: 30, elbowR: 30,
+      blink: blinkAt(t, [1.2, 3.3]) }) },
+    sit_back: { duration: 4, view: "back", pose: (t) => ({ ...life(t), sit: 1, armL: -8, armR: -8, elbowL: 35, elbowR: 35,
+      headTilt: 3 * wave(t, 4) }) },
+    sit_sleepy: { duration: 4, view: "front", pose: (t) => ({ ...CLIPS.sleepy.pose(t), sit: 1, armL: -8, armR: -8, elbowL: 30, elbowR: 30 }) },
+    // duduk sambil ngopi: angkat gelas -> seruput (mata pejam) -> turunkan -> "ahh" lega
+    sit_drink: { duration: 4.8, view: "front", pose: (t) => drinkPose(t, 1) },
+    drink: { duration: 4.8, view: "front", pose: (t) => drinkPose(t, 0) },
+    sit_drink_side: { duration: 4.8, view: "side", pose: (t) => {
+      const up = kf(t, [[0, 0], [1.0, 0], [1.5, 1, "io"], [2.6, 1], [3.1, 0, "io"], [4.8, 0]]);
+      return { ...life(t, 2.4), sit: 1, holdL: "coffee", armL: 15 + 30 * up, elbowL: 60 + 60 * up, holdTilt: 35 * up,
+        armR: 14, elbowR: 30, eyes: up > 0.8 ? "closed" : t > 3.1 && t < 3.9 ? "happy" : undefined,
+        mouth: t > 3.1 && t < 3.9 ? "open" : undefined, headTilt: -3 * up, blink: blinkAt(t, [0.5, 4.3]) };
+    } },
+    // duduk baca koran: sesekali menurunkan koran untuk melirik, lalu membalik halaman
+    sit_read: { duration: 6, view: "front", pose: (t) => readPose(t, 1) },
+    read: { duration: 6, view: "front", pose: (t) => readPose(t, 0) },
+    // main HP: menunduk, jempol mengetik, sesekali tertawa kecil
+    phone: { duration: 4, view: "front", pose: (t) => phonePose(t, 0) },
+    sit_phone: { duration: 4, view: "front", pose: (t) => phonePose(t, 1) },
+    // ---------- ngobrol berpasangan (A bicara dulu, B mendengar; lalu gantian) ----------
+    chat_a: { duration: 4.8, view: "three", pose: (t) => chatPose(t, true, 0) },
+    chat_b: { duration: 4.8, view: "three", pose: (t) => chatPose(t, false, 0) },
+    sit_chat_a: { duration: 4.8, view: "three", pose: (t) => chatPose(t, true, 1) },
+    sit_chat_b: { duration: 4.8, view: "three", pose: (t) => chatPose(t, false, 1) },
+    // ---------- gerak lain ----------
+    walk_back: { duration: 1, view: "back", pose: (t) => ({ ...CLIPS.walk_front.pose(t) }) },
+    stretch: { duration: 3.6, view: "front", pose: (t) => {
+      const up = kf(t, [[0, 0], [0.2, 0], [1.0, 1, "io"], [2.2, 1], [3.0, 0, "io"], [3.6, 0]]);
+      const yawn = t > 1.0 && t < 2.3;
+      return { ...life(t, 1.8), armL: 150 * up, armR: 150 * up, elbowL: -40 * up, elbowR: -40 * up, bodyY: -3 * up, squash: -0.2 * up,
+        eyes: yawn ? "closed" : undefined, mouth: yawn ? "o" : undefined, headTilt: 3 * up, sweat: false,
+        above: yawn ? "zzz" : null, fx: t / 1.8 };
+    } },
+    scratch_head: { duration: 3, view: "front", pose: (t) => {
+      const up = kf(t, [[0, 0], [0.7, 1, "io"], [2.3, 1], [2.95, 0, "io"], [3, 0]]);
+      return { ...life(t, 1.5), expr: "confused", armR: 140 * up, elbowR: -(85 * up + 12 * up * wave(t, 0.25)), headTilt: 6 * up, fx: t / 1.5 };
+    } },
+    point: { duration: 2.4, view: "front", pose: (t) => {
+      const up = kf(t, [[0, 0], [0.4, 1, "back"], [1.9, 1], [2.35, 0, "io"], [2.4, 0]]);
+      return { ...life(t, 1.2), expr: t < 0.2 ? "neutral" : "surprised", mouth: t > 0.2 ? "open" : undefined, armR: 78 * up,
+        elbowR: 0, headTilt: 5 * up, lookX: 1 * up, bodyY: -2 * up, fx: t / 1.2 };
+    } },
   };
+
+  // ---------- pose bantu untuk aksi ----------
+  function drinkPose(t, sit) {
+    const up = kf(t, [[0, 0], [1.0, 0], [1.5, 1, "io"], [2.6, 1], [3.1, 0, "io"], [4.8, 0]]);
+    const ahh = t > 3.1 && t < 3.9;
+    return { ...life(t, 2.4), sit, holdR: "coffee", armR: -20 - 50 * up, elbowR: 75 + 75 * up, holdTilt: 30 * up,
+      armL: -8, elbowL: sit ? 35 : 10, headTilt: 5 * up, headY: -2 * up,
+      eyes: up > 0.8 ? "closed" : ahh ? "happy" : t > 2.95 && t < 3.1 ? "closed" : undefined,
+      mouth: up > 0.8 ? "o" : ahh ? "open" : undefined, blush: ahh ? 0.6 : undefined, sweat: false,
+      blink: blinkAt(t, [0.5, 4.3]) };
+  }
+  function readPose(t, sit) {
+    const peek = kf(t, [[0, 0], [2.2, 0], [2.6, 1, "io"], [3.4, 1], [3.8, 0, "io"], [6, 0]]);
+    const flip = kf(t, [[0, 0], [4.4, 0], [4.6, 1, "out"], [4.9, 0, "io"], [6, 0]]);
+    return { ...life(t, 3), sit, hold: "newspaper", armL: -30 + 25 * flip, armR: -30, elbowL: 95 - 40 * flip, elbowR: 95,
+      paperY: 16 * peek, headY: 3 - 3 * peek, lookY: 1 - peek, lookX: 0.5 * peek, mouth: "flat", sweat: false,
+      eyes: t > 2.5 && t < 3.5 ? "half" : undefined, blink: blinkAt(t, [1.4, 5.2]) };
+  }
+  function phonePose(t, sit) {
+    const lol = t > 2.4 && t < 3.3;
+    return { ...life(t, 2), sit, holdR: "phone", armR: -32, elbowR: 118 + 4 * wave(t, 0.25), armL: -10, elbowL: sit ? 40 : 20,
+      headY: 3, lookY: 1, lookX: 0.3, expr: lol ? "laugh" : "smile", mouth: lol ? "grin" : "smile",
+      bodyY: lol ? -1.5 * Math.abs(wave(t, 0.3)) : 0, fx: t / 2, blink: blinkAt(t, [1.2]) };
+  }
+  // ngobrol: bicara (mulut bergerak + gestur tangan) atau mendengar (angguk, senyum, reaksi)
+  function chatPose(t, talkFirst, sit) {
+    const D = 4.8, half = D / 2;
+    const talking = talkFirst ? t < half : t >= half;
+    const lt = t % half;
+    const syl = ["open", "cat", "o", "open", "smile", "open", "flat", "open", "o", "smile"];
+    if (talking) {
+      const m = lt > half - 0.35 ? "smile" : syl[Math.floor(lt / 0.16) % syl.length];
+      const g = kf(lt, [[0, 0], [0.3, 1, "out"], [half - 0.4, 1], [half, 0, "io"]]);
+      return { ...life(t, 2.4), sit, expr: "smile", mouth: m, armR: (sit ? -10 : 10) + 22 * g, elbowR: 40 + 55 * g + 18 * g * wave(lt, 0.6),
+        armL: sit ? -8 : 0, elbowL: sit ? 35 : 0, headTilt: 3 * wave(lt, 1.2), headY: 1.2 * Math.abs(wave(lt, 0.4)),
+        blink: blinkAt(t, [talkFirst ? 1.3 : 3.7]) };
+    }
+    const react = lt > half * 0.55 && lt < half * 0.8; // tertawa kecil saat lawan bicara melucu
+    return { ...life(t, 2.4), sit, expr: react ? "laugh" : "smile", headY: react ? 0 : 3 * Math.max(0, wave(lt, 0.8)),
+      bodyY: react ? -1.5 * Math.abs(wave(lt, 0.3)) : 0, armL: sit ? -8 : 0, armR: sit ? -8 : 0, elbowL: sit ? 35 : 0, elbowR: sit ? 35 : 0,
+      fx: t / 1.2, blink: blinkAt(t, [talkFirst ? 3.4 : 1.1]) };
+  }
 
   // ---------- Sampling: penghalusan + follow-through ----------
   const SMOOTH_KEYS = ["headTilt", "headX", "headY", "hairSway", "ahoge", "breathe", "armL", "armR", "legL", "legR",
-    "bodyX", "bodyY", "lean", "squash", "scaleX", "lookX", "lookY", "blush"];
+    "bodyX", "bodyY", "lean", "squash", "scaleX", "lookX", "lookY", "blush", "elbowL", "elbowR", "holdTilt", "paperY", "sit"];
 
   function samplePose(clip, t, resolvePose) {
     const D = clip.duration;
