@@ -159,7 +159,10 @@ function createRig(design) {
   const fillLine = (fill, d, extra = "") => `<path fill="${fill}" ${LINE} ${extra} d="${d}"/>`;
   const outline = (d, extra = "") => `<path fill="none" ${LINE} ${extra} d="${d}"/>`;
   const shade = (clipId, fill, d, extra = "") => `<path clip-path="url(#${ID}-${clipId})" fill="${fill}" ${extra} d="${d}"/>`;
-  const strokeLines = (d, color, w = 2) => (d ? `<path fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" d="${d}"/>` : "");
+  const strokeLines = (d, color, w = 2, clipKey = null) => (d ? `<path ${clipKey ? `clip-path="url(#${ID}-${clipKey})"` : ""} fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" d="${d}"/>` : "");
+  // garis luar tutup rambut samping TANPA segmen terakhir (tepi belakang yang tertimbun rambut belakang)
+  // -> tidak ada garis ganda di belakang kepala. Desain bisa menonaktifkan lewat hair.sideClosed.
+  const openBack = (d) => { const i = d.lastIndexOf("C"); return i > 0 ? d.slice(0, i).trim() : d; };
   const MIRROR = `translate(300 0) scale(-1 1)`;
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
@@ -383,7 +386,7 @@ function createRig(design) {
     const C = PALETTE;
     let out = "";
     if (F.baldShine) out += `<path fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.9" d="${view === "side" ? "M150,90 C166,86 184,92 194,104" : "M114,104 C124,92 140,86 156,86"}"/>`;
-    if (F.doubleChin && view !== "back") out += `<path fill="none" stroke="${C.line}" stroke-width="2.2" stroke-linecap="round" d="${view === "side" ? "M176,196 C186,200 196,198 202,192" : "M128,196 C140,203 160,203 172,196"}"/>`;
+    if (F.doubleChin && view !== "back") out += `<path fill="none" stroke="${C.line}" stroke-width="2.2" stroke-linecap="round" d="${view === "side" ? "M150,201 C160,205 172,203 182,196" : "M128,196 C140,203 160,203 172,196"}"/>`;
     return out;
   };
   const ARM_DX = (design.build && design.build.armDX) || 0; // lengan bergeser keluar (badan lebar)
@@ -423,7 +426,7 @@ function createRig(design) {
   }
 
   // sarung kotak-kotak (pola diklip ke bentuk)
-  function sarongSvg(key, isSide) {
+  function sarongSvg(key, isSide, isBack = false) {
     const C = PALETTE;
     const xs = [], ys = [];
     for (let x = 80; x <= 220; x += 15) xs.push(`M${x},270 L${x + 4},380`);
@@ -437,7 +440,7 @@ function createRig(design) {
       </g>
       ${outline(SHAPE[key])}
       ${strokeLines(isSide ? "M118,290 C140,296 166,296 188,290" : "M102,290 C130,298 170,298 198,290", C.line, 2.2)}
-      ${isSide ? "" : outline("M150,292 L142,334 M150,292 L160,330", 'stroke-width="2.2"')}`;
+      ${isSide || isBack ? "" : outline("M150,292 L142,334 M150,292 L160,330", 'stroke-width="2.2"')}`;
   }
   // motif bunga daster (diklip ke bentuk)
   function dasterPattern(key) {
@@ -468,7 +471,7 @@ function createRig(design) {
       const shades = H.long
         ? shade(key, C.hairShade, "M60,180 C80,200 84,240 92,290 L60,290 Z M240,180 C220,200 216,240 208,290 L240,290 Z")
           + (front ? shade(key, C.hairShade, "M60,236 C110,250 190,250 240,236 L240,290 L60,290 Z", 'opacity="0.6"') : "")
-        : front ? shade(key, C.hairShade, "M60,168 C110,182 190,182 240,168 L240,230 L60,230 Z", 'opacity="0.7"') : "";
+        : front ? shade(key, C.hairShade, "M60,188 C110,200 190,200 240,188 L240,230 L60,230 Z", 'opacity="0.6"') : "";
       return `
       <g id="hair-back" transform="${headT} translate(${hx} 0)">
       <g transform="translate(0 142) skewX(${p.hairSway}) translate(0 -142)">
@@ -476,7 +479,7 @@ function createRig(design) {
         ${shades}
         ${front ? `<path clip-path="url(#${ID}-${key})" fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineBack || "M96,104 C118,84 182,84 204,104"}"/>` : ""}
         ${outline(d)}
-        ${strokeLines(front ? H.backViewStrands : H.backStrands, C.hairShade, front ? 2.2 : 2)}
+        ${strokeLines(front ? H.backViewStrands : H.backStrands, C.hairShade, front ? 2.2 : 2, key)}
       </g></g>`;
     };
 
@@ -517,11 +520,10 @@ function createRig(design) {
       const seamOp = isBack ? 1 : clamp01((Math.abs(deg) - 25) / 30);
       let shape;
       if (NOSLEEVE) {
-        shape = part === "arm" ? "" : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
+        // tanpa lengan baju: lengan utuh di BELAKANG badan (bahu milik badan) -> tidak ada garis melintang di dada
+        shape = part === "sleeve" ? "" : `<path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.armFull}"/>
            ${shade("armFull", C.skinShade, "M108,226 L122,226 L122,310 L109,310 C111,290 110,256 108,226 Z")}
-           ${outline("M114,205.5 C110,206.4 106,207.8 102,210", `opacity="${clamp01(1 - (Math.abs(deg) - 8) / 22).toFixed(2)}"`)}
-           ${outline("M102,210 C98,214 96,222 95,232 C93,256 95,276 96,290 C96,301 101,305 106,305 C112,305 114,300 114,290 C115,270 116,252 117,240")}
-           ${seamOp > 0 ? outline("M117,240 C118,226 121,214 126,206", `opacity="${seamOp.toFixed(2)}"`) : ""}`;
+           ${outline(SHAPE.armFull)}`;
       } else if (part === "arm") {
         shape = LONG
           ? `<circle fill="${far ? C.skinFar : C.skin}" ${LINE} cx="103" cy="297" r="8.5"/>`
@@ -555,7 +557,7 @@ function createRig(design) {
     const top = design.top;
     const tKey = top + (isBack ? "Back" : "");
     const torsoD = SHAPE[tKey];
-    const sarong = B === "sarong" ? sarongSvg("sarong", false) : "";
+    const sarong = B === "sarong" ? sarongSvg("sarong", false, isBack) : "";
     const bodySkin = design.top === "singlet" ? `<path fill="${C.skin}" d="${SHAPE[isBack ? "bellyBodyBack" : "bellyBody"]}"/>
         ${shade(isBack ? "bellyBodyBack" : "bellyBody", C.skinShade, "M80,236 C100,250 104,270 104,300 L80,300 Z M220,236 C200,250 196,270 196,300 L220,300 Z")}
         ${outline(SHAPE[isBack ? "bellyBodyBack" : "bellyBody"])}` : "";
@@ -639,7 +641,7 @@ function createRig(design) {
             <path fill="${C.hairShade}" d="${H.frontShade || "M70,150 C84,150 92,170 96,210 L70,210 Z"}"/>
           </g>
           ${outline(SHAPE.hairFront)}
-          ${strokeLines(H.frontStrands, C.hairShade)}
+          ${strokeLines(H.frontStrands, C.hairShade, 2, "hairFront")}
           ${acc("front", view)}
         </g>
         ${angerMark(L, p)}
@@ -671,7 +673,7 @@ function createRig(design) {
         <path fill="${C.hairBack}" d="${SHAPE.hairBackSide}"/>
         ${H.long ? shade("hairBackSide", C.hairShade, "M80,200 C96,220 100,250 104,290 L80,290 Z") : ""}
         ${outline(SHAPE.hairBackSide)}
-        ${strokeLines(H.sideBackStrands, C.hairShade)}
+        ${strokeLines(H.sideBackStrands, C.hairShade, 2, "hairBackSide")}
       </g></g>`;
 
     const leg = (deg, far) => {
@@ -750,8 +752,8 @@ function createRig(design) {
           <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineSide || "M100,110 C118,86 172,84 200,104"}"/>
           <path fill="${C.hairShade}" d="M80,150 C96,160 104,180 110,206 L80,206 Z"/>
         </g>
-        ${outline(SHAPE.hairFrontSide)}
-        ${strokeLines(H.sideStrands, C.hairShade)}
+        ${outline(H.sideClosed ? SHAPE.hairFrontSide : openBack(SHAPE.hairFrontSide))}
+        ${strokeLines(H.sideStrands, C.hairShade, 2, "hairFrontSide")}
         ${design.ears.side ? `<circle fill="${C.skin}" ${LINE} cx="142" cy="160" r="10"/>
           <path fill="none" stroke="${C.line}" stroke-width="2" stroke-linecap="round" d="M144,155 Q139,160 144,165"/>` : ""}
         ${acc("side", "side")}

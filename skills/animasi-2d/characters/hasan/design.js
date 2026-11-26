@@ -13,17 +13,19 @@ module.exports = {
   colors: { hair: "#767676", top: "#f6f6f6", bottom: "#6e6e6e", shoe: "#4a4a4a", skin: "#efefef", accent: "#cfcfcf" },
   hair: {
     long: false,
-    bald: true, // kepala botak: tampak belakang menggambar kulit kepala + sisa rambut di tengkuk
+    bald: true,
+    sideClosed: true, // potongan rambut kecil: garis luar utuh // kepala botak: tampak belakang menggambar kulit kepala + sisa rambut di tengkuk
     shapes: {
-      hairBack: "M84,150 C82,170 86,186 96,194 L102,150 Z M216,150 C218,170 214,186 204,194 L198,150 Z",
-      hairBackView: "M88,152 C94,172 114,188 150,190 C186,188 206,172 212,152 C200,166 182,174 150,174 C118,174 100,166 88,152 Z",
+      hairBack: "M90,150 L96,150 L96,160 L90,160 Z",
+      hairBackView: "M90,156 C98,174 118,186 150,187 C182,186 202,174 210,156 C200,168 180,176 150,176 C120,176 100,168 90,156 Z",
       // sisa rambut tipis di atas telinga
-      hairFront: "M87,158 C85,145 87,132 93,122 C96,133 98,145 99,156 Z M213,158 C215,145 213,132 207,122 C204,133 202,145 201,156 Z",
-      hairBackSide: "M92,166 C92,184 100,196 114,200 C120,190 124,178 126,166 C114,168 100,168 92,166 Z",
-      hairFrontSide: "M122,150 C118,138 122,126 130,120 C136,132 138,142 136,152 Z",
+      hairFront: "M90,121 C86,130 85,145 88,156 C91,158 94,157 96,154 C94,145 94,132 97,123 C95,120 92,119 90,121 Z M210,121 C214,130 215,145 212,156 C209,158 206,157 204,154 C206,145 206,132 203,123 C205,120 208,119 210,121 Z",
+      hairBackSide: "M94,170 C96,184 104,194 116,198 C118,190 120,180 120,170 C110,172 102,172 94,170 Z",
+      hairFrontSide: "M126,152 C128,142 136,136 146,136 C154,136 158,140 160,146 C154,144 146,144 140,146 C134,148 130,152 126,152 Z",
     },
     shineFront: "M0,0", shineBack: "M0,0", shineSide: "M0,0",
     frontShade: "M0,0",
+    frontStrands: "M89,132 L95,130 M88,142 L94,141 M206,130 L212,132 M207,141 L213,142",
   },
   ears: { front: ["l", "r"], side: true, back: ["l", "r"] },
   ahoge: null,
