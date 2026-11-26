@@ -11,6 +11,15 @@ module.exports = {
     gawang_kiri: { x: -8.5, z: 15 }, gawang_kanan: { x: 8.5, z: 15 }, jauh: { x: 1, z: 18 },
     duduk_pinggir: { x: -5.2, z: 5.95, seat: 0.48 }, duduk_pinggir2: { x: -6.2, z: 5.95, seat: 0.48 },
   },
+  extras: [
+    { seed: 31, kind: "anak_laki", spec: "run@-6,11>6,11/3+run@6,11>-6,11/3" },
+    { seed: 32, kind: "anak_laki", spec: "run@6,13>-6,13/3.2+run@-6,13>6,13/3.2", phase: 0.7 },
+    { seed: 33, kind: "anak_perempuan", spec: "run@-5,15>5,15/3.4+happy/1+run@5,15>-5,15/3.4", phase: 1.3 },
+    { seed: 34, kind: "anak_laki", spec: "run@4,17.5>-7,17.5/3.6+run@-7,17.5>4,17.5/3.6", phase: 2.1 },
+    { seed: 35, kind: "anak_laki", spec: "idle@9.6,17.5+happy/1+idle/2", flip: true },
+    { seed: 36, kind: "anak_perempuan", spec: "happy@-3,31+laugh/1.2" },
+    { seed: 37, kind: "bapak", spec: "idle@2,31.5" },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w, { groundColor: P.PAL.dirt });
     const X0 = -12, X1 = 12, Z0 = 3.5, Z1 = 32;

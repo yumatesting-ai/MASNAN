@@ -11,6 +11,11 @@ module.exports = {
     jalan_kanan: { x: 3.5, z: 2.6 }, samping: { x: 3.4, z: 8.4 },
     duduk_bale: { x: -1.3, z: 6.5, seat: 0.55 }, duduk_bale2: { x: 1.25, z: 6.5, seat: 0.55 },
   },
+  extras: [
+    { seed: 51, kind: "ibu", spec: "walk@-8,12.5>8,12.5/9+walk@8,12.5>-8,12.5/9" },
+    { seed: 52, kind: "petani", spec: "walk@8,14>-8,14/10+walk@-8,14>8,14/10", phase: 4 },
+    { seed: 53, kind: "anak_laki", spec: "run@-7,11>7,11/4+idle/1.5+run@7,11>-7,11/4", phase: 2 },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan

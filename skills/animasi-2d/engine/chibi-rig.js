@@ -175,7 +175,7 @@ function createRig(design) {
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
 
   function defs() {
-    const clip = (id, d) => `<clipPath id="${ID}-${id}"><path d="${d}"/></clipPath>`;
+    const clip = (id, d) => `<clipPath id="${ID}-${id}"><path clip-rule="evenodd" d="${d}"/></clipPath>`;
     const rect = (id, y0, y1) => `<clipPath id="${ID}-${id}"><rect x="-200" y="${y0}" width="700" height="${y1 - y0}"/></clipPath>`;
     return `<defs>${Object.entries(SHAPE).map(([k, d]) => clip(k, d)).join("")}
       ${rect("armU", -200, 273)}${rect("armD", 271, 600)}${rect("armUL", -200, 269)}${rect("armDL", 267, 600)}
@@ -713,7 +713,7 @@ function createRig(design) {
       <g id="head" transform="${headT}">
         ${isThree ? "" : earR}${earL}
         <path fill="${C.skin}" d="${SHAPE.face}"/>
-        <path clip-path="url(#${ID}-face)" fill="${C.skinShade}" transform="translate(${2 + hx} 7)" d="${SHAPE.hairFront}"/>
+        <path clip-path="url(#${ID}-face)" fill="${C.skinShade}" fill-rule="evenodd" transform="translate(${2 + hx} 7)" d="${SHAPE.hairFront}"/>
         ${isThree ? shade("face", C.skinShade, "M196,90 C214,120 216,170 196,206 L230,206 L230,90 Z") : ""}
         ${outline(SHAPE.face)}
         ${headSkinExtras(view)}
@@ -723,7 +723,7 @@ function createRig(design) {
         ${mouth(L.mouth, p)}
         ${faceFeatures(L, view, p)}
         <g transform="translate(${hx} 0)">
-          <path fill="${C.hair}" d="${SHAPE.hairFront}"/>
+          <path fill="${C.hair}" fill-rule="evenodd" d="${SHAPE.hairFront}"/>
           <g clip-path="url(#${ID}-hairFront)">
             <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineFront || "M98,108 C118,88 182,88 202,108"}"/>
             <path fill="${C.hairShade}" d="${H.frontShade || "M70,150 C84,150 92,170 96,210 L70,210 Z"}"/>
@@ -855,7 +855,7 @@ function createRig(design) {
         ${L.eyes.map((e) => eye(e, p)).join("")}
         ${mouth(L.mouth, p)}
         ${faceFeatures(L, "side", p)}
-        <path fill="${C.hair}" d="${SHAPE.hairFrontSide}"/>
+        <path fill="${C.hair}" fill-rule="evenodd" d="${SHAPE.hairFrontSide}"/>
         <g clip-path="url(#${ID}-hairFrontSide)">
           <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineSide || "M100,110 C118,86 172,84 200,104"}"/>
           <path fill="${C.hairShade}" d="M80,150 C96,160 104,180 110,206 L80,206 Z"/>

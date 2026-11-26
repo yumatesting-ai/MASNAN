@@ -11,6 +11,13 @@ module.exports = {
     serambi: { x: 1.2, z: 12.4 }, depan: { x: 0.6, z: 3.2 }, bedug: { x: -3.2, z: 12.6 },
     duduk_serambi: { x: -1.8, z: 10.85, seat: 0.4 }, duduk_serambi2: { x: 1.6, z: 10.85, seat: 0.4 },
   },
+  extras: [
+    { seed: 41, kind: "bapak", spec: "walk@0.2,5.4>0.3,11.6/5+idle/2.5+walk@0.3,11.6>0.2,5.4/5" },
+    { seed: 42, kind: "kakek", spec: "sit@4.4,10.85" },
+    { seed: 43, kind: "anak_laki", spec: "run@-5,8.2>-1.8,8.2/1.6+run@-1.8,8.2>-5,8.2/1.6", phase: 0.4 },
+    { seed: 44, kind: "pemuda", spec: "walk@0.3,11.6>0.2,5.4/5+idle/2+walk@0.2,5.4>0.3,11.6/5", phase: 3 },
+    { seed: 45, kind: "ibu", spec: "walk@-9,3>9,3/9+walk@9,3>-9,3/9", phase: 5 },
+  ],
   build(w) {
     P.sky(w, { clouds: [[0.12, 0.1, 1], [0.7, 0.06, 1.1]] });
     // jalan kampung di depan + halaman tanah

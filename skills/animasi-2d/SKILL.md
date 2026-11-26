@@ -29,6 +29,7 @@ Pakai profil itu saat menulis dialog/cerita agar kepribadian konsisten. Data pro
 engine/chibi-rig.js   createRig(design) -> { drawCharacter, drawPart, resolvePose, EXPRESSIONS, ... }
 engine/clips.js       CLIPS bersama + samplePose (penghalusan & follow-through) + kf/EASE
 engine/timeline.js    rangkaian aksi per karakter (fase berurutan + blend + gerak antar titik)
+engine/extras.js      figuran acak (kerudung, peci, caping, sarung, daster) untuk latar
 characters/<nama>/
   design.js           desain karakter (lihat format di bawah)
   CHARACTER.md        model sheet: ciri wajib, palet, sifat
@@ -150,6 +151,18 @@ node tools/location.js --loc posronda --out out/ronda.mp4 --cast \
 - Agar dua karakter ngobrol bergantian, mulai fase `chat_a`/`chat_b` pada detik yang sama.
 - Pose siku: + = lengan bawah naik ke dada/wajah untuk lengan yang menggantung; untuk lengan terangkat (>90°) pakai
   nilai negatif agar tangan mengarah ke kepala (garuk kepala, ngulet).
+
+## Figuran (karakter latar)
+`engine/extras.js` membuat figuran acak dari `seed` + jenis (`bapak`, `ibu`, `pemuda`, `pemudi`, `anak_laki`,
+`anak_perempuan`, `kakek`, `petani`): kombinasi rambut/kerudung/peci/caping, pakaian, warna, dan tinggi berbeda.
+Tiap lokasi punya daftar `extras: [{ seed, kind, spec, flip?, phase? }]` — `spec` memakai sintaks rangkaian aksi dan
+diulang terus (pejalan kaki lalu-lalang, ibu-ibu ngobrol, anak main bola, jamaah keluar-masuk, pelanggan warkop).
+
+Gaya tampil di `tools/location.js`:
+- `--extras-style shadow` (bawaan): **siluet abu polos + sedikit buram**, tanpa wajah/efek — suasana ramai tapi
+  tidak bersaing dengan tokoh utama; makin jauh makin pudar.
+- `--extras-style blur`: bentuk asli diburamkan (efek fokus kamera). `detail`: tampil penuh seperti tokoh utama.
+- `--extras off`: tanpa figuran. Semua karakter juga diberi kabut jarak (makin jauh makin pudar).
 
 ## Menambah klip (engine/clips.js)
 `{ duration, view, smooth?, pose(t) }`. Aturan agar gerak halus dan tidak "error":

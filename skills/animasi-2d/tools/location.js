@@ -11,6 +11,8 @@
 //   (lihat engine/timeline.js). Titik dari spots lokasi atau "x,z" (meter); spot boleh punya y (lantai tinggi)
 //   dan seat (tinggi tempat duduk -> klip sit_* otomatis duduk di situ).
 // --format landscape (1600x900, default) | portrait (900x1600, untuk Reels/TikTok)
+// --extras off  -> tanpa figuran (karakter latar)
+// --extras-style shadow (default: siluet abu polos + sedikit buram) | blur (bentuk asli diburamkan) | detail
 
 const path = require("path");
 const fs = require("fs");
@@ -19,6 +21,7 @@ const { execFileSync } = require("child_process");
 const { chromium } = require("playwright");
 const { createWorld } = require("../engine/world3d.js");
 const { createTimeline } = require("../engine/timeline.js");
+const { figuran } = require("../engine/extras.js");
 
 const o = { loc: "komplek", fps: 30, scale: 1, format: "landscape" };
 const args = process.argv.slice(2);
@@ -58,18 +61,57 @@ const cast = (o.cast ? o.cast.split(",") : []).map((s) => {
   return { rig, tl };
 });
 const duration = o.seconds ? +o.seconds : Math.max(1, ...cast.map((m) => m.tl.total));
+// figuran: karakter latar acak yang beraktivitas sendiri (diulang). --extras off untuk mematikan.
+const extras = o.extras === "off" ? [] : (LOC.extras || []).map((e) => {
+  const rig = figuran(e.seed, e.kind);
+  return { rig, tl: createTimeline(e.spec, spotOf, rig.resolvePose, { flip: !!e.flip }), phase: e.phase || 0, extra: true };
+});
 
 function frame(t) {
   const camOpt = Object.assign({}, LOC.camera, portrait ? LOC.cameraPortrait || {} : {});
   if (portrait && !LOC.cameraPortrait) { camOpt.f = (camOpt.f || 1300) * 1.3; camOpt.horizon = 0.4; } // vertikal: lebih dekat
   const w = createWorld(Object.assign({ W, H }, camOpt));
   LOC.build(w, { t });
-  for (const m of cast) {
-    const { pose, x, z, y } = m.tl.at(t);
+  // kabut jarak untuk karakter: makin jauh makin pudar (filter warna menuju warna langit)
+  const fogIds = new Set();
+  const fogFilter = (k) => {
+    const b = Math.round(k * 20) / 20;
+    if (b <= 0) return "";
+    const id = `chfog${Math.round(b * 100)}`;
+    if (!fogIds.has(id)) {
+      fogIds.add(id);
+      const sl = (1 - b).toFixed(3), ic = (b * 0.93).toFixed(3);
+      w.add("sky", 2e9, `<defs><filter id="${id}" color-interpolation-filters="sRGB"><feComponentTransfer>
+        <feFuncR type="linear" slope="${sl}" intercept="${ic}"/><feFuncG type="linear" slope="${sl}" intercept="${ic}"/>
+        <feFuncB type="linear" slope="${sl}" intercept="${ic}"/></feComponentTransfer></filter></defs>`);
+    }
+    return `filter="url(#${id})"`;
+  };
+  // gaya figuran: siluet/buram agar tidak bersaing dengan tokoh utama (filter di ruang piksel kanvas)
+  const exStyle = o["extras-style"] || "shadow";
+  const exFilter = (z) => {
+    if (exStyle === "detail") return fogFilter(w.fogK(z) * 0.95);
+    const k = Math.round(Math.min(0.6, w.fogK(z)) * 10) / 10, id = `fig_${exStyle}_${Math.round(k * 10)}`;
+    if (!fogIds.has(id)) {
+      fogIds.add(id);
+      const g = (0.62 + k * 0.45).toFixed(3); // siluet makin terang (pudar) bila jauh
+      const body = exStyle === "shadow"
+        ? `<feColorMatrix type="matrix" values="0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0.85 0"/><feGaussianBlur stdDeviation="1.6"/>`
+        : `<feGaussianBlur stdDeviation="3.2"/><feComponentTransfer><feFuncR type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/>
+           <feFuncG type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/><feFuncB type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/></feComponentTransfer>`;
+      w.add("sky", 2e9, `<defs><filter id="${id}" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">${body}</filter></defs>`);
+    }
+    return `filter="url(#${id})"`;
+  };
+  for (const m of [...extras, ...cast]) {
+    const tt = m.extra ? (t + m.phase) % m.tl.total : t;
+    const { pose, x, z, y } = m.tl.at(tt);
+    if (m.extra && exStyle === "shadow") Object.assign(pose, { above: null, sweat: false, blush: 0, anger: false }); // siluet: tanpa efek wajah
     w.sprite(x, z, (sx, sy, p) => {
       const s = p / KID_UNITS_PER_M;
-      return `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(pose.view, pose)}</g>`;
-    }, { bias: -0.05, y });
+      const inner = `<g transform="translate(${(sx - 150 * s).toFixed(1)} ${(sy - 382 * s).toFixed(1)}) scale(${s.toFixed(4)})">${m.rig.drawPart(pose.view, pose)}</g>`;
+      return `<g ${m.extra ? exFilter(z) : fogFilter(w.fogK(z) * 0.95)}>${inner}</g>`;
+    }, { bias: m.extra ? -0.04 : -0.05, y });
   }
   return w.render();
 }

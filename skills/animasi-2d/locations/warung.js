@@ -16,6 +16,13 @@ module.exports = {
     duduk_depan_meja2: { x: 0.6, z: 7.1, seat: 0.48 },
     jalan_kiri: { x: -2.4, z: 4.2 }, jalan_kanan: { x: 3.0, z: 4.4 }, samping: { x: 3.4, z: 7.6 },
   },
+  extras: [
+    { seed: 21, kind: "pemuda", spec: "sit_back@1.05,7.1" },
+    { seed: 22, kind: "bapak", spec: "sit_phone@2.75,6.85" },
+    { seed: 23, kind: "pemudi", spec: "walk@-8,13.5>8,13.5/8+walk@8,13.5>-8,13.5/8" },
+    { seed: 24, kind: "bapak", spec: "walk@8,15>-8,15/9+idle/2+walk@-8,15>8,15/9", phase: 4 },
+  ],
+  seatsExtra: true,
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.22, 0.08, 1], [0.8, 0.12, 0.9]] });
     w.ground([[-30, 0, 0.6], [30, 0, 0.6], [30, 0, 60], [-30, 0, 60]], P.PAL.dirt, { stroke: false });

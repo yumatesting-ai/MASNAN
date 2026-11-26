@@ -12,6 +12,16 @@ module.exports = {
     tengah: { x: 0, z: 7.5 }, jauh: { x: 0.3, z: 13 }, pinggir_kiri: { x: -2.4, z: 6 }, pinggir_kanan: { x: 2.5, z: 6 },
     duduk_bangku: { x: -2.55, z: 7.55, seat: 0.48 }, duduk_bangku2: { x: -3.4, z: 7.55, seat: 0.48 },
   },
+  // figuran (karakter latar): { seed, kind, spec (rangkaian aksi, diulang), flip?, phase? }
+  extras: [
+    { seed: 11, kind: "ibu", spec: "walk@-0.8,27>-0.8,9/9+idle/1.5+walk@-0.8,9>-0.8,27/9" },
+    { seed: 12, kind: "kakek", spec: "walk@0.9,10>0.9,30/10+idle/1+walk@0.9,30>0.9,10/10", phase: 6 },
+    { seed: 13, kind: "anak_laki", spec: "run@-6,20>6,20/3.2+happy/1+run@6,20>-6,20/3.2+idle/1" },
+    { seed: 14, kind: "anak_perempuan", spec: "run@-6.5,21>5.5,21/3.4+laugh/1.2+run@5.5,21>-6.5,21/3.4", phase: 0.6 },
+    { seed: 15, kind: "ibu", spec: "chat_a@2.3,13", flip: true },
+    { seed: 16, kind: "ibu", spec: "chat_b@3.1,13.4" },
+    { seed: 17, kind: "petani", spec: "walk@-7,34>7,34/11+walk@7,34>-7,34/11", phase: 3 },
+  ],
   build(w, { t = 0 } = {}) {
     P.sky(w);
     P.villageRoad(w);
