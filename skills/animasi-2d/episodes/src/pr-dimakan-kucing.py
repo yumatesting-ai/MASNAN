@@ -151,11 +151,11 @@ SHOTS_D = [
  (41.8, "guru", cam(-2.9, 0.9, 3.3, 1000), cam(-2.8, 0.95, 3.55, 1030)),           # Oyen jalan & lompat ke meja guru
  (45.5, "guru", cam(-2.25, 1.15, 3.9, 1100), cam(-2.2, 1.15, 4.1, 1120)),          # Oyen menaruh buku
  (48.4, "guru", cam(-1.5, 1.3, 3.7, 1050), cam(-1.5, 1.3, 3.9, 1070)),            # Bu Sari membuka buku
- (50.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.9, 1500)),        # close-up buku: lengkap + cap kaki
+ (50.85, "guru", cam(-2.15, 0.88, 4.75, 1450, 0.34), cam(-2.15, 0.88, 4.9, 1500, 0.34)),        # close-up buku: lengkap + cap kaki
  (53.7, "guru", cam(-1.2, 1.35, 3.8, 1050), cam(-1.2, 1.35, 3.95, 1060)),         # pulpen merah
- (55.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.85, 1500)),     # close-up: pulpen merah menulis "100"
+ (55.85, "guru", cam(-2.15, 0.88, 4.75, 1450, 0.34), cam(-2.15, 0.88, 4.85, 1500, 0.34)),     # close-up: pulpen merah menulis "100"
  (57.3, "guru", cam(-1.8, 1.2, 4.5, 540), cam(-1.8, 1.2, 4.6, 560)),       # Oyen 100
- (58.8, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.85, 1500)),      # close-up: pulpen merah menulis "60"
+ (58.8, "guru", cam(-2.15, 0.88, 4.75, 1450, 0.34), cam(-2.15, 0.88, 4.85, 1500, 0.34)),      # close-up: pulpen merah menulis "60"
  (59.85, "murid", cam(-0.85, 1.12, 1.15, 1100), cam(-0.85, 1.12, 1.2, 1300)),     # Bima 60
 ]
 FX_G = [  # hanya tampak guru (koordinat kelas_guru)
