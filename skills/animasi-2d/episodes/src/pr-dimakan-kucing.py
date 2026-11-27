@@ -72,7 +72,7 @@ CAST_A = "bima:" + seq(A, [(0, "sit_write{face=r}@duduk_dekat"), (3.4, "sit_eat{
 FX_A = [{"type": "gorengan", "x": -0.98, "y": BALE_Y, "z": 6.95, "n": 8},
  {"type": "prop", "kind": "book", "hold": "both", "keys": [[0, *BOOK, 0]]},
  {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "keys": [[0, 2.8, 0, 5.4, 0, 0, "hide"], [10.95, 2.8, 0, 5.4, 0, 0, "hide"], [11.0, 2.8, 0, 5.4, 0, 0, "walk"],
-   [12.7, 0.95, 0, 6.3, 0, 0, "walk"], [12.75, 0.95, 0, 6.3, 0, 0, "sit"], [13.2, 0.95, 0, 6.3, 0, 0, "sit"], [13.55, 0.5, BALE_Y, 6.85, 0, 0.3, "sit"]]},
+   [12.7, 0.95, 0, 6.15, 0, 0, "walk"], [12.75, 0.95, 0, 6.15, 0, 0, "sit"], [13.2, 0.95, 0, 6.15, 0, 0, "sit"], [13.6, 0.5, BALE_Y, 6.85, 0, 0.5, "sit"]]},
  F(5.3, "SUAP!", sx=0.3, sy=0.3, dur=0.7), F(6.05, "SOAL!", sx=0.7, sy=0.3, dur=0.7, rot=6), F(7.1, "SUAP!", sx=0.3, sy=0.3, dur=0.7), F(7.9, "SOAL!", sx=0.7, sy=0.3, dur=0.7, rot=6),
  AT(9.1, "~ bau gorengan ~", [BOOK[0], 0.95, BOOK[2]], dur=1.9, size=0.05),
  AT(11.3, "? ? ?", [2.3, 0.55, 5.6], dur=1.2, size=0.05), F(14.74, "MEONG!", sx=0.62, sy=0.26, size=0.1, rot=6, dur=0.8)]
@@ -147,18 +147,18 @@ SHOTS_D = [
  (34.5, "guru", cam(-0.85, 1.3, 3.7, 1100), cam(-0.85, 1.3, 3.95, 1130)),         # Bu Sari geleng-geleng
  (37.3, "guru", cam(-3.2, 1.0, 4.1, 1100), cam(-3.2, 1.0, 4.4, 1150)),            # pintu kelas: "meong"
  (39.86, "murid", cam(0.0, 1.2, 0.3, 880), cam(0.0, 1.2, 0.5, 900)),              # satu kelas kaget
- (41.8, "guru", cam(-2.7, 0.9, 3.4, 1050), cam(-2.6, 0.95, 3.7, 1080)),           # Oyen jalan & lompat ke meja guru
+ (41.8, "guru", cam(-2.9, 0.9, 3.3, 1000), cam(-2.8, 0.95, 3.55, 1030)),           # Oyen jalan & lompat ke meja guru
  (45.5, "guru", cam(-2.25, 1.15, 3.9, 1100), cam(-2.2, 1.15, 4.1, 1120)),          # Oyen menaruh buku
  (48.4, "guru", cam(-1.5, 1.3, 3.7, 1050), cam(-1.5, 1.3, 3.9, 1070)),            # Bu Sari membuka buku
  (50.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.9, 1500)),        # close-up buku: lengkap + cap kaki
  (53.7, "guru", cam(-1.2, 1.35, 3.8, 1050), cam(-1.2, 1.35, 3.95, 1060)),         # pulpen merah
- (55.85, "guru", cam(-1.9, 1.2, 3.6, 820), cam(-1.9, 1.2, 3.75, 840)),       # Oyen 100
+ (55.85, "guru", cam(-1.75, 1.15, 4.75, 600), cam(-1.75, 1.15, 4.85, 630)),       # Oyen 100
  (58.8, "murid", cam(-0.85, 1.12, 1.15, 1050), cam(-0.85, 1.12, 1.2, 1300)),     # Bima 60
 ]
 FX_G = [  # hanya tampak guru (koordinat kelas_guru)
  {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 46.35], "keys": [[D, -3.75, 0, 7.4, 0, 0, "hide"], [38.55, -3.75, 0, 7.4, 0, 0, "hide"],
-   [38.6, -3.75, 0, 7.4, 0, 0, "sit"], [41.9, -3.75, 0, 7.4, 0, 0, "sit"], [43.4, -3.55, 0, 6.2, 0, 0, "walk"], [44.6, -3.3, 0, 5.25, 0, 0, "walk"],
-   [44.75, -3.3, 0, 5.25, 0, 0, "sit"], [45.35, CAT_DESK[0], CAT_DESK[1], CAT_DESK[2], 0, 0.35, "sit"]]},
+   [38.6, -3.75, 0, 7.4, 0, 0, "sit"], [41.9, -3.75, 0, 7.4, 0, 0, "sit"], [43.4, -3.55, 0, 6.2, 0, 0, "walk"], [44.6, -3.12, 0, 5.2, 0, 0, "walk"],
+   [44.75, -3.12, 0, 5.2, 0, 0, "sit"], [45.35, CAT_DESK[0], CAT_DESK[1], CAT_DESK[2], 0, 0.35, "sit"]]},
  {"type": "prop", "kind": "book", "hold": "end", "open": 48.9, "paws": 48.9, "keys": [[D, *DESK, 0, 0, "hide"], [46.35, *DESK, 0, 0, "hide"], [46.36, *DESK, 0]]},
  F(38.9, "MEONG...", sx=0.62, sy=0.28, size=0.09, dur=0.9),
  AT(46.5, "RAPI.", [CAT_DESK[0], 1.35, CAT_DESK[2]], dur=1.3, size=0.06),
@@ -184,14 +184,20 @@ def kelas_scenes():
     out = []
     for i, (a, view, c0, c1) in enumerate(SHOTS_D):
         b = SHOTS_D[i + 1][0] if i + 1 < len(SHOTS_D) else SC[4]
+        # kamera tampak guru yang sudah melewati barisan murid (z > 3): murid & figuran ada di belakang kamera -> tidak digambar
+        # (mencegah siluet raksasa / badan terpotong menutupi layar)
+        past_rows = view == "guru" and c0["z"] > 3.0
+        cast = cast_slice(a, b, view)
+        if past_rows: cast = ", ".join(x for x in cast.split(", ") if x.startswith("busari:"))
         sc = {"judul": f"Kelas ({'hadap guru' if view == 'guru' else 'hadap murid'}) {a:.1f}-{b:.1f}", "loc": "kelas_guru" if view == "guru" else "kelas",
-              "seconds": round(b - a, 2), "cast": cast_slice(a, b, view),
+              "seconds": round(b - a, 2), "cast": cast,
               "camkeys": [dict(t=0, **c0), dict(t=round(b - a, 2), **c1)],
               "fx": [f for f in loc_fx(FX_G if view == "guru" else FX_M, a) if f["type"] == "prop" or -0.5 < f.get("t", 0) < b - a],
               "dialog": [d for d in dlg(a, b) if view == "guru" or d["who"] != "busari"] if True else [],
               "looks": [dict(l, t0=round(l["t0"] - a, 2), t1=round(l["t1"] - a, 2)) for l in (LOOK_G if view == "guru" else LOOK_M) if l["t1"] > a and l["t0"] < b],
               "positions": {"busari": GURU_M, "bima": BIMA_M} if view == "murid" else {"busari": GURU_POS, "bima": [0.85, 4.0]}, "visual": "", "narasi": ""}
         if view == "murid": sc["locopts"] = {"extras": extras_slice(a, b, view)}
+        elif past_rows: sc["extras"] = "off"
         out.append(sc)
     return out
 
@@ -199,10 +205,10 @@ def kelas_scenes():
 E = SC[4]
 CAST_E = "bima:idle_three{hide=1}@-2.3,10.1/" + str(round(65.3 - E, 2)) + "+run_panic@-2.3,10.1>-0.3,10.4/" + str(round(END - 65.3, 2))
 FX_E = [{"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 99], "keys": [[0, -3.2, 0, 10.2, 0, 0, "walk"], [64.9 - E, 0.9, 0, 10.6, 0, 0, "walk"], [65.0 - E, 0.9, 0, 10.6, 0, 0, "sit"]]},
- AT(65.0 - E, "PALING PAGI!", [0.9, 0.75, 10.6], dur=0.85, size=0.05), F(65.8 - E, "TELAT LAGI!", sx=0.3, sy=0.72, size=0.07, dur=0.75, rot=-4)]
+ AT(65.0 - E, "PALING PAGI!", [0.9, 0.75, 10.6], dur=0.85, size=0.05), F(65.8 - E, "TELAT LAGI!", sx=0.32, sy=0.3, size=0.07, dur=0.75, rot=-4)]
 CAM_E = [dict(t=0, **cam(-0.9, 0.85, 7.6, 1100, 0.5)), dict(t=round(END - E, 2), **cam(0.25, 0.85, 8.0, 980, 0.5))]
 
-ep = {"title": "PR Dimakan Kucing", "format": "portrait", "captionStyle": "shorts", "captionCaps": True,
+ep = {"title": "PR Dimakan Kucing", "format": "portrait", "hd": True, "captionStyle": "shorts", "captionCaps": True,
       "keywords": ["PR", "GORENGAN", "OYEN", "MEONG", "KESIANGAN", "KETINGGALAN", "KUCING", "SERATUS", "ENAM", "PULUH", "TERLAMBAT", "RAPI"],
       "music": {"style": "kocak", "tense_until": 0, "bpm": 112},
       "sfx": [{"t": 14.74, "type": "pop"}, {"t": 15.72, "type": "whoosh"}, {"t": 20.4, "type": "pop"}, {"t": 33.0, "type": "dundun"}, {"t": 38.9, "type": "pop"},
