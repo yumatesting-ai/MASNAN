@@ -423,3 +423,18 @@ Ekspresi baru di rig: `whisper, scared, badmood, worried, suspicious, proud, exc
   arc<0 = jatuh, mode cat: hide/walk/sit/sleep; `dentAt` ember penyok), `treeshake`, `jemuran`, teks 3D `at:[x,y,z]` (label).
 - Klip baru: `throw` (override `{item=sandal|sapu|ember}`), `hold_tree`, `shake_tree`, `bonk`, `point_up`. Override `{hide=1}`
   menyembunyikan tokoh sampai masuk adegan. Opsi lokasi: `"locopts": {"poles": false, "clearRight": true}` (kampung).
+
+## Tokoh & lokasi tambahan
+
+| Tokoh | Folder | Ciri |
+|---|---|---|
+| **Pak RT** (Sudarto) | `characters/rt` | peci hitam, kumis, kemeja batik coklat, celana panjang, sepatu; dewasa tertinggi (1,3×) |
+| **Mbah Sum** (Sumiyati) | `characters/mbahsum` | nenek, rambut putih dicepol, kacamata, kebaya hijau, jarik; 1,1× |
+| **Bu Sari** (guru SD) | `characters/busari` | kerudung biru, kacamata, seragam khaki lengan panjang, celana; 1,2× |
+
+| Lokasi | Isi | Titik |
+|---|---|---|
+| `sekolah` | SD Negeri 1 Sukamaju: halaman paving, tiang bendera, gedung kelas 3–6, pagar/gerbang, pohon ketapang, murid figuran | depan, kiri, kanan, tengah, tiang_bendera, pintu_kelas, gerbang, duduk_bangku(2) |
+| `sawah` | petak padi bergoyang, pematang, saluran air (bebek berenang), dangau bambu, orang-orangan sawah, gunung | depan, pematang, pematang_jauh, kiri, kanan, gubuk, duduk_gubuk(2) |
+
+Tokoh baru dibuat dari bagian tokoh lama (`hair` Pak Hasan / Bu Atin, `HIJAB`/`PECI` dari `engine/extras.js`).

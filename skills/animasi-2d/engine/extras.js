@@ -114,4 +114,4 @@ function figuran(seed, kind) {
   return cache.get(key);
 }
 
-module.exports = { figuran, figuranDesign, KINDS: Object.keys(KINDS) };
+module.exports = { figuran, figuranDesign, KINDS: Object.keys(KINDS), HIJAB, PECI, CAPING, EARS };
