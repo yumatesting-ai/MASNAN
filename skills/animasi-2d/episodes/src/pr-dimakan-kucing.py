@@ -140,8 +140,8 @@ def extras_slice(a, b, view):
     return ex
 # shot: (mulai_abs, sudut, kamera_awal, kamera_akhir)
 SHOTS_D = [
- (D, "guru", cam(-0.2, 1.3, 2.7, 1000), cam(-0.3, 1.3, 3.1, 1040)),               # Bu Sari menagih PR (punggung murid di depan)
- (25.36, "murid", cam(-0.85, 1.12, 1.45, 1150), cam(-0.85, 1.12, 1.7, 1200)),     # close Bima keringat dingin
+ (D, "guru", cam(0.3, 1.3, 2.55, 760), cam(0.25, 1.3, 2.75, 790)),               # Bu Sari menagih PR (punggung murid di depan)
+ (25.36, "murid", cam(-0.85, 1.12, 1.2, 1100), cam(-0.85, 1.12, 1.25, 1250)),     # close Bima keringat dingin
  (28.3, "murid", cam(-0.5, 1.15, 0.6, 900), cam(-0.5, 1.15, 0.85, 930)),          # Bima beralasan (Rara & Nana ikut terlihat)
  (32.6, "murid", cam(0.0, 1.2, 0.1, 860), cam(0.0, 1.2, 0.35, 880)),              # satu kelas tertawa
  (34.5, "guru", cam(-0.85, 1.3, 3.7, 1100), cam(-0.85, 1.3, 3.95, 1130)),         # Bu Sari geleng-geleng
@@ -152,8 +152,8 @@ SHOTS_D = [
  (48.4, "guru", cam(-1.5, 1.3, 3.7, 1050), cam(-1.5, 1.3, 3.9, 1070)),            # Bu Sari membuka buku
  (50.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.9, 1500)),        # close-up buku: lengkap + cap kaki
  (53.7, "guru", cam(-1.2, 1.35, 3.8, 1050), cam(-1.2, 1.35, 3.95, 1060)),         # pulpen merah
- (55.85, "guru", cam(-1.75, 1.2, 3.7, 850), cam(-1.75, 1.2, 3.9, 880)),       # Oyen 100
- (58.8, "murid", cam(-0.85, 1.12, 1.35, 1100), cam(-0.85, 1.12, 1.75, 1180)),     # Bima 60
+ (55.85, "guru", cam(-1.9, 1.2, 3.6, 820), cam(-1.9, 1.2, 3.75, 840)),       # Oyen 100
+ (58.8, "murid", cam(-0.85, 1.12, 1.15, 1050), cam(-0.85, 1.12, 1.2, 1300)),     # Bima 60
 ]
 FX_G = [  # hanya tampak guru (koordinat kelas_guru)
  {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 46.35], "keys": [[D, -3.75, 0, 7.4, 0, 0, "hide"], [38.55, -3.75, 0, 7.4, 0, 0, "hide"],
