@@ -152,7 +152,7 @@ SHOTS_D = [
  (48.4, "guru", cam(-1.5, 1.3, 3.7, 1050), cam(-1.5, 1.3, 3.9, 1070)),            # Bu Sari membuka buku
  (50.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.9, 1500)),        # close-up buku: lengkap + cap kaki
  (53.7, "guru", cam(-1.2, 1.35, 3.8, 1050), cam(-1.2, 1.35, 3.95, 1060)),         # pulpen merah
- (55.85, "guru", cam(-1.75, 1.15, 4.75, 600), cam(-1.75, 1.15, 4.85, 630)),       # Oyen 100
+ (55.85, "guru", cam(-1.8, 1.2, 4.5, 540), cam(-1.8, 1.2, 4.6, 560)),       # Oyen 100
  (58.8, "murid", cam(-0.85, 1.12, 1.15, 1050), cam(-0.85, 1.12, 1.2, 1300)),     # Bima 60
 ]
 FX_G = [  # hanya tampak guru (koordinat kelas_guru)
@@ -163,7 +163,7 @@ FX_G = [  # hanya tampak guru (koordinat kelas_guru)
  F(38.9, "MEONG...", sx=0.62, sy=0.28, size=0.09, dur=0.9),
  AT(46.5, "RAPI.", [CAT_DESK[0], 1.35, CAT_DESK[2]], dur=1.3, size=0.06),
  AT(51.0, "LENGKAP ✓", [DESK[0], 1.15, DESK[2]], dur=1.3, size=0.05), AT(52.3, "CAP KAKI KUCING!", [DESK[0], 1.15, DESK[2]], dur=1.4, size=0.045),
- AT(56.6, "100", [CAT_DESK[0], 1.45, CAT_DESK[2]], dur=2.3, size=0.11, rot=-8), {"type": "burst", "t": 56.6, "sx": 0.35, "sy": 0.4},
+ AT(56.6, "100", [CAT_DESK[0] + 0.25, 1.4, CAT_DESK[2]], dur=2.3, size=0.11, rot=-8), {"type": "burst", "t": 56.6, "sx": 0.35, "sy": 0.4},
 ]
 FX_M = [AT(59.9, "60", [BIMA_M[0], 1.45, BIMA_M[1]], dur=2.2, size=0.1, rot=8), SH(59.9, 0.015, 0.25), SH(39.9, 0.02, 0.3), F(39.9, "!!", sx=0.5, sy=0.22, size=0.12, dur=0.8)]
 LOOK_G = [
