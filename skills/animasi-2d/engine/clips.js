@@ -346,12 +346,29 @@
       armL: -30, elbowL: 80, armR: 10 + 22 * Math.max(0, wave(t, 0.4)), elbowR: 10, headY: 5, squash: 0.12,
       bodyY: 3 - 3 * Math.abs(wave(t, 0.2)), headTilt: 5 * wave(t, 0.6), fx: t / 0.3 }) },
     // lari panik (tangan melambai-lambai ke atas, keringat)
-    run_panic: { duration: 0.5, view: "side", pose: (t) => {
-      const sv = wave(t, 0.5);
-      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: 40 * sv, legR: -40 * sv,
-        armL: 130 + 30 * sv, armR: 120 - 30 * sv, elbowL: -20, elbowR: -20, lean: -9, bodyY: -7 * Math.abs(Math.cos(TAU * t / 0.5)),
-        hairSway: -4 + wave(t, 0.25), fx: t / 0.25 };
+    // LARI PANIK (kesiangan): siklus lari sungguhan — kaki bergantian menendang & mengangkat lutut, lengan memompa
+    // berlawanan dengan kaki, badan condong ke depan, memantul (squash saat mendarat, melayang di tengah langkah),
+    // kepala sedikit tertinggal (follow-through), mata melotot, mulut "AAA", keringat. Varian depan/serong/belakang
+    // dipilih otomatis dari arah gerak -> tidak ada lagi lari menyamping saat mendekati kamera.
+    run_panic: { duration: 0.46, view: "side", pose: (t) => {
+      const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(Math.sin(ph)), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: 46 * sv, legR: -46 * sv,
+        armL: -50 * sv, armR: 50 * sv, elbowL: 85, elbowR: 85, lean: -11, bodyY: -9 * air, squash: 0.07 * land,
+        headTilt: -3 + 2 * Math.cos(ph * 2), headY: 1.5 * land, hairSway: -5 + 1.2 * Math.cos(ph * 2), fx: t / 0.23 };
     } },
+    run_panic_three: { duration: 0.46, view: "three", pose: (t) => {
+      const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(sv), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: Math.max(0, 40 * sv), legR: Math.max(0, -40 * sv),
+        armL: -38 * sv, armR: 38 * sv, elbowL: 95, elbowR: 95, lean: -7, bodyY: -9 * air, squash: 0.08 * land,
+        headTilt: 3 * sv, headY: 1.5 * land, hairSway: -3 + wave(t, 0.23), fx: t / 0.23 };
+    } },
+    run_panic_front: { duration: 0.46, view: "front", pose: (t) => {
+      const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(sv), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: Math.max(0, 38 * sv), legR: Math.max(0, -38 * sv),
+        armL: 14 + 10 * sv, armR: 14 - 10 * sv, elbowL: 115 + 30 * sv, elbowR: 115 - 30 * sv, bodyX: 2 * sv, bodyY: -10 * air, squash: 0.09 * land,
+        headTilt: 4 * sv, headY: 2 * land, pitch: -0.1, hairSway: 2.5 * wave(t, 0.23), fx: t / 0.23 };
+    } },
+    run_panic_back: { duration: 0.46, view: "back", pose: (t) => ({ ...CLIPS.run_panic_front.pose(t) }) },
     // lari mengejar dengan marah
     run_angry: { duration: 0.6, view: "side", pose: (t) => ({ ...CLIPS.run.pose(t), expr: "furious", mouth: "shout", fx: t / 0.3 }) },
     // menyeka wajah dengan punggung tangan (masih duduk)
