@@ -99,7 +99,7 @@
     run: { duration: 0.6, view: "side", pose: (t) => {
       const s = wave(t, 0.6);
       const ph = TAU * t / 0.6, knee = (q, c) => 12 + 35 * Math.max(0, -q) + 60 * Math.max(0, c);
-      return { expr: "nervous", legL: 36 * s, legR: -36 * s, kneeL: knee(s, Math.cos(ph)), kneeR: knee(-s, -Math.cos(ph)),
+      return { expr: "nervous", legL: 36 * s, legR: -36 * s, kneeL: knee(s, Math.cos(ph)), kneeR: knee(-s, -Math.cos(ph)), lookX: 1.9, lookY: 0.2,
         armL: -45 * s, armR: 45 * s, elbowL: 80, elbowR: 80, lean: 9,
         bodyY: -6 * Math.abs(Math.cos(TAU * t / 0.6)), hairSway: -3.5 + 0.8 * wave(t, 0.3) };
     } },
@@ -359,19 +359,20 @@
       // lutut: terlipat saat kaki menendang ke belakang & saat diayun ke depan melewati badan (kaki ayun), lurus saat menapak
       const knee = (s, c) => 12 + 40 * Math.max(0, -s) + 70 * Math.max(0, c);
       return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true,
-        legL: 40 * sv, legR: -40 * sv, kneeL: knee(sv, Math.cos(ph)), kneeR: knee(-sv, -Math.cos(ph)),
+        legL: 40 * sv, legR: -40 * sv, kneeL: knee(sv, Math.cos(ph)), kneeR: knee(-sv, -Math.cos(ph)), lookX: 1.9, lookY: 0.2, // mata menatap ke depan (arah lari), bukan ke kamera
         armL: -55 * sv, armR: 55 * sv, elbowL: 95, elbowR: 95, lean: 12, bodyY: -10 * air, squash: 0.07 * land,
         headTilt: 4 + 2 * Math.cos(ph * 2), headY: 1.5 * land, hairSway: -6 + 1.2 * Math.cos(ph * 2), fx: t / 0.23 };
     } },
     run_panic_three: { duration: 0.46, view: "three", pose: (t) => {
       const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(sv), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
-      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: Math.max(0, 40 * sv), legR: Math.max(0, -40 * sv),
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, lookX: 1.6, lookY: 0.2, legL: Math.max(0, 40 * sv), legR: Math.max(0, -40 * sv),
         armL: -38 * sv, armR: 38 * sv, elbowL: 95, elbowR: 95, lean: -7, bodyY: -9 * air, squash: 0.08 * land,
         headTilt: 3 * sv, headY: 1.5 * land, hairSway: -3 + wave(t, 0.23), fx: t / 0.23 };
     } },
     run_panic_front: { duration: 0.46, view: "front", pose: (t) => {
       const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(sv), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
       return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: Math.max(0, 38 * sv), legR: Math.max(0, -38 * sv),
+        lookX: 0.9, lookY: 0.4, // menatap jalan di depan (ke arah sekolah), tidak ke kamera
         armL: 14 + 10 * sv, armR: 14 - 10 * sv, elbowL: 115 + 30 * sv, elbowR: 115 - 30 * sv, bodyX: 2 * sv, bodyY: -10 * air, squash: 0.09 * land,
         headTilt: 4 * sv, headY: 2 * land, pitch: -0.1, hairSway: 2.5 * wave(t, 0.23), fx: t / 0.23 };
     } },
