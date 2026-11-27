@@ -362,6 +362,13 @@ sebaliknya, lirikan dihaluskan. Close-up satu tokoh: beri `"positions": {"bima":
 melirik ke arah lawan bicara di luar layar. Tanpa dialog: lirikan kecil alami. Matikan per fase dengan `{look=0}`.
 Jangan pakai `lookX` statis di cast untuk adegan ngobrol.
 
+**Perhatian sesuai konteks (WAJIB, tokoh jangan terus menatap kamera):** urutan arah pandang:
+1. `looks` di adegan: `[{"t0":4,"t1":9,"who":"*"|"bima"|["bima","nana"],"at":"hasan" | [x,y,z]}]` — menoleh/mendongak ke
+   kejadian (bola nyangkut, orang melempar, benda jatuh). Target di atas -> kepala ikut mendongak.
+2. dialog: pendengar ke pembicara, pembicara ke lawan bicara (narator tidak menarik pandangan).
+3. tanpa konteks: melirik tokoh terdekat yang terlihat (sesekali kembali ke depan).
+Menatap kamera hanya untuk momen sengaja (janji ke penonton, tatapan datar komedi).
+
 ## Backsound (musik + suasana + SFX)
 
 `python3 tools/backsound.py episodes/<ep>.json --out out/bs.wav --vo vo.mp3 --mix out/audio.m4a`

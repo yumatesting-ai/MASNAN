@@ -1348,6 +1348,137 @@
      "text": "Pak, ember saya kok penyok?"
     }
    ],
+   "looks": [
+    {
+     "t0": 4.0,
+     "t1": 9.3,
+     "who": "bima",
+     "at": [
+      3.5,
+      3.25,
+      11.35
+     ]
+    },
+    {
+     "t0": 11.5,
+     "t1": 16.2,
+     "who": "bima",
+     "at": "hasan"
+    },
+    {
+     "t0": 16.2,
+     "t1": 30.6,
+     "who": "bima",
+     "at": [
+      3.5,
+      3.25,
+      11.35
+     ]
+    },
+    {
+     "t0": 17.4,
+     "t1": 30.6,
+     "who": "hasan",
+     "at": [
+      3.5,
+      3.25,
+      11.35
+     ]
+    },
+    {
+     "t0": 30.8,
+     "t1": 33.4,
+     "who": "*",
+     "at": [
+      4.6,
+      0.2,
+      11.0
+     ]
+    },
+    {
+     "t0": 33.4,
+     "t1": 43.9,
+     "who": "*",
+     "at": [
+      3.5,
+      3.25,
+      11.35
+     ]
+    },
+    {
+     "t0": 45.2,
+     "t1": 49.6,
+     "who": [
+      "bima",
+      "hasan"
+     ],
+     "at": "nana"
+    },
+    {
+     "t0": 45.2,
+     "t1": 49.6,
+     "who": "nana",
+     "at": [
+      3.6,
+      1.2,
+      11.8
+     ]
+    },
+    {
+     "t0": 49.6,
+     "t1": 57.6,
+     "who": "hasan",
+     "at": [
+      3.5,
+      3.25,
+      11.35
+     ]
+    },
+    {
+     "t0": 49.6,
+     "t1": 57.6,
+     "who": [
+      "bima",
+      "nana"
+     ],
+     "at": "hasan"
+    },
+    {
+     "t0": 57.6,
+     "t1": 61.0,
+     "who": [
+      "bima",
+      "nana"
+     ],
+     "at": [
+      2.9,
+      1.62,
+      10.9
+     ]
+    },
+    {
+     "t0": 61.0,
+     "t1": 62.1,
+     "who": "*",
+     "at": "atin"
+    },
+    {
+     "t0": 62.1,
+     "t1": 67.3,
+     "who": [
+      "bima",
+      "nana",
+      "atin"
+     ],
+     "at": "hasan"
+    },
+    {
+     "t0": 62.1,
+     "t1": 64.1,
+     "who": "hasan",
+     "at": "atin"
+    }
+   ],
    "visual": "15 shot di bawah pohon mangga jalan kampung",
    "narasi": ""
   },
@@ -1462,6 +1593,18 @@
      "at": 5.43,
      "dur": 1.07,
      "text": "Bolanya nyangkut di jemuran."
+    }
+   ],
+   "looks": [
+    {
+     "t0": 4.7,
+     "t1": 8,
+     "who": "bima",
+     "at": [
+      2.4,
+      1.72,
+      10.2
+     ]
     }
    ],
    "visual": "Bima berjanji di lapangan, menendang lagi, bola nyangkut di jemuran",

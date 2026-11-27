@@ -151,11 +151,11 @@ function butterfly(w, x, z, o = {}) {
   const T = (w.t || 0) + (o.phase || 0), r = o.r || 0.6;
   const px = x + r * Math.sin(T * 0.9) + 0.2 * Math.sin(T * 2.3), pz = z + r * 0.5 * Math.cos(T * 0.7), py = (o.y || 0.9) + 0.25 * Math.sin(T * 1.7);
   spr(w, px, pz, (sx, sy, p, fog, lc, sw) => {
-    const s = p * 0.006, fl = Math.abs(Math.cos(T * 14)) * 0.85 + 0.15, c = col(o.color || "#f2b632"), c2 = col(o.color2 || "#e2632c");
+    const s = p * 0.0032, fl = Math.abs(Math.cos(T * 14)) * 0.85 + 0.15, c = col(o.color || "#f2b632"), c2 = col(o.color2 || "#e2632c");
     return `<g transform="translate(${sx} ${sy}) scale(${s})" stroke="${lc}" stroke-width="1.2">
       <g transform="scale(${fl} 1)"><path d="M0,0 C-14,-18 -24,-6 -16,4 C-22,12 -10,16 0,4 Z" fill="${fog(c)}"/><path d="M0,0 C14,-18 24,-6 16,4 C22,12 10,16 0,4 Z" fill="${fog(c)}"/>
       <circle cx="-12" cy="-6" r="3" fill="${fog(c2)}" stroke="none"/><circle cx="12" cy="-6" r="3" fill="${fog(c2)}" stroke="none"/></g>
-      <path d="M0,-6 L0,8" stroke-width="2.4"/></g>`;
+      <path d="M0,-6 L0,8" stroke-width="2.4"/></g>`.replace("<g ", `<g opacity="0.75" `);
   }, { y: py, bias: -0.1 });
 }
 

@@ -93,17 +93,33 @@ function gazeTarget(who, t) {
   const prev = others.filter((d) => d.at <= cur.at).pop() || others.find((d) => d.at > cur.at);
   return prev ? prev.who : null;
 }
+// --looks '[{"t0":4,"t1":9,"who":"*","at":[x,y,z] | "hasan"}]' -> perhatian ke kejadian/tokoh (konteks adegan)
+const looks = o.looks ? JSON.parse(o.looks) : [];
+const visibleAt = (c, t) => { const st = c.tl.at(t); return st.pose.hide ? null : st; };
 function gazeAt(m, t, self) {
+  const sc = (m.rig.CANVAS && m.rig.CANVAS.scale) || 1, eye = 1.0 * sc;
+  const toPoint = (tx, ty, tz) => { // lirikan ke titik 3D (x kanan, y tinggi)
+    const dx = tx - self.x, dz = tz - self.z, d = Math.max(0.5, Math.hypot(dx, dz));
+    const lx = Math.max(-1, Math.min(1, (dx / Math.max(0.6, Math.abs(dx) + Math.abs(dz) * 0.5)) * 1.5));
+    return { lx, ly: Math.max(-1.2, Math.min(0.8, (-(ty - eye) / d) * 1.4)), hx: lx };
+  };
+  const toWho = (name) => {
+    const other = cast.find((c) => c.who === name);
+    if (other) { const st = visibleAt(other, t); if (!st) return null; const osc = (other.rig.CANVAS && other.rig.CANVAS.scale) || 1; return toPoint(st.x, (st.y || 0) + 1.0 * osc, st.z); }
+    if (positions[name]) { const [tx, tz] = positions[name]; return toPoint(tx, /hasan|atin/.test(name) ? 1.28 : 1.0, tz); }
+    return null;
+  };
+  // 1) perhatian terarah (konteks adegan)
+  const L = looks.find((l) => t >= l.t0 && t < l.t1 && (l.who === "*" || l.who === m.who || (Array.isArray(l.who) && l.who.includes(m.who))) && l.at !== m.who);
+  if (L) { const g = Array.isArray(L.at) ? toPoint(L.at[0], L.at[1], L.at[2]) : toWho(L.at); if (g) return g; }
+  // 2) dialog: pendengar ke pembicara, pembicara ke lawan bicara
   const tg = gazeTarget(m.who, t);
-  if (!tg) return { lx: 0.22 * Math.sin(t * 0.7 + m.who.length) + 0.12 * Math.sin(t * 2.3), ly: 0.1 * Math.sin(t * 0.5), hx: 0 };
-  const other = cast.find((c) => c.who === tg);
-  let tx, tz, tsc = 1;
-  if (other) { const st = other.tl.at(t); tx = st.x; tz = st.z; tsc = (other.rig.CANVAS && other.rig.CANVAS.scale) || 1; }
-  else if (positions[tg]) { [tx, tz] = positions[tg]; tsc = /hasan|atin/.test(tg) ? 1.25 : 1; }
-  else return { lx: 0, ly: 0, hx: 0 };
-  const dx = tx - self.x, dz = tz - self.z, sc = (m.rig.CANVAS && m.rig.CANVAS.scale) || 1;
-  const lx = Math.max(-1, Math.min(1, (dx / Math.max(0.6, Math.abs(dx) + Math.abs(dz) * 0.5)) * 1.5));
-  return { lx, ly: Math.max(-0.6, Math.min(0.6, (sc - tsc) * 2)), hx: lx };
+  if (tg) { const g = toWho(tg); if (g) return g; }
+  // 3) tanpa konteks: melirik tokoh terdekat yang terlihat (bukan menatap kamera); sesekali kembali ke depan
+  let best = null, bd = 1e9;
+  for (const c of cast) if (c.who !== m.who) { const st = visibleAt(c, t); if (st) { const d = Math.hypot(st.x - self.x, st.z - self.z); if (d < bd) { bd = d; best = c.who; } } }
+  if (best && bd < 6 && Math.sin(t * 0.45 + m.who.length * 1.7) > -0.55) { const g = toWho(best); if (g) return { lx: g.lx * 0.8, ly: g.ly * 0.8, hx: g.hx * 0.7 }; }
+  return { lx: 0.22 * Math.sin(t * 0.7 + m.who.length) + 0.12 * Math.sin(t * 2.3), ly: 0.1 * Math.sin(t * 0.5), hx: 0 };
 }
 // --camkeys '[{"t":0,"x":0,"z":-1,"f":1300},{"t":3,"f":1800,"track":"hasan","dx":0.3}]' -> kamera sinematik:
 //   pan/tilt (x/y/horizon), zoom in/out (f), dolly (z), tracking (track=nama tokoh, dx/dz offset). Antar key: ease in-out.
@@ -219,6 +235,7 @@ function frame(t) {
       pose.lookX = side ? (pose.lookX || 0) : lx;
       pose.lookY = (pose.lookY || 0) * 0.3 + ly;
       if (!side) { pose.headX = (pose.headX || 0) + 3.2 * lx; pose.headTilt = (pose.headTilt || 0) + 2.5 * lx; }
+      if (ly < -0.4) pose.headY = (pose.headY || 0) + 5 * (ly + 0.4); // mendongak ke atas (kepala ikut)
     }
     // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
     if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {

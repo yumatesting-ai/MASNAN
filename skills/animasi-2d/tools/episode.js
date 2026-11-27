@@ -68,6 +68,7 @@ function sceneArgs(s, extra) {
   if (s.locopts) a.push("--locopts", JSON.stringify(s.locopts));
   if (s.time || ep.time) a.push("--time", s.time || ep.time);
   if (s.dialog) a.push("--dialog", JSON.stringify(s.dialog));
+  if (s.looks) a.push("--looks", JSON.stringify(s.looks));
   if (s.positions || ep.positions) a.push("--positions", JSON.stringify(Object.assign({}, ep.positions, s.positions)));
   if (s.camkeys) a.push("--camkeys", JSON.stringify(s.camkeys));
   if (s.fx) a.push("--fx", JSON.stringify(s.fx));

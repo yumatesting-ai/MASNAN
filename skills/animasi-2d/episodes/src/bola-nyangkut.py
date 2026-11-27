@@ -118,6 +118,21 @@ CAM_K = [
  {"t": 61.0, "x": 2.35, "y": 1.3, "z": 6.0, "f": 1150, "horizon": 0.46}, CUT(65.79, x=2.4, y=1.3, z=6.3, f=1200, horizon=0.46), # 14 Bu Atin
  {"t": 65.8, "x": 2.9, "y": 1.6, "z": 8.6, "f": 1600, "horizon": 0.45}, {"t": 67.3, "x": 2.9, "y": 1.6, "z": 8.75, "f": 1650, "horizon": 0.45},  # 15 pura-pura tidur
 ]
+# ----- arah perhatian (konteks): siapa melihat apa, waktu absolut -----
+TREE_HI = [3.5, 3.25, Z_ST]; HEADPT = [HX, 1.62, HZ]
+LOOKS = [
+ {"t0": 4.0, "t1": 9.3, "who": "bima", "at": TREE_HI},
+ {"t0": 11.5, "t1": 16.2, "who": "bima", "at": "hasan"},
+ {"t0": 16.2, "t1": 30.6, "who": "bima", "at": TREE_HI}, {"t0": 17.4, "t1": 30.6, "who": "hasan", "at": TREE_HI},
+ {"t0": 30.8, "t1": 33.4, "who": "*", "at": [4.6, 0.2, 11.0]}, {"t0": 33.4, "t1": 43.9, "who": "*", "at": TREE_HI},
+ {"t0": 45.2, "t1": 49.6, "who": ["bima", "hasan"], "at": "nana"}, {"t0": 45.2, "t1": 49.6, "who": "nana", "at": [3.6, 1.2, 11.8]},
+ {"t0": 49.6, "t1": 57.6, "who": "hasan", "at": TREE_HI}, {"t0": 49.6, "t1": 57.6, "who": ["bima", "nana"], "at": "hasan"},
+ {"t0": 57.6, "t1": 61.0, "who": ["bima", "nana"], "at": HEADPT},
+ {"t0": 61.0, "t1": 62.1, "who": "*", "at": "atin"}, {"t0": 62.1, "t1": 67.3, "who": ["bima", "nana", "atin"], "at": "hasan"},
+ {"t0": 62.1, "t1": 64.1, "who": "hasan", "at": "atin"},
+]
+def looks_local(t0, t1):
+    return [dict(l, t0=round(l["t0"] - t0, 2), t1=round(l["t1"] - t0, 2)) for l in LOOKS if l["t1"] > t0 and l["t0"] < t1]
 # ----- adegan 2: lapangan (67,3..74,4) -----
 L0 = SPLIT
 CAST_L = "bima:nod{expr=smile;face=r}@0,7/3.42+big_kick{face=r}/2.4+idle_three{face=r;expr=shocked}/2.0"
@@ -135,8 +150,8 @@ ep = {"title": "Bola Nyangkut", "format": "portrait", "captionCaps": True,
       "positions": {"hasan": [HX, HZ], "bima": [1.2, 9.2], "nana": [4.15, 11.6], "atin": [1.95, 10.35]},
       "scenes": [
         {"judul": "Kampung: bola, sandal, sapu, ember, Oyen", "loc": "kampung", "locopts": {"poles": False, "clearRight": True}, "seconds": SPLIT, "extras": "off", "cast": CAST_K, "camkeys": CAM_K,
-         "fx": local(FXK, 0, SPLIT), "dialog": dlg(0, SPLIT), "visual": "15 shot di bawah pohon mangga jalan kampung", "narasi": ""},
+         "fx": local(FXK, 0, SPLIT), "dialog": dlg(0, SPLIT), "looks": looks_local(0, SPLIT), "visual": "15 shot di bawah pohon mangga jalan kampung", "narasi": ""},
         {"judul": "Lapangan: janji Bima... nyangkut di jemuran", "loc": "lapangan", "seconds": round(END - SPLIT, 2), "extras": "off", "cast": CAST_L, "camkeys": CAM_L,
-         "fx": FX_L, "dialog": dlg(SPLIT, END), "visual": "Bima berjanji di lapangan, menendang lagi, bola nyangkut di jemuran", "narasi": ""}]}
+         "fx": FX_L, "dialog": dlg(SPLIT, END), "looks": [{"t0": 4.7, "t1": 8, "who": "bima", "at": [2.4, 1.72, 10.2]}], "visual": "Bima berjanji di lapangan, menendang lagi, bola nyangkut di jemuran", "narasi": ""}]}
 json.dump(ep, open(OUT, "w"), indent=1, ensure_ascii=False)
 print("ok", OUT)
