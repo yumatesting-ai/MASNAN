@@ -16,7 +16,7 @@ description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) mili
 > `node tools/qa.js episodes/<ep>.json out/qa 1.5 8` -> lembar kontak seluruh video (frame tiap 1,5 dtk berlabel waktu).
 > Periksa: tembus benda/tokoh (`--check` kini juga antartokoh), benda muncul/hilang tiba-tiba, ukuran benda berubah,
 > ekspresi tidak sesuai aksi/dialog, tokoh/aksi penting terpotong frame atau tertutup benda depan, label/teks tersisa
-> setelah pergantian shot, benda raksasa dekat kamera, gerakan tanpa animasi (jalan tanpa langkah), logika cerita
+> setelah pergantian shot, benda raksasa dekat kamera, benda yang akan dipakai (bola, barang) harus SUDAH terlihat sebelum aksi, gerakan tanpa animasi (jalan tanpa langkah), logika cerita
 > (barang yang dilempar harus lepas dari tubuh, dsb). Perbaiki semuanya dulu, baru kirim.
 > **Alur lengkap ide → upload: lihat [`docs/WORKFLOW.md`](docs/WORKFLOW.md) (10 langkah).**
 

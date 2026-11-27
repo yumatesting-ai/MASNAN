@@ -149,7 +149,7 @@ def looks_local(t0, t1):
 L0 = SPLIT
 CAST_L = "bima:nod{expr=smile;face=r}@0,7/3.42+big_kick{face=r}/2.4+idle_three{face=r;expr=shocked}/2.0"
 FX_L = [{"type": "jemuran", "x": 2.4, "za": 9.0, "zb": 12.0},
-        {"type": "prop", "kind": "ball", "hold": "end", "keys": [[71.77 - L0, 0.3, 0.12, 7.0, 0], [72.9 - L0, 2.4, 1.72, 10.2, 700, 1.0]]},
+        {"type": "prop", "kind": "ball", "hold": "both", "keys": [[0, 0.32, 0.11, 6.95, 0], [71.77 - L0, 0.32, 0.11, 6.95, 0], [72.9 - L0, 2.4, 1.72, 10.2, 700, 1.0]]},
         F(71.77 - L0, "DUAK!", sx=0.35, sy=0.3, size=0.13, dur=0.6), F(72.95 - L0, "NYANGKUT LAGI!", sy=0.2, size=0.1, dur=1.5)]
 CAM_L = [{"t": 0, "x": 0.9, "y": 1.2, "z": 2.0, "f": 1100, "horizon": 0.47}, {"t": 4.4, "x": 1.0, "y": 1.2, "z": 2.4, "f": 1100, "horizon": 0.47},
          {"t": 7.1, "x": 1.2, "y": 1.3, "z": 3.0, "f": 1150, "horizon": 0.48}]  # satu shot: tendangan & jemuran sama-sama terlihat
