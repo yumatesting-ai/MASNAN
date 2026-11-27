@@ -434,14 +434,14 @@
     // makan gorengan sambil duduk (suap -> kunyah)
     sit_eat: { duration: 2.4, view: "three", smooth: 0.02, pose: (t) => ({ ...CLIPS.eat.pose(t), sit: 1, holdR: "gorengan", armL: -8, elbowL: 40 }) },
     // duduk tegak menghadap samping (dengar guru)
-    sit_idle: { duration: 4, view: "three", pose: (t) => ({ ...life(t, 4), sit: 1, armL: 10, armR: 10, elbowL: 70, elbowR: 70, blink: blinkAt(t, [1.3, 3.1]) }) },
+    sit_idle: { duration: 4, view: "front", pose: (t) => ({ ...life(t, 4), sit: 1, armL: 10, armR: 10, elbowL: 70, elbowR: 70, blink: blinkAt(t, [1.3, 3.1]) }) },
     // duduk tertawa terbahak (memegang perut, berguncang)
-    sit_laugh: { duration: 1.2, view: "three", pose: (t) => ({ ...CLIPS.laugh.pose(t), sit: 1, armL: -20, elbowL: 80, armR: -20, elbowR: 80, fx: t / 0.3 }) },
+    sit_laugh: { duration: 1.2, view: "front", pose: (t) => ({ ...CLIPS.laugh.pose(t), sit: 1, armL: -20, elbowL: 80, armR: -20, elbowR: 80, fx: t / 0.3 }) },
     // duduk gugup: keringat dingin, mata melirik, tangan meremas
-    sit_nervous: { duration: 3, view: "three", smooth: 0.015, pose: (t) => ({ ...CLIPS.nervous.pose(t), sit: 1, sweat: true, armL: 15, armR: 15, elbowL: 95, elbowR: 95,
+    sit_nervous: { duration: 3, view: "front", smooth: 0.015, pose: (t) => ({ ...CLIPS.nervous.pose(t), sit: 1, sweat: true, armL: 15, armR: 15, elbowL: 95, elbowR: 95,
       bodyX: 0.6 * wave(t, 0.15) }) },
     // duduk kaget (tersentak, mata bulat)
-    sit_shock: { duration: 1.6, view: "three", smooth: 0.01, pose: (t) => { const k = kf(t, [[0, 0], [0.12, 1, "out"], [1.6, 0.8]]);
+    sit_shock: { duration: 1.6, view: "front", smooth: 0.01, pose: (t) => { const k = kf(t, [[0, 0], [0.12, 1, "out"], [1.6, 0.8]]);
       return { ...life(t, 1.6), sit: 1, expr: "shocked", eyes: "wide", mouth: "o", bodyY: -8 * k + 6 * k * (1 - k), armL: 40 * k, armR: 40 * k, elbowL: 60, elbowR: 60, above: t < 1.2 ? "exclaim" : null }; } },
     // geleng-geleng kepala (tidak percaya) sambil tangan di pinggang
     shake_head: { duration: 2, view: "front", smooth: 0.01, pose: (t) => ({ ...life(t, 2), expr: "deadpan", armL: -30, armR: -30, elbowL: 110, elbowR: 110,

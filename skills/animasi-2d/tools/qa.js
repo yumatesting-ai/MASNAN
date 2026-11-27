@@ -9,7 +9,7 @@ for (const s of ep.scenes) {
     const a = ["tools/location.js", "--loc", s.loc, "--format", "portrait", "--seconds", String(s.seconds), "--t", t.toFixed(2), "--png", path.join(outDir, `f${String(k).padStart(3, "0")}.png`)];
     for (const [key, flag] of [["cast", "--cast"], ["extras", "--extras"], ["t0", "--t0"]]) if (s[key] !== undefined) a.push(flag, String(s[key]));
     for (const [key, flag] of [["dialog", "--dialog"], ["looks", "--looks"], ["camkeys", "--camkeys"], ["fx", "--fx"], ["fg", "--fg"], ["locopts", "--locopts"]]) if (s[key]) a.push(flag, JSON.stringify(s[key]));
-    if (ep.positions) a.push("--positions", JSON.stringify(ep.positions));
+    if (ep.positions || s.positions) a.push("--positions", JSON.stringify(Object.assign({}, ep.positions, s.positions)));
     if (s.time || ep.time) a.push("--time", s.time || ep.time);
     execFileSync("node", a, { stdio: "ignore", env: { ...process.env, WARNA: "1" } });
     const f = path.join(outDir, `f${String(k).padStart(3, "0")}.png`), g = f.replace(".png", "_l.png");

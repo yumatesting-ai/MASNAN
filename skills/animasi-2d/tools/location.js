@@ -210,7 +210,7 @@ function frame(t) {
       fogIds.add(id);
       const g = (0.5 + k * 0.6).toFixed(3); // siluet makin terang (pudar) bila jauh
       const body = exStyle === "shadow"
-        ? `<feColorMatrix type="matrix" values="0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0.85 0"/><feGaussianBlur stdDeviation="1.6"/>`
+        ? `<feColorMatrix type="matrix" values="0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0 ${g}  0 0 0 0.85 0"/><feGaussianBlur stdDeviation="${LOC.extrasBlur || 1.6}"/>`
         : `<feGaussianBlur stdDeviation="3.2"/><feComponentTransfer><feFuncR type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/>
            <feFuncG type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/><feFuncB type="linear" slope="${(0.75 - k * 0.4).toFixed(2)}" intercept="${(0.24 + k * 0.37).toFixed(2)}"/></feComponentTransfer>`;
       w.add("sky", 2e9, `<defs><filter id="${id}" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">${body}</filter></defs>`);

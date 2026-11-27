@@ -95,63 +95,105 @@ FX_C = [{"type": "prop", "kind": "book", "hold": "start", "keys": [[0, *BOOK, 0]
  F(19.5 - C, "KETINGGALAN!", sy=0.22, size=0.1, dur=1.5)]
 CAM_C = [dict(t=0, **cam(0.25, 0.95, 5.3, 1350, 0.55)), dict(t=round(SC[3] - C, 2), **cam(0.4, 0.95, 5.1, 1300, 0.55))]
 
-# ======================= D. KELAS (21,4 - 62,15) =======================
-D = SC[3]; DESK = [-2.25, 0.76, 4.25]; CAT_DESK = [-2.62, 0.76, 4.35]
-BIMA = [0.8, 1.0, 3.7]; DOOR = [-3.05, 0.3, 7.2]
-CAST_D = ", ".join([
- "bima:" + seq(D, [(D, "sit_idle{face=l}@duduk_bima"), (25.9, "sit_nervous{face=l}"), (28.35, "sit_nervous{face=l;sweat=1}"), (32.6, "sit_idle{face=l;expr=nervous;sweat=1;blush=1}"),
-   (34.5, "sit_idle{face=l;expr=sad}"), (37.3, "sit_idle{face=l;expr=curious}"), (39.86, "sit_shock{face=l}"), (41.5, "sit_idle{face=l;expr=surprised}"),
-   (50.9, "sit_idle{face=l;expr=happy}"), (52.3, "sit_idle{face=l;expr=deadpan}"), (55.87, "sit_idle{face=l;expr=hopeful}"), (58.82, "sit_idle{face=l;expr=sad}"), (60.4, "sit_idle{face=l;expr=deadpan;gloom=1}")]),
- "rara:" + seq(D, [(D, "sit_idle{face=l}@duduk_rara"), (23.6, "sit_idle{face=l;holdR=book;armR=75;elbowR=35;expr=smile}"), (26.2, "sit_idle{face=l}"),
-   (33.0, "sit_laugh{face=l}"), (34.5, "sit_idle{face=l;expr=smile}"), (39.86, "sit_shock{face=l}"), (41.5, "sit_idle{face=l;expr=surprised}"), (48.4, "sit_idle{face=l}"), (59.8, "sit_laugh{face=l}"), (61.4, "sit_idle{face=l;expr=smile}")]),
- "nana:" + seq(D, [(D, "sit_idle{face=l}@duduk_nana"), (23.8, "sit_idle{face=l;holdR=book;armR=75;elbowR=35;expr=happy}"), (26.4, "sit_idle{face=l}"),
-   (33.0, "sit_laugh{face=l}"), (34.5, "sit_idle{face=l;expr=smile}"), (39.86, "sit_shock{face=l}"), (41.5, "sit_idle{face=l;expr=surprised}"), (48.4, "sit_idle{face=l}"), (59.8, "sit_laugh{face=l}"), (61.4, "sit_idle{face=l;expr=smile}")]),
- "busari:" + seq(D, [(D, "idle{face=r}@depan_guru"), (23.47, "explain{face=r}"), (25.36, "arms_crossed{face=r}"), (28.35, "arms_crossed{face=r;expr=suspicious}"),
-   (32.6, "arms_crossed{face=r;expr=deadpan}"), (34.5, "shake_head"), (35.55, "hands_hips{expr=deadpan}"), (37.3, "idle{expr=surprised}"), (45.4, "idle{expr=deadpan}"),
-   (48.4, "read_desk{face=l}"), (54.0, "idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}"), (55.87, "write_score{face=l}"), (58.82, "idle_three{face=r;holdR=redpen;expr=deadpan}")]),
-])
-LAUGH = lambda seat, ph=0: {"spec": f"sit_idle{{face=l}}@{seat}/{round(33.0 - D + ph, 2)}+sit_laugh{{face=l}}/{round(1.5 - ph, 2)}+sit_idle{{face=l;expr=smile}}/{round(59.8 - 34.5, 2)}+sit_laugh{{face=l}}/1.6+sit_idle{{face=l}}/20"}
-EXTRAS_D = [dict(seed=71, kind="anak_laki", **LAUGH("duduk_a")), dict(seed=72, kind="anak_perempuan", **LAUGH("duduk_b", 0.2)), dict(seed=73, kind="anak_laki", **LAUGH("duduk_c", 0.1))]
-FX_D = [
- # Oyen: muncul di pintu -> jalan pelan menggigit buku -> lompat ke meja guru -> menaruh buku -> duduk manis
- {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 46.35], "keys": [[D, -3.05, 0, 7.45, 0, 0, "hide"], [38.55, -3.05, 0, 7.45, 0, 0, "hide"],
-   [38.6, -3.05, 0, 7.45, 0, 0, "sit"], [39.9, -3.05, 0, 7.45, 0, 0, "sit"], [43.0, -3.45, 0, 5.5, 0, 0, "walk"], [44.6, -3.4, 0, 3.75, 0, 0, "walk"],
-   [44.75, -3.4, 0, 3.75, 0, 0, "sit"], [45.35, CAT_DESK[0], CAT_DESK[1], CAT_DESK[2], 0, 0.35, "sit"]]},
+# ======================= D. KELAS (21,4 - 62,15): shot bergantian HADAP GURU (kelas_guru) / HADAP MURID (kelas) =======================
+# Koordinat tiap sudut: lihat locations/kelas.js (x_guru = -x_murid, z_guru = 6.8 - z_murid).
+D = SC[3]; DESK = [-2.15, 0.76, 5.85]; CAT_DESK = [-2.6, 0.76, 5.9]; GURU_POS = [-0.9, 6.05]
+BIMA_M = [-0.85, 2.8]; GURU_M = [0.9, 0.75]; DOOR_M = [3.75, 0.3, -0.2]
+PARTS = {  # (mulai_abs, klip) — tampak murid (wajah). Tampak guru: murid memakai sit_back.
+ "bima": [(D, "sit_idle"), (25.9, "sit_nervous"), (28.35, "sit_nervous{sweat=1}"), (32.6, "sit_idle{expr=nervous;sweat=1;blush=1}"),
+   (34.5, "sit_idle{expr=sad}"), (37.3, "sit_idle{expr=curious}"), (39.86, "sit_shock"), (41.5, "sit_idle{expr=surprised}"),
+   (50.9, "sit_idle{expr=happy}"), (52.3, "sit_idle{expr=deadpan}"), (55.87, "sit_idle{expr=hopeful}"), (58.82, "sit_idle{expr=sad}"), (60.4, "sit_idle{expr=deadpan;gloom=1}")],
+ "rara": [(D, "sit_idle"), (23.6, "sit_idle{holdR=book;armR=75;elbowR=35;expr=smile}"), (26.2, "sit_idle"), (33.0, "sit_laugh"), (34.5, "sit_idle{expr=smile}"),
+   (39.86, "sit_shock"), (41.5, "sit_idle{expr=surprised}"), (48.4, "sit_idle"), (59.8, "sit_laugh"), (61.4, "sit_idle{expr=smile}")],
+ "nana": [(D, "sit_idle"), (23.8, "sit_idle{holdR=book;armR=75;elbowR=35;expr=happy}"), (26.4, "sit_idle"), (33.0, "sit_laugh"), (34.5, "sit_idle{expr=smile}"),
+   (39.86, "sit_shock"), (41.5, "sit_idle{expr=surprised}"), (48.4, "sit_idle"), (59.8, "sit_laugh"), (61.4, "sit_idle{expr=smile}")],
+ "busari": [(D, "idle"), (23.47, "explain"), (25.36, "arms_crossed"), (28.35, "arms_crossed{expr=suspicious}"), (32.6, "arms_crossed{expr=deadpan}"),
+   (34.5, "shake_head"), (35.55, "hands_hips{expr=deadpan}"), (37.3, "idle{expr=surprised}"), (45.4, "idle{expr=deadpan}"), (48.4, "read_desk{face=l}"),
+   (54.0, "idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}"), (55.87, "write_score{face=l}"), (58.82, "idle{holdR=redpen;expr=deadpan}")],
+}
+SPOT = {"bima": "duduk_bima", "rara": "duduk_rara", "nana": "duduk_nana", "busari": "depan_guru"}
+def cast_slice(a, b, view):
+    out = []
+    for who, parts in PARTS.items():
+        if view == "murid" and who == "busari": continue
+        seg = [(max(t, a), c) for i, (t, c) in enumerate(parts) if t < b and (i + 1 == len(parts) or parts[i + 1][0] > a)]
+        if view == "guru" and who != "busari": seg = [(seg[0][0], "sit_back")]
+        specs = []
+        for i, (t, c) in enumerate(seg):
+            t1 = seg[i + 1][0] if i + 1 < len(seg) else b
+            specs.append(f"{c}{'@' + SPOT[who] if i == 0 else ''}/{round(t1 - t, 2)}")
+        out.append(f"{who}:" + "+".join(specs))
+    return ", ".join(out)
+LAUGH_T = [(33.0, 34.5), (59.8, 61.4)]
+def extras_slice(a, b, view):
+    if view == "guru": return None
+    ex = []
+    for i, seat in enumerate(["duduk_a", "duduk_b", "duduk_c", "duduk_d", "duduk_e"]):
+        segs, t = [], a
+        for l0, l1 in LAUGH_T:
+            if l1 <= a or l0 >= b: continue
+            if l0 > t: segs.append(("sit_idle", l0 - t)); t = l0
+            segs.append(("sit_laugh", min(l1, b) - t)); t = min(l1, b)
+        if t < b: segs.append(("sit_idle", b - t + 30))
+        spec = "+".join(f"{c}{'@' + seat if k == 0 else ''}/{round(d, 2)}" for k, (c, d) in enumerate(segs))
+        ex.append({"seed": 71 + i, "kind": "anak_perempuan" if i % 2 else "anak_laki", "spec": spec})
+    return ex
+# shot: (mulai_abs, sudut, kamera_awal, kamera_akhir)
+SHOTS_D = [
+ (D, "guru", cam(-0.2, 1.3, 2.7, 1000), cam(-0.3, 1.3, 3.1, 1040)),               # Bu Sari menagih PR (punggung murid di depan)
+ (25.36, "murid", cam(-0.85, 1.12, 1.45, 1150), cam(-0.85, 1.12, 1.7, 1200)),     # close Bima keringat dingin
+ (28.3, "murid", cam(-0.5, 1.15, 0.6, 900), cam(-0.5, 1.15, 0.85, 930)),          # Bima beralasan (Rara & Nana ikut terlihat)
+ (32.6, "murid", cam(0.0, 1.2, 0.1, 860), cam(0.0, 1.2, 0.35, 880)),              # satu kelas tertawa
+ (34.5, "guru", cam(-0.85, 1.3, 3.7, 1100), cam(-0.85, 1.3, 3.95, 1130)),         # Bu Sari geleng-geleng
+ (37.3, "guru", cam(-3.2, 1.0, 4.1, 1100), cam(-3.2, 1.0, 4.4, 1150)),            # pintu kelas: "meong"
+ (39.86, "murid", cam(0.0, 1.2, 0.3, 880), cam(0.0, 1.2, 0.5, 900)),              # satu kelas kaget
+ (41.8, "guru", cam(-2.7, 0.9, 3.4, 1050), cam(-2.6, 0.95, 3.7, 1080)),           # Oyen jalan & lompat ke meja guru
+ (45.5, "guru", cam(-2.25, 1.15, 3.9, 1100), cam(-2.2, 1.15, 4.1, 1120)),          # Oyen menaruh buku
+ (48.4, "guru", cam(-1.5, 1.3, 3.7, 1050), cam(-1.5, 1.3, 3.9, 1070)),            # Bu Sari membuka buku
+ (50.85, "guru", cam(-2.15, 1.1, 4.75, 1450), cam(-2.15, 1.1, 4.9, 1500)),        # close-up buku: lengkap + cap kaki
+ (53.7, "guru", cam(-1.2, 1.35, 3.8, 1050), cam(-1.2, 1.35, 3.95, 1060)),         # pulpen merah
+ (55.85, "guru", cam(-1.75, 1.2, 3.7, 850), cam(-1.75, 1.2, 3.9, 880)),       # Oyen 100
+ (58.8, "murid", cam(-0.85, 1.12, 1.35, 1100), cam(-0.85, 1.12, 1.75, 1180)),     # Bima 60
+]
+FX_G = [  # hanya tampak guru (koordinat kelas_guru)
+ {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 46.35], "keys": [[D, -3.75, 0, 7.4, 0, 0, "hide"], [38.55, -3.75, 0, 7.4, 0, 0, "hide"],
+   [38.6, -3.75, 0, 7.4, 0, 0, "sit"], [41.9, -3.75, 0, 7.4, 0, 0, "sit"], [43.4, -3.55, 0, 6.2, 0, 0, "walk"], [44.6, -3.3, 0, 5.25, 0, 0, "walk"],
+   [44.75, -3.3, 0, 5.25, 0, 0, "sit"], [45.35, CAT_DESK[0], CAT_DESK[1], CAT_DESK[2], 0, 0.35, "sit"]]},
  {"type": "prop", "kind": "book", "hold": "end", "open": 48.9, "paws": 48.9, "keys": [[D, *DESK, 0, 0, "hide"], [46.35, *DESK, 0, 0, "hide"], [46.36, *DESK, 0]]},
- F(38.9, "MEONG...", sx=0.35, sy=0.28, size=0.09, dur=0.9), SH(39.9, 0.02, 0.3),
+ F(38.9, "MEONG...", sx=0.62, sy=0.28, size=0.09, dur=0.9),
  AT(46.5, "RAPI.", [CAT_DESK[0], 1.35, CAT_DESK[2]], dur=1.3, size=0.06),
  AT(51.0, "LENGKAP ✓", [DESK[0], 1.15, DESK[2]], dur=1.3, size=0.05), AT(52.3, "CAP KAKI KUCING!", [DESK[0], 1.15, DESK[2]], dur=1.4, size=0.045),
- AT(56.6, "100", [CAT_DESK[0], 1.45, CAT_DESK[2]], dur=5.5, size=0.11, rot=-8), {"type": "burst", "t": 56.6, "sx": 0.5, "sy": 0.4},
- AT(59.9, "60", [BIMA[0], 1.75, BIMA[2]], dur=2.2, size=0.1, rot=8), SH(59.9, 0.015, 0.25),
+ AT(56.6, "100", [CAT_DESK[0], 1.45, CAT_DESK[2]], dur=2.3, size=0.11, rot=-8), {"type": "burst", "t": 56.6, "sx": 0.35, "sy": 0.4},
 ]
-CAM_D = shots([
- (D, cam(-0.4, 1.2, 1.0, 800, 0.45), cam(-0.4, 1.2, 1.4, 820, 0.45)),            # wide: Bu Sari + kelas
- (25.36, cam(0.65, 1.0, 2.0, 1100), cam(0.65, 1.0, 2.35, 1150)),       # close Bima keringat dingin
- (28.3, cam(0.2, 1.05, 1.4, 1000), cam(0.2, 1.05, 1.6, 1000)),         # Bima beralasan (Rara & Nana terlihat)
- (32.6, cam(1.6, 1.15, 1.2, 760, 0.45), cam(1.6, 1.15, 1.45, 780, 0.45)),             # satu kelas tertawa
- (34.5, cam(-1.25, 1.35, 2.1, 1050), cam(-1.25, 1.35, 2.4, 1080)),     # Bu Sari geleng-geleng
- (37.3, cam(-3.5, 1.0, 3.6, 1100), cam(-3.5, 1.0, 3.9, 1150)),           # pintu kelas: "meong"
- (41.8, cam(-2.6, 0.75, 1.6, 950), cam(-2.4, 0.85, 1.9, 980)),         # Oyen jalan & lompat ke meja
- (45.5, cam(-2.45, 1.1, 2.5, 1100), cam(-2.4, 1.1, 2.7, 1120)),       # Oyen menaruh buku, Bu Sari
- (48.4, cam(-1.7, 1.3, 2.1, 1050), cam(-1.7, 1.3, 2.3, 1060)),         # Bu Sari membuka buku
- (50.85, cam(-2.2, 1.1, 3.15, 1450), cam(-2.2, 1.1, 3.3, 1500)),       # close-up buku: lengkap + cap kaki
- (53.7, cam(-1.6, 1.35, 2.2, 1000), cam(-1.6, 1.35, 2.35, 1000)),      # pulpen merah
- (55.85, cam(-2.0, 1.15, 2.1, 950), cam(-2.0, 1.15, 2.3, 980)),      # Oyen 100
- (58.8, cam(0.6, 1.0, 1.9, 1050), cam(0.6, 1.0, 2.3, 1120)),           # Bima 60
-], D)
-STUD = ["bima", "rara", "nana"]
-LOOK_D = [
+FX_M = [AT(59.9, "60", [BIMA_M[0], 1.45, BIMA_M[1]], dur=2.2, size=0.1, rot=8), SH(59.9, 0.015, 0.25), SH(39.9, 0.02, 0.3), F(39.9, "!!", sx=0.5, sy=0.22, size=0.12, dur=0.8)]
+LOOK_G = [
  {"t0": 48.4, "t1": 55.9, "who": "busari", "at": [DESK[0], 0.8, DESK[2]]},
- {"t0": 21.4, "t1": 25.5, "who": STUD, "at": "busari"},
- {"t0": 28.35, "t1": 32.6, "who": ["busari", "rara", "nana"], "at": "bima"}, {"t0": 28.35, "t1": 32.6, "who": "bima", "at": "busari"},
- {"t0": 32.6, "t1": 34.5, "who": ["rara", "nana"], "at": "bima"}, {"t0": 32.6, "t1": 37.3, "who": "busari", "at": "bima"},
- {"t0": 34.5, "t1": 37.3, "who": STUD, "at": "busari"},
- {"t0": 37.3, "t1": 41.6, "who": "*", "at": DOOR}, {"t0": 41.6, "t1": 43.4, "who": "*", "at": [-3.45, 0.3, 5.5]},
- {"t0": 43.4, "t1": 45.3, "who": "*", "at": [-3.4, 0.3, 3.9]}, {"t0": 45.3, "t1": 48.4, "who": "*", "at": [CAT_DESK[0], 1.0, CAT_DESK[2]]},
- {"t0": 48.4, "t1": 55.9, "who": STUD, "at": "busari"},
- {"t0": 55.9, "t1": 58.8, "who": "*", "at": [CAT_DESK[0], 1.0, CAT_DESK[2]]},
- {"t0": 58.8, "t1": 62.2, "who": ["busari", "rara", "nana"], "at": "bima"}, {"t0": 58.8, "t1": 62.2, "who": "bima", "at": "busari"},
+ {"t0": 28.35, "t1": 37.3, "who": "busari", "at": "bima"}, {"t0": 37.3, "t1": 41.8, "who": "busari", "at": [-3.75, 0.3, 7.2]},
+ {"t0": 41.8, "t1": 45.4, "who": "busari", "at": [-3.4, 0.3, 5.6]}, {"t0": 45.4, "t1": 48.4, "who": "busari", "at": [CAT_DESK[0], 1.0, CAT_DESK[2]]},
+ {"t0": 55.9, "t1": 58.8, "who": "busari", "at": [CAT_DESK[0], 1.0, CAT_DESK[2]]}, {"t0": 58.8, "t1": 62.2, "who": "busari", "at": "bima"},
 ]
+LOOK_M = [
+ {"t0": 21.4, "t1": 28.35, "who": ["rara", "nana"], "at": "busari"}, {"t0": 21.4, "t1": 25.9, "who": "bima", "at": "busari"},
+ {"t0": 28.35, "t1": 34.5, "who": ["rara", "nana"], "at": "bima"}, {"t0": 28.35, "t1": 32.6, "who": "bima", "at": "busari"},
+ {"t0": 34.5, "t1": 37.3, "who": ["bima", "rara", "nana"], "at": "busari"},
+ {"t0": 37.3, "t1": 48.4, "who": ["bima", "rara", "nana"], "at": DOOR_M},
+ {"t0": 48.4, "t1": 58.8, "who": ["bima", "rara", "nana"], "at": "busari"},
+ {"t0": 58.8, "t1": 62.2, "who": "bima", "at": "busari"}, {"t0": 58.8, "t1": 62.2, "who": ["rara", "nana"], "at": "bima"},
+]
+def kelas_scenes():
+    out = []
+    for i, (a, view, c0, c1) in enumerate(SHOTS_D):
+        b = SHOTS_D[i + 1][0] if i + 1 < len(SHOTS_D) else SC[4]
+        sc = {"judul": f"Kelas ({'hadap guru' if view == 'guru' else 'hadap murid'}) {a:.1f}-{b:.1f}", "loc": "kelas_guru" if view == "guru" else "kelas",
+              "seconds": round(b - a, 2), "cast": cast_slice(a, b, view),
+              "camkeys": [dict(t=0, **c0), dict(t=round(b - a, 2), **c1)],
+              "fx": [f for f in loc_fx(FX_G if view == "guru" else FX_M, a) if f["type"] == "prop" or -0.5 < f.get("t", 0) < b - a],
+              "dialog": [d for d in dlg(a, b) if view == "guru" or d["who"] != "busari"] if True else [],
+              "looks": [dict(l, t0=round(l["t0"] - a, 2), t1=round(l["t1"] - a, 2)) for l in (LOOK_G if view == "guru" else LOOK_M) if l["t1"] > a and l["t0"] < b],
+              "positions": {"busari": GURU_M, "bima": BIMA_M} if view == "murid" else {"busari": GURU_POS, "bima": [0.85, 4.0]}, "visual": "", "narasi": ""}
+        if view == "murid": sc["locopts"] = {"extras": extras_slice(a, b, view)}
+        out.append(sc)
+    return out
 
 # ======================= E. SEKOLAH, BESOK PAGI (62,15 - 66,51): Oyen paling pagi =======================
 E = SC[4]
@@ -165,7 +207,6 @@ ep = {"title": "PR Dimakan Kucing", "format": "portrait", "captionStyle": "short
       "music": {"style": "kocak", "tense_until": 0, "bpm": 112},
       "sfx": [{"t": 14.74, "type": "pop"}, {"t": 15.72, "type": "whoosh"}, {"t": 20.4, "type": "pop"}, {"t": 33.0, "type": "dundun"}, {"t": 38.9, "type": "pop"},
               {"t": 45.35, "type": "boing"}, {"t": 46.4, "type": "thud"}, {"t": 56.6, "type": "pop"}, {"t": 59.9, "type": "wahwah"}, {"t": 65.8, "type": "whoosh"}],
-      "positions": {"busari": [-1.45, 4.35], "bima": [0.8, 3.7]},
       "scenes": [
         {"judul": "Pos ronda malam: PR + gorengan, Oyen datang", "loc": "posronda", "time": "night", "locopts": {"noCat": True, "noCoffee": True}, "extras": "off",
          "seconds": SC[1] - A, "cast": CAST_A, "camkeys": CAM_A, "fx": loc_fx(FX_A, A), "dialog": dlg(A, SC[1]), "looks": looks(LOOK_A, A), "visual": "", "narasi": ""},
@@ -173,8 +214,7 @@ ep = {"title": "PR Dimakan Kucing", "format": "portrait", "captionStyle": "short
          "dialog": dlg(B, SC[2]), "visual": "", "narasi": ""},
         {"judul": "Pos ronda pagi: buku ketinggalan, Oyen membawanya", "loc": "posronda", "locopts": {"noCat": True}, "t0": 30, "seconds": round(SC[3] - C, 2),
          "camkeys": CAM_C, "fx": FX_C, "dialog": dlg(C, SC[3]), "visual": "", "narasi": ""},
-        {"judul": "Kelas: PR dibawa kucing", "loc": "kelas", "locopts": {"extras": EXTRAS_D}, "seconds": round(SC[4] - D, 2), "cast": CAST_D, "camkeys": CAM_D,
-         "fx": loc_fx(FX_D, D), "dialog": dlg(D, SC[4]), "looks": looks(LOOK_D, D), "visual": "", "narasi": ""},
+        *kelas_scenes(),
         {"judul": "Sekolah besok pagi: Oyen paling pagi", "loc": "sekolah", "extras": "off", "seconds": round(END - E, 2), "cast": CAST_E, "camkeys": CAM_E,
          "fx": FX_E, "dialog": dlg(E, END), "visual": "", "narasi": ""}]}
 json.dump(ep, open(OUT, "w"), indent=1, ensure_ascii=False)

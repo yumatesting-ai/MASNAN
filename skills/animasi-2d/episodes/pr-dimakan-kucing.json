@@ -64,16 +64,6 @@
    "type": "whoosh"
   }
  ],
- "positions": {
-  "busari": [
-   -1.45,
-   4.35
-  ],
-  "bima": [
-   0.8,
-   3.7
-  ]
- },
  "scenes": [
   {
    "judul": "Pos ronda malam: PR + gorengan, Oyen datang",
@@ -605,248 +595,25 @@
    "narasi": ""
   },
   {
-   "judul": "Kelas: PR dibawa kucing",
-   "loc": "kelas",
-   "locopts": {
-    "extras": [
-     {
-      "seed": 71,
-      "kind": "anak_laki",
-      "spec": "sit_idle{face=l}@duduk_a/11.6+sit_laugh{face=l}/1.5+sit_idle{face=l;expr=smile}/25.3+sit_laugh{face=l}/1.6+sit_idle{face=l}/20"
-     },
-     {
-      "seed": 72,
-      "kind": "anak_perempuan",
-      "spec": "sit_idle{face=l}@duduk_b/11.8+sit_laugh{face=l}/1.3+sit_idle{face=l;expr=smile}/25.3+sit_laugh{face=l}/1.6+sit_idle{face=l}/20"
-     },
-     {
-      "seed": 73,
-      "kind": "anak_laki",
-      "spec": "sit_idle{face=l}@duduk_c/11.7+sit_laugh{face=l}/1.4+sit_idle{face=l;expr=smile}/25.3+sit_laugh{face=l}/1.6+sit_idle{face=l}/20"
-     }
-    ]
-   },
-   "seconds": 40.75,
-   "cast": "bima:sit_idle{face=l}@duduk_bima/4.5+sit_nervous{face=l}/2.45+sit_nervous{face=l;sweat=1}/4.25+sit_idle{face=l;expr=nervous;sweat=1;blush=1}/1.9+sit_idle{face=l;expr=sad}/2.8+sit_idle{face=l;expr=curious}/2.56+sit_shock{face=l}/1.64+sit_idle{face=l;expr=surprised}/9.4+sit_idle{face=l;expr=happy}/1.4+sit_idle{face=l;expr=deadpan}/3.57+sit_idle{face=l;expr=hopeful}/2.95+sit_idle{face=l;expr=sad}/1.58+sit_idle{face=l;expr=deadpan;gloom=1}/1.75, rara:sit_idle{face=l}@duduk_rara/2.2+sit_idle{face=l;holdR=book;armR=75;elbowR=35;expr=smile}/2.6+sit_idle{face=l}/6.8+sit_laugh{face=l}/1.5+sit_idle{face=l;expr=smile}/5.36+sit_shock{face=l}/1.64+sit_idle{face=l;expr=surprised}/6.9+sit_idle{face=l}/11.4+sit_laugh{face=l}/1.6+sit_idle{face=l;expr=smile}/0.75, nana:sit_idle{face=l}@duduk_nana/2.4+sit_idle{face=l;holdR=book;armR=75;elbowR=35;expr=happy}/2.6+sit_idle{face=l}/6.6+sit_laugh{face=l}/1.5+sit_idle{face=l;expr=smile}/5.36+sit_shock{face=l}/1.64+sit_idle{face=l;expr=surprised}/6.9+sit_idle{face=l}/11.4+sit_laugh{face=l}/1.6+sit_idle{face=l;expr=smile}/0.75, busari:idle{face=r}@depan_guru/2.07+explain{face=r}/1.89+arms_crossed{face=r}/2.99+arms_crossed{face=r;expr=suspicious}/4.25+arms_crossed{face=r;expr=deadpan}/1.9+shake_head/1.05+hands_hips{expr=deadpan}/1.75+idle{expr=surprised}/8.1+idle{expr=deadpan}/3.0+read_desk{face=l}/5.6+idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}/1.87+write_score{face=l}/2.95+idle_three{face=r;holdR=redpen;expr=deadpan}/3.33",
+   "judul": "Kelas (hadap guru) 21.4-25.4",
+   "loc": "kelas_guru",
+   "seconds": 3.96,
+   "cast": "bima:sit_back@duduk_bima/3.96, rara:sit_back@duduk_rara/3.96, nana:sit_back@duduk_nana/3.96, busari:idle@depan_guru/2.07+explain/1.89",
    "camkeys": [
     {
-     "t": 0.0,
-     "x": -0.4,
-     "y": 1.2,
-     "z": 1.0,
-     "f": 800,
-     "horizon": 0.45
-    },
-    {
-     "t": 3.95,
-     "ease": "cut",
-     "x": -0.4,
-     "y": 1.2,
-     "z": 1.4,
-     "f": 820,
-     "horizon": 0.45
+     "t": 0,
+     "x": -0.2,
+     "y": 1.3,
+     "z": 2.7,
+     "f": 1000,
+     "horizon": 0.5
     },
     {
      "t": 3.96,
-     "x": 0.65,
-     "y": 1.0,
-     "z": 2.0,
-     "f": 1100,
-     "horizon": 0.5
-    },
-    {
-     "t": 6.89,
-     "ease": "cut",
-     "x": 0.65,
-     "y": 1.0,
-     "z": 2.35,
-     "f": 1150,
-     "horizon": 0.5
-    },
-    {
-     "t": 6.9,
-     "x": 0.2,
-     "y": 1.05,
-     "z": 1.4,
-     "f": 1000,
-     "horizon": 0.5
-    },
-    {
-     "t": 11.19,
-     "ease": "cut",
-     "x": 0.2,
-     "y": 1.05,
-     "z": 1.6,
-     "f": 1000,
-     "horizon": 0.5
-    },
-    {
-     "t": 11.2,
-     "x": 1.6,
-     "y": 1.15,
-     "z": 1.2,
-     "f": 760,
-     "horizon": 0.45
-    },
-    {
-     "t": 13.09,
-     "ease": "cut",
-     "x": 1.6,
-     "y": 1.15,
-     "z": 1.45,
-     "f": 780,
-     "horizon": 0.45
-    },
-    {
-     "t": 13.1,
-     "x": -1.25,
-     "y": 1.35,
-     "z": 2.1,
-     "f": 1050,
-     "horizon": 0.5
-    },
-    {
-     "t": 15.89,
-     "ease": "cut",
-     "x": -1.25,
-     "y": 1.35,
-     "z": 2.4,
-     "f": 1080,
-     "horizon": 0.5
-    },
-    {
-     "t": 15.9,
-     "x": -3.5,
-     "y": 1.0,
-     "z": 3.6,
-     "f": 1100,
-     "horizon": 0.5
-    },
-    {
-     "t": 20.39,
-     "ease": "cut",
-     "x": -3.5,
-     "y": 1.0,
-     "z": 3.9,
-     "f": 1150,
-     "horizon": 0.5
-    },
-    {
-     "t": 20.4,
-     "x": -2.6,
-     "y": 0.75,
-     "z": 1.6,
-     "f": 950,
-     "horizon": 0.5
-    },
-    {
-     "t": 24.09,
-     "ease": "cut",
-     "x": -2.4,
-     "y": 0.85,
-     "z": 1.9,
-     "f": 980,
-     "horizon": 0.5
-    },
-    {
-     "t": 24.1,
-     "x": -2.45,
-     "y": 1.1,
-     "z": 2.5,
-     "f": 1100,
-     "horizon": 0.5
-    },
-    {
-     "t": 26.99,
-     "ease": "cut",
-     "x": -2.4,
-     "y": 1.1,
-     "z": 2.7,
-     "f": 1120,
-     "horizon": 0.5
-    },
-    {
-     "t": 27.0,
-     "x": -1.7,
+     "x": -0.3,
      "y": 1.3,
-     "z": 2.1,
-     "f": 1050,
-     "horizon": 0.5
-    },
-    {
-     "t": 29.44,
-     "ease": "cut",
-     "x": -1.7,
-     "y": 1.3,
-     "z": 2.3,
-     "f": 1060,
-     "horizon": 0.5
-    },
-    {
-     "t": 29.45,
-     "x": -2.2,
-     "y": 1.1,
-     "z": 3.15,
-     "f": 1450,
-     "horizon": 0.5
-    },
-    {
-     "t": 32.29,
-     "ease": "cut",
-     "x": -2.2,
-     "y": 1.1,
-     "z": 3.3,
-     "f": 1500,
-     "horizon": 0.5
-    },
-    {
-     "t": 32.3,
-     "x": -1.6,
-     "y": 1.35,
-     "z": 2.2,
-     "f": 1000,
-     "horizon": 0.5
-    },
-    {
-     "t": 34.44,
-     "ease": "cut",
-     "x": -1.6,
-     "y": 1.35,
-     "z": 2.35,
-     "f": 1000,
-     "horizon": 0.5
-    },
-    {
-     "t": 34.45,
-     "x": -2.0,
-     "y": 1.15,
-     "z": 2.1,
-     "f": 950,
-     "horizon": 0.5
-    },
-    {
-     "t": 37.39,
-     "ease": "cut",
-     "x": -2.0,
-     "y": 1.15,
-     "z": 2.3,
-     "f": 980,
-     "horizon": 0.5
-    },
-    {
-     "t": 37.4,
-     "x": 0.6,
-     "y": 1.0,
-     "z": 1.9,
-     "f": 1050,
-     "horizon": 0.5
-    },
-    {
-     "t": 40.75,
-     "x": 0.6,
-     "y": 1.0,
-     "z": 2.3,
-     "f": 1120,
+     "z": 3.1,
+     "f": 1040,
      "horizon": 0.5
     }
    ],
@@ -864,72 +631,72 @@
      "keys": [
       [
        0.0,
-       -3.05,
+       -3.75,
        0,
-       7.45,
+       7.4,
        0,
        0,
        "hide"
       ],
       [
        17.15,
-       -3.05,
+       -3.75,
        0,
-       7.45,
+       7.4,
        0,
        0,
        "hide"
       ],
       [
        17.2,
-       -3.05,
+       -3.75,
        0,
-       7.45,
-       0,
-       0,
-       "sit"
-      ],
-      [
-       18.5,
-       -3.05,
-       0,
-       7.45,
+       7.4,
        0,
        0,
        "sit"
       ],
       [
-       21.6,
-       -3.45,
+       20.5,
+       -3.75,
        0,
-       5.5,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       22.0,
+       -3.55,
+       0,
+       6.2,
        0,
        0,
        "walk"
       ],
       [
        23.2,
-       -3.4,
+       -3.3,
        0,
-       3.75,
+       5.25,
        0,
        0,
        "walk"
       ],
       [
        23.35,
-       -3.4,
+       -3.3,
        0,
-       3.75,
+       5.25,
        0,
        0,
        "sit"
       ],
       [
        23.95,
-       -2.62,
+       -2.6,
        0.76,
-       4.35,
+       5.9,
        0,
        0.35,
        "sit"
@@ -945,123 +712,30 @@
      "keys": [
       [
        0.0,
-       -2.25,
+       -2.15,
        0.76,
-       4.25,
+       5.85,
        0,
        0,
        "hide"
       ],
       [
        24.95,
-       -2.25,
+       -2.15,
        0.76,
-       4.25,
+       5.85,
        0,
        0,
        "hide"
       ],
       [
        24.96,
-       -2.25,
+       -2.15,
        0.76,
-       4.25,
+       5.85,
        0
       ]
      ]
-    },
-    {
-     "type": "text",
-     "t": 17.5,
-     "dur": 0.9,
-     "text": "MEONG...",
-     "size": 0.09,
-     "rot": -6,
-     "sx": 0.35,
-     "sy": 0.28
-    },
-    {
-     "type": "shake",
-     "t": 18.5,
-     "dur": 0.3,
-     "amp": 0.02
-    },
-    {
-     "type": "text",
-     "t": 25.1,
-     "dur": 1.3,
-     "text": "RAPI.",
-     "at": [
-      -2.62,
-      1.35,
-      4.35
-     ],
-     "size": 0.06,
-     "rot": 0
-    },
-    {
-     "type": "text",
-     "t": 29.6,
-     "dur": 1.3,
-     "text": "LENGKAP ✓",
-     "at": [
-      -2.25,
-      1.15,
-      4.25
-     ],
-     "size": 0.05,
-     "rot": 0
-    },
-    {
-     "type": "text",
-     "t": 30.9,
-     "dur": 1.4,
-     "text": "CAP KAKI KUCING!",
-     "at": [
-      -2.25,
-      1.15,
-      4.25
-     ],
-     "size": 0.045,
-     "rot": 0
-    },
-    {
-     "type": "text",
-     "t": 35.2,
-     "dur": 5.5,
-     "text": "100",
-     "at": [
-      -2.62,
-      1.45,
-      4.35
-     ],
-     "size": 0.11,
-     "rot": -8
-    },
-    {
-     "type": "burst",
-     "t": 35.2,
-     "sx": 0.5,
-     "sy": 0.4
-    },
-    {
-     "type": "text",
-     "t": 38.5,
-     "dur": 2.2,
-     "text": "60",
-     "at": [
-      0.8,
-      1.75,
-      3.7
-     ],
-     "size": 0.1,
-     "rot": 8
-    },
-    {
-     "type": "shake",
-     "t": 38.5,
-     "dur": 0.25,
-     "amp": 0.015
     }
    ],
    "dialog": [
@@ -1080,177 +754,174 @@
      "text": "“Anak-anak, kumpulkan PR kalian!”"
     },
     {
-     "who": "narator",
-     "noname": true,
-     "at": 4.5,
-     "dur": 2.01,
-     "text": "Bima keringat dingin."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 6.95,
-     "dur": 4.21,
-     "text": "“Bu... PR saya... dibawa kucing!”"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 11.6,
-     "dur": 1.04,
-     "text": "Satu kelas tertawa."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 13.12,
-     "dur": 2.31,
-     "text": "Bu Sari geleng-geleng. “Bima, alasan itu sudah kuno.”"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 15.93,
-     "dur": 2.02,
-     "text": "Tiba-tiba... dari pintu kelas... “Meong.”"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 18.46,
-     "dur": 1.78,
-     "text": "Si Oyen masuk... sambil menggigit buku PR Bima!"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 20.54,
-     "dur": 3.39,
-     "text": "Oyen jalan pelan-pelan, naik ke meja Bu Sari,"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 24.16,
-     "dur": 2.26,
-     "text": "lalu menaruh bukunya. Rapi."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 26.99,
-     "dur": 2.12,
-     "text": "Bu Sari membuka buku itu."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 29.49,
-     "dur": 2.78,
-     "text": "PR-nya lengkap... tapi penuh cap kaki kucing."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 32.6,
-     "dur": 1.36,
-     "text": "Bu Sari mengambil pulpen merah."
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 34.47,
-     "dur": 2.54,
-     "text": "“Oyen, nilai seratus. Datang tepat waktu.”"
-    },
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 37.42,
-     "dur": 3.08,
-     "text": "“Bima, nilai enam puluh. Kamu terlambat.”"
-    },
-    {
      "who": "busari",
      "nosub": true,
      "emo": "normal",
      "at": 2.07,
      "dur": 1.89,
      "text": "Anak-anak, kumpulkan PR kalian!"
+    }
+   ],
+   "looks": [],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap murid) 25.4-28.3",
+   "loc": "kelas",
+   "seconds": 2.94,
+   "cast": "bima:sit_idle@duduk_bima/0.54+sit_nervous/2.4, rara:sit_idle{holdR=book;armR=75;elbowR=35;expr=smile}@duduk_rara/0.84+sit_idle/2.1, nana:sit_idle{holdR=book;armR=75;elbowR=35;expr=happy}@duduk_nana/1.04+sit_idle/1.9",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -0.85,
+     "y": 1.12,
+     "z": 1.45,
+     "f": 1150,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.94,
+     "x": -0.85,
+     "y": 1.12,
+     "z": 1.7,
+     "f": 1200,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.54,
+     "dur": 2.01,
+     "text": "Bima keringat dingin."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -3.96,
+     "t1": 2.99,
+     "who": [
+      "rara",
+      "nana"
+     ],
+     "at": "busari"
+    },
+    {
+     "t0": -3.96,
+     "t1": 0.54,
+     "who": "bima",
+     "at": "busari"
+    }
+   ],
+   "positions": {
+    "busari": [
+     0.9,
+     0.75
+    ],
+    "bima": [
+     -0.85,
+     2.8
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "locopts": {
+    "extras": [
+     {
+      "seed": 71,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_a/32.94"
+     },
+     {
+      "seed": 72,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_b/32.94"
+     },
+     {
+      "seed": 73,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_c/32.94"
+     },
+     {
+      "seed": 74,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_d/32.94"
+     },
+     {
+      "seed": 75,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_e/32.94"
+     }
+    ]
+   }
+  },
+  {
+   "judul": "Kelas (hadap murid) 28.3-32.6",
+   "loc": "kelas",
+   "seconds": 4.3,
+   "cast": "bima:sit_nervous@duduk_bima/0.05+sit_nervous{sweat=1}/4.25, rara:sit_idle@duduk_rara/4.3, nana:sit_idle@duduk_nana/4.3",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -0.5,
+     "y": 1.15,
+     "z": 0.6,
+     "f": 900,
+     "horizon": 0.5
+    },
+    {
+     "t": 4.3,
+     "x": -0.5,
+     "y": 1.15,
+     "z": 0.85,
+     "f": 930,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.05,
+     "dur": 4.21,
+     "text": "“Bu... PR saya... dibawa kucing!”"
     },
     {
      "who": "bima",
      "nosub": true,
      "emo": "nervous",
-     "at": 6.95,
+     "at": 0.05,
      "dur": 4.21,
      "text": "Bu... PR saya... dibawa kucing!"
-    },
-    {
-     "who": "busari",
-     "nosub": true,
-     "emo": "deadpan",
-     "at": 14.15,
-     "dur": 1.28,
-     "text": "Bima, alasan itu sudah kuno."
-    },
-    {
-     "who": "busari",
-     "nosub": true,
-     "emo": "deadpan",
-     "at": 34.47,
-     "dur": 2.54,
-     "text": "Oyen, nilai seratus. Datang tepat waktu."
-    },
-    {
-     "who": "busari",
-     "nosub": true,
-     "emo": "deadpan",
-     "at": 37.42,
-     "dur": 3.08,
-     "text": "Bima, nilai enam puluh. Kamu terlambat."
     }
    ],
    "looks": [
     {
-     "t0": 27.0,
-     "t1": 34.5,
-     "who": "busari",
-     "at": [
-      -2.25,
-      0.8,
-      4.25
-     ]
-    },
-    {
-     "t0": 0.0,
-     "t1": 4.1,
+     "t0": -6.9,
+     "t1": 0.05,
      "who": [
-      "bima",
       "rara",
       "nana"
      ],
      "at": "busari"
     },
     {
-     "t0": 6.95,
-     "t1": 11.2,
-     "who": [
-      "busari",
-      "rara",
-      "nana"
-     ],
-     "at": "bima"
-    },
-    {
-     "t0": 6.95,
-     "t1": 11.2,
-     "who": "bima",
-     "at": "busari"
-    },
-    {
-     "t0": 11.2,
-     "t1": 13.1,
+     "t0": 0.05,
+     "t1": 6.2,
      "who": [
       "rara",
       "nana"
@@ -1258,100 +929,1882 @@
      "at": "bima"
     },
     {
-     "t0": 11.2,
-     "t1": 15.9,
-     "who": "busari",
-     "at": "bima"
-    },
-    {
-     "t0": 13.1,
-     "t1": 15.9,
-     "who": [
-      "bima",
-      "rara",
-      "nana"
-     ],
-     "at": "busari"
-    },
-    {
-     "t0": 15.9,
-     "t1": 20.2,
-     "who": "*",
-     "at": [
-      -3.05,
-      0.3,
-      7.2
-     ]
-    },
-    {
-     "t0": 20.2,
-     "t1": 22.0,
-     "who": "*",
-     "at": [
-      -3.45,
-      0.3,
-      5.5
-     ]
-    },
-    {
-     "t0": 22.0,
-     "t1": 23.9,
-     "who": "*",
-     "at": [
-      -3.4,
-      0.3,
-      3.9
-     ]
-    },
-    {
-     "t0": 23.9,
-     "t1": 27.0,
-     "who": "*",
-     "at": [
-      -2.62,
-      1.0,
-      4.35
-     ]
-    },
-    {
-     "t0": 27.0,
-     "t1": 34.5,
-     "who": [
-      "bima",
-      "rara",
-      "nana"
-     ],
-     "at": "busari"
-    },
-    {
-     "t0": 34.5,
-     "t1": 37.4,
-     "who": "*",
-     "at": [
-      -2.62,
-      1.0,
-      4.35
-     ]
-    },
-    {
-     "t0": 37.4,
-     "t1": 40.8,
-     "who": [
-      "busari",
-      "rara",
-      "nana"
-     ],
-     "at": "bima"
-    },
-    {
-     "t0": 37.4,
-     "t1": 40.8,
+     "t0": 0.05,
+     "t1": 4.3,
      "who": "bima",
      "at": "busari"
     }
    ],
+   "positions": {
+    "busari": [
+     0.9,
+     0.75
+    ],
+    "bima": [
+     -0.85,
+     2.8
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "locopts": {
+    "extras": [
+     {
+      "seed": 71,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_a/34.3"
+     },
+     {
+      "seed": 72,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_b/34.3"
+     },
+     {
+      "seed": 73,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_c/34.3"
+     },
+     {
+      "seed": 74,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_d/34.3"
+     },
+     {
+      "seed": 75,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_e/34.3"
+     }
+    ]
+   }
+  },
+  {
+   "judul": "Kelas (hadap murid) 32.6-34.5",
+   "loc": "kelas",
+   "seconds": 1.9,
+   "cast": "bima:sit_idle{expr=nervous;sweat=1;blush=1}@duduk_bima/1.9, rara:sit_idle@duduk_rara/0.4+sit_laugh/1.5, nana:sit_idle@duduk_nana/0.4+sit_laugh/1.5",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": 0.0,
+     "y": 1.2,
+     "z": 0.1,
+     "f": 860,
+     "horizon": 0.5
+    },
+    {
+     "t": 1.9,
+     "x": 0.0,
+     "y": 1.2,
+     "z": 0.35,
+     "f": 880,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.4,
+     "dur": 1.04,
+     "text": "Satu kelas tertawa."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -4.25,
+     "t1": 1.9,
+     "who": [
+      "rara",
+      "nana"
+     ],
+     "at": "bima"
+    }
+   ],
+   "positions": {
+    "busari": [
+     0.9,
+     0.75
+    ],
+    "bima": [
+     -0.85,
+     2.8
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "locopts": {
+    "extras": [
+     {
+      "seed": 71,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_a/0.4+sit_laugh/1.5"
+     },
+     {
+      "seed": 72,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_b/0.4+sit_laugh/1.5"
+     },
+     {
+      "seed": 73,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_c/0.4+sit_laugh/1.5"
+     },
+     {
+      "seed": 74,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_d/0.4+sit_laugh/1.5"
+     },
+     {
+      "seed": 75,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_e/0.4+sit_laugh/1.5"
+     }
+    ]
+   }
+  },
+  {
+   "judul": "Kelas (hadap guru) 34.5-37.3",
+   "loc": "kelas_guru",
+   "seconds": 2.8,
+   "cast": "bima:sit_back@duduk_bima/2.8, rara:sit_back@duduk_rara/2.8, nana:sit_back@duduk_nana/2.8, busari:shake_head@depan_guru/1.05+hands_hips{expr=deadpan}/1.75",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -0.85,
+     "y": 1.3,
+     "z": 3.7,
+     "f": 1100,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.8,
+     "x": -0.85,
+     "y": 1.3,
+     "z": 3.95,
+     "f": 1130,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -34.5,
+      11.85
+     ],
+     "keys": [
+      [
+       -13.1,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       4.05,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       4.1,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       7.4,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       8.9,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       10.1,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       10.25,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       10.85,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": 14.4,
+     "paws": 14.4,
+     "keys": [
+      [
+       -13.1,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       11.85,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       11.86,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.02,
+     "dur": 2.31,
+     "text": "Bu Sari geleng-geleng. “Bima, alasan itu sudah kuno.”"
+    },
+    {
+     "who": "busari",
+     "nosub": true,
+     "emo": "deadpan",
+     "at": 1.05,
+     "dur": 1.28,
+     "text": "Bima, alasan itu sudah kuno."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -6.15,
+     "t1": 2.8,
+     "who": "busari",
+     "at": "bima"
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
    "visual": "",
    "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 37.3-39.9",
+   "loc": "kelas_guru",
+   "seconds": 2.56,
+   "cast": "bima:sit_back@duduk_bima/2.56, rara:sit_back@duduk_rara/2.56, nana:sit_back@duduk_nana/2.56, busari:idle{expr=surprised}@depan_guru/2.56",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -3.2,
+     "y": 1.0,
+     "z": 4.1,
+     "f": 1100,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.56,
+     "x": -3.2,
+     "y": 1.0,
+     "z": 4.4,
+     "f": 1150,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -37.3,
+      9.05
+     ],
+     "keys": [
+      [
+       -15.9,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       1.25,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       1.3,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       4.6,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       6.1,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       7.3,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       7.45,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       8.05,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": 11.6,
+     "paws": 11.6,
+     "keys": [
+      [
+       -15.9,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       9.05,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       9.06,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 1.6,
+     "dur": 0.9,
+     "text": "MEONG...",
+     "size": 0.09,
+     "rot": -6,
+     "sx": 0.62,
+     "sy": 0.28
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.03,
+     "dur": 2.02,
+     "text": "Tiba-tiba... dari pintu kelas... “Meong.”"
+    }
+   ],
+   "looks": [
+    {
+     "t0": 0.0,
+     "t1": 4.5,
+     "who": "busari",
+     "at": [
+      -3.75,
+      0.3,
+      7.2
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap murid) 39.9-41.8",
+   "loc": "kelas",
+   "seconds": 1.94,
+   "cast": "bima:sit_shock@duduk_bima/1.64+sit_idle{expr=surprised}/0.3, rara:sit_shock@duduk_rara/1.64+sit_idle{expr=surprised}/0.3, nana:sit_shock@duduk_nana/1.64+sit_idle{expr=surprised}/0.3",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": 0.0,
+     "y": 1.2,
+     "z": 0.3,
+     "f": 880,
+     "horizon": 0.5
+    },
+    {
+     "t": 1.94,
+     "x": 0.0,
+     "y": 1.2,
+     "z": 0.5,
+     "f": 900,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "shake",
+     "t": 0.04,
+     "dur": 0.3,
+     "amp": 0.02
+    },
+    {
+     "type": "text",
+     "t": 0.04,
+     "dur": 0.8,
+     "text": "!!",
+     "size": 0.12,
+     "rot": -6,
+     "sx": 0.5,
+     "sy": 0.22
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.0,
+     "dur": 1.78,
+     "text": "Si Oyen masuk... sambil menggigit buku PR Bima!"
+    }
+   ],
+   "looks": [
+    {
+     "t0": -2.56,
+     "t1": 8.54,
+     "who": [
+      "bima",
+      "rara",
+      "nana"
+     ],
+     "at": [
+      3.75,
+      0.3,
+      -0.2
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     0.9,
+     0.75
+    ],
+    "bima": [
+     -0.85,
+     2.8
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "locopts": {
+    "extras": [
+     {
+      "seed": 71,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_a/31.94"
+     },
+     {
+      "seed": 72,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_b/31.94"
+     },
+     {
+      "seed": 73,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_c/31.94"
+     },
+     {
+      "seed": 74,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_d/31.94"
+     },
+     {
+      "seed": 75,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_e/31.94"
+     }
+    ]
+   }
+  },
+  {
+   "judul": "Kelas (hadap guru) 41.8-45.5",
+   "loc": "kelas_guru",
+   "seconds": 3.7,
+   "cast": "bima:sit_back@duduk_bima/3.7, rara:sit_back@duduk_rara/3.7, nana:sit_back@duduk_nana/3.7, busari:idle{expr=surprised}@depan_guru/3.6+idle{expr=deadpan}/0.1",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -2.7,
+     "y": 0.9,
+     "z": 3.4,
+     "f": 1050,
+     "horizon": 0.5
+    },
+    {
+     "t": 3.7,
+     "x": -2.6,
+     "y": 0.95,
+     "z": 3.7,
+     "f": 1080,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -41.8,
+      4.55
+     ],
+     "keys": [
+      [
+       -20.4,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -3.25,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -3.2,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       0.1,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       1.6,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       2.8,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       2.95,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       3.55,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": 7.1,
+     "paws": 7.1,
+     "keys": [
+      [
+       -20.4,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       4.55,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       4.56,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.14,
+     "dur": 3.39,
+     "text": "Oyen jalan pelan-pelan, naik ke meja Bu Sari,"
+    }
+   ],
+   "looks": [
+    {
+     "t0": 0.0,
+     "t1": 3.6,
+     "who": "busari",
+     "at": [
+      -3.4,
+      0.3,
+      5.6
+     ]
+    },
+    {
+     "t0": 3.6,
+     "t1": 6.6,
+     "who": "busari",
+     "at": [
+      -2.6,
+      1.0,
+      5.9
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 45.5-48.4",
+   "loc": "kelas_guru",
+   "seconds": 2.9,
+   "cast": "bima:sit_back@duduk_bima/2.9, rara:sit_back@duduk_rara/2.9, nana:sit_back@duduk_nana/2.9, busari:idle{expr=deadpan}@depan_guru/2.9",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -2.25,
+     "y": 1.15,
+     "z": 3.9,
+     "f": 1100,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.9,
+     "x": -2.2,
+     "y": 1.15,
+     "z": 4.1,
+     "f": 1120,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -45.5,
+      0.85
+     ],
+     "keys": [
+      [
+       -24.1,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -6.95,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -6.9,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -3.6,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -2.1,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -0.9,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -0.75,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -0.15,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": 3.4,
+     "paws": 3.4,
+     "keys": [
+      [
+       -24.1,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       0.85,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       0.86,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 1.0,
+     "dur": 1.3,
+     "text": "RAPI.",
+     "at": [
+      -2.6,
+      1.35,
+      5.9
+     ],
+     "size": 0.06,
+     "rot": 0
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.06,
+     "dur": 2.26,
+     "text": "lalu menaruh bukunya. Rapi."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 2.89,
+     "dur": 2.12,
+     "text": "Bu Sari membuka buku itu."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -0.1,
+     "t1": 2.9,
+     "who": "busari",
+     "at": [
+      -2.6,
+      1.0,
+      5.9
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 48.4-50.9",
+   "loc": "kelas_guru",
+   "seconds": 2.45,
+   "cast": "bima:sit_back@duduk_bima/2.45, rara:sit_back@duduk_rara/2.45, nana:sit_back@duduk_nana/2.45, busari:read_desk{face=l}@depan_guru/2.45",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -1.5,
+     "y": 1.3,
+     "z": 3.7,
+     "f": 1050,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.45,
+     "x": -1.5,
+     "y": 1.3,
+     "z": 3.9,
+     "f": 1070,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -48.4,
+      -2.05
+     ],
+     "keys": [
+      [
+       -27.0,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -9.85,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -9.8,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -6.5,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -5.0,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -3.8,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -3.65,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -3.05,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": 0.5,
+     "paws": 0.5,
+     "keys": [
+      [
+       -27.0,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -2.05,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -2.04,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    }
+   ],
+   "dialog": [],
+   "looks": [
+    {
+     "t0": 0.0,
+     "t1": 7.5,
+     "who": "busari",
+     "at": [
+      -2.15,
+      0.8,
+      5.85
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 50.9-53.7",
+   "loc": "kelas_guru",
+   "seconds": 2.85,
+   "cast": "bima:sit_back@duduk_bima/2.85, rara:sit_back@duduk_rara/2.85, nana:sit_back@duduk_nana/2.85, busari:read_desk{face=l}@depan_guru/2.85",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.75,
+     "f": 1450,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.85,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.9,
+     "f": 1500,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -50.85,
+      -4.5
+     ],
+     "keys": [
+      [
+       -29.45,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -12.3,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -12.25,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -8.95,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -7.45,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -6.25,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -6.1,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -5.5,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": -1.95,
+     "paws": -1.95,
+     "keys": [
+      [
+       -29.45,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -4.5,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -4.49,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 0.15,
+     "dur": 1.3,
+     "text": "LENGKAP ✓",
+     "at": [
+      -2.15,
+      1.15,
+      5.85
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 1.45,
+     "dur": 1.4,
+     "text": "CAP KAKI KUCING!",
+     "at": [
+      -2.15,
+      1.15,
+      5.85
+     ],
+     "size": 0.045,
+     "rot": 0
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.04,
+     "dur": 2.78,
+     "text": "PR-nya lengkap... tapi penuh cap kaki kucing."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -2.45,
+     "t1": 5.05,
+     "who": "busari",
+     "at": [
+      -2.15,
+      0.8,
+      5.85
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 53.7-55.9",
+   "loc": "kelas_guru",
+   "seconds": 2.15,
+   "cast": "bima:sit_back@duduk_bima/2.15, rara:sit_back@duduk_rara/2.15, nana:sit_back@duduk_nana/2.15, busari:read_desk{face=l}@depan_guru/0.3+idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}/1.85",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -1.2,
+     "y": 1.35,
+     "z": 3.8,
+     "f": 1050,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.15,
+     "x": -1.2,
+     "y": 1.35,
+     "z": 3.95,
+     "f": 1060,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -53.7,
+      -7.35
+     ],
+     "keys": [
+      [
+       -32.3,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -15.15,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -15.1,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -11.8,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -10.3,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -9.1,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -8.95,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -8.35,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": -4.8,
+     "paws": -4.8,
+     "keys": [
+      [
+       -32.3,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -7.35,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -7.34,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.3,
+     "dur": 1.36,
+     "text": "Bu Sari mengambil pulpen merah."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -5.3,
+     "t1": 2.2,
+     "who": "busari",
+     "at": [
+      -2.15,
+      0.8,
+      5.85
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap guru) 55.9-58.8",
+   "loc": "kelas_guru",
+   "seconds": 2.95,
+   "cast": "bima:sit_back@duduk_bima/2.95, rara:sit_back@duduk_rara/2.95, nana:sit_back@duduk_nana/2.95, busari:idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}@depan_guru/0.02+write_score{face=l}/2.93",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -1.75,
+     "y": 1.2,
+     "z": 3.7,
+     "f": 850,
+     "horizon": 0.5
+    },
+    {
+     "t": 2.95,
+     "x": -1.75,
+     "y": 1.2,
+     "z": 3.9,
+     "f": 880,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -55.85,
+      -9.5
+     ],
+     "keys": [
+      [
+       -34.45,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -17.3,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -17.25,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -13.95,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -12.45,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -11.25,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -11.1,
+       -3.3,
+       0,
+       5.25,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -10.5,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": -6.95,
+     "paws": -6.95,
+     "keys": [
+      [
+       -34.45,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -9.5,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -9.49,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 0.75,
+     "dur": 2.3,
+     "text": "100",
+     "at": [
+      -2.6,
+      1.45,
+      5.9
+     ],
+     "size": 0.11,
+     "rot": -8
+    },
+    {
+     "type": "burst",
+     "t": 0.75,
+     "sx": 0.35,
+     "sy": 0.4
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.02,
+     "dur": 2.54,
+     "text": "“Oyen, nilai seratus. Datang tepat waktu.”"
+    },
+    {
+     "who": "busari",
+     "nosub": true,
+     "emo": "deadpan",
+     "at": 0.02,
+     "dur": 2.54,
+     "text": "Oyen, nilai seratus. Datang tepat waktu."
+    }
+   ],
+   "looks": [
+    {
+     "t0": -7.45,
+     "t1": 0.05,
+     "who": "busari",
+     "at": [
+      -2.15,
+      0.8,
+      5.85
+     ]
+    },
+    {
+     "t0": 0.05,
+     "t1": 2.95,
+     "who": "busari",
+     "at": [
+      -2.6,
+      1.0,
+      5.9
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": ""
+  },
+  {
+   "judul": "Kelas (hadap murid) 58.8-62.1",
+   "loc": "kelas",
+   "seconds": 3.35,
+   "cast": "bima:sit_idle{expr=hopeful}@duduk_bima/0.02+sit_idle{expr=sad}/1.58+sit_idle{expr=deadpan;gloom=1}/1.75, rara:sit_idle@duduk_rara/1.0+sit_laugh/1.6+sit_idle{expr=smile}/0.75, nana:sit_idle@duduk_nana/1.0+sit_laugh/1.6+sit_idle{expr=smile}/0.75",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -0.85,
+     "y": 1.12,
+     "z": 1.35,
+     "f": 1100,
+     "horizon": 0.5
+    },
+    {
+     "t": 3.35,
+     "x": -0.85,
+     "y": 1.12,
+     "z": 1.75,
+     "f": 1180,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "text",
+     "t": 1.1,
+     "dur": 2.2,
+     "text": "60",
+     "at": [
+      -0.85,
+      1.45,
+      2.8
+     ],
+     "size": 0.1,
+     "rot": 8
+    },
+    {
+     "type": "shake",
+     "t": 1.1,
+     "dur": 0.25,
+     "amp": 0.015
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.02,
+     "dur": 3.08,
+     "text": "“Bima, nilai enam puluh. Kamu terlambat.”"
+    }
+   ],
+   "looks": [
+    {
+     "t0": 0.0,
+     "t1": 3.4,
+     "who": "bima",
+     "at": "busari"
+    },
+    {
+     "t0": 0.0,
+     "t1": 3.4,
+     "who": [
+      "rara",
+      "nana"
+     ],
+     "at": "bima"
+    }
+   ],
+   "positions": {
+    "busari": [
+     0.9,
+     0.75
+    ],
+    "bima": [
+     -0.85,
+     2.8
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "locopts": {
+    "extras": [
+     {
+      "seed": 71,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_a/1.0+sit_laugh/1.6+sit_idle/30.75"
+     },
+     {
+      "seed": 72,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_b/1.0+sit_laugh/1.6+sit_idle/30.75"
+     },
+     {
+      "seed": 73,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_c/1.0+sit_laugh/1.6+sit_idle/30.75"
+     },
+     {
+      "seed": 74,
+      "kind": "anak_perempuan",
+      "spec": "sit_idle@duduk_d/1.0+sit_laugh/1.6+sit_idle/30.75"
+     },
+     {
+      "seed": 75,
+      "kind": "anak_laki",
+      "spec": "sit_idle@duduk_e/1.0+sit_laugh/1.6+sit_idle/30.75"
+     }
+    ]
+   }
   },
   {
    "judul": "Sekolah besok pagi: Oyen paling pagi",
