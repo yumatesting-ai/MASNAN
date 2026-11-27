@@ -207,7 +207,7 @@ def kelas_scenes():
 
 # ======================= E. SEKOLAH, BESOK PAGI (62,15 - 66,51): Oyen paling pagi =======================
 E = SC[4]
-CAST_E = "bima:idle_three{hide=1}@-1.75,10.1/" + str(round(65.15 - E, 2)) + "+run_panic@-1.75,10.1>-0.2,10.4/" + str(round(END - 65.15, 2))
+CAST_E = "bima:idle_three{hide=1}@-1.6,10.1/" + str(round(65.0 - E, 2)) + "+run_panic@-1.6,10.1>0.35,10.4/" + str(round(END - 65.0, 2))
 FX_E = [{"type": "prop", "kind": "cat", "hold": "end", **OYEN, "carry": [0, 99], "keys": [[0, -3.2, 0, 10.2, 0, 0, "walk"], [64.9 - E, 0.9, 0, 10.6, 0, 0, "walk"], [65.0 - E, 0.9, 0, 10.6, 0, 0, "sit"]]},
  AT(65.0 - E, "PALING PAGI!", [0.9, 0.75, 10.6], dur=0.85, size=0.05), F(65.6 - E, "TELAT LAGI!", sx=0.32, sy=0.3, size=0.07, dur=0.75, rot=-4)]
 CAM_E = [dict(t=0, **cam(-0.9, 0.85, 7.6, 1100, 0.5)), dict(t=round(END - E, 2), **cam(0.25, 0.85, 8.0, 980, 0.5))]

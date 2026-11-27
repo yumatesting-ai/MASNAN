@@ -987,7 +987,7 @@ function createRig(design) {
 
     const SIT = p.sit, seatU = (p.seat * 270) / SCALE;
     const sitDy = SIT * (382 - seatU - 282);
-    const leg = (deg, far) => {
+    const leg = (deg, far, knee = 0) => {
       const skin = SLIM ? `
         <path fill="${far ? C.skinFar : C.skin}" d="${SHAPE.legSideS}"/>
         ${shade("legSideS", C.skinShade, "M130,282 L146,282 L146,372 L130,372 Z")}
@@ -1000,6 +1000,13 @@ function createRig(design) {
         ${B === "pants" ? socks(gKey) : ""}
         ${outline(SHAPE[gKey])}` : "";
       const content = `${skin}${garment}${shoeSvg("shoeSide", false, true, p.barefoot === "both" || p.barefoot === (far ? "l" : "r"))}`;
+      if (SIT < 0.01 && knee > 0.5) { // lutut menekuk ke belakang (lari/lompat): paha berputar di pinggul, betis di lutut
+        const kneeCol = B === "pants" || B === "shorts" ? (far ? C.pantsShade : C.pants) : far ? C.skinFar : C.skin;
+        return `<g transform="rotate(${deg} 150 284)">
+          <circle fill="${kneeCol}" ${LINE} cx="150" cy="326" r="${B === "pants" ? 14 : 10}"/>
+          <g clip-path="url(#${ID}-kneeU)">${content}</g>
+          <g transform="rotate(${knee.toFixed(1)} 150 326)"><g clip-path="url(#${ID}-kneeD)">${content}</g></g></g>`;
+      }
       if (SIT < 0.01) return `<g transform="rotate(${deg} 150 284)">${content}</g>`;
       // duduk: paha mendatar ke depan, betis menggantung dari lutut
       const kneeCol = B === "pants" || B === "shorts" ? (far ? C.pantsShade : C.pants) : far ? C.skinFar : C.skin;
@@ -1097,7 +1104,7 @@ function createRig(design) {
     // lengan jauh (di balik badan) saat berayun ke depan: ayunan dikurangi agar ujung lengan baju tidak
     // menyembul terpisah dari lengannya di depan dada (garis lengan terlihat "patah")
     const farSwing = !p.holdR && Math.abs(p.elbowR) < 25 && p.armR > 0 ? p.armR * 0.35 : p.armR;
-    return `${up(arm(farSwing, true, p.elbowR, p.holdR))}${leg(-p.legR, true)}${up(hairBackG)}${leg(-p.legL, false)}${up(torso)}
+    return `${up(arm(farSwing, true, p.elbowR, p.holdR))}${leg(-p.legR, true, p.kneeR || 0)}${up(hairBackG)}${leg(-p.legL, false, p.kneeL || 0)}${up(torso)}
       ${up(arm(p.armL, false, p.elbowL, p.holdL))}${up(head)}${up(paperS)}`;
   }
 

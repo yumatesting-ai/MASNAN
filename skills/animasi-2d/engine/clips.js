@@ -98,7 +98,9 @@
     } },
     run: { duration: 0.6, view: "side", pose: (t) => {
       const s = wave(t, 0.6);
-      return { expr: "nervous", legL: 36 * s, legR: -36 * s, armL: -45 * s, armR: 45 * s, lean: -7,
+      const ph = TAU * t / 0.6, knee = (q, c) => 12 + 35 * Math.max(0, -q) + 60 * Math.max(0, c);
+      return { expr: "nervous", legL: 36 * s, legR: -36 * s, kneeL: knee(s, Math.cos(ph)), kneeR: knee(-s, -Math.cos(ph)),
+        armL: -45 * s, armR: 45 * s, elbowL: 80, elbowR: 80, lean: 9,
         bodyY: -6 * Math.abs(Math.cos(TAU * t / 0.6)), hairSway: -3.5 + 0.8 * wave(t, 0.3) };
     } },
     jump: { duration: 1.6, view: "front", pose: (t) => {
@@ -351,10 +353,15 @@
     // kepala sedikit tertinggal (follow-through), mata melotot, mulut "AAA", keringat. Varian depan/serong/belakang
     // dipilih otomatis dari arah gerak -> tidak ada lagi lari menyamping saat mendekati kamera.
     run_panic: { duration: 0.46, view: "side", pose: (t) => {
+      // siklus lari samping: kaki depan menjulur (lutut sedikit tekuk), kaki belakang menendang ke belakang dengan lutut
+      // terlipat tinggi; lengan menekuk 90° memompa berlawanan kaki; badan condong ke ARAH LARI; melayang di tengah langkah
       const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(Math.sin(ph)), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
-      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true, legL: 46 * sv, legR: -46 * sv,
-        armL: -50 * sv, armR: 50 * sv, elbowL: 85, elbowR: 85, lean: -11, bodyY: -9 * air, squash: 0.07 * land,
-        headTilt: -3 + 2 * Math.cos(ph * 2), headY: 1.5 * land, hairSway: -5 + 1.2 * Math.cos(ph * 2), fx: t / 0.23 };
+      // lutut: terlipat saat kaki menendang ke belakang & saat diayun ke depan melewati badan (kaki ayun), lurus saat menapak
+      const knee = (s, c) => 12 + 40 * Math.max(0, -s) + 70 * Math.max(0, c);
+      return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true,
+        legL: 40 * sv, legR: -40 * sv, kneeL: knee(sv, Math.cos(ph)), kneeR: knee(-sv, -Math.cos(ph)),
+        armL: -55 * sv, armR: 55 * sv, elbowL: 95, elbowR: 95, lean: 12, bodyY: -10 * air, squash: 0.07 * land,
+        headTilt: 4 + 2 * Math.cos(ph * 2), headY: 1.5 * land, hairSway: -6 + 1.2 * Math.cos(ph * 2), fx: t / 0.23 };
     } },
     run_panic_three: { duration: 0.46, view: "three", pose: (t) => {
       const ph = TAU * t / 0.46, sv = Math.sin(ph), air = Math.abs(sv), land = Math.pow(Math.max(0, Math.cos(ph * 2)), 4);
