@@ -156,7 +156,7 @@ const LAYOUT = {
     sweat: { x: 190, y: 166 }, anger: { x: 192, y: 94 }, top: { x: 92, y: 62 },
   },
   side: {
-    eyes: [{ cx: 184, cy: 147, rx: 13, ry: 12, inner: 4 }],
+    eyes: [{ cx: 186, cy: 147, rx: 9, ry: 12.5, inner: 4, side: true }],
     mouth: { x: 192, y: 177, s: 0.72 }, cheeks: [{ x: 178, y: 167 }],
     sweat: { x: 114, y: 112 }, anger: { x: 128, y: 98 }, top: { x: 196, y: 62 },
   },
@@ -216,6 +216,30 @@ function createRig(design) {
       return `<path fill="${C.skin}" d="M${xo},${yOuter} L${xi},${yInner} L${xi},${cy - ry - 8} L${xo},${cy - ry - 8} Z"/>
         <path fill="none" stroke="${C.line}" stroke-width="3.6" stroke-linecap="round" d="M${cx - s * rx},${yOuter + (yInner - yOuter) * 0.04} L${cx + s * rx * 0.95},${yInner - (yInner - yOuter) * 0.02}"/>`;
     };
+    // TAMPAK SAMPING: mata profil — putih sempit (lonjong tegak), pupil besar menempel di sisi DEPAN (arah hadap),
+    // bukan bulatan dengan titik di tengah (yang terlihat seperti menatap kamera). lookX>0 = depan, <0 = melirik ke belakang.
+    if (e.side && ["normal", "wide", "sad", "angry", "half", "sparkle"].includes(type)) {
+      const k = type === "wide" ? 1.18 : type === "half" ? 0.62 : 1;
+      const RX = rx * (type === "wide" ? 1.05 : 1), RY = ry * k;
+      const fwd = Math.max(-1, Math.min(1, p.lookX >= 0 ? 0.55 + 0.25 * Math.min(1, p.lookX) : 0.55 + 1.1 * p.lookX));
+      const PR = type === "wide" ? 3.6 : 4.4;
+      const pxS = cx + fwd * (RX - PR + 0.6), pyS = cy + (type === "half" ? RY * 0.25 : 0) + 2.6 * Math.max(-1, Math.min(1, p.lookY));
+      const id = `${ID}-eyeS${type}`;
+      const shape = `M${cx - RX * 0.75},${cy - RY} C${cx + RX * 0.9},${cy - RY * 1.02} ${cx + RX * 1.15},${cy + RY * 0.7} ${cx + RX * 0.2},${cy + RY}
+        C${cx - RX * 0.6},${cy + RY * 1.02} ${cx - RX},${cy + RY * 0.3} ${cx - RX},${cy - RY * 0.2} C${cx - RX},${cy - RY * 0.7} ${cx - RX * 0.9},${cy - RY} ${cx - RX * 0.75},${cy - RY} Z`;
+      const top = type === "half" ? cy - RY * 0.1 : cy - RY;
+      const lidS = type === "half" ? `<path fill="none" stroke="${C.line}" stroke-width="3.6" stroke-linecap="round" d="M${cx - RX - 1},${top} L${cx + RX + 2},${top - 1}"/>`
+        : type === "sad" ? `<path fill="${C.skin}" d="M${cx - RX - 3},${cy - RY * 0.1} L${cx + RX + 4},${cy - RY * 0.85} L${cx + RX + 4},${cy - RY - 6} L${cx - RX - 3},${cy - RY - 6} Z"/>
+            <path fill="none" stroke="${C.line}" stroke-width="3.4" stroke-linecap="round" d="M${cx - RX},${cy - RY * 0.15} L${cx + RX + 1},${cy - RY * 0.85}"/>`
+        : type === "angry" ? `<path fill="${C.skin}" d="M${cx - RX - 3},${cy - RY * 0.9} L${cx + RX + 4},${cy - RY * 0.05} L${cx + RX + 4},${cy - RY - 6} L${cx - RX - 3},${cy - RY - 6} Z"/>
+            <path fill="none" stroke="${C.line}" stroke-width="3.4" stroke-linecap="round" d="M${cx - RX},${cy - RY * 0.9} L${cx + RX + 1},${cy - RY * 0.1}"/>`
+        : type === "wide" ? "" : `<path fill="none" stroke="${C.line}" stroke-width="3.6" stroke-linecap="round" d="M${cx - RX * 0.8},${cy - RY + 0.5} C${cx},${cy - RY * 1.12} ${cx + RX * 0.8},${cy - RY * 0.85} ${cx + RX * 1.02},${cy - RY * 0.35}"/>`;
+      return wrap(`<defs><clipPath id="${id}"><path d="${shape}"/></clipPath></defs>
+        <path fill="${C.eyeWhite}" d="${shape}"/>
+        <g clip-path="url(#${id})"><circle fill="${C.line}" cx="${pxS}" cy="${pyS}" r="${PR}"/><circle fill="#ffffff" cx="${pxS + 1.2}" cy="${pyS - 1.6}" r="1.3"/>
+          ${type === "half" ? `<rect fill="${C.skin}" x="${cx - RX - 2}" y="${cy - RY - 4}" width="${RX * 2 + 6}" height="${top - (cy - RY - 4)}"/>` : ""}</g>
+        <path fill="none" stroke="${C.line}" stroke-width="2.6" stroke-linejoin="round" d="${shape}"/>${lidS}`);
+    }
     switch (type) {
       case "closed":
         return `<path fill="none" stroke="${C.line}" stroke-width="3.2" stroke-linecap="round" d="M${cx - rx + 3},${cy} Q${cx},${cy + 7} ${cx + rx - 3},${cy}"/>`;
