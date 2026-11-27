@@ -23,7 +23,34 @@ const bg = (c1, c2) => `<defs><radialGradient id="bg" cx="50%" cy="38%" r="70%">
   <circle cx="400" cy="330" r="300" fill="url(#sun)"/>`;
 const ground = `<ellipse cx="400" cy="760" rx="520" ry="170" fill="#8fc067"/><ellipse cx="400" cy="745" rx="470" ry="140" fill="#9fcd74"/>`;
 let body = "";
-if (o.style === "geng") {
+// gaya stiker: garis tepi putih tebal + bayangan lembut di sekeliling tokoh (menonjol saat foto profil kecil)
+const STICKER = `<filter id="stk" x="-20%" y="-20%" width="140%" height="140%">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="9" result="d"/><feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="10" result="b"/><feOffset in="b" dy="8" result="bo"/><feFlood flood-color="#000" flood-opacity="0.25"/><feComposite in2="bo" operator="in" result="sh"/>
+  <feMerge><feMergeNode in="sh"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+const dots = (c) => `<pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="4" fill="${c}" opacity="0.18"/><circle cx="30" cy="30" r="4" fill="${c}" opacity="0.18"/></pattern>`;
+const bg2 = (c1, c2, dc) => `<defs>${STICKER}${dots(dc)}<radialGradient id="bg" cx="50%" cy="40%" r="65%"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></radialGradient></defs>
+  <rect width="${S}" height="${S}" fill="url(#bg)"/><rect width="${S}" height="${S}" fill="url(#dots)"/>
+  <circle cx="400" cy="400" r="300" fill="#ffffff" opacity="0.18"/>`;
+const ring = (c) => `<circle cx="400" cy="400" r="388" fill="none" stroke="${c}" stroke-width="16" opacity="0.9"/><circle cx="400" cy="400" r="374" fill="none" stroke="#ffffff" stroke-width="6" opacity="0.8"/>`;
+const spark = (x, y, r, c = "#ffffff") => `<path d="M${x},${y - r} Q${x + r * 0.18},${y - r * 0.18} ${x + r},${y} Q${x + r * 0.18},${y + r * 0.18} ${x},${y + r} Q${x - r * 0.18},${y + r * 0.18} ${x - r},${y} Q${x - r * 0.18},${y - r * 0.18} ${x},${y - r} Z" fill="${c}"/>`;
+if (o.style === "trio") {          // tiga bocah close-up tertawa + Oyen mengintip
+  body = bg2("#fff3b0", "#ff9f43", "#ffffff") + `<g filter="url(#stk)">` +
+    put("bima", { expr: "happy", headTilt: -8 }, 175, 860, 1.85, "three") +
+    put("rara", { expr: "laugh", headTilt: 8, flip: true }, 625, 860, 1.85, "three") +
+    put("nana", { expr: "happy", eyes: "happy", mouth: "happy_open", blush: 1 }, 400, 930, 1.95) + `</g>` +
+    `<g filter="url(#stk)">${cat(625, 262, 2.5, {})}</g>` + spark(150, 200, 26) + spark(110, 520, 16) + spark(250, 110, 14) + ring("#ff7a1a");
+} else if (o.style === "oyenwink") { // maskot Oyen close-up, berkedip
+  body = bg2("#d9f3ff", "#3d9be0", "#ffffff") + `<g filter="url(#stk)">${cat(400, 720, 11.5, {})}</g>` +
+    spark(160, 200, 30) + spark(650, 170, 22) + spark(620, 290, 12) + ring("#2b7fd0");
+} else if (o.style === "hasanoyen") { // Pak Hasan + Oyen tidur di kepala, gaya stiker
+  body = bg2("#e5ffd6", "#4fb35a", "#ffffff") + `<g filter="url(#stk)">` + put("hasan", { expr: "smug", headTilt: -4 }, 400, 1110, 2.3) +
+    cat(392, 312, 5.0, { mode: "sleep" }) + `</g>` + spark(150, 220, 24) + spark(660, 230, 18) + ring("#2f8f3e");
+} else if (o.style === "nana") {   // Nana melambai, ceria
+  body = bg2("#ffe1ec", "#ff6fa1", "#ffffff") + `<g filter="url(#stk)">` + put("nana", { expr: "happy", armR: 125, elbowR: -10, blush: 1 }, 380, 900, 2.2) + `</g>` +
+    spark(170, 230, 26) + spark(640, 200, 20) + spark(600, 330, 12) + ring("#e0457b");
+} else if (o.style === "geng") {
+
   body = bg("#ffe9a8", "#f4a640") + ground +
     put("hasan", { expr: "laugh", armR: 30, armL: 30 }, 215, 640, 1.0) +
     put("atin", { expr: "smug" }, 585, 640, 1.0) +
