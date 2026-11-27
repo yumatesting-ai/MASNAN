@@ -61,14 +61,15 @@ function keyAt(keys, t, hold = "both") {
   const y = a.y + (b.y - a.y) * ue + (b.arc > 0 ? 4 * b.arc * u * (1 - u) : 0);
   const moving = Math.abs(b.x - a.x) + Math.abs(b.y - a.y) + Math.abs(b.z - a.z) > 0.01;
   return { x: a.x + (b.x - a.x) * u, y, z: a.z + (b.z - a.z) * u, rot: a.rot + (b.rot - a.rot) * u,
-    mode: moving ? (b.mode === "walk" ? "walk" : a.mode === "hide" ? b.mode : b.arc ? "leap" : b.mode || a.mode) : a.mode,
-    flip: b.flip ?? a.flip, moving };
+    mode: moving ? (b.mode === "walk" || b.mode === "climb" ? b.mode : a.mode === "hide" ? b.mode : b.arc ? "leap" : b.mode || a.mode) : a.mode,
+    flip: b.flip ?? (Math.abs(b.x - a.x) > 0.02 ? b.x > a.x : a.flip), moving };
 }
 function drawProp(w, kind, st, dent, e) {
   const C = require("./life.js").col;
   if (kind === "ball") return P.ball(w, st.x, st.z, { y: st.y, r: e.r || 0.11, spin: st.rot / 30, bias: e.bias ?? -0.2 });
   w.sprite(st.x, st.z, (sx, sy, p, fog, lc, sw) => {
-    const s = p * 0.01, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
+    // skala per jenis agar ukuran SAMA dengan saat dipegang tokoh (sandal ±0,22 m, sapu ±0,75 m, ember ±0,3 m)
+    const s = p * ({ sandal: 0.0068, sapu: 0.0063, ember: 0.0088, mango: 0.008 }[kind] || 0.01), L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
     let g = "";
     if (kind === "sandal") g = `<path d="M-14,-4 Q-16,-12 -6,-13 L14,-11 Q20,-6 14,-1 L-8,1 Q-14,1 -14,-4 Z" fill="${fog(C("#7a4a2a"))}" ${L}/>
       <path d="M-4,-12 Q2,-20 8,-11" fill="none" stroke="${fog(C("#2f6b8f"))}" stroke-width="4" stroke-linecap="round"/>`;
@@ -140,7 +141,7 @@ function draw(w, list, t) {
       if (!st) continue;
       if (e.kind === "cat") {
         const LIFE = require("./life.js");
-        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0 });
+        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0, moving: st.moving });
       } else drawProp(w, e.kind, st, t >= (e.dentAt ?? 1e9), e);
     } else if (e.type === "jemuran") {
       P.jemuran(w, e.x, e.za, e.zb);

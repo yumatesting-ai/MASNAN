@@ -25,6 +25,7 @@ const BASE_DEFAULT_POSE = {
   elbowL: 0, elbowR: 0,     // tekuk siku (deg, + = lengan bawah naik ke arah dada/wajah)
   holdL: null, holdR: null, // barang di tangan: "coffee" | "phone" | "broom" | "lipstick" | "lipstickBottle" | "balm" | "gorengan"
   pitch: 0,                 // kepala mendongak (-1) / menunduk (+1): wajah bergeser di dalam kepala + kepala berputar
+  barefoot: null,           // sandal dicopot: "r" | "l" | "both"
   handToFace: false, // tangan kanan digambar DI DEPAN wajah (mengoles bibir, makan)
   lip: null, lipPatch: 0, lipDry: 0, lipCrack: 0, lipThick: 0, lipShine: 0, // bibir berlipstik (konten kecantikan)
   holdTilt: 0,              // kemiringan gelas (minum: negatif = dituang ke mulut)
@@ -479,8 +480,12 @@ function createRig(design) {
       <path clip-path="url(#${ID}-${clipId})" fill="none" stroke="${C.line}" stroke-width="5" d="M90,${sockTop} L210,${sockTop}"/>
       ${shade(clipId, C.sockShade, `M90,${sockTop + 2} L210,${sockTop + 2} L210,${sockTop + 7} L90,${sockTop + 7} Z`)}`;
   }
-  function shoeSvg(shapeKey, isBack, isSide) {
+  function shoeSvg(shapeKey, isBack, isSide, bare = false) {
     const C = PALETTE;
+    if (design.shoes === "sandal" && bare) { // sandal sudah dicopot: kaki telanjang saja
+      const foot = isSide ? "sandalFootSide" : "sandalFoot";
+      return `<path fill="${C.skin}" d="${SHAPE[foot]}"/>${shade(foot, C.skinShade, isSide ? "M120,372 L200,372 L200,380 L120,380 Z" : "M100,368 L160,368 L160,380 L100,380 Z")}${outline(SHAPE[foot])}`;
+    }
     if (design.shoes === "sandal") {
       const sole = isSide ? "sandalSoleSide" : "sandalSole", foot = isSide ? "sandalFootSide" : "sandalFoot";
       return `${fillLine(C.shoe, SHAPE[sole])}
@@ -542,13 +547,13 @@ function createRig(design) {
         <path fill="${require("./life.js").col("#7a4a2a")}" ${LINE} stroke-width="2" d="M${hx - 6},${hy - 36} Q${hx},${hy - 44} ${hx + 6},${hy - 36} L${hx + 7},${hy - 6} Q${hx},${hy} ${hx - 7},${hy - 6} Z"/>
         <path fill="none" stroke="${require("./life.js").col("#2f6b8f")}" stroke-width="3.2" stroke-linecap="round" d="M${hx - 6},${hy - 24} Q${hx},${hy - 30} ${hx + 6},${hy - 24}"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 7}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
-    if (kind === "sapu") return `<g transform="${rot}">
+    if (kind === "sapu") return `<g transform="${rot} translate(${hx} ${hy}) scale(1.3) translate(${-hx} ${-hy})">
         <path fill="none" stroke="${C.line}" stroke-width="6.5" stroke-linecap="round" d="M${hx},${hy + 20} L${hx},${hy - 62}"/>
         <path fill="none" stroke="#a9895a" stroke-width="3.4" stroke-linecap="round" d="M${hx},${hy + 20} L${hx},${hy - 62}"/>
         <path fill="#d9c27a" ${LINE} stroke-width="2" d="M${hx - 3},${hy - 60} L${hx - 18},${hy - 100} L${hx + 18},${hy - 100} L${hx + 3},${hy - 60} Z"/>
         <path fill="none" stroke="#a9895a" stroke-width="1.3" d="M${hx},${hy - 62} L${hx - 10},${hy - 99} M${hx},${hy - 62} L${hx},${hy - 99} M${hx},${hy - 62} L${hx + 10},${hy - 99}"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 4}" cy="${hy - 6}" rx="5.5" ry="7"/></g>`;
-    if (kind === "ember") return `<g transform="${rot}">
+    if (kind === "ember") return `<g transform="${rot} translate(${hx} ${hy}) scale(1.6) translate(${-hx} ${-hy})">
         <path fill="none" ${LINE} stroke-width="2.2" d="M${hx - 14},${hy - 34} Q${hx},${hy - 6} ${hx + 14},${hy - 34}"/>
         <path fill="${require("./life.js").col("#3f86c4")}" ${LINE} stroke-width="2.4" d="M${hx - 16},${hy - 34} L${hx + 16},${hy - 34} L${hx + 12},${hy - 62} L${hx - 12},${hy - 62} Z" transform="rotate(180 ${hx} ${hy - 48})"/>
         <ellipse fill="${require("./life.js").col("#2c5f8a")}" ${LINE} stroke-width="2" cx="${hx}" cy="${hy - 62}" rx="16" ry="4"/>
@@ -657,7 +662,7 @@ function createRig(design) {
       const shoeDy = -Math.max(0, lift) * kS - (1 - kS) * 88;
       return `<g id="leg-${side}">
         <g transform="translate(0 282) scale(1 ${k}) translate(0 -282)">${skinLeg}${garment}</g>
-        <g transform="translate(${l ? 0 : 42} ${shoeDy.toFixed(2)})">${shoeSvg("shoe", isBack, false)}</g></g>`;
+        <g transform="translate(${l ? 0 : 42} ${shoeDy.toFixed(2)})">${shoeSvg("shoe", isBack, false, p.barefoot === "both" || p.barefoot === side)}</g></g>`;
     };
     // pangkuan (paha yang mengarah ke kamera) saat duduk
     const lapCol = B === "pants" || B === "shorts" ? C.pants : C.skin;
@@ -948,7 +953,7 @@ function createRig(design) {
         ${far ? "" : shade(gKey, C.pantsShade, "M130,274 L172,274 L172,294 L130,294 Z")}
         ${B === "pants" ? socks(gKey) : ""}
         ${outline(SHAPE[gKey])}` : "";
-      const content = `${skin}${garment}${shoeSvg("shoeSide", false, true)}`;
+      const content = `${skin}${garment}${shoeSvg("shoeSide", false, true, p.barefoot === "both" || p.barefoot === (far ? "l" : "r"))}`;
       if (SIT < 0.01) return `<g transform="rotate(${deg} 150 284)">${content}</g>`;
       // duduk: paha mendatar ke depan, betis menggantung dari lutut
       const kneeCol = B === "pants" || B === "shorts" ? (far ? C.pantsShade : C.pants) : far ? C.skinFar : C.skin;

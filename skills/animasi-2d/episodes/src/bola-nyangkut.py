@@ -34,7 +34,7 @@ def LABEL(t, txt, at, dur=4.4): return {"type": "text", "t": t, "dur": dur, "tex
 ST = {"ball": (3.15, 3.3), "sandal1": (3.95, 3.2), "sandal2": (4.35, 3.45), "sapu": (2.75, 3.4), "ember": (3.55, 3.05), "cat": (4.15, 2.95)}
 def hd(dx=0): return (HX + dx, HEAD + 0.05, HZ + 0.02)
 PROPS = [
- {"type": "prop", "kind": "ball", "hold": "end", "keys": [[3.62, 1.5, 0.12, 9.2, 0], [7.9, ST["ball"][0], ST["ball"][1], Z_ST, 900, 3.2], [49.7, ST["ball"][0], ST["ball"][1], Z_ST, 900],
+ {"type": "prop", "kind": "ball", "hold": "end", "keys": [[0, 1.52, 0.11, 9.15, 0], [3.55, 1.52, 0.11, 9.15, 0], [7.9, ST["ball"][0], ST["ball"][1], Z_ST, 900, 3.2], [49.7, ST["ball"][0], ST["ball"][1], Z_ST, 900],
    [50.72, *hd(0.05), 1300, -1], [51.3, 2.2, 0.11, 10.2, 1600, 0.5]]},
  {"type": "prop", "kind": "sandal", "hold": "end", "keys": [[16.85, *HAND, 0, 0, "hide"], [16.86, *HAND, 0], [17.6, ST["sandal1"][0], ST["sandal1"][1], Z_ST, 520, 0.7],
    [51.3, ST["sandal1"][0], ST["sandal1"][1], Z_ST, 520], [51.72, *hd(0.08), 700, -1], [52.1, 3.4, 0.03, 10.5, 720, 0.3]]},
@@ -46,15 +46,16 @@ PROPS = [
    [54.28, ST["ember"][0], ST["ember"][1], Z_ST, 15], [54.85, HX, HEAD + 0.02, HZ + 0.03, 175, -1], [55.35, 3.45, 0.0, 10.35, 200, 0.4]]},
  # Oyen: jalan masuk -> lompat ke dahan -> duduk -> jatuh ke kepala Pak Hasan -> duduk lalu "tidur" di kepala
  {"type": "prop", "kind": "cat", "hold": "end", "color": "#e59a4c", "stripe": "#b8692c", "keys": [
-   [0, 5.6, 0, 10.6, 0, 0, "hide"], [30.85, 5.6, 0, 10.6, 0, 0, "hide"], [30.9, 5.6, 0, 10.6, 0, 0, "walk"], [32.7, 4.15, 0, 11.3, 0, 0, "walk"],
-   [33.35, 4.15, 0, 11.3, 0, 0, "sit"], [34.0, ST["cat"][0], ST["cat"][1], Z_ST, 0, 0.6, "sit"], [57.0, ST["cat"][0], ST["cat"][1], Z_ST, 0, 0, "sit"],
+   [0, 5.6, 0, 10.6, 0, 0, "hide"], [30.85, 5.6, 0, 10.6, 0, 0, "hide"], [30.9, 5.6, 0, 10.6, 0, 0, "walk"], [32.7, 3.9, 0, 11.5, 0, 0, "walk"],
+   [33.3, 3.9, 0, 11.5, 0, 0, "sit"], [33.35, 3.9, 0.05, 11.5, 0, 0, "climb"], [35.3, 3.9, 2.45, 11.5, 0, 0, "climb"],
+   [35.7, ST["cat"][0], ST["cat"][1], Z_ST, 0, 0.25, "sit"], [57.0, ST["cat"][0], ST["cat"][1], Z_ST, 0, 0, "sit"],
    [57.58, HX, HEAD - 0.06, HZ + 0.03, 0, 0.35, "sit"], [65.9, HX, HEAD - 0.06, HZ + 0.03, 0, 0, "sit"], [65.95, HX, HEAD - 0.06, HZ + 0.03, 0, 0, "sleep"]]},
 ]
 FXK = PROPS + [
  F(3.6, "DUAK!", sx=0.35, sy=0.3, size=0.13), {"type": "burst", "t": 3.6, "sx": 0.35, "sy": 0.66}, SH(3.6, 0.03, 0.3),
  F(7.95, "NYANGKUT!", sy=0.2), F(17.95, "NYANGKUT!", sy=0.2), F(20.85, "NYANGKUT x2!", sy=0.2), F(24.85, "NYANGKUT x3!", sy=0.2), F(27.35, "NYANGKUT x4!", sy=0.2),
  {"type": "text", "t": 28.6, "dur": 1.8, "text": "❤", "at": [3.15, 3.65, Z_ST], "size": 0.09, "rot": 0},
- F(34.05, "NYANGKUT x5!", sy=0.2), F(36.45, "MEONG!", sx=0.62, sy=0.2, size=0.11, rot=6),
+ F(35.75, "NYANGKUT x5!", sy=0.2), F(36.45, "MEONG!", sx=0.62, sy=0.2, size=0.11, rot=6),
  LABEL(39.0, "BOLA", [ST["ball"][0], ST["ball"][1] + 0.25, Z_ST]), LABEL(39.9, "SANDAL", [ST["sandal1"][0] + 0.2, ST["sandal1"][1] + 0.45, Z_ST]),
  LABEL(41.2, "SAPU", [ST["sapu"][0], ST["sapu"][1] + 0.75, Z_ST], 2.2), LABEL(41.8, "EMBER", [ST["ember"][0], ST["ember"][1] - 0.25, Z_ST], 1.6),
  LABEL(42.5, "KUCING", [ST["cat"][0], ST["cat"][1] - 0.15, Z_ST], 0.9),
@@ -83,12 +84,16 @@ def dlg(t0, t1):
 CAST_K = ", ".join([
  "bima:idle_three{face=r}@1.2,9.2/2.55+big_kick{face=r}/2.4+look_up/4.35+idle_three{face=r}/27.1+look_up{expr=surprised}/7.0"
  "+idle_three{face=r}/6.2+idle_three{face=r;expr=surprised}/8.3+laugh_hard/3.1+idle_three{face=r;expr=smile}/6.3",
- f"hasan:idle_three{{hide=1}}@4.6,9.9/9.3+walk@4.6,9.9>{HX},{HZ}/2.2+pat_belly{{expr=proud}}/2.6+idle_three{{face=r;lean=-8;armR=-40;headY=5;expr=smug}}/2.1"
- "+throw{item=sandal;face=r}/1.2+look_up{expr=deadpan}/2.0+throw{item=sandal;face=r}/1.2+look_up{expr=shocked}/1.55"
- "+idle_three{face=r;holdR=sapu;expr=smug}/1.6+throw{item=sapu;face=r}/1.2+idle_three{face=r;holdR=ember;expr=smug}/1.25+throw{item=ember;face=r}/1.2"
- "+scratch_head/2.9+look_up{expr=deadpan}/5.5+look_up{expr=badmood}/7.0+idle_three{face=r;expr=deadpan}/7.9"
- "+bonk/0.6+idle{expr=dizzy}/0.4+bonk/0.5+bonk/0.5+idle{expr=dizzy}/0.75+bonk/0.5+idle{expr=dizzy}/0.85+bonk/0.6+dizzy/2.15"
- "+bonk/0.5+dizzy/2.7+idle{expr=nervous;sweat=true}/3.45+point_up/1.8+idle{expr=nervous;sweat=true}/1.3",
+ f"hasan:idle_three{{hide=1}}@4.6,9.9/9.3+walk@4.6,9.9>{HX},{HZ}/2.2+pat_belly{{expr=proud}}/2.6"
+ "+idle_three{face=r;legR=38;armR=-12;elbowR=-25;armL=25;lean=-5;headY=6;pitch=0.75;squash=0.06;expr=smug}/1.2+idle_three{face=r;holdR=sandal;barefoot=r;expr=smug}/0.9"
+ "+throw{item=sandal;face=r;barefoot=r}/1.2+look_up{expr=deadpan;barefoot=r}/1.1"
+ "+idle_three{face=r;legL=38;armR=-12;elbowR=-25;armL=25;lean=-5;headY=6;pitch=0.75;squash=0.06;barefoot=r}/0.5+idle_three{face=r;holdR=sandal;barefoot=both}/0.4"
+ "+throw{item=sandal;face=r;barefoot=both}/1.2+look_up{expr=shocked;barefoot=both}/1.55"
+ "+idle_three{face=r;holdR=sapu;expr=smug;barefoot=both}/1.6+throw{item=sapu;face=r;barefoot=both}/1.2+idle_three{face=r;holdR=ember;expr=smug;barefoot=both}/1.25+throw{item=ember;face=r;barefoot=both}/1.2"
+ "+scratch_head{barefoot=both}/2.9+look_up{expr=deadpan;barefoot=both}/5.5+look_up{expr=badmood;barefoot=both}/7.0+idle_three{face=r;expr=deadpan;barefoot=both}/7.9"
+ "+bonk{barefoot=both}/0.6+idle{expr=dizzy;barefoot=both}/0.4+bonk{barefoot=both}/0.5+bonk{barefoot=both}/0.5+idle{expr=dizzy;barefoot=both}/0.75+bonk{barefoot=both}/0.5"
+ "+idle{expr=dizzy;barefoot=both}/0.85+bonk{barefoot=both}/0.6+dizzy{barefoot=both}/2.15"
+ "+bonk{barefoot=both}/0.5+dizzy{barefoot=both}/2.7+idle{expr=nervous;sweat=true;barefoot=both}/3.45+point_up{barefoot=both}/1.8+idle{expr=nervous;sweat=true;barefoot=both}/1.3",
  "nana:idle_three{hide=1}@5.4,10.4/43.9+run@5.4,10.4>4.15,11.6/1.3+hold_tree{face=l}/3.4+shake_tree{face=l}/1.0+idle_three{face=l;expr=surprised}/8.0"
  "+laugh/3.1+idle_three{face=l;expr=smile}/5.1+idle_three{hide=1}/1.5",
  "atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
@@ -109,7 +114,7 @@ CAM_K = [
  {"t": 26.3, "x": 3.0, "y": 1.6, "z": 4.6, "f": 1000, "horizon": 0.5}, CUT(27.99, x=3.0, y=1.6, z=4.8, f=1000, horizon=0.5),
  {"t": 28.0, "x": 3.4, "y": 3.3, "z": 8.4, "f": 1550, "horizon": 0.5}, CUT(30.69, x=3.4, y=3.3, z=8.8, f=1650, horizon=0.5),  #   pelukan
  {"t": 30.7, "x": 4.6, "y": 0.5, "z": 8.9, "f": 1300, "horizon": 0.55}, CUT(32.99, x=4.4, y=0.5, z=9.1, f=1300, horizon=0.55), # 9 Oyen datang
- {"t": 33.0, "x": 4.2, "y": 0.9, "z": 8.6, "f": 1250, "horizon": 0.55}, {"t": 34.0, "x": 3.9, "y": 3.0, "z": 7.6, "f": 1300, "horizon": 0.5}, CUT(36.19, x=3.9, y=3.0, z=7.8, f=1300, horizon=0.5),  #   manjat
+ {"t": 33.0, "x": 4.1, "y": 1.3, "z": 6.6, "f": 2000, "horizon": 0.62}, {"t": 35.3, "x": 4.0, "y": 2.5, "z": 6.6, "f": 2000, "horizon": 0.5}, {"t": 35.8, "x": 4.0, "y": 2.8, "z": 7.9, "f": 1300, "horizon": 0.5}, CUT(36.19, x=4.0, y=2.8, z=8.0, f=1300, horizon=0.5),  #   manjat
  {"t": 36.2, "x": 3.6, "y": 3.2, "z": 7.3, "f": 1150, "horizon": 0.5}, CUT(43.59, x=3.5, y=3.2, z=7.8, f=1200, horizon=0.5),   # 10 berbuah
  {"t": 43.6, "x": 2.3, "y": 1.2, "z": 5.4, "f": 1150, "horizon": 0.48}, CUT(49.59, x=2.6, y=1.3, z=6.1, f=1250, horizon=0.48), # 11 Nana
  {"t": 49.6, "x": 2.95, "y": 1.9, "z": 6.6, "f": 1150, "horizon": 0.4}, CUT(55.59, x=2.95, y=1.9, z=6.8, f=1150, horizon=0.4), # 12 berjatuhan
@@ -131,7 +136,7 @@ LOOKS = [
  {"t0": 4.0, "t1": 9.3, "who": "bima", "at": TREE_HI},
  {"t0": 11.5, "t1": 16.2, "who": "bima", "at": "hasan"},
  {"t0": 16.2, "t1": 30.6, "who": "bima", "at": TREE_HI}, {"t0": 17.4, "t1": 30.6, "who": "hasan", "at": TREE_HI},
- {"t0": 30.8, "t1": 33.4, "who": "*", "at": [4.6, 0.2, 11.0]}, {"t0": 33.4, "t1": 43.9, "who": "*", "at": TREE_HI},
+ {"t0": 30.8, "t1": 33.3, "who": "*", "at": [4.4, 0.2, 11.2]}, {"t0": 33.3, "t1": 35.4, "who": "*", "at": [3.9, 1.4, 11.5]}, {"t0": 35.4, "t1": 43.9, "who": "*", "at": TREE_HI},
  {"t0": 45.2, "t1": 49.6, "who": ["bima", "hasan"], "at": "nana"}, {"t0": 45.2, "t1": 49.6, "who": "nana", "at": [3.6, 1.2, 11.8]},
  {"t0": 49.6, "t1": 57.6, "who": "hasan", "at": TREE_HI}, {"t0": 49.6, "t1": 57.6, "who": ["bima", "nana"], "at": "hasan"},
  {"t0": 57.6, "t1": 61.0, "who": ["bima", "nana"], "at": HEADPT},

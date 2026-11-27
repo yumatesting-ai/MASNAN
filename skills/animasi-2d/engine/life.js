@@ -56,6 +56,7 @@ function cat(w, x, z, o = {}) {
     dir = (u < go + 2 ? -1 : 1) * Math.sign(o.to[0] - x || 1);
     moving = u < go || (u > go + 2 && u < 2 * go + 2);
   }
+  if (o.moving !== undefined) moving = o.moving; // digerakkan dari luar (fx prop): kaki melangkah saat bergerak
   if (mode === "walk") mover(w, "kucing", px, pz, 0.25);
   if (w.castBlob) w.castBlob(px, pz, 0.15 + (o.y || 0), 0.2, { strength: 0.6 });
   // kedip & kedut telinga sesekali (deterministik)
@@ -94,9 +95,9 @@ function cat(w, x, z, o = {}) {
         <g transform="scale(0.85) translate(-16 -10)">${head(0, 0, true, false)}</g>
         <ellipse cx="-24" cy="-2" rx="4" ry="2.6" fill="${F(c)}" ${L}/>
         <text x="-22" y="${-30 - 3 * Math.sin(T * 1.2)}" font-size="9" font-family="DejaVu Sans" font-weight="700" fill="${lc}" opacity="${(0.4 + 0.5 * Math.abs(Math.sin(T * 1.2))).toFixed(2)}">z</text>`;
-    } else if (mode === "walk" || mode === "leap") { // tampak samping menghadap kiri: 4 kaki bergantian, ekor tegak bergoyang
+    } else if (mode === "walk" || mode === "leap" || mode === "climb") { // tampak samping menghadap kiri: 4 kaki bergantian, ekor tegak bergoyang
       const LEAP = mode === "leap"; // melompat: kaki depan menjulur ke depan, kaki belakang ke belakang, ekor lurus
-      const g = moving ? T * 9 : 0, A = moving ? 7 : 0, bob = moving ? Math.abs(Math.sin(g)) * 1.2 : 0;
+      const g = moving ? T * (mode === "climb" ? 12 : 9) : 0, A = moving ? (mode === "climb" ? 9 : 7) : 0, bob = moving ? Math.abs(Math.sin(g)) * 1.2 : 0;
       const leg = (lx, ph, back) => { const a = LEAP ? (lx < 0 ? -16 : 16) : Math.sin(g + ph) * A; return `<path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${F(back ? c2 : c)}" stroke-width="${(sw * 2.6).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M${lx},-10 L${lx + a * 0.5},-1 L${lx + a * 0.5 - 2.5},0" fill="none" stroke="${lc}" stroke-width="${(sw * 2.6 + sw * 1.3).toFixed(2)}" stroke-linecap="round" opacity="0" />`; };
       const sway = LEAP ? 14 : Math.sin(T * 3) * 6;
@@ -109,6 +110,7 @@ function cat(w, x, z, o = {}) {
         <path d="M-10,-9 Q0,-5 12,-8" fill="none" stroke="${F(cream)}" stroke-width="2.4" stroke-linecap="round"/>
         ${leg(15, 0, false)}${leg(-9, Math.PI, false)}
         ${head(-17, -24 + bob * 0.5, blink, o.food)}</g>`;
+      if (mode === "climb") body = `<g transform="rotate(90 2 -14)">${body}</g>`; // memanjat: badan tegak, kepala ke atas, kaki mencengkeram batang
     } else { // duduk menghadap kamera (serong kiri): ekor melingkar & mengibas, dada krem
       const tail = Math.sin(T * 2.2 + x) * 10, br = 0.6 * Math.sin(T * 2);
       body = `

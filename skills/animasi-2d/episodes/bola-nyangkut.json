@@ -101,7 +101,7 @@
    },
    "seconds": 67.3,
    "extras": "off",
-   "cast": "bima:idle_three{face=r}@1.2,9.2/2.55+big_kick{face=r}/2.4+look_up/4.35+idle_three{face=r}/27.1+look_up{expr=surprised}/7.0+idle_three{face=r}/6.2+idle_three{face=r;expr=surprised}/8.3+laugh_hard/3.1+idle_three{face=r;expr=smile}/6.3, hasan:idle_three{hide=1}@4.6,9.9/9.3+walk@4.6,9.9>2.9,10.9/2.2+pat_belly{expr=proud}/2.6+idle_three{face=r;lean=-8;armR=-40;headY=5;expr=smug}/2.1+throw{item=sandal;face=r}/1.2+look_up{expr=deadpan}/2.0+throw{item=sandal;face=r}/1.2+look_up{expr=shocked}/1.55+idle_three{face=r;holdR=sapu;expr=smug}/1.6+throw{item=sapu;face=r}/1.2+idle_three{face=r;holdR=ember;expr=smug}/1.25+throw{item=ember;face=r}/1.2+scratch_head/2.9+look_up{expr=deadpan}/5.5+look_up{expr=badmood}/7.0+idle_three{face=r;expr=deadpan}/7.9+bonk/0.6+idle{expr=dizzy}/0.4+bonk/0.5+bonk/0.5+idle{expr=dizzy}/0.75+bonk/0.5+idle{expr=dizzy}/0.85+bonk/0.6+dizzy/2.15+bonk/0.5+dizzy/2.7+idle{expr=nervous;sweat=true}/3.45+point_up/1.8+idle{expr=nervous;sweat=true}/1.3, nana:idle_three{hide=1}@5.4,10.4/43.9+run@5.4,10.4>4.15,11.6/1.3+hold_tree{face=l}/3.4+shake_tree{face=l}/1.0+idle_three{face=l;expr=surprised}/8.0+laugh/3.1+idle_three{face=l;expr=smile}/5.1+idle_three{hide=1}/1.5, atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
+   "cast": "bima:idle_three{face=r}@1.2,9.2/2.55+big_kick{face=r}/2.4+look_up/4.35+idle_three{face=r}/27.1+look_up{expr=surprised}/7.0+idle_three{face=r}/6.2+idle_three{face=r;expr=surprised}/8.3+laugh_hard/3.1+idle_three{face=r;expr=smile}/6.3, hasan:idle_three{hide=1}@4.6,9.9/9.3+walk@4.6,9.9>2.9,10.9/2.2+pat_belly{expr=proud}/2.6+idle_three{face=r;legR=38;armR=-12;elbowR=-25;armL=25;lean=-5;headY=6;pitch=0.75;squash=0.06;expr=smug}/1.2+idle_three{face=r;holdR=sandal;barefoot=r;expr=smug}/0.9+throw{item=sandal;face=r;barefoot=r}/1.2+look_up{expr=deadpan;barefoot=r}/1.1+idle_three{face=r;legL=38;armR=-12;elbowR=-25;armL=25;lean=-5;headY=6;pitch=0.75;squash=0.06;barefoot=r}/0.5+idle_three{face=r;holdR=sandal;barefoot=both}/0.4+throw{item=sandal;face=r;barefoot=both}/1.2+look_up{expr=shocked;barefoot=both}/1.55+idle_three{face=r;holdR=sapu;expr=smug;barefoot=both}/1.6+throw{item=sapu;face=r;barefoot=both}/1.2+idle_three{face=r;holdR=ember;expr=smug;barefoot=both}/1.25+throw{item=ember;face=r;barefoot=both}/1.2+scratch_head{barefoot=both}/2.9+look_up{expr=deadpan;barefoot=both}/5.5+look_up{expr=badmood;barefoot=both}/7.0+idle_three{face=r;expr=deadpan;barefoot=both}/7.9+bonk{barefoot=both}/0.6+idle{expr=dizzy;barefoot=both}/0.4+bonk{barefoot=both}/0.5+bonk{barefoot=both}/0.5+idle{expr=dizzy;barefoot=both}/0.75+bonk{barefoot=both}/0.5+idle{expr=dizzy;barefoot=both}/0.85+bonk{barefoot=both}/0.6+dizzy{barefoot=both}/2.15+bonk{barefoot=both}/0.5+dizzy{barefoot=both}/2.7+idle{expr=nervous;sweat=true;barefoot=both}/3.45+point_up{barefoot=both}/1.8+idle{expr=nervous;sweat=true;barefoot=both}/1.3, nana:idle_three{hide=1}@5.4,10.4/43.9+run@5.4,10.4>4.15,11.6/1.3+hold_tree{face=l}/3.4+shake_tree{face=l}/1.0+idle_three{face=l;expr=surprised}/8.0+laugh/3.1+idle_three{face=l;expr=smile}/5.1+idle_three{hide=1}/1.5, atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
    "camkeys": [
     {
      "t": 0,
@@ -343,26 +343,34 @@
     },
     {
      "t": 33.0,
-     "x": 4.2,
-     "y": 0.9,
-     "z": 8.6,
-     "f": 1250,
-     "horizon": 0.55
+     "x": 4.1,
+     "y": 1.3,
+     "z": 6.6,
+     "f": 2000,
+     "horizon": 0.62
     },
     {
-     "t": 34.0,
-     "x": 3.9,
-     "y": 3.0,
-     "z": 7.6,
+     "t": 35.3,
+     "x": 4.0,
+     "y": 2.5,
+     "z": 6.6,
+     "f": 2000,
+     "horizon": 0.5
+    },
+    {
+     "t": 35.8,
+     "x": 4.0,
+     "y": 2.8,
+     "z": 7.9,
      "f": 1300,
      "horizon": 0.5
     },
     {
      "t": 36.19,
      "ease": "cut",
-     "x": 3.9,
-     "y": 3.0,
-     "z": 7.8,
+     "x": 4.0,
+     "y": 2.8,
+     "z": 8.0,
      "f": 1300,
      "horizon": 0.5
     },
@@ -492,10 +500,17 @@
      "hold": "end",
      "keys": [
       [
-       3.62,
-       1.5,
-       0.12,
-       9.2,
+       0,
+       1.52,
+       0.11,
+       9.15,
+       0
+      ],
+      [
+       3.55,
+       1.52,
+       0.11,
+       9.15,
        0
       ],
       [
@@ -784,29 +799,47 @@
       ],
       [
        32.7,
-       4.15,
+       3.9,
        0,
-       11.3,
+       11.5,
        0,
        0,
        "walk"
       ],
       [
-       33.35,
-       4.15,
+       33.3,
+       3.9,
        0,
-       11.3,
+       11.5,
        0,
        0,
        "sit"
       ],
       [
-       34.0,
+       33.35,
+       3.9,
+       0.05,
+       11.5,
+       0,
+       0,
+       "climb"
+      ],
+      [
+       35.3,
+       3.9,
+       2.45,
+       11.5,
+       0,
+       0,
+       "climb"
+      ],
+      [
+       35.7,
        4.15,
        2.95,
        11.35,
        0,
-       0.6,
+       0.25,
        "sit"
       ],
       [
@@ -929,7 +962,7 @@
     },
     {
      "type": "text",
-     "t": 34.05,
+     "t": 35.75,
      "dur": 1.0,
      "text": "NYANGKUT x5!",
      "size": 0.12,
@@ -1472,16 +1505,26 @@
     },
     {
      "t0": 30.8,
-     "t1": 33.4,
+     "t1": 33.3,
      "who": "*",
      "at": [
-      4.6,
+      4.4,
       0.2,
-      11.0
+      11.2
      ]
     },
     {
-     "t0": 33.4,
+     "t0": 33.3,
+     "t1": 35.4,
+     "who": "*",
+     "at": [
+      3.9,
+      1.4,
+      11.5
+     ]
+    },
+    {
+     "t0": 35.4,
      "t1": 43.9,
      "who": "*",
      "at": [
