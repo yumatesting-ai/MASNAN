@@ -479,7 +479,7 @@
       "judul": "Penutup (Nana ngakak)",
       "loc": "kampung",
       "seconds": 9,
-      "cast": "nana:idle@depan/1.2+look_around/2.6+laugh_hard/3.6+deadpan/1.6, bima:run_panic@-4.5,6.9>4.5,6.9, hasan:idle{dirty=1}@-9,6.95/1.1+run_angry{dirty=1}@-4.5,6.95>4.5,6.95",
+      "cast": "nana:idle@depan/1.2+look_around/2.6+laugh_hard/3.6+deadpan/1.6, bima:run_panic@-4.5,6.9>4.5,6.9, hasan:idle{dirty=1}@-9,7.3/1.6+run_angry{dirty=1}@-4.5,7.3>4.5,7.3",
       "dialog": [
         {
           "who": "nana",

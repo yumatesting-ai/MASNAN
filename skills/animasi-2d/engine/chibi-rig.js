@@ -54,6 +54,9 @@ const BASE_EXPRESSIONS = {
   shy:        { eyes: "normal", mouth: "wavy", lookX: -1, blush: 1, sweat: true },
   love:       { eyes: "sparkle", mouth: "smile", blush: 1, sweat: false, above: "heart" },
   nervous:    { eyes: "normal", mouth: "flat", sweat: true },
+  determined: { eyes: "angry", mouth: "teeth", sweat: false },                                 // fokus / ancang-ancang
+  effort:     { eyes: "cry", mouth: "shout", sweat: true },                                    // mengerahkan tenaga (>_<)
+  hopeful:    { eyes: "wide", mouth: "o", sweat: false },                                      // penuh harap melihat hasil
   whisper:    { eyes: "normal", mouth: "small", lookX: 0.8, blush: 0.3, sweat: false },        // berbisik (melirik)
   scared:     { eyes: "wide", mouth: "wavy", sweat: true, gloom: true },                       // takut
   badmood:    { eyes: "half", mouth: "pout", sweat: false, gloom: true },                      // bad mood / bete

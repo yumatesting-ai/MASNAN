@@ -56,14 +56,14 @@ FXK = PROPS + [
  F(7.95, "NYANGKUT!", sy=0.2), F(17.95, "NYANGKUT!", sy=0.2), F(20.85, "NYANGKUT x2!", sy=0.2), F(24.85, "NYANGKUT x3!", sy=0.2), F(27.35, "NYANGKUT x4!", sy=0.2),
  {"type": "text", "t": 28.6, "dur": 1.8, "text": "❤", "at": [3.15, 3.65, Z_ST], "size": 0.09, "rot": 0},
  F(35.75, "NYANGKUT x5!", sy=0.2), F(36.45, "MEONG!", sx=0.62, sy=0.2, size=0.11, rot=6),
- LABEL(39.0, "BOLA", [ST["ball"][0], ST["ball"][1] + 0.25, Z_ST]), LABEL(39.9, "SANDAL", [ST["sandal1"][0] + 0.2, ST["sandal1"][1] + 0.45, Z_ST]),
+ LABEL(39.0, "BOLA", [ST["ball"][0], ST["ball"][1] + 0.25, Z_ST], 4.5), LABEL(39.9, "SANDAL", [ST["sandal1"][0] + 0.2, ST["sandal1"][1] + 0.45, Z_ST], 3.6),
  LABEL(41.2, "SAPU", [ST["sapu"][0], ST["sapu"][1] + 0.75, Z_ST], 2.2), LABEL(41.8, "EMBER", [ST["ember"][0], ST["ember"][1] - 0.25, Z_ST], 1.6),
  LABEL(42.5, "KUCING", [ST["cat"][0], ST["cat"][1] - 0.15, Z_ST], 0.9),
  {"type": "treeshake", "t": 48.6, "dur": 1.0, "amp": 7, "x": TREE[0], "z": TREE[1]}, SH(48.6, 0.025, 0.9),
  F(50.72, "TUK!", sx=0.62, sy=0.3, size=0.1, dur=0.6), SH(50.72, 0.03, 0.3),
  F(51.72, "PLOK!", sx=0.35, sy=0.3, size=0.1, dur=0.5), F(52.22, "PLOK!", sx=0.65, sy=0.33, size=0.1, dur=0.5),
  F(53.45, "SREK!", sx=0.6, sy=0.28, size=0.1, dur=0.6), F(54.85, "KONTANG!", sy=0.26, size=0.13, dur=0.8), SH(54.85, 0.05, 0.5),
- F(57.58, "HAP!", sy=0.24, size=0.13, dur=0.8), SH(57.58, 0.03, 0.3), F(66.0, "zzz...", sx=0.68, sy=0.25, size=0.07, rot=0, dur=1.3),
+ F(57.58, "HAP!", sy=0.24, size=0.13, dur=0.8), SH(57.58, 0.03, 0.3),
 ]
 def local(fxlist, t0, t1):
     out = []
@@ -96,26 +96,26 @@ CAST_K = ", ".join([
  "+bonk{barefoot=both}/0.5+dizzy{barefoot=both}/2.7+idle{expr=nervous;sweat=true;barefoot=both}/3.45+point_up{barefoot=both}/1.8+idle{expr=nervous;sweat=true;barefoot=both}/1.3",
  "nana:idle_three{hide=1}@5.4,10.4/43.9+run@5.4,10.4>4.15,11.6/1.3+hold_tree{face=l}/3.4+shake_tree{face=l}/1.0+idle_three{face=l;expr=surprised}/8.0"
  "+laugh/3.1+idle_three{face=l;expr=smile}/5.1+idle_three{hide=1}/1.5",
- "atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
+ "atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>0.2,10.0>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
 ])
 CUT = lambda t, **k: dict(t=t, ease="cut", **k)
 CAM_K = [
  {"t": 0, "x": 1.4, "y": 1.0, "z": 5.6, "f": 1500, "horizon": 0.5}, CUT(4.49, x=1.4, y=1.0, z=6.0, f=1500, horizon=0.5),        # 1 Bima
  {"t": 4.5, "x": 1.8, "y": 1.2, "z": 5.0, "f": 1150, "horizon": 0.55}, CUT(9.09, x=3.2, y=2.6, z=6.0, f=1150, horizon=0.85),    # 2 tilt ikut bola
- {"t": 9.1, "x": 2.6, "y": 1.2, "z": 6.0, "f": 1250, "horizon": 0.48}, CUT(11.99, x=2.8, y=1.2, z=6.4, f=1250, horizon=0.48),  # 3 Pak Hasan datang
+ {"t": 9.1, "x": 3.1, "y": 1.2, "z": 6.0, "f": 1200, "horizon": 0.48}, CUT(11.99, x=3.1, y=1.2, z=6.4, f=1250, horizon=0.48),  # 3 Pak Hasan datang
  {"t": 12.0, "x": 2.9, "y": 0.8, "z": 7.6, "f": 1400, "horizon": 0.62}, CUT(15.69, x=2.9, y=0.8, z=8.0, f=1400, horizon=0.62), # 4 low angle bangga
- {"t": 15.7, "x": 3.0, "y": 1.6, "z": 4.6, "f": 1000, "horizon": 0.5}, CUT(17.59, x=3.0, y=1.6, z=4.8, f=1000, horizon=0.5),   # 5 lempar
+ {"t": 15.7, "x": 2.1, "y": 1.7, "z": 4.4, "f": 950, "horizon": 0.5}, CUT(17.59, x=2.1, y=1.7, z=4.6, f=950, horizon=0.5),   # 5 lempar
  {"t": 17.6, "x": 3.6, "y": 3.2, "z": 8.2, "f": 1400, "horizon": 0.5}, CUT(19.19, x=3.6, y=3.2, z=8.4, f=1400, horizon=0.5),   #   nyangkut
- {"t": 19.2, "x": 3.0, "y": 1.6, "z": 4.6, "f": 1000, "horizon": 0.5}, CUT(20.79, x=3.0, y=1.6, z=4.8, f=1000, horizon=0.5),   # 6 lempar 2
+ {"t": 19.2, "x": 2.1, "y": 1.7, "z": 4.4, "f": 950, "horizon": 0.5}, CUT(20.79, x=2.1, y=1.7, z=4.6, f=950, horizon=0.5),   # 6 lempar 2
  {"t": 20.8, "x": 3.7, "y": 3.2, "z": 8.2, "f": 1400, "horizon": 0.5}, CUT(21.89, x=3.7, y=3.2, z=8.35, f=1400, horizon=0.5),
  {"t": 21.9, "x": 2.9, "y": 1.3, "z": 7.0, "f": 1300, "horizon": 0.48}, CUT(23.79, x=2.9, y=1.3, z=7.2, f=1300, horizon=0.48), # 7 sapu
- {"t": 23.8, "x": 3.0, "y": 1.6, "z": 4.6, "f": 1000, "horizon": 0.5}, CUT(25.29, x=3.0, y=1.6, z=4.8, f=1000, horizon=0.5),
+ {"t": 23.8, "x": 2.1, "y": 1.7, "z": 4.4, "f": 950, "horizon": 0.5}, CUT(25.29, x=2.1, y=1.7, z=4.6, f=950, horizon=0.5),
  {"t": 25.3, "x": 2.9, "y": 1.3, "z": 7.0, "f": 1300, "horizon": 0.48}, CUT(26.29, x=2.9, y=1.3, z=7.1, f=1300, horizon=0.48), # 8 ember
- {"t": 26.3, "x": 3.0, "y": 1.6, "z": 4.6, "f": 1000, "horizon": 0.5}, CUT(27.99, x=3.0, y=1.6, z=4.8, f=1000, horizon=0.5),
+ {"t": 26.3, "x": 2.1, "y": 1.7, "z": 4.4, "f": 950, "horizon": 0.5}, CUT(27.99, x=2.1, y=1.7, z=4.6, f=950, horizon=0.5),
  {"t": 28.0, "x": 3.4, "y": 3.3, "z": 8.4, "f": 1550, "horizon": 0.5}, CUT(30.69, x=3.4, y=3.3, z=8.8, f=1650, horizon=0.5),  #   pelukan
  {"t": 30.7, "x": 4.6, "y": 0.5, "z": 8.9, "f": 1300, "horizon": 0.55}, CUT(32.99, x=4.4, y=0.5, z=9.1, f=1300, horizon=0.55), # 9 Oyen datang
  {"t": 33.0, "x": 4.1, "y": 1.3, "z": 6.6, "f": 2000, "horizon": 0.62}, {"t": 35.3, "x": 4.0, "y": 2.5, "z": 6.6, "f": 2000, "horizon": 0.5}, {"t": 35.8, "x": 4.0, "y": 2.8, "z": 7.9, "f": 1300, "horizon": 0.5}, CUT(36.19, x=4.0, y=2.8, z=8.0, f=1300, horizon=0.5),  #   manjat
- {"t": 36.2, "x": 3.6, "y": 3.2, "z": 7.3, "f": 1150, "horizon": 0.5}, CUT(43.59, x=3.5, y=3.2, z=7.8, f=1200, horizon=0.5),   # 10 berbuah
+ {"t": 36.2, "x": 3.6, "y": 3.4, "z": 8.2, "f": 1250, "horizon": 0.56}, CUT(43.59, x=3.5, y=3.4, z=8.6, f=1300, horizon=0.56),   # 10 berbuah
  {"t": 43.6, "x": 2.3, "y": 1.2, "z": 5.4, "f": 1150, "horizon": 0.48}, CUT(49.59, x=2.6, y=1.3, z=6.1, f=1250, horizon=0.48), # 11 Nana
  {"t": 49.6, "x": 2.95, "y": 1.9, "z": 6.6, "f": 1150, "horizon": 0.4}, CUT(55.59, x=2.95, y=1.9, z=6.8, f=1150, horizon=0.4), # 12 berjatuhan
  {"t": 55.6, "x": 4.0, "y": 3.0, "z": 8.6, "f": 1500, "horizon": 0.5}, CUT(57.39, x=4.0, y=3.0, z=8.75, f=1500, horizon=0.5),  # 13 Oyen terakhir
@@ -151,8 +151,8 @@ CAST_L = "bima:nod{expr=smile;face=r}@0,7/3.42+big_kick{face=r}/2.4+idle_three{f
 FX_L = [{"type": "jemuran", "x": 2.4, "za": 9.0, "zb": 12.0},
         {"type": "prop", "kind": "ball", "hold": "end", "keys": [[71.77 - L0, 0.3, 0.12, 7.0, 0], [72.9 - L0, 2.4, 1.72, 10.2, 700, 1.0]]},
         F(71.77 - L0, "DUAK!", sx=0.35, sy=0.3, size=0.13, dur=0.6), F(72.95 - L0, "NYANGKUT LAGI!", sy=0.2, size=0.1, dur=1.5)]
-CAM_L = [{"t": 0, "x": 0.4, "y": 1.2, "z": 2.4, "f": 1150, "horizon": 0.47}, CUT(4.49, x=0.5, y=1.2, z=2.8, f=1150, horizon=0.47),
-         {"t": 4.5, "x": 1.3, "y": 1.3, "z": 4.6, "f": 1150, "horizon": 0.48}, {"t": 7.1, "x": 1.9, "y": 1.4, "z": 6.0, "f": 1300, "horizon": 0.48}]
+CAM_L = [{"t": 0, "x": 0.9, "y": 1.2, "z": 2.0, "f": 1100, "horizon": 0.47}, {"t": 4.4, "x": 1.0, "y": 1.2, "z": 2.4, "f": 1100, "horizon": 0.47},
+         {"t": 7.1, "x": 1.2, "y": 1.3, "z": 3.0, "f": 1150, "horizon": 0.48}]  # satu shot: tendangan & jemuran sama-sama terlihat
 
 ep = {"title": "Bola Nyangkut", "format": "portrait", "captionCaps": True,
       "music": {"style": "kocak", "tense_until": 0, "bpm": 116},

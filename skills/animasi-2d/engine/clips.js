@@ -366,7 +366,11 @@
     throw: { once: true, duration: 1.2, view: "three", smooth: 0.015, pose: (t) => {
       const wind = kf(t, [[0, 0], [0.5, 1, "io"], [0.6, 1], [0.7, 0, "in"], [1.2, 0]]);
       const up = kf(t, [[0, 0], [0.6, 0], [0.72, 1, "out"], [1.0, 0.85, "io"], [1.2, 0.6, "io"]]);
-      return { ...life(t, 1.2), expr: t < 0.6 ? "smug" : "excited", holdR: t < 0.65 ? "__item" : null, holdTilt: -30 * wind,
+      // ekspresi: ancang-ancang FOKUS (alis menukik, gigi terkatup) -> lempar MENGERAHKAN TENAGA (>_< teriak)
+      // -> follow-through MENDONGAK PENUH HARAP ke arah lemparan
+      const ex = t < 0.55 ? "determined" : t < 0.85 ? "effort" : "hopeful";
+      const after = kf(t, [[0, 0], [0.85, 0], [1.05, 1, "out"], [1.2, 1]]);
+      return { ...life(t, 1.2), expr: ex, pitch: -0.75 * after, lookY: -1.1 * after, holdR: t < 0.65 ? "__item" : null, holdTilt: -30 * wind,
         armR: -45 * wind + 165 * up, elbowR: 70 * wind - 10 * up, armL: 25 * wind - 10 * up, lean: 6 * wind - 6 * up,
         squash: 0.12 * wind - 0.08 * up, bodyY: 3 * wind - 4 * up, headY: -3 * up, fx: t / 0.6 };
     } },

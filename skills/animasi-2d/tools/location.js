@@ -277,6 +277,14 @@ function frame(t) {
       const te = t + (+o.t0 || 0), w = createWorld(Object.assign({ W, H }, LOC.camera));
       w.movers = []; w.t = te; LOC.build(w, { t: te, extras: o.extras !== "off", opts: o.locopts ? JSON.parse(o.locopts) : {} });
       const people = [...cast.map((m) => ({ who: m.who, ...m.tl.at(t) })), ...extras.map((m, i) => ({ who: `figuran#${LOC.extras[i].seed}`, ...m.tl.at((te + m.phase) % m.tl.total) }))];
+      // antartokoh: dua tokoh terlihat tidak boleh saling tembus (jarak badan < 0,34 m) saat salah satunya bergerak
+      const vis = cast.map((m) => ({ who: m.who, st: m.tl.at(t), st2: m.tl.at(Math.min(duration, t + 0.2)) })).filter((c) => !c.st.pose.hide);
+      for (let i = 0; i < vis.length; i++) for (let j = i + 1; j < vis.length; j++) {
+        const A = vis[i], B = vis[j], mov = Math.hypot(A.st2.x - A.st.x, A.st2.z - A.st.z) + Math.hypot(B.st2.x - B.st.x, B.st2.z - B.st.z) > 0.01;
+        if (mov && Math.hypot(A.st.x - B.st.x, A.st.z - B.st.z) < 0.34) {
+          const key = `${A.who}|${B.who}`; if (!seen.has(key)) { seen.add(key); exCrash.push(`${A.who} menembus ${B.who} pada t=${t.toFixed(1)} dtk (x=${A.st.x.toFixed(2)} z=${A.st.z.toFixed(2)})`); }
+        }
+      }
       for (const mv of w.movers) {
         for (const pp of people) if (Math.hypot(pp.x - mv.x, pp.z - mv.z) < mv.r + 0.16) {
           const key = `${pp.who}|${mv.name}`; if (seen.has(key)) continue; seen.add(key);

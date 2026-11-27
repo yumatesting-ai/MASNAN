@@ -220,6 +220,7 @@ function createWorld(opt = {}) {
   }
   // sprite tegak (pohon, karakter, papan): drawFn(sx, sy, pxPerMeter, fogFn, lineColor, strokeWidth)
   function sprite(x, z, drawFn, o = {}) {
+    if (z - cam.z < NEAR + 0.05) return; // di belakang/terlalu dekat kamera: jangan digambar (bug benda raksasa)
     const [sx, sy] = proj([x, o.y || 0, z]);
     items.push({ layer: o.layer || "obj", z: z + (o.bias || 0),
       svg: drawFn(sx, sy, ppm(z), (c) => fog(c, z), lineCol(z), sw(z)) });
