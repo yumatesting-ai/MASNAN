@@ -55,11 +55,11 @@ function deskPair(w, xc, zSeat, facing) {
     w.box(xc - L / 2, SEAT - 0.05, zb - 0.15, L, 0.05, 0.3, wood, { bias: 0.35 });
     for (const dx of [-L / 2 + 0.06, L / 2 - 0.1]) w.box(xc + dx, 0, zb - 0.1, 0.05, SEAT - 0.05, 0.05, wood2, { bias: 0.35 });
   } else {
-    const zf = zSeat - 0.17; // sisi bangku yang menghadap kamera (di belakang pinggul murid)
-    w.box(xc - L / 2, SEAT - 0.05, zf, L, 0.05, 0.3, wood, { bias: 0.2 }); // papan duduk: di bawah pinggul (tidak menutupi badan)
-    w.face([[xc - L / 2, 0.04, zf], [xc + L / 2, 0.04, zf], [xc + L / 2, SEAT - 0.05, zf], [xc - L / 2, SEAT - 0.05, zf]], wood2, { swk: 0.7, bias: -0.91 });
-    w.line3([[xc - L / 2, (SEAT - 0.05) / 2, zf - 0.005], [xc + L / 2, (SEAT - 0.05) / 2, zf - 0.005]], c("#5e3f26"), null, { bias: -0.92, swk: 0.6 });
-    for (const dx of [-L / 2, L / 2 - 0.05]) w.box(xc + dx, 0, zf - 0.02, 0.05, 0.05, 0.05, wood2, { bias: -0.92 });
+    // papan duduk tipis: tepi belakangnya digambar DI DEPAN pinggul murid (pinggul tampak menempel di papan), kaki bangku ke lantai
+    const zf = zSeat - 0.12;
+    w.box(xc - L / 2, SEAT - 0.06, zf, L, 0.05, 0.28, wood, { bias: 0.2 });
+    w.face([[xc - L / 2, SEAT - 0.07, zf], [xc + L / 2, SEAT - 0.07, zf], [xc + L / 2, SEAT - 0.01, zf], [xc - L / 2, SEAT - 0.01, zf]], wood, { swk: 0.7, bias: -0.95 });
+    for (const dx of [-L / 2 + 0.05, L / 2 - 0.1]) w.box(xc + dx, 0, zf + 0.02, 0.05, SEAT - 0.07, 0.05, wood2, { bias: -0.2 });
   }
   // meja: daun meja + panel depan (menutup kaki) + kaki meja; tampak murid digambar DI DEPAN murid yang duduk
   const b = facing === "cam" ? -0.3 : 0.1;

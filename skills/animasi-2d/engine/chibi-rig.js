@@ -695,7 +695,12 @@ function createRig(design) {
       <path fill="${lapFill}" ${LINE} d="M110,288 C108,300 110,312 118,318 C128,322 140,321 147,316 L150,312 L153,316 C160,321 172,322 182,318 C190,312 192,300 190,288 Z"/>
       <path fill="none" stroke="${C.line}" stroke-width="2" stroke-linecap="round" opacity="0.55" d="M150,296 L150,311"/>
       <path fill="#000" opacity="0.08" d="M112,308 C122,318 140,320 147,315 L150,311 L153,315 C160,320 178,318 188,308 C186,316 176,321 164,321 C158,320 154,318 150,314 C146,318 142,320 136,321 C124,321 114,316 112,308 Z"/></g>` : "";
-    const legs = `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""} translate(0 ${sitDy.toFixed(2)})">
+    // DUDUK TAMPAK BELAKANG: paha mengarah menjauh & betis di kolong meja -> kaki tidak terlihat, hanya pinggul/rok
+    // yang menempel di papan duduk (bangku digambar lokasi di depan pinggul).
+    const legsBackSit = isBack && SIT > 0.5 ? `<g id="legs" transform="translate(0 ${sitDy.toFixed(2)})">
+      <path fill="${C.pants}" ${LINE} stroke-width="2.4" d="M110,258 L190,258 L192,300 C172,307 128,307 108,300 Z"/>
+      <path fill="none" stroke="${C.pantsShade}" stroke-width="3" d="M150,262 L150,302"/></g>` : null;
+    const legs = legsBackSit || `<g id="legs" transform="${isThree ? "translate(-3 0)" : ""} translate(0 ${sitDy.toFixed(2)})">
       ${B === "pants" || B === "shorts" ? `<path fill="${C.pants}" d="M115,258 L185,258 L186,290 L114,290 Z"/>` : ""}
       ${p.legL > p.legR ? leg("r", p.legR) + leg("l", p.legL) : leg("l", p.legL) + leg("r", p.legR)}${lap}</g>`;
 

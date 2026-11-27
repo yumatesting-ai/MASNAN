@@ -140,7 +140,7 @@ def extras_slice(a, b, view):
     return ex
 # shot: (mulai_abs, sudut, kamera_awal, kamera_akhir)
 SHOTS_D = [
- (D, "guru", cam(0.3, 1.3, 2.55, 760), cam(0.25, 1.3, 2.75, 790)),               # Bu Sari menagih PR (punggung murid di depan)
+ (D, "guru", cam(0.45, 1.3, 2.5, 740), cam(0.45, 1.3, 2.65, 760)),               # Bu Sari menagih PR (punggung murid di depan)
  (25.36, "murid", cam(-0.85, 1.12, 1.2, 1100), cam(-0.85, 1.12, 1.25, 1250)),     # close Bima keringat dingin
  (28.3, "murid", cam(-0.5, 1.15, 0.6, 900), cam(-0.5, 1.15, 0.85, 930)),          # Bima beralasan (Rara & Nana ikut terlihat)
  (32.6, "murid", cam(0.0, 1.2, 0.1, 860), cam(0.0, 1.2, 0.35, 880)),              # satu kelas tertawa
