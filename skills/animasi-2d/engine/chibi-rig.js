@@ -157,7 +157,7 @@ const LAYOUT = {
   },
   side: {
     eyes: [{ cx: 186, cy: 147, rx: 9, ry: 12.5, inner: 4, side: true }],
-    mouth: { x: 192, y: 177, s: 0.72 }, cheeks: [{ x: 178, y: 167 }],
+    mouth: { x: 185, y: 179, s: 0.95, side: true }, cheeks: [{ x: 178, y: 167 }],
     sweat: { x: 114, y: 112 }, anger: { x: 128, y: 98 }, top: { x: 196, y: 62 },
   },
   back: { eyes: [], mouth: null, cheeks: [], sweat: null, anger: { x: 198, y: 94 }, top: { x: 206, y: 62 } },
@@ -306,6 +306,29 @@ function createRig(design) {
       tongue: `<path fill="${C.mouthIn}" ${st} d="M-9,-4 L9,-4 Q8,7 0,7 Q-8,7 -9,-4 Z"/>
                <path fill="${C.tongue}" ${st} d="M-5,3 Q-6,16 0,17 Q6,16 5,3 Z"/><path fill="none" ${st} d="M0,6 L0,13"/>`,
     };
+    if (m.side && !p.lip) { // MULUT PROFIL: bukaan berbentuk "D"/baji menghadap ke depan (+x), sudut mulut ke belakang
+      const IN = C.mouthIn, TG = C.tongue;
+      const prof = {
+        cat: `<path fill="none" ${st} d="M-6,-1 Q-3,3 0,0 Q2,2.5 4,0"/>`,
+        smile: `<path fill="none" ${st} d="M-7,-3 Q-3,4 4,1"/>`,
+        smirk: `<path fill="none" ${st} d="M-6,1 Q-1,3 4,-2"/>`,
+        flat: `<path fill="none" ${st} d="M-5,1 L4,1"/>`, smallflat: `<path fill="none" ${st} d="M-3,1 L3,1"/>`,
+        frown: `<path fill="none" ${st} d="M-6,4 Q-2,-2 4,1"/>`, pout: `<path fill="none" ${st} d="M-3,2 Q0,-1.5 3,2"/>`,
+        wavy: `<path fill="none" ${st} d="M-7,1 Q-5,-2 -3,1 Q-1,4 1,1 Q3,-2 5,1"/>`,
+        small: `<ellipse fill="${IN}" ${st} cx="1" cy="1" rx="2" ry="2"/>`,
+        o: `<ellipse fill="${IN}" ${st} cx="1" cy="1" rx="3.2" ry="4.4"/>`,
+        open: `<path fill="${IN}" ${st} d="M5,-3 L-5,-1 Q-4,6 4,7 Q6,2 5,-3 Z"/>`,
+        sad_open: `<path fill="${IN}" ${st} d="M5,-1 Q-3,-1 -5,3 Q-1,8 4,8 Q6,3 5,-1 Z"/>`,
+        happy_open: `<path fill="${IN}" ${st} d="M6,-3 L-7,-3 Q-5,8 4,9 Q7,3 6,-3 Z"/><path fill="${TG}" d="M-2,7 Q2,4 5,7.5 Q1,9 -2,7 Z"/>`,
+        grin: `<path fill="${IN}" ${st} d="M6,-3 L-8,-4 Q-6,8 4,9 Q7,3 6,-3 Z"/><path fill="${TG}" d="M-2,7 Q2,4 5,7.5 Q1,9 -2,7 Z"/>
+               <path fill="none" ${st} d="M6,-3 L-8,-4 Q-6,8 4,9 Q7,3 6,-3 Z"/>`,
+        shout: `<path fill="${IN}" ${st} d="M7,-5 L-7,-3 Q-6,11 5,12 Q8,4 7,-5 Z"/><path fill="${TG}" d="M-3,10 Q2,6 6,10.5 Q1,12.5 -3,10 Z"/>
+                <path fill="none" ${st} d="M7,-5 L-7,-3 Q-6,11 5,12 Q8,4 7,-5 Z"/>`,
+        teeth: `<path fill="#ffffff" ${st} d="M6,-3 L-6,-2 L-5,4 L5,4 Z"/><path fill="none" ${st} stroke-width="${1.2 / m.s}" d="M-5,1 L6,1"/>`,
+        tongue: `<path fill="${IN}" ${st} d="M6,-3 L-6,-2 Q-4,6 5,6 Z"/><path fill="${TG}" ${st} d="M2,3 Q10,4 11,9 Q8,12 3,8 Z"/>`,
+      };
+      return `<g transform="translate(${m.x} ${m.y}) scale(${m.s})">${prof[p.mouth] || prof.cat}</g>`;
+    }
     return `<g transform="translate(${m.x} ${m.y}) scale(${m.s})">${lips(p, st)}${shapes[p.mouth] || shapes.cat}${lipFx(p)}</g>`;
   }
   // BIBIR (konten kecantikan): p.lip = warna lipstik; kondisi: lipPatch (comeng/belang), lipDry (kering, kulit mati),
