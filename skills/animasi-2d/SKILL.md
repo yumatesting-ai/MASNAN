@@ -395,3 +395,15 @@ Sumber emosi (urutan): `dialog[].emo` → tag ElevenLabs di teks (`[whispering] 
 
 Ekspresi baru di rig: `whisper, scared, badmood, worried, suspicious, proud, excited`; mulut baru:
 `small, smallflat, sad_open, teeth, happy_open, pout`. Kedipan otomatis berbeda tiap tokoh (tidak serempak).
+
+## Format narator tunggal + komedi fisik (contoh: `episodes/bola-nyangkut.json`, generator `episodes/src/bola-nyangkut.py`)
+
+- VO dari kreator boleh berupa video ber-subtitle otomatis (CapCut): baca subtitle per pergantian frame
+  (`ffmpeg ... select='gt(scene,0.003)',showinfo`) -> teks + waktu persis tiap kalimat.
+- Narasi = `dialog` dengan `"who":"narator","noname":true`; kutipan tokoh ("Tenang, serahkan sama ahlinya!") =
+  dialog tokoh dengan `"nosub":true` (hanya gerak mulut). `"captionCaps": true` -> subtitle huruf besar.
+- Satu adegan panjang + `camkeys` dengan `"ease":"cut"` = banyak shot dengan kontinuitas benda terjaga.
+- `fx` baru: `prop` (benda berkeyframe `[t,x,y,z,rot,arc,mode]`: sandal, sapu, ember, ball, mango, cat; arc>0 = lempar,
+  arc<0 = jatuh, mode cat: hide/walk/sit/sleep; `dentAt` ember penyok), `treeshake`, `jemuran`, teks 3D `at:[x,y,z]` (label).
+- Klip baru: `throw` (override `{item=sandal|sapu|ember}`), `hold_tree`, `shake_tree`, `bonk`, `point_up`. Override `{hide=1}`
+  menyembunyikan tokoh sampai masuk adegan. Opsi lokasi: `"locopts": {"poles": false, "clearRight": true}` (kampung).

@@ -1,0 +1,1471 @@
+{
+ "title": "Bola Nyangkut",
+ "format": "portrait",
+ "captionCaps": true,
+ "music": {
+  "style": "kocak",
+  "tense_until": 0,
+  "bpm": 116
+ },
+ "sfx": [
+  {
+   "t": 3.6,
+   "type": "thud"
+  },
+  {
+   "t": 7.9,
+   "type": "rustle"
+  },
+  {
+   "t": 17.6,
+   "type": "rustle"
+  },
+  {
+   "t": 20.8,
+   "type": "rustle"
+  },
+  {
+   "t": 25.1,
+   "type": "rustle"
+  },
+  {
+   "t": 27.6,
+   "type": "rustle"
+  },
+  {
+   "t": 33.4,
+   "type": "boing"
+  },
+  {
+   "t": 50.72,
+   "type": "pop"
+  },
+  {
+   "t": 51.72,
+   "type": "pop"
+  },
+  {
+   "t": 52.22,
+   "type": "pop"
+  },
+  {
+   "t": 53.45,
+   "type": "rustle"
+  },
+  {
+   "t": 54.85,
+   "type": "thud"
+  },
+  {
+   "t": 57.58,
+   "type": "boing"
+  },
+  {
+   "t": 61.0,
+   "type": "dundun"
+  },
+  {
+   "t": 71.77,
+   "type": "thud"
+  },
+  {
+   "t": 72.9,
+   "type": "wahwah"
+  }
+ ],
+ "positions": {
+  "hasan": [
+   2.9,
+   10.9
+  ],
+  "bima": [
+   1.2,
+   9.2
+  ],
+  "nana": [
+   4.15,
+   11.6
+  ],
+  "atin": [
+   1.95,
+   10.35
+  ]
+ },
+ "scenes": [
+  {
+   "judul": "Kampung: bola, sandal, sapu, ember, Oyen",
+   "loc": "kampung",
+   "locopts": {
+    "poles": false,
+    "clearRight": true
+   },
+   "seconds": 67.3,
+   "extras": "off",
+   "cast": "bima:idle_three{face=r}@1.2,9.2/2.55+big_kick{face=r}/2.4+look_up/4.35+idle_three{face=r}/27.1+look_up{expr=surprised}/7.0+idle_three{face=r}/6.2+idle_three{face=r;expr=surprised}/8.3+laugh_hard/3.1+idle_three{face=r;expr=smile}/6.3, hasan:idle_three{hide=1}@4.6,9.9/9.3+walk@4.6,9.9>2.9,10.9/2.2+pat_belly{expr=proud}/2.6+idle_three{face=r;lean=-8;armR=-40;headY=5;expr=smug}/2.1+throw{item=sandal;face=r}/1.2+look_up{expr=deadpan}/2.0+throw{item=sandal;face=r}/1.2+look_up{expr=shocked}/1.55+idle_three{face=r;holdR=sapu;expr=smug}/1.6+throw{item=sapu;face=r}/1.2+idle_three{face=r;holdR=ember;expr=smug}/1.25+throw{item=ember;face=r}/1.2+scratch_head/2.9+look_up{expr=deadpan}/5.5+look_up{expr=badmood}/7.0+idle_three{face=r;expr=deadpan}/7.9+bonk/0.6+idle{expr=dizzy}/0.4+bonk/0.5+bonk/0.5+idle{expr=dizzy}/0.75+bonk/0.5+idle{expr=dizzy}/0.85+bonk/0.6+dizzy/2.15+bonk/0.5+dizzy/2.7+idle{expr=nervous;sweat=true}/3.45+point_up/1.8+idle{expr=nervous;sweat=true}/1.3, nana:idle_three{hide=1}@5.4,10.4/43.9+run@5.4,10.4>4.15,11.6/1.3+hold_tree{face=l}/3.4+shake_tree{face=l}/1.0+idle_three{face=l;expr=surprised}/8.0+laugh/3.1+idle_three{face=l;expr=smile}/5.1+idle_three{hide=1}/1.5, atin:idle{hide=1}@-1.5,6.6/60.6+run@-1.5,6.6>1.95,10.35/1.5+deadpan{expr=badmood}/2.0+angry_shake/2.1+deadpan{expr=badmood}/1.1",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": 1.4,
+     "y": 1.0,
+     "z": 5.6,
+     "f": 1500,
+     "horizon": 0.5
+    },
+    {
+     "t": 4.49,
+     "ease": "cut",
+     "x": 1.4,
+     "y": 1.0,
+     "z": 6.0,
+     "f": 1500,
+     "horizon": 0.5
+    },
+    {
+     "t": 4.5,
+     "x": 1.8,
+     "y": 1.2,
+     "z": 5.0,
+     "f": 1150,
+     "horizon": 0.55
+    },
+    {
+     "t": 9.09,
+     "ease": "cut",
+     "x": 3.2,
+     "y": 2.6,
+     "z": 6.0,
+     "f": 1150,
+     "horizon": 0.85
+    },
+    {
+     "t": 9.1,
+     "x": 2.6,
+     "y": 1.2,
+     "z": 6.0,
+     "f": 1250,
+     "horizon": 0.48
+    },
+    {
+     "t": 11.99,
+     "ease": "cut",
+     "x": 2.8,
+     "y": 1.2,
+     "z": 6.4,
+     "f": 1250,
+     "horizon": 0.48
+    },
+    {
+     "t": 12.0,
+     "x": 2.9,
+     "y": 0.8,
+     "z": 7.6,
+     "f": 1400,
+     "horizon": 0.62
+    },
+    {
+     "t": 15.69,
+     "ease": "cut",
+     "x": 2.9,
+     "y": 0.8,
+     "z": 8.0,
+     "f": 1400,
+     "horizon": 0.62
+    },
+    {
+     "t": 15.7,
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.6,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 17.59,
+     "ease": "cut",
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.8,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 17.6,
+     "x": 3.6,
+     "y": 3.2,
+     "z": 8.2,
+     "f": 1400,
+     "horizon": 0.5
+    },
+    {
+     "t": 19.19,
+     "ease": "cut",
+     "x": 3.6,
+     "y": 3.2,
+     "z": 8.4,
+     "f": 1400,
+     "horizon": 0.5
+    },
+    {
+     "t": 19.2,
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.6,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 20.79,
+     "ease": "cut",
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.8,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 20.8,
+     "x": 3.7,
+     "y": 3.2,
+     "z": 8.2,
+     "f": 1400,
+     "horizon": 0.5
+    },
+    {
+     "t": 21.89,
+     "ease": "cut",
+     "x": 3.7,
+     "y": 3.2,
+     "z": 8.35,
+     "f": 1400,
+     "horizon": 0.5
+    },
+    {
+     "t": 21.9,
+     "x": 2.9,
+     "y": 1.3,
+     "z": 7.0,
+     "f": 1300,
+     "horizon": 0.48
+    },
+    {
+     "t": 23.79,
+     "ease": "cut",
+     "x": 2.9,
+     "y": 1.3,
+     "z": 7.2,
+     "f": 1300,
+     "horizon": 0.48
+    },
+    {
+     "t": 23.8,
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.6,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 25.29,
+     "ease": "cut",
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.8,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 25.3,
+     "x": 2.9,
+     "y": 1.3,
+     "z": 7.0,
+     "f": 1300,
+     "horizon": 0.48
+    },
+    {
+     "t": 26.29,
+     "ease": "cut",
+     "x": 2.9,
+     "y": 1.3,
+     "z": 7.1,
+     "f": 1300,
+     "horizon": 0.48
+    },
+    {
+     "t": 26.3,
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.6,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 27.99,
+     "ease": "cut",
+     "x": 3.0,
+     "y": 1.6,
+     "z": 4.8,
+     "f": 1000,
+     "horizon": 0.5
+    },
+    {
+     "t": 28.0,
+     "x": 3.4,
+     "y": 3.3,
+     "z": 8.4,
+     "f": 1550,
+     "horizon": 0.5
+    },
+    {
+     "t": 30.69,
+     "ease": "cut",
+     "x": 3.4,
+     "y": 3.3,
+     "z": 8.8,
+     "f": 1650,
+     "horizon": 0.5
+    },
+    {
+     "t": 30.7,
+     "x": 4.6,
+     "y": 0.5,
+     "z": 8.9,
+     "f": 1300,
+     "horizon": 0.55
+    },
+    {
+     "t": 32.99,
+     "ease": "cut",
+     "x": 4.4,
+     "y": 0.5,
+     "z": 9.1,
+     "f": 1300,
+     "horizon": 0.55
+    },
+    {
+     "t": 33.0,
+     "x": 4.2,
+     "y": 0.9,
+     "z": 8.6,
+     "f": 1250,
+     "horizon": 0.55
+    },
+    {
+     "t": 34.0,
+     "x": 3.9,
+     "y": 3.0,
+     "z": 7.6,
+     "f": 1300,
+     "horizon": 0.5
+    },
+    {
+     "t": 36.19,
+     "ease": "cut",
+     "x": 3.9,
+     "y": 3.0,
+     "z": 7.8,
+     "f": 1300,
+     "horizon": 0.5
+    },
+    {
+     "t": 36.2,
+     "x": 3.6,
+     "y": 3.2,
+     "z": 7.3,
+     "f": 1150,
+     "horizon": 0.5
+    },
+    {
+     "t": 43.59,
+     "ease": "cut",
+     "x": 3.5,
+     "y": 3.2,
+     "z": 7.8,
+     "f": 1200,
+     "horizon": 0.5
+    },
+    {
+     "t": 43.6,
+     "x": 2.3,
+     "y": 1.2,
+     "z": 5.4,
+     "f": 1150,
+     "horizon": 0.48
+    },
+    {
+     "t": 49.59,
+     "ease": "cut",
+     "x": 2.6,
+     "y": 1.3,
+     "z": 6.1,
+     "f": 1250,
+     "horizon": 0.48
+    },
+    {
+     "t": 49.6,
+     "x": 2.95,
+     "y": 1.9,
+     "z": 6.6,
+     "f": 1150,
+     "horizon": 0.4
+    },
+    {
+     "t": 55.59,
+     "ease": "cut",
+     "x": 2.95,
+     "y": 1.9,
+     "z": 6.8,
+     "f": 1150,
+     "horizon": 0.4
+    },
+    {
+     "t": 55.6,
+     "x": 4.0,
+     "y": 3.0,
+     "z": 8.6,
+     "f": 1500,
+     "horizon": 0.5
+    },
+    {
+     "t": 57.39,
+     "ease": "cut",
+     "x": 4.0,
+     "y": 3.0,
+     "z": 8.75,
+     "f": 1500,
+     "horizon": 0.5
+    },
+    {
+     "t": 57.4,
+     "x": 2.9,
+     "y": 1.45,
+     "z": 7.4,
+     "f": 1350,
+     "horizon": 0.42
+    },
+    {
+     "t": 60.99,
+     "ease": "cut",
+     "x": 2.9,
+     "y": 1.45,
+     "z": 7.7,
+     "f": 1400,
+     "horizon": 0.42
+    },
+    {
+     "t": 61.0,
+     "x": 2.35,
+     "y": 1.3,
+     "z": 6.0,
+     "f": 1150,
+     "horizon": 0.46
+    },
+    {
+     "t": 65.79,
+     "ease": "cut",
+     "x": 2.4,
+     "y": 1.3,
+     "z": 6.3,
+     "f": 1200,
+     "horizon": 0.46
+    },
+    {
+     "t": 65.8,
+     "x": 2.9,
+     "y": 1.6,
+     "z": 8.6,
+     "f": 1600,
+     "horizon": 0.45
+    },
+    {
+     "t": 67.3,
+     "x": 2.9,
+     "y": 1.6,
+     "z": 8.75,
+     "f": 1650,
+     "horizon": 0.45
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "ball",
+     "hold": "end",
+     "keys": [
+      [
+       3.62,
+       1.5,
+       0.12,
+       9.2,
+       0
+      ],
+      [
+       7.9,
+       3.15,
+       3.3,
+       11.35,
+       900,
+       3.2
+      ],
+      [
+       49.7,
+       3.15,
+       3.3,
+       11.35,
+       900
+      ],
+      [
+       50.72,
+       2.9499999999999997,
+       1.55,
+       10.92,
+       1300,
+       -1
+      ],
+      [
+       51.3,
+       2.2,
+       0.11,
+       10.2,
+       1600,
+       0.5
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "sandal",
+     "hold": "end",
+     "keys": [
+      [
+       16.85,
+       3.05,
+       1.65,
+       10.9,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       16.86,
+       3.05,
+       1.65,
+       10.9,
+       0
+      ],
+      [
+       17.6,
+       3.95,
+       3.2,
+       11.35,
+       520,
+       0.7
+      ],
+      [
+       51.3,
+       3.95,
+       3.2,
+       11.35,
+       520
+      ],
+      [
+       51.72,
+       2.98,
+       1.55,
+       10.92,
+       700,
+       -1
+      ],
+      [
+       52.1,
+       3.4,
+       0.03,
+       10.5,
+       720,
+       0.3
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "sandal",
+     "hold": "end",
+     "keys": [
+      [
+       20.05,
+       3.05,
+       1.65,
+       10.9,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       20.06,
+       3.05,
+       1.65,
+       10.9,
+       0
+      ],
+      [
+       20.8,
+       4.35,
+       3.45,
+       11.35,
+       -470,
+       0.8
+      ],
+      [
+       51.78,
+       4.35,
+       3.45,
+       11.35,
+       -470
+      ],
+      [
+       52.22,
+       2.85,
+       1.55,
+       10.92,
+       -650,
+       -1
+      ],
+      [
+       52.6,
+       2.4,
+       0.03,
+       10.7,
+       -700,
+       0.3
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "sapu",
+     "hold": "end",
+     "keys": [
+      [
+       24.4,
+       3.05,
+       1.65,
+       10.9,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       24.41,
+       3.05,
+       1.65,
+       10.9,
+       0
+      ],
+      [
+       25.1,
+       2.75,
+       3.4,
+       11.35,
+       -35,
+       0.6
+      ],
+      [
+       52.98,
+       2.75,
+       3.4,
+       11.35,
+       -35
+      ],
+      [
+       53.45,
+       2.9,
+       1.55,
+       10.92,
+       30,
+       -1
+      ],
+      [
+       53.85,
+       2.2,
+       0.05,
+       11.1,
+       90,
+       0.2
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "ember",
+     "hold": "end",
+     "dentAt": 54.85,
+     "keys": [
+      [
+       26.85,
+       3.05,
+       1.65,
+       10.9,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       26.86,
+       3.05,
+       1.65,
+       10.9,
+       0
+      ],
+      [
+       27.6,
+       3.55,
+       3.05,
+       11.35,
+       15,
+       0.7
+      ],
+      [
+       54.28,
+       3.55,
+       3.05,
+       11.35,
+       15
+      ],
+      [
+       54.85,
+       2.9,
+       1.52,
+       10.93,
+       175,
+       -1
+      ],
+      [
+       55.35,
+       3.45,
+       0.0,
+       10.35,
+       200,
+       0.4
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "keys": [
+      [
+       0,
+       5.6,
+       0,
+       10.6,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       30.85,
+       5.6,
+       0,
+       10.6,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       30.9,
+       5.6,
+       0,
+       10.6,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       32.7,
+       4.15,
+       0,
+       11.3,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       33.35,
+       4.15,
+       0,
+       11.3,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       34.0,
+       4.15,
+       2.95,
+       11.35,
+       0,
+       0.6,
+       "sit"
+      ],
+      [
+       57.0,
+       4.15,
+       2.95,
+       11.35,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       57.58,
+       2.9,
+       1.44,
+       10.93,
+       0,
+       0.35,
+       "sit"
+      ],
+      [
+       65.9,
+       2.9,
+       1.44,
+       10.93,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       65.95,
+       2.9,
+       1.44,
+       10.93,
+       0,
+       0,
+       "sleep"
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 3.6,
+     "dur": 1.0,
+     "text": "DUAK!",
+     "size": 0.13,
+     "rot": -6,
+     "sx": 0.35,
+     "sy": 0.3
+    },
+    {
+     "type": "burst",
+     "t": 3.6,
+     "sx": 0.35,
+     "sy": 0.66
+    },
+    {
+     "type": "shake",
+     "t": 3.6,
+     "dur": 0.3,
+     "amp": 0.03
+    },
+    {
+     "type": "text",
+     "t": 7.95,
+     "dur": 1.0,
+     "text": "NYANGKUT!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 17.95,
+     "dur": 1.0,
+     "text": "NYANGKUT!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 20.85,
+     "dur": 1.0,
+     "text": "NYANGKUT x2!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 24.85,
+     "dur": 1.0,
+     "text": "NYANGKUT x3!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 27.35,
+     "dur": 1.0,
+     "text": "NYANGKUT x4!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 28.6,
+     "dur": 1.8,
+     "text": "❤",
+     "at": [
+      3.15,
+      3.65,
+      11.35
+     ],
+     "size": 0.09,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 34.05,
+     "dur": 1.0,
+     "text": "NYANGKUT x5!",
+     "size": 0.12,
+     "rot": -6,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 36.45,
+     "dur": 1.0,
+     "text": "MEONG!",
+     "size": 0.11,
+     "rot": 6,
+     "sx": 0.62,
+     "sy": 0.2
+    },
+    {
+     "type": "text",
+     "t": 39.0,
+     "dur": 4.4,
+     "text": "BOLA",
+     "at": [
+      3.15,
+      3.55,
+      11.35
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 39.9,
+     "dur": 4.4,
+     "text": "SANDAL",
+     "at": [
+      4.15,
+      3.6500000000000004,
+      11.35
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 41.2,
+     "dur": 2.2,
+     "text": "SAPU",
+     "at": [
+      2.75,
+      4.15,
+      11.35
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 41.8,
+     "dur": 1.6,
+     "text": "EMBER",
+     "at": [
+      3.55,
+      2.8,
+      11.35
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "text",
+     "t": 42.5,
+     "dur": 0.9,
+     "text": "KUCING",
+     "at": [
+      4.15,
+      2.8000000000000003,
+      11.35
+     ],
+     "size": 0.05,
+     "rot": 0
+    },
+    {
+     "type": "treeshake",
+     "t": 48.6,
+     "dur": 1.0,
+     "amp": 7,
+     "x": 3.6,
+     "z": 11.8
+    },
+    {
+     "type": "shake",
+     "t": 48.6,
+     "dur": 0.9,
+     "amp": 0.025
+    },
+    {
+     "type": "text",
+     "t": 50.72,
+     "dur": 0.6,
+     "text": "TUK!",
+     "size": 0.1,
+     "rot": -6,
+     "sx": 0.62,
+     "sy": 0.3
+    },
+    {
+     "type": "shake",
+     "t": 50.72,
+     "dur": 0.3,
+     "amp": 0.03
+    },
+    {
+     "type": "text",
+     "t": 51.72,
+     "dur": 0.5,
+     "text": "PLOK!",
+     "size": 0.1,
+     "rot": -6,
+     "sx": 0.35,
+     "sy": 0.3
+    },
+    {
+     "type": "text",
+     "t": 52.22,
+     "dur": 0.5,
+     "text": "PLOK!",
+     "size": 0.1,
+     "rot": -6,
+     "sx": 0.65,
+     "sy": 0.33
+    },
+    {
+     "type": "text",
+     "t": 53.45,
+     "dur": 0.6,
+     "text": "SREK!",
+     "size": 0.1,
+     "rot": -6,
+     "sx": 0.6,
+     "sy": 0.28
+    },
+    {
+     "type": "text",
+     "t": 54.85,
+     "dur": 0.8,
+     "text": "KONTANG!",
+     "size": 0.13,
+     "rot": -6,
+     "sy": 0.26
+    },
+    {
+     "type": "shake",
+     "t": 54.85,
+     "dur": 0.5,
+     "amp": 0.05
+    },
+    {
+     "type": "text",
+     "t": 57.58,
+     "dur": 0.8,
+     "text": "HAP!",
+     "size": 0.13,
+     "rot": -6,
+     "sy": 0.24
+    },
+    {
+     "type": "shake",
+     "t": 57.58,
+     "dur": 0.3,
+     "amp": 0.03
+    },
+    {
+     "type": "text",
+     "t": 66.0,
+     "dur": 1.3,
+     "text": "zzz...",
+     "size": 0.07,
+     "rot": 0,
+     "sx": 0.68,
+     "sy": 0.25
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.23,
+     "dur": 2.6,
+     "text": "Siang itu Bima nendang bola sekuat tenaga."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 3.6,
+     "dur": 0.2,
+     "text": "DUAK!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 4.77,
+     "dur": 3.73,
+     "text": "Bolanya terbang tinggi-tinggi dan nyangkut di pohon mangga."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 9.3,
+     "dur": 2.03,
+     "text": "Pak Hasan lewat, langsung busungin dada."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 12.07,
+     "dur": 3.3,
+     "text": "“Tenang, serahkan sama ahlinya!” Beliau copot sandal,"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 15.77,
+     "dur": 1.06,
+     "text": "ancang-ancang, lempar!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 17.9,
+     "dur": 0.63,
+     "text": "Sandalnya nyangkut."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 19.33,
+     "dur": 1.97,
+     "text": "Lempar sandal satunya lagi, nyangkut juga."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 22.13,
+     "dur": 0.97,
+     "text": "Pak Hasan pinjem sapu Bu Atin."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 23.8,
+     "dur": 0.97,
+     "text": "Lempar, nyangkut."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 25.53,
+     "dur": 1.87,
+     "text": "Pinjem ember, lempar, nyangkut."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 28.07,
+     "dur": 1.96,
+     "text": "Ember sama sapunya malah pelukan di atas."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 30.87,
+     "dur": 1.53,
+     "text": "Lalu datang si Oyen, kucing warung."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 33.07,
+     "dur": 2.56,
+     "text": "Dia manjat mau bantu, dan Oyen ikut nyangkut."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 36.43,
+     "dur": 4.4,
+     "text": "“Meong!” Sekarang pohon mangga itu berbuah bola, sandal,"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 41.23,
+     "dur": 1.74,
+     "text": "sapu, ember, dan kucing."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 43.93,
+     "dur": 0.54,
+     "text": "Lalu datang Nana."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 45.2,
+     "dur": 2.97,
+     "text": "Dia pegang pohonnya terus bilang, “Permisi ya, pohon.”"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 48.57,
+     "dur": 0.43,
+     "text": "Goyang sedikit."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 49.67,
+     "dur": 0.3,
+     "text": "Bola jatuh!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 50.67,
+     "dur": 0.2,
+     "text": "TUK!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 51.23,
+     "dur": 0.97,
+     "text": "Sandal, PLOK, PLOK!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 52.97,
+     "dur": 0.6,
+     "text": "Sapu, SREK!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 54.27,
+     "dur": 0.86,
+     "text": "Ember, KONTANG!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 55.83,
+     "dur": 0.97,
+     "text": "Dan terakhir... Oyen."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 57.5,
+     "dur": 0.2,
+     "text": "HAP!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 57.93,
+     "dur": 2.27,
+     "text": "Mendarat pas di kepala Pak Hasan, kayak topi."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 61.03,
+     "dur": 0.44,
+     "text": "Bu Atin datang."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 62.17,
+     "dur": 3.06,
+     "text": "“Pak, ember saya kok penyok?” Pak Hasan cuma nunjuk Oyen."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 65.93,
+     "dur": 0.77,
+     "text": "Oyen pura-pura tidur."
+    },
+    {
+     "who": "hasan",
+     "nosub": true,
+     "emo": "proud",
+     "at": 12.07,
+     "dur": 1.83,
+     "text": "Tenang, serahkan sama ahlinya!"
+    },
+    {
+     "who": "nana",
+     "nosub": true,
+     "emo": "happy",
+     "at": 47.1,
+     "dur": 1.35,
+     "text": "Permisi ya, pohon."
+    },
+    {
+     "who": "atin",
+     "nosub": true,
+     "emo": "badmood",
+     "at": 62.17,
+     "dur": 1.88,
+     "text": "Pak, ember saya kok penyok?"
+    }
+   ],
+   "visual": "15 shot di bawah pohon mangga jalan kampung",
+   "narasi": ""
+  },
+  {
+   "judul": "Lapangan: janji Bima... nyangkut di jemuran",
+   "loc": "lapangan",
+   "seconds": 7.1,
+   "extras": "off",
+   "cast": "bima:nod{expr=smile;face=r}@0,7/3.42+big_kick{face=r}/2.4+idle_three{face=r;expr=shocked}/2.0",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": 0.4,
+     "y": 1.2,
+     "z": 2.4,
+     "f": 1150,
+     "horizon": 0.47
+    },
+    {
+     "t": 4.49,
+     "ease": "cut",
+     "x": 0.5,
+     "y": 1.2,
+     "z": 2.8,
+     "f": 1150,
+     "horizon": 0.47
+    },
+    {
+     "t": 4.5,
+     "x": 1.3,
+     "y": 1.3,
+     "z": 4.6,
+     "f": 1150,
+     "horizon": 0.48
+    },
+    {
+     "t": 7.1,
+     "x": 1.9,
+     "y": 1.4,
+     "z": 6.0,
+     "f": 1300,
+     "horizon": 0.48
+    }
+   ],
+   "fx": [
+    {
+     "type": "jemuran",
+     "x": 2.4,
+     "za": 9.0,
+     "zb": 12.0
+    },
+    {
+     "type": "prop",
+     "kind": "ball",
+     "hold": "end",
+     "keys": [
+      [
+       4.469999999999999,
+       0.3,
+       0.12,
+       7.0,
+       0
+      ],
+      [
+       5.6000000000000085,
+       2.4,
+       1.72,
+       10.2,
+       700,
+       1.0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 4.469999999999999,
+     "dur": 0.6,
+     "text": "DUAK!",
+     "size": 0.13,
+     "rot": -6,
+     "sx": 0.35,
+     "sy": 0.3
+    },
+    {
+     "type": "text",
+     "t": 5.650000000000006,
+     "dur": 1.5,
+     "text": "NYANGKUT LAGI!",
+     "size": 0.1,
+     "rot": -6,
+     "sy": 0.2
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.17,
+     "dur": 3.53,
+     "text": "Sejak hari itu, Bima janji main bola di tempat yang nggak ada pohonnya."
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 4.47,
+     "dur": 0.2,
+     "text": "DUAK!"
+    },
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 5.43,
+     "dur": 1.07,
+     "text": "Bolanya nyangkut di jemuran."
+    }
+   ],
+   "visual": "Bima berjanji di lapangan, menendang lagi, bola nyangkut di jemuran",
+   "narasi": ""
+  }
+ ]
+}

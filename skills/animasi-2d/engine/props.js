@@ -353,7 +353,8 @@ function tree(w, x, z, o = {}) {
     const r = treeRng(seed);
     const id = `tr${Math.round(Math.abs(seed) * 100)}`;
     const P = (v) => (v * p).toFixed(1);
-    const sway = Math.sin(T * 1.3 + seed) * 1.6 + Math.sin(T * 2.7 + seed * 2) * 0.5; // derajat
+    const ts = w.treeShake && Math.hypot(w.treeShake.x - x, w.treeShake.z - z) < 0.6 ? w.treeShake.deg : 0; // digoyang tokoh
+    const sway = Math.sin(T * 1.3 + seed) * 1.6 + Math.sin(T * 2.7 + seed * 2) * 0.5 + ts; // derajat
     const shadow = `<ellipse cx="0" cy="0" rx="${P(h * (kind === "round" ? 0.32 : 0.2))}" ry="${P(0.16)}" fill="rgba(0,0,0,0.13)" stroke="none"/>`;
     const L = `stroke="${lc}" stroke-width="${sw}" stroke-linejoin="round" stroke-linecap="round"`;
     let out = "";

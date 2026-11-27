@@ -46,6 +46,42 @@ function drops(w, e, t, life, vel, col) {
   }
 }
 
+// posisi benda dari keyframe [t,x,y,z,rot,arc,mode,flip]; arc = tinggi lengkung (lempar/lompat) ruas menuju key ini;
+// arc < 0 = jatuh (makin cepat). Sebelum key pertama/ sesudah key terakhir: tampil diam bila hold (default "both").
+function keyAt(keys, t, hold = "both") {
+  if (!keys || !keys.length) return null;
+  const K = keys.map((k) => ({ t: k[0], x: k[1], y: k[2], z: k[3], rot: k[4] || 0, arc: k[5] || 0, mode: k[6], flip: k[7] }));
+  if (t < K[0].t) return hold === "both" || hold === "start" ? K[0] : null;
+  if (t >= K[K.length - 1].t) return hold === "both" || hold === "end" ? K[K.length - 1] : null;
+  let i = 0; while (K[i + 1].t <= t) i++;
+  const a = K[i], b = K[i + 1];
+  if (b.mode === "hide") return null;
+  let u = (t - a.t) / (b.t - a.t || 1);
+  const ue = b.arc < 0 ? u * u : u;
+  const y = a.y + (b.y - a.y) * ue + (b.arc > 0 ? 4 * b.arc * u * (1 - u) : 0);
+  const moving = Math.abs(b.x - a.x) + Math.abs(b.y - a.y) + Math.abs(b.z - a.z) > 0.01;
+  return { x: a.x + (b.x - a.x) * u, y, z: a.z + (b.z - a.z) * u, rot: a.rot + (b.rot - a.rot) * u,
+    mode: moving ? (b.mode === "walk" ? "walk" : a.mode === "hide" ? b.mode : b.arc ? "leap" : b.mode || a.mode) : a.mode,
+    flip: b.flip ?? a.flip, moving };
+}
+function drawProp(w, kind, st, dent, e) {
+  const C = require("./life.js").col;
+  if (kind === "ball") return P.ball(w, st.x, st.z, { y: st.y, r: e.r || 0.11, spin: st.rot / 30, bias: e.bias ?? -0.2 });
+  w.sprite(st.x, st.z, (sx, sy, p, fog, lc, sw) => {
+    const s = p * 0.01, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
+    let g = "";
+    if (kind === "sandal") g = `<path d="M-14,-4 Q-16,-12 -6,-13 L14,-11 Q20,-6 14,-1 L-8,1 Q-14,1 -14,-4 Z" fill="${fog(C("#7a4a2a"))}" ${L}/>
+      <path d="M-4,-12 Q2,-20 8,-11" fill="none" stroke="${fog(C("#2f6b8f"))}" stroke-width="4" stroke-linecap="round"/>`;
+    else if (kind === "sapu") g = `<path d="M0,-55 L0,25" stroke="${lc}" stroke-width="6.5" stroke-linecap="round"/><path d="M0,-55 L0,25" stroke="${fog("#a9895a")}" stroke-width="3.6" stroke-linecap="round"/>
+      <path d="M-3,22 L-20,62 L20,62 L3,22 Z" fill="${fog(C("#d9c27a"))}" ${L}/><path d="M0,24 L-10,61 M0,24 L0,61 M0,24 L10,61" stroke="${fog("#a9895a")}" stroke-width="1.4"/>`;
+    else if (kind === "ember") g = `<path d="M-18,-30 Q0,-52 18,-30" fill="none" ${L}/>
+      <path d="${dent ? "M-18,-30 L18,-30 L12,0 L4,-6 L-2,1 L-12,0 Z" : "M-18,-30 L18,-30 L13,0 L-13,0 Z"}" fill="${fog(C("#3f86c4"))}" ${L}/>
+      <ellipse cx="0" cy="-30" rx="18" ry="5" fill="${fog(C("#2c5f8a"))}" ${L}/>`;
+    else if (kind === "mango") g = `<ellipse cx="0" cy="-10" rx="8" ry="10" fill="${fog(C("#e0b13a"))}" ${L}/><path d="M0,-20 l2,-5" ${L}/>`;
+    return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)}) rotate(${st.rot.toFixed(1)}) scale(${s.toFixed(4)})">${g}</g>`;
+  }, { y: st.y, bias: e.bias ?? -0.2 });
+}
+
 function draw(w, list, t) {
   for (const e of list) {
     if (e.type === "ball") {
@@ -73,7 +109,9 @@ function draw(w, list, t) {
       if (tau < 0 || tau > dur) continue;
       const pop = tau < 0.12 ? (tau / 0.12) * 1.3 : tau < 0.25 ? 1.3 - ((tau - 0.12) / 0.13) * 0.3 : 1;
       const op = tau > dur - 0.25 ? (dur - tau) / 0.25 : 1;
-      const fs = w.W * (e.size || 0.1), X = w.W * (e.sx ?? 0.5), Y = w.H * (e.sy ?? 0.3), wob = 2 * Math.sin(tau * 30) * (tau < 0.4 ? 1 : 0);
+      let X0 = w.W * (e.sx ?? 0.5), Y0 = w.H * (e.sy ?? 0.3);
+      if (e.at) { const q = w.proj(e.at); X0 = q[0]; Y0 = q[1]; } // teks menempel pada titik 3D (label benda)
+      const fs = w.W * (e.size || 0.1), X = X0, Y = Y0, wob = 2 * Math.sin(tau * 30) * (tau < 0.4 ? 1 : 0);
       w.add("ui", 0, `<g transform="translate(${X} ${Y}) rotate(${(e.rot ?? -8) + wob}) scale(${pop.toFixed(3)})" opacity="${op.toFixed(2)}"
         font-family="DejaVu Sans, Arial Black, sans-serif" font-weight="900" font-size="${fs.toFixed(0)}" text-anchor="middle" dominant-baseline="middle">
         <text stroke="#1e1e1e" stroke-width="${(fs * 0.2).toFixed(1)}" stroke-linejoin="round" fill="#1e1e1e" x="${fs * 0.05}" y="${fs * 0.07}">${e.text}</text>
@@ -97,6 +135,15 @@ function draw(w, list, t) {
         const k = (t - e.t) / (e.dur || 0.4), x = e.from[0] + (e.x - e.from[0]) * k, z = e.from[1] + (e.z - e.from[1]) * k;
         LIFE.cat(w, x, z, { mode: "leap", y: 4 * (e.h || 0.45) * k * (1 - k), flip: e.x > e.from[0], color: e.color, stripe: e.stripe, food: !!e.food });
       } else LIFE.cat(w, e.x, e.z, { mode: e.mode || "sit", flip: e.flip, color: e.color, stripe: e.stripe, food: !!e.food });
+    } else if (e.type === "prop") { // benda bergerak berkeyframe: keys [[t,x,y,z,rot,arc,mode]] (mode untuk kucing)
+      const st = keyAt(e.keys, t, e.hold);
+      if (!st) continue;
+      if (e.kind === "cat") {
+        const LIFE = require("./life.js");
+        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0 });
+      } else drawProp(w, e.kind, st, t >= (e.dentAt ?? 1e9), e);
+    } else if (e.type === "jemuran") {
+      P.jemuran(w, e.x, e.za, e.zb);
     } else if (e.type === "burst") {
       const dur = e.dur || 0.35, tau = t - e.t;
       if (tau < 0 || tau > dur) continue;

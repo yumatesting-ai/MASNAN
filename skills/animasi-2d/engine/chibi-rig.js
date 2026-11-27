@@ -531,6 +531,21 @@ function createRig(design) {
         <path fill="#4a4a4a" d="M${hx - 9},${hy - 14} L${hx + 9},${hy - 14} L${hx + 7.6},${hy + 4.5} L${hx - 7.6},${hy + 4.5} Z"/>
         <path fill="none" stroke="#bdbdbd" stroke-width="2" stroke-linecap="round" d="M${hx - 3},${hy - 28} q3,-5 0,-10 M${hx + 4},${hy - 27} q3,-4 0,-8"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 9}" cy="${hy - 4}" rx="5.5" ry="7"/></g>`;
+    if (kind === "sandal") return `<g transform="${rot}">
+        <path fill="${require("./life.js").col("#7a4a2a")}" ${LINE} stroke-width="2" d="M${hx - 6},${hy - 36} Q${hx},${hy - 44} ${hx + 6},${hy - 36} L${hx + 7},${hy - 6} Q${hx},${hy} ${hx - 7},${hy - 6} Z"/>
+        <path fill="none" stroke="${require("./life.js").col("#2f6b8f")}" stroke-width="3.2" stroke-linecap="round" d="M${hx - 6},${hy - 24} Q${hx},${hy - 30} ${hx + 6},${hy - 24}"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 7}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
+    if (kind === "sapu") return `<g transform="${rot}">
+        <path fill="none" stroke="${C.line}" stroke-width="6.5" stroke-linecap="round" d="M${hx},${hy + 20} L${hx},${hy - 62}"/>
+        <path fill="none" stroke="#a9895a" stroke-width="3.4" stroke-linecap="round" d="M${hx},${hy + 20} L${hx},${hy - 62}"/>
+        <path fill="#d9c27a" ${LINE} stroke-width="2" d="M${hx - 3},${hy - 60} L${hx - 18},${hy - 100} L${hx + 18},${hy - 100} L${hx + 3},${hy - 60} Z"/>
+        <path fill="none" stroke="#a9895a" stroke-width="1.3" d="M${hx},${hy - 62} L${hx - 10},${hy - 99} M${hx},${hy - 62} L${hx},${hy - 99} M${hx},${hy - 62} L${hx + 10},${hy - 99}"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 4}" cy="${hy - 6}" rx="5.5" ry="7"/></g>`;
+    if (kind === "ember") return `<g transform="${rot}">
+        <path fill="none" ${LINE} stroke-width="2.2" d="M${hx - 14},${hy - 34} Q${hx},${hy - 6} ${hx + 14},${hy - 34}"/>
+        <path fill="${require("./life.js").col("#3f86c4")}" ${LINE} stroke-width="2.4" d="M${hx - 16},${hy - 34} L${hx + 16},${hy - 34} L${hx + 12},${hy - 62} L${hx - 12},${hy - 62} Z" transform="rotate(180 ${hx} ${hy - 48})"/>
+        <ellipse fill="${require("./life.js").col("#2c5f8a")}" ${LINE} stroke-width="2" cx="${hx}" cy="${hy - 62}" rx="16" ry="4"/>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx}" cy="${hy - 6}" rx="5.5" ry="7"/></g>`;
     if (kind === "broom") { // sapu lidi: gagang miring ke depan-bawah, ikatan lidi mengembang menyentuh tanah
       const bx = hx + 64, by = hy + 60;
       return `<g transform="rotate(${(upright + tilt).toFixed(1)} ${hx} ${hy})">

@@ -35,7 +35,7 @@ ep.scenes.forEach((s, i) => {
   // adegan berdialog: narasi tampil di ATAS (gaya narator), dialog di bawah dengan nama tokoh
   const narrStyle = s.dialog && s.dialog.length ? "NarasiAtas" : "Narasi";
   sent.forEach((x, k) => { const d = (avail * words[k]) / total; cues.push({ a: t, b: t + d - 0.08, text: x, scene: i + 1, style: narrStyle }); t += d; });
-  for (const d0 of s.dialog || []) { const d = Object.assign({}, d0, { text: d0.text.replace(/\[[^\]]+\]\s*/g, "").trim() }); cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: d.noname ? d.text : `${NAME(d.who)}: ${d.text}`, name: d.noname ? "" : NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" }); }
+  for (const d0 of s.dialog || []) { if (d0.nosub) continue; const d = Object.assign({}, d0, { text: d0.text.replace(/\[[^\]]+\]\s*/g, "").trim() }); if (ep.captionCaps) d.text = d.text.toUpperCase(); cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: d.noname ? d.text : `${NAME(d.who)}: ${d.text}`, name: d.noname ? "" : NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" }); }
   s._start = T; T += s.seconds;
 });
 
@@ -65,6 +65,7 @@ function sceneArgs(s, extra) {
   if (s.cast) a.push("--cast", s.cast);
   if (s.extras) a.push("--extras", s.extras);
   if (s.t0) a.push("--t0", String(s.t0));
+  if (s.locopts) a.push("--locopts", JSON.stringify(s.locopts));
   if (s.time || ep.time) a.push("--time", s.time || ep.time);
   if (s.dialog) a.push("--dialog", JSON.stringify(s.dialog));
   if (s.positions || ep.positions) a.push("--positions", JSON.stringify(Object.assign({}, ep.positions, s.positions)));

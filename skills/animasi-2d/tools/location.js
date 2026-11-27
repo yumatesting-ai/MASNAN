@@ -14,6 +14,7 @@
 // --camera '{"x":1,"z":2,"f":1600}' [--camera-to '{...}']  -> atur/gerakkan kamera (pan, zoom, push-in)
 // --t0 12        -> waktu lingkungan & figuran dimulai dari detik 12 (tokoh utama tetap dari 0)
 // --time night  -> MALAM: langit gelap, bulan & bintang, filter malam, lampu menyala, kunang-kunang
+// --locopts '{"poles":false}' -> opsi lokasi (mis. kampung: poles=false tanpa tiang/kabel, clearRight=true tanpa teras kanan)
 // --extras off  -> tanpa figuran (karakter latar)
 // --extras-style shadow (default: siluet abu polos + sedikit buram) | blur (bentuk asli diburamkan) | detail
 
@@ -83,11 +84,12 @@ const positions = o.positions ? JSON.parse(o.positions) : {};
 // ARAH PANDANG OTOMATIS: pendengar menatap pembicara, pembicara menatap lawan bicara (mata + kepala, dihaluskan),
 // anak mendongak ke orang dewasa & sebaliknya; tanpa dialog -> lirikan kecil alami. Override: {look=0} mematikan.
 function gazeTarget(who, t) {
-  const cur = dialog.find((d) => t >= d.at && t < d.at + d.dur + 0.2);
+  const actors = new Set([...cast.map((c) => c.who), ...Object.keys(positions)]);
+  const cur = dialog.find((d) => actors.has(d.who) && t >= d.at && t < d.at + d.dur + 0.2); // narator tidak menarik pandangan
   if (!cur) return null;
   if (cur.who !== who) return cur.who;
   if (cur.to) return cur.to;
-  const others = dialog.filter((d) => d.who !== who);
+  const others = dialog.filter((d) => d.who !== who && actors.has(d.who));
   const prev = others.filter((d) => d.at <= cur.at).pop() || others.find((d) => d.at > cur.at);
   return prev ? prev.who : null;
 }
@@ -160,7 +162,9 @@ function frame(t) {
   const w = createWorld(Object.assign({ W, H, night: o.time === "night" }, camOpt));
   const te = t + (+o.t0 || 0); // --t0: geser waktu lingkungan & figuran (mis. agar gol terjadi di tengah adegan)
   w.t = te; // waktu untuk animasi lingkungan (pohon bergoyang, dll.)
-  LOC.build(w, { t: te, extras: o.extras !== "off" });
+  for (const e of fxList) if (e.type === "treeshake" && t >= e.t && t < e.t + (e.dur || 1)) // tokoh menggoyang pohon
+    w.treeShake = { x: e.x, z: e.z, deg: (e.amp || 6) * Math.sin((t - e.t) * 28) * (1 - 0.5 * (t - e.t) / (e.dur || 1)) };
+  LOC.build(w, { t: te, extras: o.extras !== "off", opts: o.locopts ? JSON.parse(o.locopts) : {} });
   FX.draw(w, fxList, t);
   FX.foreground(w, fgList, t);
   // kabut jarak untuk karakter: makin jauh makin pudar (filter warna menuju warna langit)
@@ -197,6 +201,8 @@ function frame(t) {
   for (const m of [...extras, ...cast]) {
     const tt = m.extra ? (te + m.phase) % m.tl.total : t;
     const { pose, x, z, y } = m.extra ? m.tl.at(tt) : states[cast.indexOf(m)];
+    if (pose.hide) continue; // tokoh disembunyikan (belum masuk adegan)
+    if (pose.holdR === "__item") pose.holdR = pose.item || null; // barang yang sedang dilempar (klip throw)
     // KEDIP ALAMI per tokoh (jadwal berbeda tiap tokoh, sesekali kedip ganda) -> tidak berkedip bersamaan
     if (!m.extra) {
       let hsh = 0; for (const ch of m.who) hsh = (hsh * 31 + ch.charCodeAt(0)) % 997;
@@ -249,7 +255,7 @@ function frame(t) {
     const seen = new Set();
     for (let t = 0; t <= duration + 1e-6; t += 0.2) {
       const te = t + (+o.t0 || 0), w = createWorld(Object.assign({ W, H }, LOC.camera));
-      w.movers = []; w.t = te; LOC.build(w, { t: te, extras: o.extras !== "off" });
+      w.movers = []; w.t = te; LOC.build(w, { t: te, extras: o.extras !== "off", opts: o.locopts ? JSON.parse(o.locopts) : {} });
       const people = [...cast.map((m) => ({ who: m.who, ...m.tl.at(t) })), ...extras.map((m, i) => ({ who: `figuran#${LOC.extras[i].seed}`, ...m.tl.at((te + m.phase) % m.tl.total) }))];
       for (const mv of w.movers) {
         for (const pp of people) if (Math.hypot(pp.x - mv.x, pp.z - mv.z) < mv.r + 0.16) {

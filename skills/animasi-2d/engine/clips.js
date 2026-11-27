@@ -360,6 +360,28 @@
       return { ...life(t, 2), sit: 1, expr: "deadpan", armR: 120 * up - 8, elbowR: -95 * up + 35 * (1 - up) + 18 * up * wave(t, 0.4),
         armL: -8, elbowL: 35, headTilt: 4 * up * wave(t, 0.8), eyes: up > 0.5 ? "closed" : "half" };
     } },
+    // ---------- AKSI KOMEDI FISIK ----------
+    // melempar ke atas (tampak serong): ancang-ancang ke belakang -> lempar (lepas di 0.65 dtk) -> follow-through.
+    // Barang di tangan: override {item=sandal|sapu|ember}; hilang dari tangan saat lepas.
+    throw: { once: true, duration: 1.2, view: "three", smooth: 0.015, pose: (t) => {
+      const wind = kf(t, [[0, 0], [0.5, 1, "io"], [0.6, 1], [0.7, 0, "in"], [1.2, 0]]);
+      const up = kf(t, [[0, 0], [0.6, 0], [0.72, 1, "out"], [1.0, 0.85, "io"], [1.2, 0.6, "io"]]);
+      return { ...life(t, 1.2), expr: t < 0.6 ? "smug" : "excited", holdR: t < 0.65 ? "__item" : null, holdTilt: -30 * wind,
+        armR: -45 * wind + 165 * up, elbowR: 70 * wind - 10 * up, armL: 25 * wind - 10 * up, lean: 6 * wind - 6 * up,
+        squash: 0.12 * wind - 0.08 * up, bodyY: 3 * wind - 4 * up, headY: -3 * up, fx: t / 0.6 };
+    } },
+    // memegang batang pohon (tangan ke depan)
+    hold_tree: { duration: 2.4, view: "three", pose: (t) => ({ ...life(t, 2.4), expr: "smile", armR: 70, armL: 62, elbowR: 15, elbowL: 20, lean: 3, blink: blinkAt(t, [1.4]) }) },
+    // menggoyang pohon: tangan ke depan, badan maju-mundur cepat
+    shake_tree: { duration: 0.5, view: "three", pose: (t) => ({ expr: "happy", eyes: "closed", mouth: "grin", armR: 70 + 6 * wave(t, 0.25), armL: 62 + 6 * wave(t, 0.25),
+      elbowR: 15, elbowL: 20, bodyX: 3.5 * wave(t, 0.25), lean: 4 + 3 * wave(t, 0.25), fx: t / 0.25 }) },
+    // kepala kejatuhan benda: kepala & badan tertekan, mata terpejam, lalu memantul
+    bonk: { once: true, duration: 0.6, view: "front", smooth: 0.01, pose: (t) => {
+      const hit = kf(t, [[0, 0], [0.06, 1, "out"], [0.25, 0.4, "io"], [0.4, -0.15, "io"], [0.6, 0, "io"]]);
+      return { expr: "dizzy", eyes: t < 0.35 ? "cry" : "dizzy", mouth: "shout", squash: 0.25 * hit, headY: 7 * hit, bodyY: 4 * hit, armL: 20 * hit, armR: 20 * hit, fx: t / 0.3 };
+    } },
+    // menunjuk ke atas kepala sendiri (mis. ke kucing di kepala)
+    point_up: { duration: 1.6, view: "front", pose: (t) => ({ ...life(t, 1.6), expr: "nervous", armR: 168, elbowR: -6 + 4 * wave(t, 0.4), lookY: -1, lookX: 0.3, headY: -1, blink: blinkAt(t, [1.1]) }) },
     // ---------- KONTEN KECANTIKAN ----------
     // mengoles bibir (lipstik / lip balm): tangan ke mulut, gerakan oles kiri-kanan, mata melirik ke bawah
     apply_lip: { duration: 1.6, view: "front", smooth: 0.03, pose: (t) => {
