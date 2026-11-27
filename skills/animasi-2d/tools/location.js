@@ -235,7 +235,10 @@ function frame(t) {
       pose.lookX = side ? (pose.lookX || 0) : lx;
       pose.lookY = (pose.lookY || 0) * 0.3 + ly;
       if (!side) { pose.headX = (pose.headX || 0) + 3.2 * lx; pose.headTilt = (pose.headTilt || 0) + 2.5 * lx; }
-      if (ly < -0.4) pose.headY = (pose.headY || 0) + 5 * (ly + 0.4); // mendongak ke atas (kepala ikut)
+      // kepala ikut mendongak / menunduk ke arah target (bukan hanya bola mata)
+      const pitch = Math.max(-1, Math.min(1, ly * 0.9));
+      pose.pitch = Math.abs(pose.pitch || 0) > Math.abs(pitch) ? pose.pitch : pitch;
+      if (pitch < -0.3) pose.lean = (pose.lean || 0) + 4 * (-pitch - 0.3); // badan sedikit condong ke belakang saat mendongak
     }
     // LIP SYNC: saat tokoh berdialog, mulut mengikuti huruf + anggukan kecil penekanan
     if (!m.extra) for (const d of dialog) if (d.who === m.who && t >= d.at && t < d.at + d.dur) {

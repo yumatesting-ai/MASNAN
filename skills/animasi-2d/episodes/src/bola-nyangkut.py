@@ -121,6 +121,13 @@ CAM_K = [
 # ----- arah perhatian (konteks): siapa melihat apa, waktu absolut -----
 TREE_HI = [3.5, 3.25, Z_ST]; HEADPT = [HX, 1.62, HZ]
 LOOKS = [
+ # menunduk ke benda yang jatuh ke tanah (prioritas: ditulis paling atas)
+ {"t0": 50.9, "t1": 51.6, "who": ["bima", "nana"], "at": [2.2, 0.05, 10.2]},       # bola menggelinding
+ {"t0": 52.3, "t1": 52.95, "who": ["bima", "nana"], "at": [2.4, 0.03, 10.7]},       # sandal di tanah
+ {"t0": 53.85, "t1": 54.25, "who": ["bima", "nana"], "at": [2.2, 0.05, 11.1]},      # sapu di tanah
+ {"t0": 55.35, "t1": 55.6, "who": ["bima", "nana"], "at": [3.45, 0.0, 10.35]},      # ember penyok
+ {"t0": 55.4, "t1": 57.4, "who": ["bima", "nana"], "at": [3.0, 0.05, 10.5]}, {"t0": 55.5, "t1": 57.0, "who": "hasan", "at": [3.4, 0.0, 10.0]},
+ {"t0": 63.6, "t1": 65.0, "who": "atin", "at": [3.45, 0.0, 10.35]},
  {"t0": 4.0, "t1": 9.3, "who": "bima", "at": TREE_HI},
  {"t0": 11.5, "t1": 16.2, "who": "bima", "at": "hasan"},
  {"t0": 16.2, "t1": 30.6, "who": "bima", "at": TREE_HI}, {"t0": 17.4, "t1": 30.6, "who": "hasan", "at": TREE_HI},

@@ -24,6 +24,7 @@ const BASE_DEFAULT_POSE = {
   // --- aksi ---
   elbowL: 0, elbowR: 0,     // tekuk siku (deg, + = lengan bawah naik ke arah dada/wajah)
   holdL: null, holdR: null, // barang di tangan: "coffee" | "phone" | "broom" | "lipstick" | "lipstickBottle" | "balm" | "gorengan"
+  pitch: 0,                 // kepala mendongak (-1) / menunduk (+1): wajah bergeser di dalam kepala + kepala berputar
   handToFace: false, // tangan kanan digambar DI DEPAN wajah (mengoles bibir, makan)
   lip: null, lipPatch: 0, lipDry: 0, lipCrack: 0, lipThick: 0, lipShine: 0, // bibir berlipstik (konten kecantikan)
   holdTilt: 0,              // kemiringan gelas (minum: negatif = dituang ke mulut)
@@ -302,6 +303,12 @@ function createRig(design) {
     return o;
   }
 
+  // geser & pipihkan fitur wajah sesuai pitch (dongak: naik & memipih; tunduk: turun & memipih)
+  function pitchT(p, k = 1) {
+    const pt = Math.max(-1, Math.min(1, p.pitch || 0));
+    if (Math.abs(pt) < 0.02) return "";
+    return `translate(0 ${(14 * pt * k).toFixed(2)}) translate(150 160) scale(1 ${(1 - 0.12 * Math.abs(pt)).toFixed(3)}) translate(-150 -160)`;
+  }
   function faceExtras(L, p, faceClip) {
     const C = PALETTE;
     let out = "";
@@ -606,7 +613,7 @@ function createRig(design) {
     const isBack = view === "back", isThree = view === "three";
     const headPivot = "150 200";
     const breatheScale = 1 + 0.015 * p.breathe;
-    const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt} ${headPivot})`;
+    const headT = `translate(${p.headX} ${p.headY + 3 * Math.max(0, p.pitch)}) rotate(${p.headTilt + (isThree ? -7 * p.pitch : 0)} ${headPivot})`;
     const hx = isThree ? -4 : 0;
 
     const hairBackG = (front) => {
@@ -877,11 +884,13 @@ function createRig(design) {
         ${outline(SHAPE.face)}
         ${headSkinExtras(view)}
         ${isThree ? earR : ""}
+        <g clip-path="url(#${ID}-face)"><g transform="${pitchT(p)}">
         ${faceExtras(L, p, "face")}
         ${L.eyes.map((e) => eye(e, p)).join("")}
         ${mouth(L.mouth, p)}
-        ${faceFeatures(L, view, p)}
-        <g transform="translate(${hx} 0)">
+        ${faceFeatures(L, view, p)}</g></g>
+        ${p.pitch < -0.15 ? `<path fill="${C.skinShade}" opacity="${Math.min(0.5, -p.pitch * 0.5).toFixed(2)}" clip-path="url(#${ID}-face)" d="M80,${(230 + 18 * p.pitch).toFixed(1)} Q150,${(262 + 18 * p.pitch).toFixed(1)} 220,${(230 + 18 * p.pitch).toFixed(1)} L220,280 L80,280 Z"/>` : ""}
+        <g transform="translate(${hx} ${(p.pitch < 0 ? p.pitch * 11 : p.pitch * 2).toFixed(2)})">
           <path fill="${C.hair}" fill-rule="evenodd" d="${SHAPE.hairFront}"/>
           <g clip-path="url(#${ID}-hairFront)">
             <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineFront || "M98,108 C118,88 182,88 202,108"}"/>
@@ -892,7 +901,7 @@ function createRig(design) {
           ${acc("front", view)}
         </g>
         ${angerMark(L, p)}
-        ${AHOGE(p)}
+        <g transform="translate(0 ${(p.pitch < 0 ? p.pitch * 11 : p.pitch * 2).toFixed(2)})">${AHOGE(p)}</g>
       </g>`;
     }
 
@@ -912,7 +921,7 @@ function createRig(design) {
     const C = PALETTE;
     const L = LAYOUT.side;
     const headPivot = "150 200";
-    const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt} ${headPivot})`;
+    const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt - 20 * p.pitch} ${headPivot})`; // samping: dongak = putar ke belakang
     const breatheScale = 1 + 0.015 * p.breathe;
     const LONG = design.sleeves === "long", NOSLEEVE = design.sleeves === "none";
 
@@ -1010,10 +1019,11 @@ function createRig(design) {
         <path clip-path="url(#${ID}-face)" fill="${C.skinShade}" transform="translate(3 7)" d="${SHAPE.hairFrontSide}"/>
         ${outline(SHAPE.face)}
         ${headSkinExtras("side")}
+        <g clip-path="url(#${ID}-face)"><g transform="${pitchT(p, 0.7)}">
         ${faceExtras(L, p, "face")}
         ${L.eyes.map((e) => eye(e, p)).join("")}
         ${mouth(L.mouth, p)}
-        ${faceFeatures(L, "side", p)}
+        ${faceFeatures(L, "side", p)}</g></g>
         <path fill="${C.hair}" fill-rule="evenodd" d="${SHAPE.hairFrontSide}"/>
         <g clip-path="url(#${ID}-hairFrontSide)">
           <path fill="none" stroke="${C.hairShine}" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 9" d="${H.shineSide || "M100,110 C118,86 172,84 200,104"}"/>

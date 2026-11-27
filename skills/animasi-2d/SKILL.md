@@ -368,6 +368,9 @@ Jangan pakai `lookX` statis di cast untuk adegan ngobrol.
 2. dialog: pendengar ke pembicara, pembicara ke lawan bicara (narator tidak menarik pandangan).
 3. tanpa konteks: melirik tokoh terdekat yang terlihat (sesekali kembali ke depan).
 Menatap kamera hanya untuk momen sengaja (janji ke penonton, tatapan datar komedi).
+Kepala ikut **mendongak/menunduk** (`pose.pitch` -1..1, otomatis dari tinggi target `looks`): wajah bergeser naik/turun &
+memipih di dalam kepala, poni ikut, dagu tampak saat mendongak; tampak samping kepala berputar. Klip `look_up` memakainya.
+Beri juga lirikan singkat ke bawah saat benda jatuh ke tanah (`looks` dengan target y≈0).
 
 ## Backsound (musik + suasana + SFX)
 

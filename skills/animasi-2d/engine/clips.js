@@ -327,7 +327,7 @@
     // mendongak mengikuti sesuatu yang terbang tinggi
     look_up: { once: true, duration: 2.4, view: "front", smooth: 0.03, pose: (t) => {
       const up = kf(t, [[0, 0], [0.6, 1, "out"], [2.4, 1]]);
-      return { ...life(t, 2.4), eyes: "wide", mouth: "o", lookY: -1.2 * up, headY: -5 * up, headTilt: -3 * up, bodyY: 1 * up, sweat: false };
+      return { ...life(t, 2.4), eyes: "wide", mouth: "o", lookY: -1.2 * up, pitch: -0.9 * up, headY: -2 * up, headTilt: -3 * up, lean: 3 * up, sweat: false };
     } },
     // berhenti mendadak setelah lari (rem kaki, badan condong ke belakang, follow-through)
     skid: { once: true, duration: 1, view: "side", smooth: 0.015, pose: (t) => {
@@ -470,7 +470,7 @@
 
   // ---------- Sampling: penghalusan + follow-through ----------
   const SMOOTH_KEYS = ["headTilt", "headX", "headY", "hairSway", "ahoge", "breathe", "armL", "armR", "legL", "legR",
-    "bodyX", "bodyY", "lean", "squash", "scaleX", "lookX", "lookY", "blush", "elbowL", "elbowR", "holdTilt", "paperY", "sit"];
+    "bodyX", "bodyY", "lean", "squash", "scaleX", "lookX", "lookY", "pitch", "blush", "elbowL", "elbowR", "holdTilt", "paperY", "sit"];
 
   function samplePose(clip, t, resolvePose) {
     const D = clip.duration;
