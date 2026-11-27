@@ -21,7 +21,9 @@ for (let i = 0; i < args.length; i++) if (args[i].startsWith("--")) opt[args[i].
 if (!file) { console.error("Pakai: node tools/episode.js <episode.json> --out out.mp4 [--audio narasi.mp3] [--script naskah.md]"); process.exit(1); }
 const ep = JSON.parse(fs.readFileSync(file, "utf8"));
 const portrait = (ep.format || "portrait") === "portrait";
-const W = portrait ? 900 : 1600, H = portrait ? 1600 : 900;
+// "hd": true -> 1080x1920 (vertikal) / 1920x1080 (render x1,2)
+const HD = !!ep.hd || opt.hd !== undefined;
+const W = (portrait ? 900 : 1600) * (HD ? 1.2 : 1), H = (portrait ? 1600 : 900) * (HD ? 1.2 : 1);
 
 // ---- timing narasi ----
 const { lineDuration } = require("../engine/lipsync.js");
@@ -35,7 +37,7 @@ ep.scenes.forEach((s, i) => {
   // adegan berdialog: narasi tampil di ATAS (gaya narator), dialog di bawah dengan nama tokoh
   const narrStyle = s.dialog && s.dialog.length ? "NarasiAtas" : "Narasi";
   sent.forEach((x, k) => { const d = (avail * words[k]) / total; cues.push({ a: t, b: t + d - 0.08, text: x, scene: i + 1, style: narrStyle }); t += d; });
-  for (const d0 of s.dialog || []) { if (d0.nosub) continue; const d = Object.assign({}, d0, { text: d0.text.replace(/\[[^\]]+\]\s*/g, "").trim() }); if (ep.captionCaps) d.text = d.text.toUpperCase(); cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: d.noname ? d.text : `${NAME(d.who)}: ${d.text}`, name: d.noname ? "" : NAME(d.who), line: d.text, scene: i + 1, style: "Dialog" }); }
+  for (const d0 of s.dialog || []) { if (d0.nosub) continue; const d = Object.assign({}, d0, { text: d0.text.replace(/\[[^\]]+\]\s*/g, "").trim() }); if (ep.captionCaps) d.text = d.text.toUpperCase(); cues.push({ a: T + d.at, b: Math.min(T + s.seconds - 0.05, T + d.at + (d.dur || lineDuration(d.text)) + 0.45), text: d.noname ? d.text : `${NAME(d.who)}: ${d.text}`, name: d.noname ? "" : NAME(d.who), line: d.text, orig: d0.text.replace(/\[[^\]]+\]\s*/g, "").trim(), scene: i + 1, style: "Dialog" }); }
   s._start = T; T += s.seconds;
 });
 
@@ -61,7 +63,7 @@ if (opt.script) {
 // ---- render adegan ----
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "episode-"));
 function sceneArgs(s, extra) {
-  const a = [path.join(__dirname, "location.js"), "--loc", s.loc, "--format", portrait ? "portrait" : "landscape", "--seconds", String(s.seconds), ...extra];
+  const a = [path.join(__dirname, "location.js"), "--loc", s.loc, "--format", portrait ? "portrait" : "landscape", "--seconds", String(s.seconds), ...(HD ? ["--scale", "1.2"] : []), ...extra];
   if (s.cast) a.push("--cast", s.cast);
   if (s.extras) a.push("--extras", s.extras);
   if (s.t0) a.push("--t0", String(s.t0));
@@ -119,10 +121,40 @@ ass += "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, Outlin
 ass += `Style: Narasi,DejaVu Sans,${fs1},&H00FFFFFF,&H00FFFFFF,&H00202020,&H80000000,1,0,0,0,100,100,0,0,1,${Math.round(fs1 * 0.14)},${Math.round(fs1 * 0.06)},2,${Math.round(W * 0.07)},${Math.round(W * 0.07)},${Math.round(H * (portrait ? 0.16 : 0.07))},1\n`;
 ass += `Style: Dialog,DejaVu Sans,${Math.round(fs1 * 1.05)},&H00FFFFFF,&H00FFFFFF,&H00202020,&H80000000,1,0,0,0,100,100,0,0,1,${Math.round(fs1 * 0.16)},${Math.round(fs1 * 0.06)},2,${Math.round(W * 0.06)},${Math.round(W * 0.06)},${Math.round(H * (portrait ? 0.14 : 0.06))},1\n`;
 ass += `Style: NarasiAtas,DejaVu Sans,${Math.round(fs1 * 0.85)},&H00F0F0F0,&H00FFFFFF,&H00303030,&H80000000,0,1,0,0,100,100,0,0,1,${Math.round(fs1 * 0.12)},0,8,${Math.round(W * 0.08)},${Math.round(W * 0.08)},${Math.round(H * (portrait ? 0.2 : 0.12))},1\n`;
+const SHORTS = ep.captionStyle === "shorts";
+if (SHORTS) {
+  const fsS = Math.round(W * 0.078);
+  ass += `Style: Kata,DejaVu Sans,${fsS},&H00FFFFFF,&H00FFFFFF,&H00141414,&H96000000,1,0,0,0,100,100,1,0,1,${Math.round(fsS * 0.16)},${Math.round(fsS * 0.07)},2,${Math.round(W * 0.08)},${Math.round(W * 0.08)},${Math.round(H * 0.27)},1\n`;
+}
 ass += `Style: Judul,DejaVu Sans,${ft},&H00FFFFFF,&H00FFFFFF,&H00202020,&H80000000,1,0,0,0,100,100,0,0,1,${Math.round(ft * 0.12)},${Math.round(ft * 0.05)},8,40,40,${Math.round(H * (portrait ? 0.1 : 0.06))},1\n\n`;
 ass += "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n";
 if (ep.title) ass += `Dialogue: 1,${fmt(0.2)},${fmt(Math.min(3.2, ep.scenes[0].seconds - 0.2))},Judul,,0,0,0,,{\\fad(300,400)}${ep.title}\n`;
-for (const c of cues) ass += `Dialogue: 0,${fmt(c.a)},${fmt(c.b)},${c.style || "Narasi"},,0,0,0,,{\\fad(120,120)}${c.style === "Dialog" && c.name ? `{\\c&H00C8C8C8&}${c.name}:{\\c&H00FFFFFF&} ${c.line}` : c.style === "Dialog" ? c.line : c.text}\n`;
+// GAYA SHORTS: kata muncul satu per satu (bertambah), maks 5 kata per layar, kata kunci (HURUF BESAR di teks asli
+// atau ada di ep.keywords) berwarna amber, kata terbaru "pop"; posisi di tengah-bawah area aman Shorts.
+const KW = new Set((ep.keywords || []).map((k) => k.toUpperCase()));
+const isKey = (raw) => { const w = raw.replace(/[^A-Za-z0-9]/g, ""); return (w.length > 2 && w === w.toUpperCase() && /[A-Z]/.test(w)) || KW.has(w.toUpperCase()); };
+function shortsEvents(c) {
+  const raw = (c.orig || c.line || c.text).replace(/\[[^\]]+\]\s*/g, "").trim(), words = raw.split(/\s+/).filter(Boolean);
+  const wt = words.map((w) => Math.max(1, (w.match(/[aiueoAIUEO]/g) || []).length) + 0.4), tot = wt.reduce((x, y) => x + y, 0);
+  const a = c.a, b = Math.max(c.a + 0.3, c.b - 0.4);
+  const starts = []; let acc = 0; for (const w of wt) { starts.push(a + ((b - a) * acc) / tot); acc += w; }
+  const chunks = []; let cur = [];
+  words.forEach((w, i) => { cur.push(i); if (cur.length >= 5 || /[.!?,…]$/.test(w)) { chunks.push(cur); cur = []; } }); if (cur.length) chunks.push(cur);
+  let out = "";
+  chunks.forEach((ch, ci) => {
+    const chEnd = ci + 1 < chunks.length ? starts[chunks[ci + 1][0]] : c.b;
+    ch.forEach((wi, k) => {
+      const t0 = starts[wi], t1 = k + 1 < ch.length ? starts[ch[k + 1]] : chEnd;
+      const txt = ch.slice(0, k + 1).map((j, n) => {
+        const w = words[j].toUpperCase(), col = isKey(words[j]) ? "{\\c&H003DC8FF&}" : "{\\c&H00FFFFFF&}";
+        return n === k ? `${col}{\\fscx118\\fscy118\\t(0,90,\\fscx100\\fscy100)}${w}{\\fscx100\\fscy100}` : `${col}${w}`;
+      }).join(" ");
+      out += `Dialogue: 0,${fmt(t0)},${fmt(Math.max(t0 + 0.05, t1 - 0.01))},Kata,,0,0,0,,${txt}\n`;
+    });
+  });
+  return out;
+}
+for (const c of cues) if (SHORTS && (c.style === "Dialog" || c.style === "Narasi" || c.style === "NarasiAtas")) ass += shortsEvents(c); else ass += `Dialogue: 0,${fmt(c.a)},${fmt(c.b)},${c.style || "Narasi"},,0,0,0,,{\\fad(120,120)}${c.style === "Dialog" && c.name ? `{\\c&H00C8C8C8&}${c.name}:{\\c&H00FFFFFF&} ${c.line}` : c.style === "Dialog" ? c.line : c.text}\n`;
 const assPath = path.join(tmp, "sub.ass");
 fs.writeFileSync(assPath, ass);
 
