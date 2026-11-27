@@ -226,6 +226,11 @@ function frame(t) {
       const bl = (x) => (x >= 0 && x < 0.15 ? Math.sin((Math.PI * x) / 0.15) : 0);
       pose.blink = Math.max(bl(u), hsh % 3 === 0 ? bl(u - 0.25) : 0);
     }
+    // TRANSISI EMOSI HALUS: bila bentuk mata berganti (mis. senyum -> kaget), sisipkan kedipan singkat agar tidak meloncat
+    if (!m.extra && t > 0.12) {
+      const pr = m.tl.at(t - 0.1).pose;
+      if (pr.eyes !== pose.eyes && !["closed", "happy", "cry"].includes(pose.eyes)) pose.blink = Math.max(pose.blink || 0, 0.85);
+    }
     // ARAH PANDANG (rata-rata 3 sampel waktu -> perpindahan lirikan halus)
     if (!m.extra && pose.look !== 0 && pose.view !== "back") {
       const self = { x, z }, g = [0, 0.1, 0.2].map((d) => gazeAt(m, Math.max(0, t - d), self));

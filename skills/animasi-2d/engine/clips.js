@@ -360,6 +360,39 @@
       return { ...life(t, 2), sit: 1, expr: "deadpan", armR: 120 * up - 8, elbowR: -95 * up + 35 * (1 - up) + 18 * up * wave(t, 0.4),
         armL: -8, elbowL: 35, headTilt: 4 * up * wave(t, 0.8), eyes: up > 0.5 ? "closed" : "half" };
     } },
+    // ---------- GESTUR (akting) ----------
+    // jempol: angkat tangan + jempol ke atas, sedikit hentakan, senyum yakin
+    thumbs_up: { duration: 1.6, view: "front", pose: (t) => {
+      const up = kf(t, [[0, 0], [0.3, 1, "back"], [1.6, 1]]);
+      return { ...life(t, 1.6), expr: "smile", eyes: t > 0.35 && t < 0.55 ? "happy" : undefined, holdR: up > 0.6 ? "thumb" : null,
+        armR: 45 * up, elbowR: -120 * up, bodyY: -1.5 * up, headTilt: -4 * up, blink: blinkAt(t, [1.2]) };
+    } },
+    // tepuk jidat: tangan ke dahi, kepala menunduk, mata terpejam, garis suram
+    facepalm: { duration: 2.0, view: "front", smooth: 0.03, pose: (t) => {
+      const up = kf(t, [[0, 0], [0.35, 1, "out"], [2.0, 1]]);
+      return { ...life(t, 2), handToFace: true, armR: 120 * up, elbowR: -110 * up, pitch: 0.45 * up, headY: 4 * up, headTilt: 8 * up,
+        eyes: up > 0.5 ? "closed" : undefined, mouth: "frown", gloom: up > 0.7, sweat: true, bodyY: 2 * up };
+    } },
+    // tepuk tangan berulang (gembira)
+    clap: { duration: 0.6, view: "front", pose: (t) => {
+      const k = Math.abs(Math.sin((Math.PI * t) / 0.3));
+      return { expr: "happy", armL: -20, armR: -20, elbowL: 70 + 40 * k, elbowR: 70 + 40 * k, bodyY: -1.5 * k, fx: t / 0.3 };
+    } },
+    // angkat bahu: tidak tahu
+    shrug: { duration: 1.8, view: "front", smooth: 0.03, pose: (t) => {
+      const up = kf(t, [[0, 0], [0.35, 1, "back"], [1.3, 1], [1.8, 0.8, "io"]]);
+      return { ...life(t, 1.8), eyes: "half", mouth: "wavy", armL: 35 * up, armR: 35 * up, elbowL: -60 * up, elbowR: -60 * up,
+        bodyY: -3 * up, headTilt: 6 * up, headY: -2 * up, above: up > 0.6 ? "question" : null, sweat: false };
+    } },
+    // tolak pinggang: berdiri pede / galak
+    hands_hips: { duration: 2.4, view: "front", pose: (t) => ({ ...life(t, 2.4), expr: "smug", armL: 30, armR: 30, elbowL: 110, elbowR: 110,
+      headTilt: -3, bodyY: -1, blink: blinkAt(t, [1.7]) }) },
+    // berpikir: tangan di pipi, mata melirik ke atas, tanda tanya
+    think: { duration: 2.4, view: "front", smooth: 0.03, pose: (t) => ({ ...life(t, 2.4), handToFace: true, armR: 105, elbowR: -125, armL: -28, elbowL: 80,
+      lookY: -0.9, lookX: -0.5, headTilt: 6, mouth: "flat", eyes: "half", above: "question", fx: t / 1.2, sweat: false }) },
+    // melipat tangan di dada: kesal / menunggu
+    arms_crossed: { duration: 2.4, view: "front", pose: (t) => ({ ...life(t, 2.4), expr: "badmood", armL: -35, armR: -35, elbowL: 110, elbowR: 110,
+      headTilt: -4, blink: blinkAt(t, [1.2]) }) },
     // ---------- AKSI KOMEDI FISIK ----------
     // melempar ke atas (tampak serong): ancang-ancang ke belakang -> lempar (lepas di 0.65 dtk) -> follow-through.
     // Barang di tangan: override {item=sandal|sapu|ember}; hilang dari tangan saat lepas.

@@ -438,3 +438,17 @@ Ekspresi baru di rig: `whisper, scared, badmood, worried, suspicious, proud, exc
 | `sawah` | petak padi bergoyang, pematang, saluran air (bebek berenang), dangau bambu, orang-orangan sawah, gunung | depan, pematang, pematang_jauh, kiri, kanan, gubuk, duduk_gubuk(2) |
 
 Tokoh baru dibuat dari bagian tokoh lama (`hair` Pak Hasan / Bu Atin, `HIJAB`/`PECI` dari `engine/extras.js`).
+
+## Shorts, akting & thumbnail
+
+- **Subtitle gaya Shorts**: di episode `"captionStyle": "shorts"` -> kata muncul satu per satu (maks 5 kata/layar),
+  kata kunci amber (kata HURUF BESAR di naskah atau `"keywords": ["NYANGKUT"]`), kata terbaru "pop", posisi di area aman.
+- **HD**: `"hd": true` -> render 1080x1920 (atau 1920x1080).
+- **Potong Shorts/Reels (<60 dtk)**: `node tools/shorts.js --in out/ep.mp4 --out out/ep-shorts.mp4 --from 10 --to 69`.
+- **Gestur baru**: `thumbs_up` (jempol), `facepalm` (pegang kepala pusing), `clap`, `shrug` (angkat bahu "?"),
+  `hands_hips` (tolak pinggang), `think` (tangan di pipi "?"), `arms_crossed` (lipat tangan, bete). Prop tangan `thumb`.
+- **Transisi emosi halus**: saat bentuk mata berganti, otomatis disisipkan kedipan singkat.
+- **Thumbnail**: `WARNA=1 node tools/thumbnail.js episodes/<ep>.json --scene 0 --t 58.8 --text "OYEN JADI TOPI!" --key "OYEN TOPI"
+  [--format landscape|portrait] [--camera '{...}'] --out out/thumb.png` -> 1280x720 / 1080x1920, judul tebal otomatis muat,
+  kata kunci kuning, bingkai kuning. Pilih momen paling lucu & wajah ekspresif.
+- **Banner & foto profil**: `tools/banner.js` (2560x1440, area aman) & `tools/avatar.js`.

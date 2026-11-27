@@ -36,7 +36,7 @@ Jeda audio dideteksi → tiap kalimat dipetakan ke detiknya (proporsional suku k
 Aturan:
 - Visual berganti tiap 1–5 dtk; kamera selalu bergerak pelan (push-in/pan), tidak pernah diam ✅ (`camkeys`)
 - Maks 6 kata per layar untuk teks besar ✅ (`fx` text)
-- Subtitle kata per kata, 1 kata kunci amber ⏳ (sekarang per kalimat)
+- Subtitle kata per kata, kata kunci amber ✅ (`"captionStyle": "shorts"`)
 - Safe area 9:16: teks tidak di 12% atas & 20% bawah (UI TikTok/Reels) ⏳ dicek manual di pratinjau
 - Lingkungan hidup, tidak menembus benda (`--check`) ✅
 
@@ -46,12 +46,12 @@ props salah, lengan putus. **Kirim pratinjau + naskah ke kreator, render HANYA s
 
 ## 8. Render & audio
 - Render ✅ (`WARNA=1 node tools/episode.js <ep>.json --audio vo.mp3 --out x.mp4`), saat ini 900×1600 30 fps
-  ⏳ target 1080×1920
+  ✅ 1080×1920 dengan `"hd": true`
 - Musik latar & SFX ✅ `python3 tools/backsound.py <ep>.json --out out/bs.wav --vo vo.mp3 --mix out/audio.m4a`
   (musik orisinal disintesis, ducking otomatis saat VO, SFX dari fx naskah). Gabung ke video tanpa render ulang:
   `ffmpeg -i video.mp4 -i out/audio.m4a -map 0:v -map 1:a -c copy final.mp4`
 
-## 9. Distribusi ⏳
+## 9. Distribusi (sebagian ✅: `tools/shorts.js` potong <60 dtk; `tools/thumbnail.js` thumbnail)
 Satu konten → 3 format: YouTube panjang (16:9, 3–5 mnt), YouTube Shorts, Reels FB/IG.
 
 ## 10. Caption & upload ⏳

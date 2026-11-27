@@ -546,6 +546,10 @@ function createRig(design) {
         <path fill="#4a4a4a" d="M${hx - 9},${hy - 14} L${hx + 9},${hy - 14} L${hx + 7.6},${hy + 4.5} L${hx - 7.6},${hy + 4.5} Z"/>
         <path fill="none" stroke="#bdbdbd" stroke-width="2" stroke-linecap="round" d="M${hx - 3},${hy - 28} q3,-5 0,-10 M${hx + 4},${hy - 27} q3,-4 0,-8"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 9}" cy="${hy - 4}" rx="5.5" ry="7"/></g>`;
+    if (kind === "thumb") return `<g transform="rotate(${(upright).toFixed(1)} ${hx} ${hy})">
+        <rect fill="${C.skin}" ${LINE} stroke-width="2.4" x="${hx - 9}" y="${hy - 12}" width="18" height="15" rx="6"/>
+        <path fill="${C.skin}" ${LINE} stroke-width="2.4" d="M${hx - 4},${hy - 11} L${hx - 5},${hy - 27} Q${hx},${hy - 32} ${hx + 4},${hy - 27} L${hx + 3},${hy - 11} Z"/>
+        <path fill="none" ${LINE} stroke-width="1.6" d="M${hx - 8},${hy - 4} L${hx + 8},${hy - 4} M${hx - 8},${hy + 0.5} L${hx + 8},${hy + 0.5}"/></g>`;
     if (kind === "sandal") return `<g transform="${rot}">
         <path fill="${require("./life.js").col("#7a4a2a")}" ${LINE} stroke-width="2" d="M${hx - 6},${hy - 36} Q${hx},${hy - 44} ${hx + 6},${hy - 36} L${hx + 7},${hy - 6} Q${hx},${hy} ${hx - 7},${hy - 6} Z"/>
         <path fill="none" stroke="${require("./life.js").col("#2f6b8f")}" stroke-width="3.2" stroke-linecap="round" d="M${hx - 6},${hy - 24} Q${hx},${hy - 30} ${hx + 6},${hy - 24}"/>
