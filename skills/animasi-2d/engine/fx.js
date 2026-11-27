@@ -90,6 +90,27 @@ function drawProp(w, kind, st, dent, e) {
         const paw = (px, py, a) => `<g transform="translate(${px} ${py}) rotate(${a})" fill="${fog(C("#7a4a2a"))}" opacity="0.85"><ellipse cx="0" cy="1.6" rx="2.6" ry="2.1"/><circle cx="-2.6" cy="-1.8" r="0.95"/><circle cx="-0.9" cy="-2.9" r="0.95"/><circle cx="1" cy="-2.9" r="0.95"/><circle cx="2.7" cy="-1.8" r="0.95"/></g>`;
         g = `<path d="M-36,-28 L0,-26 L36,-28 L36,0 L0,2 L-36,0 Z" fill="${fog("#fbfaf4")}" ${L}/><path d="M0,-26 L0,2" stroke="${lc}" stroke-width="1.4"/>${lines}${scrib}
           ${paws ? [[-26, -9, -20], [-14, -20, 15], [-8, -6, -5], [12, -22, 25], [22, -9, -12], [28, -19, 10], [3, -14, 0]].map((q) => paw(...q)).join("") : ""}
+          ${(e.writes || []).map(([w0, wd, txt, wx, wy, ws]) => { // tulisan tangan pulpen merah muncul bertahap (kiri -> kanan)
+              if (st.t < w0) return "";
+              const k = Math.min(1, (st.t - w0) / wd), sz = ws || 12, wdt = txt.length * sz * 0.62;
+              const id = `wr${Math.round(w0 * 100)}`;
+              return `<defs><clipPath id="${id}"><rect x="${wx - wdt / 2 - 2}" y="${wy - sz}" width="${(wdt + 4) * k}" height="${sz * 1.6}"/></clipPath></defs>
+                <g clip-path="url(#${id})"><text x="${wx}" y="${wy}" font-size="${sz}" font-family="DejaVu Sans" font-weight="700" font-style="italic" text-anchor="middle" fill="#d8423a">${txt}</text>
+                <path d="M${wx - wdt / 2 - 3},${wy + 3} q${wdt / 2},4 ${wdt + 6},0" fill="none" stroke="#d8423a" stroke-width="1.3"/></g>`;
+            }).join("")}
+          ${(() => { // tangan + pulpen merah: ujung pena di ujung tulisan yang sedang ditulis
+              const w = (e.writes || []).find(([w0, wd]) => st.t >= w0 - 0.5 && st.t < w0 + wd + 0.5);
+              if (!w) return "";
+              const [w0, wd, txt, wx, wy, ws] = w, sz = ws || 12, wdt = txt.length * sz * 0.62;
+              const k = Math.max(0, Math.min(1, (st.t - w0) / wd));
+              const px = wx - wdt / 2 + wdt * k, py = wy - sz * 0.35 + Math.sin(st.t * 40) * sz * 0.22 * (k > 0 && k < 1 ? 1 : 0);
+              const lift = st.t < w0 ? (w0 - st.t) * 30 : st.t > w0 + wd ? (st.t - w0 - wd) * 30 : 0;
+              return `<g transform="translate(${px} ${py - lift}) rotate(28) scale(0.72)">
+                <path d="M-1.6,0 L1.6,0 L1.6,-30 L-1.6,-30 Z" fill="#d8423a" stroke="${lc}" stroke-width="0.8"/><path d="M-1.6,0 L1.6,0 L0,4 Z" fill="#f4f4f4" stroke="${lc}" stroke-width="0.6"/>
+                <path d="M-2,-30 L2,-30 L2,-35 L-2,-35 Z" fill="#f4f4f4" stroke="${lc}" stroke-width="0.6"/>
+                <path d="M-6,-12 C-8,-20 -2,-26 5,-24 C12,-22 16,-14 12,-6 C9,-1 1,0 -3,-4 Z" fill="${C(e.handSkin || "#f2cba8")}" stroke="${lc}" stroke-width="0.9"/>
+                <path d="M-6,-12 C-14,-14 -22,-22 -30,-26 L-28,-34 C-20,-30 -10,-24 -4,-20 Z" fill="${C(e.sleeve || "#c8a96b")}" stroke="${lc}" stroke-width="0.9"/></g>`;
+            })()}
           ${score ? `<text x="${e.scoreX ?? 20}" y="-2" font-size="13" font-family="DejaVu Sans" font-weight="700" text-anchor="middle" fill="#d8423a" transform="rotate(-10 20 -6)">${score}</text>` : ""}`;
       }
     }

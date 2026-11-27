@@ -536,7 +536,7 @@ function createRig(design) {
   }
 
   // ---------- barang di tangan (koordinat lokal tangan; gambar tetap tegak) ----------
-  function handProp(kind, hx, hy, upright, tilt) {
+  function handProp(kind, hx, hy, upright, tilt, pose) {
     if (!kind) return "";
     const C = PALETTE;
     const lift = Math.min(14, Math.abs(tilt) * 0.4); // gelas terangkat sedikit saat dimiringkan ke mulut
@@ -604,11 +604,16 @@ function createRig(design) {
         <rect fill="${require("./life.js").col("#7fb7d9")}" ${LINE} stroke-width="2" x="${hx - 5}" y="${hy - 40}" width="10" height="40" rx="3"/>
         <path fill="none" stroke="#ffffff" stroke-width="1.6" opacity="0.6" d="M${hx - 2},${hy - 36} L${hx - 2},${hy - 8}"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 7}" cy="${hy - 6}" rx="5" ry="6.5"/></g>`;
-    if (kind === "gorengan") return `<g transform="${rot}">
-        <path fill="${require("./life.js").col("#c98532")}" ${LINE} stroke-width="1.6" d="M${hx - 3},${hy - 8} L${hx - 2},${hy - 30} L${hx + 3},${hy - 30} L${hx + 3},${hy - 8} Z"/>
-        <ellipse fill="${require("./life.js").col("#d99a3f")}" ${LINE} stroke-width="2" cx="${hx}" cy="${hy - 42}" rx="15" ry="9" transform="rotate(-15 ${hx} ${hy - 42})"/>
-        <path fill="none" stroke="${require("./life.js").col("#b0702a")}" stroke-width="1.5" d="M${hx - 9},${hy - 42} q4,-3 8,0 q4,3 8,-1"/>
-        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 6}" cy="${hy - 8}" rx="5" ry="6.5"/></g>`;
+    if (kind === "gorengan") { // bakwan/tempe goreng dipegang ujung jari (bukan tusuk sate); p.bite -> bekas gigitan
+      const col = require("./life.js").col, bite = pose && pose.bite;
+      const body = bite ? `M${hx - 14},${hy - 14} C${hx - 16},${hy - 24} ${hx - 6},${hy - 30} ${hx + 2},${hy - 28} q2,4 5,3 q3,3 7,1 C${hx + 16},${hy - 20} ${hx + 12},${hy - 8} ${hx + 2},${hy - 7} C${hx - 6},${hy - 6} ${hx - 12},${hy - 8} ${hx - 14},${hy - 14} Z`
+        : `M${hx - 14},${hy - 14} C${hx - 16},${hy - 24} ${hx - 6},${hy - 30} ${hx + 4},${hy - 28} C${hx + 14},${hy - 27} ${hx + 17},${hy - 18} ${hx + 13},${hy - 11} C${hx + 9},${hy - 6} ${hx - 6},${hy - 6} ${hx - 14},${hy - 14} Z`;
+      return `<g transform="${rot}">
+        ${pose && pose.handToFace ? `<path fill="${C.skin}" ${LINE} stroke-width="2.2" d="M${hx - 7},${hy - 4} L${hx - 6},${hy - 22} Q${hx - 3},${hy - 26} ${hx},${hy - 22} L${hx + 2},${hy - 4} Z"/>` : ""}
+        <g transform="translate(0 ${pose && pose.handToFace ? -14 : 0})"><path fill="${col("#d99a3f")}" ${LINE} stroke-width="2" d="${body}"/>
+        <path fill="none" stroke="${col("#b0702a")}" stroke-width="1.4" d="M${hx - 9},${hy - 19} q4,-3 8,0 q4,3 7,-1 M${hx - 6},${hy - 13} q3,-2 6,0"/></g>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 3}" cy="${hy - 5}" rx="5" ry="6.5"/></g>`;
+    }
     if (kind === "phone") return `<g transform="${rot}">
         <rect fill="#3a3a3a" ${LINE} stroke-width="2.4" x="${hx - 8}" y="${hy - 26}" width="16" height="28" rx="3"/>
         <rect fill="#d9d9d9" x="${hx - 5.5}" y="${hy - 23}" width="11" height="20" rx="1.5"/>
@@ -717,7 +722,7 @@ function createRig(design) {
       const cU = LONG ? "armUL" : "armU", cD = LONG ? "armDL" : "armD";
       const forearmT = `rotate(${(-elbow).toFixed(1)} ${EL[0]} ${EL[1]})`;
       const hand = LONG ? [103, 297] : [105, 300];
-      const prop = (rotTotal) => (p.hold === "newspaper" ? "" : handProp(holdK, hand[0], hand[1], -rotTotal, side === -1 ? -p.holdTilt : -p.holdTilt));
+      const prop = (rotTotal) => (p.hold === "newspaper" ? "" : handProp(holdK, hand[0], hand[1], -rotTotal, side === -1 ? -p.holdTilt : -p.holdTilt, p));
       const mirror = side === 1 ? MIRROR : "";
       const far = isThree && side === -1;
       const shift = `translate(${(far ? 7 : 0) - ARM_DX} 0)`;
@@ -947,8 +952,18 @@ function createRig(design) {
       return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}
         ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
     }
+    // BUKU DI PANGKUAN (lapBook): buku tulis terbuka di atas paha, di belakang tangan -> pensil menggores halaman
+    const lapBook = p.lapBook && !isBack ? (() => {
+      const oil = p.lapBook === "oily" ? `<ellipse cx="172" cy="298" rx="8" ry="3.5" fill="#c98532" opacity="0.4"/><ellipse cx="128" cy="300" rx="5" ry="2.5" fill="#c98532" opacity="0.3"/>` : "";
+      const lines = [289, 294, 299, 304].map((y) => `<path d="M${112 + (y - 286) * 0.2},${y} L146,${y + 1.5} M154,${y + 1.5} L${188 - (y - 286) * 0.2},${y}" stroke="#9ab7d6" stroke-width="1"/>`).join("");
+      const scrib = [290, 295, 300].map((y) => `<path d="M115,${y} q4,-1.6 8,0 t8,0 t8,0 M156,${y + 1} q4,-1.6 8,0 t8,0 t6,0" fill="none" stroke="${C.line}" stroke-width="0.9"/>`).join("");
+      return `<g id="lapbook">
+        <path fill="${require("./life.js").col("#3f86c4")}" ${LINE} stroke-width="2.2" d="M104,284 L150,287 L196,284 L200,312 L150,315 L100,312 Z"/>
+        <path fill="#fbfaf4" ${LINE} stroke-width="1.8" d="M108,282 L150,286 L150,310 L104,308 Z M150,286 L192,282 L196,308 L150,310 Z"/>
+        ${lines}${scrib}${oil}</g>`;
+    })() : "";
     return `${up(hairBackG(false))}${legs}
-      ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}
+      ${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}${lapBook}
       ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head}${paper}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
   }
 
@@ -1020,7 +1035,7 @@ function createRig(design) {
       return `<g transform="${pos}">${joint}
         <g clip-path="url(#${ID}-${LONG ? "armUL" : "armU"})">${body}</g>
         <g transform="rotate(${-elbow} 150 ${E})"><g clip-path="url(#${ID}-${LONG ? "armDL" : "armD"})">${body}</g>
-          ${handProp(holdK, hand[0], hand[1], deg + elbow, -p.holdTilt)}</g></g>`;
+          ${handProp(holdK, hand[0], hand[1], deg + elbow, -p.holdTilt, p)}</g></g>`;
     };
 
     const tKey = design.top + "Side";

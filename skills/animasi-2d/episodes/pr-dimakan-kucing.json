@@ -53,7 +53,7 @@
    "type": "thud"
   },
   {
-   "t": 56.6,
+   "t": 57.3,
    "type": "pop"
   },
   {
@@ -76,7 +76,7 @@
    },
    "extras": "off",
    "seconds": 15.5,
-   "cast": "bima:sit_write{face=r}@duduk_dekat/3.4+sit_eat{face=r}/1.84+sit_eat{face=r}/0.76+sit_write{face=r}/1.05+sit_eat{face=r}/0.8+sit_write{face=r}/1.19+sit_eat{face=r}/2.16+sit_write{face=r}/2.4+sit_eat{face=r}/1.9",
+   "cast": "bima:sit_write@duduk_dekat/3.4+sit_eat/1.84+sit_eat/0.76+sit_write/1.05+sit_eat/0.8+sit_write/1.19+sit_eat{lapBook=oily}/2.16+sit_write{lapBook=oily}/2.4+sit_eat{lapBook=oily}/1.9",
    "camkeys": [
     {
      "t": 0,
@@ -114,19 +114,19 @@
     },
     {
      "t": 9.0,
-     "x": -0.15,
-     "y": 1.0,
-     "z": 5.2,
-     "f": 1350,
+     "x": -0.42,
+     "y": 0.9,
+     "z": 5.4,
+     "f": 1400,
      "horizon": 0.52
     },
     {
      "t": 11.09,
      "ease": "cut",
-     "x": -0.1,
-     "y": 1.0,
-     "z": 5.4,
-     "f": 1400,
+     "x": -0.42,
+     "y": 0.9,
+     "z": 5.6,
+     "f": 1450,
      "horizon": 0.52
     },
     {
@@ -170,20 +170,6 @@
      "y": 0.56,
      "z": 6.95,
      "n": 8
-    },
-    {
-     "type": "prop",
-     "kind": "book",
-     "hold": "both",
-     "keys": [
-      [
-       0,
-       0.08,
-       0.56,
-       6.9,
-       0
-      ]
-     ]
     },
     {
      "type": "prop",
@@ -303,9 +289,9 @@
      "dur": 1.9,
      "text": "~ bau gorengan ~",
      "at": [
-      0.08,
+      -0.42,
       0.95,
-      6.9
+      6.75
      ],
      "size": 0.05,
      "rot": 0
@@ -398,9 +384,9 @@
      "t1": 15.5,
      "who": "bima",
      "at": [
-      0.08,
-      0.6,
-      6.9
+      -0.42,
+      0.45,
+      6.6
      ]
     }
    ],
@@ -710,6 +696,26 @@
      "hold": "end",
      "open": 27.5,
      "paws": 27.5,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       34.65,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       37.55,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        0.0,
@@ -1179,6 +1185,26 @@
      "hold": "end",
      "open": 14.4,
      "paws": 14.4,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       21.55,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       24.45,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -13.1,
@@ -1362,6 +1388,26 @@
      "hold": "end",
      "open": 11.6,
      "paws": 11.6,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       18.75,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       21.65,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -15.9,
@@ -1659,6 +1705,26 @@
      "hold": "end",
      "open": 7.1,
      "paws": 7.1,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       14.25,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       17.15,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -20.4,
@@ -1848,6 +1914,26 @@
      "hold": "end",
      "open": 3.4,
      "paws": 3.4,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       10.55,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       13.45,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -24.1,
@@ -2047,6 +2133,26 @@
      "hold": "end",
      "open": 0.5,
      "paws": 0.5,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       7.65,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       10.55,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -27.0,
@@ -2218,6 +2324,26 @@
      "hold": "end",
      "open": -1.95,
      "paws": -1.95,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       5.2,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       8.1,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -29.45,
@@ -2423,6 +2549,26 @@
      "hold": "end",
      "open": -4.8,
      "paws": -4.8,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       2.35,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       5.25,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -32.3,
@@ -2488,25 +2634,25 @@
    "extras": "off"
   },
   {
-   "judul": "Kelas (hadap guru) 55.9-58.8",
+   "judul": "Kelas (hadap guru) 55.9-57.3",
    "loc": "kelas_guru",
-   "seconds": 2.95,
-   "cast": "busari:idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}@depan_guru/0.02+write_score{face=l}/2.93",
+   "seconds": 1.45,
+   "cast": "busari:idle{holdR=redpen;armR=112;elbowR=-28;expr=deadpan}@depan_guru/0.02+write_score{face=l}/1.43",
    "camkeys": [
     {
      "t": 0,
-     "x": -1.8,
-     "y": 1.2,
-     "z": 4.5,
-     "f": 540,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.75,
+     "f": 1450,
      "horizon": 0.5
     },
     {
-     "t": 2.95,
-     "x": -1.8,
-     "y": 1.2,
-     "z": 4.6,
-     "f": 560,
+     "t": 1.45,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.85,
+     "f": 1500,
      "horizon": 0.5
     }
    ],
@@ -2602,6 +2748,26 @@
      "hold": "end",
      "open": -6.95,
      "paws": -6.95,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       0.2,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       3.1,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
      "keys": [
       [
        -34.45,
@@ -2629,25 +2795,6 @@
        0
       ]
      ]
-    },
-    {
-     "type": "text",
-     "t": 0.75,
-     "dur": 2.3,
-     "text": "100",
-     "at": [
-      -2.35,
-      1.4,
-      5.9
-     ],
-     "size": 0.11,
-     "rot": -8
-    },
-    {
-     "type": "burst",
-     "t": 0.75,
-     "sx": 0.35,
-     "sy": 0.4
     }
    ],
    "dialog": [
@@ -2704,21 +2851,434 @@
    "extras": "off"
   },
   {
-   "judul": "Kelas (hadap murid) 58.8-62.1",
+   "judul": "Kelas (hadap guru) 57.3-58.8",
+   "loc": "kelas_guru",
+   "seconds": 1.5,
+   "cast": "busari:idle{holdR=redpen;expr=deadpan}@depan_guru/1.5",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -1.8,
+     "y": 1.2,
+     "z": 4.5,
+     "f": 540,
+     "horizon": 0.5
+    },
+    {
+     "t": 1.5,
+     "x": -1.8,
+     "y": 1.2,
+     "z": 4.6,
+     "f": 560,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -57.3,
+      -10.95
+     ],
+     "keys": [
+      [
+       -35.9,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -18.75,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -18.7,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -15.4,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -13.9,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -12.7,
+       -3.12,
+       0,
+       5.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -12.55,
+       -3.12,
+       0,
+       5.2,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -11.95,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": -8.4,
+     "paws": -8.4,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       -1.25,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       1.65,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
+     "keys": [
+      [
+       -35.9,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -10.95,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -10.94,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    },
+    {
+     "type": "text",
+     "t": 0.0,
+     "dur": 2.3,
+     "text": "100",
+     "at": [
+      -2.35,
+      1.4,
+      5.9
+     ],
+     "size": 0.11,
+     "rot": -8
+    },
+    {
+     "type": "burst",
+     "t": 0.0,
+     "sx": 0.35,
+     "sy": 0.4
+    }
+   ],
+   "dialog": [],
+   "looks": [
+    {
+     "t0": -1.4,
+     "t1": 1.5,
+     "who": "busari",
+     "at": [
+      -2.6,
+      1.0,
+      5.9
+     ]
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "extras": "off"
+  },
+  {
+   "judul": "Kelas (hadap guru) 58.8-59.9",
+   "loc": "kelas_guru",
+   "seconds": 1.05,
+   "cast": "busari:idle{holdR=redpen;expr=deadpan}@depan_guru/0.02+write_score{face=l}/1.03",
+   "camkeys": [
+    {
+     "t": 0,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.75,
+     "f": 1450,
+     "horizon": 0.5
+    },
+    {
+     "t": 1.05,
+     "x": -2.15,
+     "y": 1.1,
+     "z": 4.85,
+     "f": 1500,
+     "horizon": 0.5
+    }
+   ],
+   "fx": [
+    {
+     "type": "prop",
+     "kind": "cat",
+     "hold": "end",
+     "color": "#e59a4c",
+     "stripe": "#b8692c",
+     "carry": [
+      -58.8,
+      -12.45
+     ],
+     "keys": [
+      [
+       -37.4,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -20.25,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -20.2,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -16.9,
+       -3.75,
+       0,
+       7.4,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -15.4,
+       -3.55,
+       0,
+       6.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -14.2,
+       -3.12,
+       0,
+       5.2,
+       0,
+       0,
+       "walk"
+      ],
+      [
+       -14.05,
+       -3.12,
+       0,
+       5.2,
+       0,
+       0,
+       "sit"
+      ],
+      [
+       -13.45,
+       -2.6,
+       0.76,
+       5.9,
+       0,
+       0.35,
+       "sit"
+      ]
+     ]
+    },
+    {
+     "type": "prop",
+     "kind": "book",
+     "hold": "end",
+     "open": -9.9,
+     "paws": -9.9,
+     "handSkin": "#f2cba8",
+     "sleeve": "#c8a96b",
+     "writes": [
+      [
+       -2.75,
+       1.0,
+       "100",
+       18,
+       -11,
+       13
+      ],
+      [
+       0.15,
+       0.75,
+       "60",
+       -18,
+       -11,
+       13
+      ]
+     ],
+     "keys": [
+      [
+       -37.4,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -12.45,
+       -2.15,
+       0.76,
+       5.85,
+       0,
+       0,
+       "hide"
+      ],
+      [
+       -12.44,
+       -2.15,
+       0.76,
+       5.85,
+       0
+      ]
+     ]
+    }
+   ],
+   "dialog": [
+    {
+     "who": "narator",
+     "noname": true,
+     "at": 0.02,
+     "dur": 3.08,
+     "text": "“Bima, nilai enam puluh. Kamu terlambat.”"
+    },
+    {
+     "who": "busari",
+     "nosub": true,
+     "emo": "deadpan",
+     "at": 0.02,
+     "dur": 3.08,
+     "text": "Bima, nilai enam puluh. Kamu terlambat."
+    }
+   ],
+   "looks": [
+    {
+     "t0": 0.0,
+     "t1": 3.4,
+     "who": "busari",
+     "at": "bima"
+    }
+   ],
+   "positions": {
+    "busari": [
+     -0.9,
+     6.05
+    ],
+    "bima": [
+     0.85,
+     4.0
+    ]
+   },
+   "visual": "",
+   "narasi": "",
+   "extras": "off"
+  },
+  {
+   "judul": "Kelas (hadap murid) 59.9-62.1",
    "loc": "kelas",
-   "seconds": 3.35,
-   "cast": "bima:sit_idle{expr=hopeful}@duduk_bima/0.02+sit_idle{expr=sad}/1.58+sit_idle{expr=deadpan;gloom=1}/1.75, rara:sit_idle@duduk_rara/1.0+sit_laugh/1.6+sit_idle{expr=smile}/0.75, nana:sit_idle@duduk_nana/1.0+sit_laugh/1.6+sit_idle{expr=smile}/0.75",
+   "seconds": 2.3,
+   "cast": "bima:sit_idle{expr=sad}@duduk_bima/0.55+sit_idle{expr=deadpan;gloom=1}/1.75, rara:sit_laugh@duduk_rara/1.55+sit_idle{expr=smile}/0.75, nana:sit_laugh@duduk_nana/1.55+sit_idle{expr=smile}/0.75",
    "camkeys": [
     {
      "t": 0,
      "x": -0.85,
      "y": 1.12,
      "z": 1.15,
-     "f": 1050,
+     "f": 1100,
      "horizon": 0.5
     },
     {
-     "t": 3.35,
+     "t": 2.3,
      "x": -0.85,
      "y": 1.12,
      "z": 1.2,
@@ -2729,7 +3289,7 @@
    "fx": [
     {
      "type": "text",
-     "t": 1.1,
+     "t": 0.05,
      "dur": 2.2,
      "text": "60",
      "at": [
@@ -2742,30 +3302,22 @@
     },
     {
      "type": "shake",
-     "t": 1.1,
+     "t": 0.05,
      "dur": 0.25,
      "amp": 0.015
     }
    ],
-   "dialog": [
-    {
-     "who": "narator",
-     "noname": true,
-     "at": 0.02,
-     "dur": 3.08,
-     "text": "“Bima, nilai enam puluh. Kamu terlambat.”"
-    }
-   ],
+   "dialog": [],
    "looks": [
     {
-     "t0": 0.0,
-     "t1": 3.4,
+     "t0": -1.05,
+     "t1": 2.35,
      "who": "bima",
      "at": "busari"
     },
     {
-     "t0": 0.0,
-     "t1": 3.4,
+     "t0": -1.05,
+     "t1": 2.35,
      "who": [
       "rara",
       "nana"
@@ -2790,27 +3342,27 @@
      {
       "seed": 71,
       "kind": "anak_laki",
-      "spec": "sit_idle@duduk_a/1.0+sit_laugh/1.6+sit_idle/30.75"
+      "spec": "sit_laugh@duduk_a/1.55+sit_idle/30.75"
      },
      {
       "seed": 72,
       "kind": "anak_perempuan",
-      "spec": "sit_idle@duduk_b/1.0+sit_laugh/1.6+sit_idle/30.75"
+      "spec": "sit_laugh@duduk_b/1.55+sit_idle/30.75"
      },
      {
       "seed": 73,
       "kind": "anak_laki",
-      "spec": "sit_idle@duduk_c/1.0+sit_laugh/1.6+sit_idle/30.75"
+      "spec": "sit_laugh@duduk_c/1.55+sit_idle/30.75"
      },
      {
       "seed": 74,
       "kind": "anak_perempuan",
-      "spec": "sit_idle@duduk_d/1.0+sit_laugh/1.6+sit_idle/30.75"
+      "spec": "sit_laugh@duduk_d/1.55+sit_idle/30.75"
      },
      {
       "seed": 75,
       "kind": "anak_laki",
-      "spec": "sit_idle@duduk_e/1.0+sit_laugh/1.6+sit_idle/30.75"
+      "spec": "sit_laugh@duduk_e/1.55+sit_idle/30.75"
      }
     ]
    }

@@ -429,10 +429,23 @@
     // makan gorengan: gigit -> kunyah (pipi bergerak) -> gigit lagi
     // ---------- DUDUK BELAJAR / KELAS ----------
     // menulis di buku yang ada di samping kanan (bale/meja): menunduk, tangan kanan menggores pensil
-    sit_write: { duration: 2.4, view: "three", smooth: 0.015, pose: (t) => ({ ...life(t, 2.4), sit: 1, holdR: "pencil", armR: 28 + 4 * wave(t, 0.3), elbowR: 70 + 10 * wave(t, 0.22),
-      armL: -8, elbowL: 40, pitch: 0.75, lookY: 1, headY: 3, lean: 6, mouth: "smallflat", eyes: "half", blink: blinkAt(t, [1.5]), sweat: false }) },
-    // makan gorengan sambil duduk (suap -> kunyah)
-    sit_eat: { duration: 2.4, view: "three", smooth: 0.02, pose: (t) => ({ ...CLIPS.eat.pose(t), sit: 1, holdR: "gorengan", armL: -8, elbowL: 40 }) },
+    // menulis di buku yang terbuka di PANGKUAN: tangan kiri memegang tepi buku, ujung pensil (tangan kanan) menggores
+    // halaman bergerak kiri-kanan per baris; kepala menunduk ke buku
+    sit_write: { duration: 2.4, view: "front", smooth: 0.012, pose: (t) => {
+      const stroke = (t * 2.5) % 1, line = Math.floor(t * 2.5) % 3;
+      return { ...life(t, 2.4), sit: 1, lapBook: true, holdR: "pencil", holdTilt: 25,
+        armR: -11 + 7 * stroke, elbowR: 40 - 5 * stroke + 2 * line, armL: -14, elbowL: 52,
+        pitch: 0.8, lookY: 1, headY: 4, mouth: "smallflat", eyes: "half", blink: blinkAt(t, [1.5]), sweat: false };
+    } },
+    // makan gorengan sambil duduk (buku tetap di pangkuan): angkat -> gigit di mulut -> kunyah; gorengan tergigit
+    sit_eat: { duration: 2.4, view: "front", smooth: 0.02, pose: (t) => {
+      const up = kf(t, [[0, 0.1], [0.45, 1, "io"], [0.85, 1], [1.25, 0.15, "io"], [2.4, 0.1]]);
+      const chew = t > 0.85 ? Math.abs(Math.sin(t * 12)) : 0;
+      return { ...life(t, 2.4), sit: 1, lapBook: true, holdR: "gorengan", bite: t > 0.75, handToFace: up > 0.6,
+        armR: -12 - 58 * up, elbowR: 55 + 107 * up, holdTilt: 0, armL: -14, elbowL: 52,
+        headY: 2, pitch: -0.1 * up, mouth: t > 0.45 && t < 0.75 ? "open" : chew > 0.5 ? "cat" : "flat",
+        eyes: t > 0.85 && t < 1.8 ? "happy" : undefined, blush: 0.5, sweat: false };
+    } },
     // duduk tegak menghadap samping (dengar guru)
     sit_idle: { duration: 4, view: "front", pose: (t) => ({ ...life(t, 4), sit: 1, armL: 10, armR: 10, elbowL: 70, elbowR: 70, blink: blinkAt(t, [1.3, 3.1]) }) },
     // duduk tertawa terbahak (memegang perut, berguncang)
