@@ -189,7 +189,7 @@
     sit_side: { duration: 4, view: "side", pose: (t) => ({
       ...life(t), sit: 1, legL: 8 * wave(t, 2), legR: -6 * wave(t, 2), armL: 18, armR: 14, elbowL: 30, elbowR: 30,
       blink: blinkAt(t, [1.2, 3.3]) }) },
-    sit_back: { duration: 4, view: "back", pose: (t) => ({ ...life(t), sit: 1, armL: -8, armR: -8, elbowL: 35, elbowR: 35,
+    sit_back: { duration: 4, view: "back", pose: (t) => ({ ...life(t), sit: 1, armsFwd: true, armL: 10, armR: 10, elbowL: 70, elbowR: 70, // sama dgn sit_idle (tangan di meja)
       headTilt: 3 * wave(t, 4) }) },
     sit_sleepy: { duration: 4, view: "front", pose: (t) => ({ ...CLIPS.sleepy.pose(t), sit: 1, armL: -8, armR: -8, elbowL: 30, elbowR: 30 }) },
     // duduk sambil ngopi: angkat gelas -> seruput (mata pejam) -> turunkan -> "ahh" lega

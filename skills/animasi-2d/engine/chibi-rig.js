@@ -939,6 +939,10 @@ function createRig(design) {
 
     const up = (svg) => `<g transform="translate(0 ${sitDy.toFixed(2)})">${svg}</g>`;
     const paper = p.hold === "newspaper" && !isBack ? newspaper(view, p) : "";
+    if (isBack && p.armsFwd) { // tangan ke depan (mis. bertumpu di meja): dari belakang lengan bawah & tangan tertutup badan
+      return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${armLayer(-1, p.armL, "sleeve")}${armLayer(1, p.armR, "sleeve")}${torso}${lapTop}
+        ${head.before}${hairBackG(true)}${head.after}`)}`;
+    }
     if (isBack) {
       return `${legs}${up(`${armLayer(-1, p.armL, "arm")}${armLayer(1, p.armR, "arm")}${torso}${lapTop}
         ${armLayer(-1, p.armL, "sleeve")}${p.handToFace ? "" : armLayer(1, p.armR, "sleeve")}${head.before}${hairBackG(true)}${head.after}${p.handToFace ? armLayer(1, p.armR, "sleeve") : ""}`)}`;
