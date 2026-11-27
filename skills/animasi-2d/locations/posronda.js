@@ -34,7 +34,7 @@ module.exports = {
     { name: "rumah kanan", x0: 5, x1: 12, z0: 7, z1: 13 }, { name: "rumah kiri", x0: -12.5, x1: -5.5, z0: 9, z1: 15 },
     { name: "semak", x: 3.4, z: 10.4, r: 0.55 }, { name: "ayam jago", x: 3.6, z: 4.6, r: 0.22 }, { name: "ayam betina", x: 4.3, z: 5.4, r: 0.22 },
   ],
-  build(w, { t = 0 } = {}) {
+  build(w, { t = 0, opts = {} } = {}) {
     P.sky(w, { clouds: [[0.3, 0.08, 1.1], [0.86, 0.13, 0.9]] });
     // jalan cor melintang di depan
     w.ground([[-30, 0, -20], [30, 0, -20], [30, 0, 3.4], [-30, 0, 3.4]], P.PAL.concrete, { stroke: false });
@@ -70,8 +70,7 @@ module.exports = {
     // papan catur + kopi di atas bale
     w.box(-0.9, floorY, 7.6, 0.5, 0.04, 0.5, TW("#e8e8e8"));
     for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) if ((i + j) % 2) w.ground([[-0.9 + i * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + j * 0.125], [-0.9 + (i + 1) * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125], [-0.9 + i * 0.125, floorY + 0.045, 7.6 + (j + 1) * 0.125]], TW("#5a5a5a"), { stroke: false, layer: "obj", bias: -0.3 });
-    P.glassOfCoffee(w, 0.2, floorY, 7.5);
-    P.glassOfCoffee(w, 0.5, floorY, 7.7);
+    if (!opts.noCoffee) { P.glassOfCoffee(w, 0.2, floorY, 7.5); P.glassOfCoffee(w, 0.5, floorY, 7.7); }
     // sandal di depan bale
     for (const [x, z] of [[-1.6, 6.1], [-1.3, 6.15], [0.9, 6.0], [1.2, 6.05]]) w.ground([[x, 0.01, z], [x + 0.26, 0.01, z], [x + 0.26, 0.01, z + 0.11], [x, 0.01, z + 0.11]], TW("#5a5a5a"), { bias: -0.5 });
 
@@ -85,7 +84,7 @@ module.exports = {
     P.chicken(w, 4.3, 5.4, { t, kind: "betina", phase: 1.6 });
 
     // ---- kehidupan ----
-    LIFE.cat(w, 0.05, 7.7, { mode: "sleep", y: 0.56, color: TW("#9a9a9a"), stripe: TW("#5a5a5a") });   // kucing tidur di bale
+    if (!opts.noCat) LIFE.cat(w, 0.05, 7.7, { mode: "sleep", y: 0.56, color: TW("#9a9a9a"), stripe: TW("#5a5a5a") });   // kucing tidur di bale
     LIFE.ducks(w, [[2.6, 1.6], [7.5, 1.9]], { n: 3 });
     LIFE.flag(w, 2.75, 6.3, { h: 3.6 });
     LIFE.smoke(w, 8.5, 10, { y: 3.4 });

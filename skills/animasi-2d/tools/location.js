@@ -129,6 +129,9 @@ const fxList = o.fx ? JSON.parse(o.fx) : [];
 // --fg '[{"kind":"leaves","x":-1,"z":1.5}]' -> latar depan buram dekat kamera (parallax & kedalaman)
 const fgList = o.fg ? JSON.parse(o.fg) : [];
 // figuran: karakter latar acak yang beraktivitas sendiri (diulang). --extras off untuk mematikan.
+// locopts.extras: daftar figuran khusus adegan (mis. teman sekelas yang tertawa di detik tertentu) menggantikan bawaan lokasi
+const LOCOPTS0 = o.locopts ? JSON.parse(o.locopts) : {};
+if (LOCOPTS0.extras) LOC.extras = LOCOPTS0.extras;
 const extras = o.extras === "off" ? [] : (LOC.extras || []).map((e) => {
   const rig = figuran(e.seed, e.kind);
   // motion(t) -> { x, z, clip, ct, faceRight } : gerak terskrip (mis. main bola, engine/football.js)
@@ -199,7 +202,7 @@ function frame(t) {
     return `filter="url(#${id})"`;
   };
   // gaya figuran: siluet/buram agar tidak bersaing dengan tokoh utama (filter di ruang piksel kanvas)
-  const exStyle = o["extras-style"] || "shadow";
+  const exStyle = o["extras-style"] || LOCOPTS0.extrasStyle || LOC.extrasStyle || "shadow"; // kelas: teman sekelas dekat kamera -> "detail"
   const exFilter = (z) => {
     if (exStyle === "detail") return fogFilter(w.fogK(z) * 0.95);
     const k = Math.round(Math.min(0.6, w.fogK(z)) * 10) / 10, id = `fig_${exStyle}_${Math.round(k * 10)}`;

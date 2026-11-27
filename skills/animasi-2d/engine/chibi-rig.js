@@ -575,6 +575,20 @@ function createRig(design) {
         <path fill="none" stroke="${C.line}" stroke-width="2.6" d="M${bx - 7},${by + 1} L${bx + 4},${by + 1}"/>
         <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx}" cy="${hy - 4}" rx="6" ry="7.5"/></g>`;
     }
+    if (kind === "pencil" || kind === "redpen") { // pensil kuning / pulpen merah (menulis, memberi nilai)
+      const body = kind === "pencil" ? require("./life.js").col("#f2c84b") : require("./life.js").col("#d8423a");
+      return `<g transform="${rot}">
+        <path fill="${body}" ${LINE} stroke-width="2" d="M${hx - 3},${hy - 40} L${hx + 3},${hy - 40} L${hx + 3},${hy + 2} L${hx - 3},${hy + 2} Z"/>
+        <path fill="${kind === "pencil" ? "#f3d9b0" : "#f4f4f4"}" ${LINE} stroke-width="1.8" d="M${hx - 3},${hy + 2} L${hx + 3},${hy + 2} L${hx},${hy + 11} Z"/>
+        <path fill="${kind === "pencil" ? "#3a3a3a" : body}" d="M${hx - 1.2},${hy + 7} L${hx + 1.2},${hy + 7} L${hx},${hy + 11} Z"/>
+        ${kind === "pencil" ? `<rect fill="#f2a3ae" ${LINE} stroke-width="1.6" x="${hx - 3}" y="${hy - 46}" width="6" height="6" rx="1.5"/>` : `<rect fill="#f4f4f4" ${LINE} stroke-width="1.6" x="${hx - 3.5}" y="${hy - 46}" width="7" height="8" rx="2"/>`}
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx}" cy="${hy - 8}" rx="5.5" ry="7"/></g>`;
+    }
+    if (kind === "book") return `<g transform="${rot}">
+        <path fill="${require("./life.js").col("#3f86c4")}" ${LINE} stroke-width="2.2" d="M${hx - 15},${hy - 34} L${hx + 15},${hy - 34} L${hx + 15},${hy + 4} L${hx - 15},${hy + 4} Z"/>
+        <path fill="#ffffff" ${LINE} stroke-width="1.6" d="M${hx - 10},${hy - 26} L${hx + 10},${hy - 26} L${hx + 10},${hy - 16} L${hx - 10},${hy - 16} Z"/>
+        <text x="${hx}" y="${hy - 18.5}" font-size="8" font-family="DejaVu Sans" font-weight="700" text-anchor="middle" fill="${C.line}">PR</text>
+        <ellipse fill="${C.skin}" ${LINE} stroke-width="2.4" cx="${hx - 12}" cy="${hy - 6}" rx="5.5" ry="7"/></g>`;
     if (kind === "lipstick") return `<g transform="${rot}">
         <rect fill="#f4f4f4" ${LINE} stroke-width="2" x="${hx - 2.5}" y="${hy - 46}" width="5" height="28" rx="2"/>
         <path fill="${require("./life.js").col("#b3263c")}" ${LINE} stroke-width="1.8" d="M${hx - 3.5},${hy - 46} Q${hx},${hy - 58} ${hx + 3.5},${hy - 46} Z"/>

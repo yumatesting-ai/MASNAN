@@ -77,9 +77,13 @@ function cat(w, x, z, o = {}) {
         <ellipse cx="-3" cy="5" rx="7" ry="4.6" fill="${F(cream)}"/>
         ${eye(-7.2, -0.5, closed)}${eye(1.8, -0.5, closed)}
         <path d="M-3.6,2.6 l1.4,1.3 l1.4,-1.3 Z" fill="${F(pink)}" ${L} stroke-width="${(sw * 0.4).toFixed(2)}"/>
-        ${food ? "" : `<path d="M-4.9,4.6 q1.2,1.5 2.7,0 q1.5,1.5 2.7,0" fill="none" ${L} stroke-width="${(sw * 0.45).toFixed(2)}"/>`}
+        ${food || o.carry ? "" : `<path d="M-4.9,4.6 q1.2,1.5 2.7,0 q1.5,1.5 2.7,0" fill="none" ${L} stroke-width="${(sw * 0.45).toFixed(2)}"/>`}
         <path d="M-10,2.5 l-7,-1.3 M-10,4.2 l-7,1.2 M5,2.5 l7,-1.3 M5,4.2 l7,1.2" stroke="${lc}" stroke-width="${(sw * 0.3).toFixed(2)}" opacity="0.7"/>
         <ellipse cx="-8.5" cy="3.6" rx="2" ry="1.1" fill="${F(pink)}" opacity="0.6"/><ellipse cx="3.5" cy="3.6" rx="2" ry="1.1" fill="${F(pink)}" opacity="0.6"/>
+        ${o.carry === "book" ? `<g transform="rotate(-8 -3 6)"><path d="M-17,4 L9,4 L9,24 L-17,24 Z" fill="${F(col("#3f86c4"))}" ${L}/>
+          <path d="M-11,9 L3,9 L3,15 L-11,15 Z" fill="${F("#ffffff")}" ${L} stroke-width="${(sw * 0.35).toFixed(2)}"/>
+          <path d="M-17,4 L-17,24" stroke="${lc}" stroke-width="${(sw * 0.9).toFixed(2)}"/>
+          <path d="M-5,3.6 q1.6,2.4 3.4,0.2" fill="${F(col("#7a2f35"))}" ${L} stroke-width="${(sw * 0.4).toFixed(2)}"/></g>` : ""}
         ${food ? `<g transform="rotate(28 -6 7)"><ellipse cx="-9" cy="9" rx="6" ry="3.2" fill="${F(col("#d99a3f"))}" ${L}/>
           <path d="M-13,9 q2,-1.6 4,0 q2,1.6 4,0" fill="none" stroke="${F(col("#b0702a"))}" stroke-width="1"/></g>
           <path d="M-4.6,4.4 q1.6,2 3.4,0.2" fill="${F(col("#7a2f35"))}" ${L} stroke-width="${(sw * 0.4).toFixed(2)}"/>` : ""}

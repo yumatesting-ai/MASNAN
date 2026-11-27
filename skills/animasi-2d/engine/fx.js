@@ -65,11 +65,12 @@ function keyAt(keys, t, hold = "both") {
     flip: b.flip ?? (Math.abs(b.x - a.x) > 0.02 ? b.x > a.x : a.flip), moving };
 }
 function drawProp(w, kind, st, dent, e) {
+  const t0open = (e) => e.open !== undefined && st.t >= e.open;
   const C = require("./life.js").col;
   if (kind === "ball") return P.ball(w, st.x, st.z, { y: st.y, r: e.r || 0.11, spin: st.rot / 30, bias: e.bias ?? -0.2 });
   w.sprite(st.x, st.z, (sx, sy, p, fog, lc, sw) => {
     // skala per jenis agar ukuran SAMA dengan saat dipegang tokoh (sandal ±0,22 m, sapu ±0,75 m, ember ±0,3 m)
-    const s = p * ({ sandal: 0.0068, sapu: 0.0063, ember: 0.0088, mango: 0.008 }[kind] || 0.01), L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
+    const s = p * ({ sandal: 0.0068, sapu: 0.0063, ember: 0.0088, mango: 0.008, book: 0.0064 }[kind] || 0.01), L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
     let g = "";
     if (kind === "sandal") g = `<path d="M-14,-4 Q-16,-12 -6,-13 L14,-11 Q20,-6 14,-1 L-8,1 Q-14,1 -14,-4 Z" fill="${fog(C("#7a4a2a"))}" ${L}/>
       <path d="M-4,-12 Q2,-20 8,-11" fill="none" stroke="${fog(C("#2f6b8f"))}" stroke-width="4" stroke-linecap="round"/>`;
@@ -78,6 +79,20 @@ function drawProp(w, kind, st, dent, e) {
     else if (kind === "ember") g = `<path d="M-18,-30 Q0,-52 18,-30" fill="none" ${L}/>
       <path d="${dent ? "M-18,-30 L18,-30 L12,0 L4,-6 L-2,1 L-12,0 Z" : "M-18,-30 L18,-30 L13,0 L-13,0 Z"}" fill="${fog(C("#3f86c4"))}" ${L}/>
       <ellipse cx="0" cy="-30" rx="18" ry="5" fill="${fog(C("#2c5f8a"))}" ${L}/>`;
+    else if (kind === "book") { // buku PR: tertutup, atau terbuka (e.open = detik dibuka) dengan cap kaki kucing & nilai
+      const op = t0open(e), paws = e.paws && st.t >= e.paws, score = e.score && st.t >= e.score[0] ? e.score[1] : null;
+      if (!op) g = `<path d="M-20,-28 L20,-28 L20,0 L-20,0 Z" fill="${fog(C("#3f86c4"))}" ${L}/><path d="M-20,-28 L-20,0" stroke="${lc}" stroke-width="2.4"/>
+        <path d="M-12,-21 L12,-21 L12,-11 L-12,-11 Z" fill="${fog("#ffffff")}" ${L}/><text x="0" y="-13.4" font-size="8" font-family="DejaVu Sans" font-weight="700" text-anchor="middle" fill="${lc}">PR BIMA</text>
+        <ellipse cx="11" cy="-5" rx="4" ry="2.2" fill="${fog("#c98532")}" opacity="0.45"/>`;
+      else {
+        const lines = [-22, -17, -12, -7].map((y) => `<path d="M-33,${y} L-5,${y} M5,${y} L33,${y}" stroke="${fog("#9ab7d6")}" stroke-width="1"/>`).join("");
+        const scrib = [-21, -16, -11].map((y, i) => `<path d="M-31,${y} q4,-2 8,0 t8,0 t8,0" fill="none" stroke="${lc}" stroke-width="0.9"/><path d="M7,${y} q4,-2 8,0 t8,0 t${i === 2 ? 2 : 8},0" fill="none" stroke="${lc}" stroke-width="0.9"/>`).join("");
+        const paw = (px, py, a) => `<g transform="translate(${px} ${py}) rotate(${a})" fill="${fog(C("#7a4a2a"))}" opacity="0.85"><ellipse cx="0" cy="1.6" rx="2.6" ry="2.1"/><circle cx="-2.6" cy="-1.8" r="0.95"/><circle cx="-0.9" cy="-2.9" r="0.95"/><circle cx="1" cy="-2.9" r="0.95"/><circle cx="2.7" cy="-1.8" r="0.95"/></g>`;
+        g = `<path d="M-36,-28 L0,-26 L36,-28 L36,0 L0,2 L-36,0 Z" fill="${fog("#fbfaf4")}" ${L}/><path d="M0,-26 L0,2" stroke="${lc}" stroke-width="1.4"/>${lines}${scrib}
+          ${paws ? [[-26, -9, -20], [-14, -20, 15], [-8, -6, -5], [12, -22, 25], [22, -9, -12], [28, -19, 10], [3, -14, 0]].map((q) => paw(...q)).join("") : ""}
+          ${score ? `<text x="${e.scoreX ?? 20}" y="-2" font-size="13" font-family="DejaVu Sans" font-weight="700" text-anchor="middle" fill="#d8423a" transform="rotate(-10 20 -6)">${score}</text>` : ""}`;
+      }
+    }
     else if (kind === "mango") g = `<ellipse cx="0" cy="-10" rx="8" ry="10" fill="${fog(C("#e0b13a"))}" ${L}/><path d="M0,-20 l2,-5" ${L}/>`;
     return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)}) rotate(${st.rot.toFixed(1)}) scale(${s.toFixed(4)})">${g}</g>`;
   }, { y: st.y, bias: e.bias ?? -0.2 });
@@ -141,8 +156,9 @@ function draw(w, list, t) {
       if (!st) continue;
       if (e.kind === "cat") {
         const LIFE = require("./life.js");
-        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0, moving: st.moving });
-      } else drawProp(w, e.kind, st, t >= (e.dentAt ?? 1e9), e);
+        const carry = e.carry && t >= (e.carry[0] ?? -1e9) && t < (e.carry[1] ?? 1e9) ? e.carryKind || "book" : null;
+        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0, moving: st.moving, carry });
+      } else drawProp(w, e.kind, { ...st, t }, t >= (e.dentAt ?? 1e9), e);
     } else if (e.type === "jemuran") {
       P.jemuran(w, e.x, e.za, e.zb);
     } else if (e.type === "burst") {

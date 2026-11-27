@@ -104,6 +104,11 @@ function createTimeline(spec, spotOf, resolvePose, o = {}) {
       ct = (before + ph.dist * k) / ph.speed;
     }
     const pose = samplePose(ph.clip, ct, resolvePose);
+    // {expr=...}: terapkan preset ekspresi (mata, mulut, keringat, dll.) — bukan hanya label expr
+    if (ph.over.expr) {
+      const base = resolvePose({}), ex = resolvePose({ expr: ph.over.expr });
+      for (const kk in ex) if (kk === "eyes" || kk === "mouth" || ex[kk] !== base[kk]) pose[kk] = ex[kk];
+    }
     for (const [kk, v] of Object.entries(ph.over)) if (kk !== "face") pose[kk] = v;
     const end = ph.to || ph.from;
     const x = ph.from.x + (end.x - ph.from.x) * k, z = ph.from.z + (end.z - ph.from.z) * k;
