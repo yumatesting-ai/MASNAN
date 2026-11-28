@@ -18,6 +18,19 @@ description: Membuat konten animasi 2D kartun chibi kampung Indonesia (channel A
 > ekspresi tidak sesuai aksi/dialog, tokoh/aksi penting terpotong frame atau tertutup benda depan, label/teks tersisa
 > setelah pergantian shot, benda raksasa dekat kamera, benda yang akan dipakai (bola, barang) harus SUDAH terlihat sebelum aksi, gerakan tanpa animasi (jalan tanpa langkah), logika cerita
 > (barang yang dilempar harus lepas dari tubuh, dsb). Perbaiki semuanya dulu, baru kirim.
+> **STANDAR KUALITAS (permintaan kreator, berlaku untuk SETIAP video):** sebelum mengirim pratinjau, buka lembar QA
+> (frame tiap 1 dtk) DAN render close-up di momen penting, lalu periksa satu per satu:
+> 1. **Arah mata & kepala** — tiap tokoh benar-benar menatap yang ia perhatikan (lawan bicara, benda, kejadian);
+>    tampak samping: kepala menunduk/mendongak ke arah yang benar (cek dengan render pitch -0.6/0/0.6 bila ragu).
+>    Tokoh berjalan menatap arah tujuan. Tidak ada yang menatap kamera/pohon/langit tanpa alasan.
+> 2. **Pegangan benda** — benda tergenggam di tangan (di balik jari), proporsi & ketebalan pantas (joran, sapu, buku).
+> 3. **Tembus / terpotong / tertutup** — tokoh, benda, teks tidak menembus, tidak terpotong tepi frame, tidak tertutup
+>    benda dekat kamera; tidak ada bayangan/benda raksasa dari objek di samping lensa.
+> 4. **Logika aksi** — sebab-akibat terlihat (benda ada sebelum dipakai, isi wadah di DALAM wadah, makan ke mulut,
+>    menulis di kertas, jalan maju searah badan), urutan cocok dengan VO.
+> 5. **Kamera** — tiap shot punya gerak & sudut yang berbeda (lihat "Bahasa kamera"); tokoh utama selalu terbaca.
+> 6. **Teks** — muat di kotak/papan, tidak menimpa wajah atau subtitle.
+> Temukan & perbaiki sendiri dulu; kreator tidak boleh menjadi orang pertama yang menemukan bug.
 > **Alur lengkap ide → upload: lihat [`docs/WORKFLOW.md`](docs/WORKFLOW.md) (10 langkah).**
 
 Semua karakter dibangun dari **satu mesin rig SVG** (`engine/chibi-rig.js`). Bagian badan (rambut belakang,

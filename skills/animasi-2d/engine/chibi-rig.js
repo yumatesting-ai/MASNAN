@@ -223,7 +223,7 @@ function createRig(design) {
       const RX = rx * (type === "wide" ? 1.05 : 1), RY = ry * k;
       const fwd = Math.max(-1, Math.min(1, p.lookX >= 0 ? 0.55 + 0.25 * Math.min(1, p.lookX) : 0.55 + 1.1 * p.lookX));
       const PR = type === "wide" ? 3.6 : 4.4;
-      const pxS = cx + fwd * (RX - PR + 0.6), pyS = cy + (type === "half" ? RY * 0.25 : 0) + 2.6 * Math.max(-1, Math.min(1, p.lookY));
+      const pxS = cx + fwd * (RX - PR + 0.6), pyS = cy + (type === "half" ? RY * 0.25 : 0) + (RY - PR - 1) * Math.max(-1, Math.min(1, p.lookY));
       const id = `${ID}-eyeS${type}`;
       const shape = `M${cx - RX * 0.75},${cy - RY} C${cx + RX * 0.9},${cy - RY * 1.02} ${cx + RX * 1.15},${cy + RY * 0.7} ${cx + RX * 0.2},${cy + RY}
         C${cx - RX * 0.6},${cy + RY * 1.02} ${cx - RX},${cy + RY * 0.3} ${cx - RX},${cy - RY * 0.2} C${cx - RX},${cy - RY * 0.7} ${cx - RX * 0.9},${cy - RY} ${cx - RX * 0.75},${cy - RY} Z`;
@@ -1019,7 +1019,7 @@ function createRig(design) {
     const C = PALETTE;
     const L = LAYOUT.side;
     const headPivot = "150 200";
-    const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt - 20 * p.pitch} ${headPivot})`; // samping: dongak = putar ke belakang
+    const headT = `translate(${p.headX} ${p.headY}) rotate(${p.headTilt + 20 * p.pitch} ${headPivot})`; // samping (digambar menghadap kanan): tunduk (+) = searah jarum jam, dongak (-) = ke belakang
     const breatheScale = 1 + 0.015 * p.breathe;
     const LONG = design.sleeves === "long", NOSLEEVE = design.sleeves === "none";
 

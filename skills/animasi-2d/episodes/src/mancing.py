@@ -167,8 +167,8 @@ FX = [
  drop_to("boot", 19.9, BOOT_AT, (1.2, DECK + 0.02, 5.92)), drop_to("can", 24.6, CAN_AT, (1.0, DECK + 0.02, 6.58)),
  drop_to("branch", 40.1, BRANCH_AT, (-0.35, 0.02, 3.55)),
  # Oyen: datang diam-diam, duduk di samping ember, (makan ikan saat semua menonton BYUR), tidur kekenyangan
- {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "fatAt": 49.5, "keys": [[0, -3.6, 0, 3.5, 0, 0, "hide"], [24.6, -3.6, 0, 3.5, 0, 0, "hide"],
-   [24.7, -3.6, 0, 3.5, 0, 0, "walk"], [27.9, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "walk"], [28.0, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"],
+ {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "fatAt": 49.5, "keys": [[0, -3.6, 0, 4.9, 0, 0, "hide"], [24.6, -3.6, 0, 4.9, 0, 0, "hide"],
+   [24.7, -3.6, 0, 4.9, 0, 0, "walk"], [27.9, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "walk"], [28.0, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"],
    [49.4, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"], [49.5, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sleep"],
    [68.4, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sleep"], [68.45, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sit"]]
    + [[round(69.2 + k * 0.3, 2), round(H.at(69.2 + k * 0.3 - 1.4)[0] + 0.35, 3), 0, round(H.at(69.2 + k * 0.3 - 1.4)[1] - 0.05, 3), 0, 0, "walk"] for k in range(int((END - 69.2) / 0.3) + 1)]},
@@ -213,7 +213,7 @@ SHOTS = [
  (19.95, cam(0.35, 0.95, 2.15, 950), cam(0.3, 0.95, 2.3, 980)),             # Bima dapat lagi, Plung!
  (22.2, cam(2.0, 1.2, 4.6, 1350), cam(2.0, 1.2, 4.7, 1450)),                # Pak Hasan tegang menunggu (push-in wajah)
  (23.7, cam(2.25, 0.9, 4.45, 1000, 0.66), cam(2.25, 0.9, 4.55, 1050, 0.66)),# ...kaleng
- (24.65, cam(-3.0, 0.3, 1.9, 950, 0.5), cam(-1.2, 0.3, 2.6, 1000, 0.5)),    # kamera setinggi kucing: Oyen mengendap (tracking)
+ (24.65, cam(-3.3, 0.32, 2.85, 900, 0.5), cam(-1.0, 0.32, 2.75, 900, 0.5)),    # kamera setinggi kucing: Oyen mengendap (tracking)
  (28.55, cam(-0.75, 0.45, 3.05, 1250, 0.5), cam(-0.75, 0.45, 3.15, 1350, 0.5)),# Oyen melirik ember penuh ikan. Meong.
  (30.4, cam(2.0, 1.15, 4.6, 1500), cam(2.0, 1.15, 4.65, 1600)),             # Pak Hasan kesal (close)
  (31.6, cam(0.9, 1.2, 1.3, 900), cam(0.55, 1.2, 1.6, 920)),                 # tukar tempat (lebar, pan mengikuti)

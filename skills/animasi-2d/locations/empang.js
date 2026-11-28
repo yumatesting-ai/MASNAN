@@ -63,10 +63,12 @@ module.exports = {
     for (const [x, z] of [[1.1, 5.82], [2.25, 5.82], [1.1, 6.62], [2.25, 6.62]]) w.box(x - 0.04, WATER_Y - 0.3, z - 0.04, 0.08, 0.38, 0.08, P.PAL.bambooPole);
     // pancang bambu di tepi + papan kecil "EMPANG MBAH SUM"
     w.box(0.5, 0, 7.55, 0.1, 1.1, 0.1, P.PAL.bambooPole);
-    w.box(-1.89, 0, 2.6, 0.08, 0.9, 0.08, c("#8d5f3c"));
-    w.box(-2.45, 0.72, 2.58, 1.2, 0.42, 0.05, c("#f3ead6"));
-    w.text(-2.38, 0.92, -1.32, 1.08, 2.57, "EMPANG", { size: 0.55 });
-    w.text(-2.38, 0.76, -1.32, 0.9, 2.57, "MBAH SUM", { size: 0.5 });
+    // papan nama di sisi kiri jalan setapak (jauh dari jalur kamera -> tidak ada bayangan raksasa di depan lensa)
+    const SX = -5.2, SZ = 4.6;
+    w.box(SX + 0.56, 0, SZ + 0.02, 0.08, 0.9, 0.08, c("#8d5f3c"));
+    w.box(SX, 0.72, SZ, 1.2, 0.42, 0.05, c("#f3ead6"));
+    w.text(SX + 0.07, 0.92, SX + 1.13, 1.08, SZ - 0.01, "EMPANG", { size: 0.55 });
+    w.text(SX + 0.07, 0.76, SX + 1.13, 0.9, SZ - 0.01, "MBAH SUM", { size: 0.5 });
     // pohon pisang & semak di belakang tepian; gubuk kecil di seberang kolam
     P.tree(w, -2.4, 8.2, { h: 3.6, kind: "banana" }); P.tree(w, -5.5, 11, { h: 6.5, kind: "round" }); P.bush(w, -1.6, 10.4, 0.55);
     for (const [x, z] of [[8.2, 13.6], [9.8, 13.6], [8.2, 14.8], [9.8, 14.8]]) w.box(x - 0.05, 0, z - 0.05, 0.1, 2.0, 0.1, P.PAL.bambooPole);

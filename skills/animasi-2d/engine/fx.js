@@ -200,15 +200,32 @@ function draw(w, list, t) {
       for (let k = 0; k <= 10; k++) { const q = k / 10, sag = bend * len * 0.55 * q * q; pts.push([bx + dir * Math.cos(ang) * len * q, by + Math.sin(ang) * len * q - sag, BZ]); }
       const tip = pts[10];
       const RB = 0.02; // bias joran: di belakang pemegang
-      w.line3([butt, ...pts], "#2a2a2a", null, { bias: RB, swk: 3.4 });
-      const mahal = e.style === "mahal";
-      w.line3([butt, ...pts], C2(mahal ? "#2c5f8a" : "#c9a35a"), null, { bias: RB - 0.001, swk: mahal ? 1.8 : 2.2 });
-      if (mahal) { // joran mahal: pegangan hitam + gulungan (reel) perak berkilau
-        w.line3([butt, pts[1]], C2("#2a2a2a"), null, { bias: RB - 0.002, swk: 2.8 });
+      const mahal = e.style === "mahal", all = [butt, ...pts];
+      // batang meruncing: tebal di pangkal -> tipis di ujung (segmen dengan lebar menurun), garis tepi gelap
+      for (let k = 0; k < all.length - 1; k++) {
+        const q = k / (all.length - 1), wOut = (mahal ? 7.4 : 5.6) * (1 - 0.72 * q), wIn = wOut - 1.8;
+        w.line3([all[k], all[k + 1]], "#2a2a2a", null, { bias: RB, swk: wOut });
+        w.line3([all[k], all[k + 1]], C2(mahal ? (k % 2 ? "#1f4e86" : "#24599a") : "#cfa65a"), null, { bias: RB - 0.001, swk: Math.max(0.8, wIn) });
+      }
+      if (mahal) {
+        // pegangan gabus + tutup pangkal hitam + kilau, cincin pemandu senar, gulungan (reel) besar berputar
+        w.line3([butt, pts[1]], "#2a2a2a", null, { bias: RB - 0.002, swk: 6.6 });
+        w.line3([butt, pts[1]], C2("#c9955a"), null, { bias: RB - 0.003, swk: 5.0 });
+        w.line3([butt, [butt[0] + (pts[0][0] - butt[0]) * 0.25, butt[1] + (pts[0][1] - butt[1]) * 0.25, BZ]], "#1e1e1e", null, { bias: RB - 0.004, swk: 6.4 });
+        w.line3([pts[2], pts[9]], "#9fc6f0", null, { bias: RB - 0.004, swk: 0.7 }); // kilau batang
+        for (const k of [3, 5, 7, 9]) w.sprite(pts[k][0], BZ, (sx, sy, p, fog, lc, sw) => {
+          const r = p * (0.016 - k * 0.0009);
+          return `<circle cx="${sx}" cy="${sy + r * 1.1}" r="${r}" fill="none" stroke="${lc}" stroke-width="${sw * 1.6}"/><circle cx="${sx}" cy="${sy + r * 1.1}" r="${r}" fill="none" stroke="#d9d9d9" stroke-width="${sw * 0.8}"/>`;
+        }, { y: pts[k][1], bias: RB - 0.005 });
         const rp = pts[1];
-        w.sprite(rp[0], rp[2], (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy + p * 0.05})"><circle r="${p * 0.045}" fill="#d9d9d9" stroke="${lc}" stroke-width="${sw * 0.7}"/>
-          <circle r="${p * 0.015}" fill="#9a9a9a"/><path d="M0,0 L${p * 0.04 * Math.cos(t * 9)},${p * 0.04 * Math.sin(t * 9)}" stroke="${lc}" stroke-width="${sw * 0.6}"/></g>`, { y: rp[1], bias: RB - 0.003 });
-      } else for (let k = 2; k < 10; k += 2) { const q = pts[k + 1], m = pts[k].map((v, j) => v + (q[j] - v) * 0.12); w.line3([pts[k], m], "#7d5a2a", null, { bias: RB - 0.002, swk: 2.8 }); } // ruas bambu
+        w.sprite(rp[0], BZ, (sx, sy, p, fog, lc, sw) => { const R = p * 0.062, a = t * 9;
+          return `<g transform="translate(${sx} ${sy + R * 1.05})">
+            <rect x="${-R * 0.25}" y="${-R * 1.1}" width="${R * 0.5}" height="${R * 0.5}" fill="#9a9a9a" stroke="${lc}" stroke-width="${sw * 0.7}"/>
+            <circle r="${R}" fill="#e3e3e3" stroke="${lc}" stroke-width="${sw * 0.9}"/><circle r="${R * 0.62}" fill="#b9b9b9" stroke="${lc}" stroke-width="${sw * 0.5}"/>
+            <circle r="${R * 0.2}" fill="#d8423a"/><path d="M0,0 L${R * 0.85 * Math.cos(a)},${R * 0.85 * Math.sin(a)}" stroke="${lc}" stroke-width="${sw * 0.9}"/>
+            <circle cx="${R * 0.85 * Math.cos(a)}" cy="${R * 0.85 * Math.sin(a)}" r="${R * 0.18}" fill="#2a2a2a"/>
+            <path d="M${-R * 0.55},${-R * 0.55} A${R * 0.78},${R * 0.78} 0 0 1 ${R * 0.2},${-R * 0.76}" fill="none" stroke="#ffffff" stroke-width="${sw * 0.8}" opacity="0.8"/></g>`; }, { y: rp[1], bias: RB - 0.006 });
+      } else for (let k = 2; k < 10; k += 2) { const q = pts[k + 1], m = pts[k].map((v, j) => v + (q[j] - v) * 0.12); w.line3([pts[k], m], "#7d5a2a", null, { bias: RB - 0.002, swk: 3.6 - k * 0.2 }); } // ruas bambu
       const sway = Math.sin(t * 7) * 0.04;
       if (cat) { // tangkapan tergantung
         const hy = tip[1] - 0.32, hx = tip[0] + sway;
