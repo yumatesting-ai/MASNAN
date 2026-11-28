@@ -82,9 +82,10 @@ B.walk((-0.55, 5.35), clip="walk{armL=50;elbowL=35;armR=42;elbowR=40}")         
 B.stay(33.8, "fish_wait{face=r;expr=confused}")
 B.walk((0.05, 6.25), DERMAGA, clip="walk{armL=50;elbowL=35;armR=42;elbowR=40}")             # ke dermaga
 B.stay(37.35, "fish_wait{face=r;expr=smile}"); B.stay(38.35, "fish_lift{face=r}"); B.stay(40.17, "fish_wait{face=r;expr=happy}")
-B.stay(47.81, "fish_wait{face=l;expr=surprised}"); B.stay(51.6, "fish_wait{face=l;expr=shocked}"); B.stay(54.27, "fish_wait{face=l;expr=laugh}")
-B.stay(60.77, "fish_wait{face=l;expr=smile}"); B.stay(62.45, "fish_wait{face=l;expr=surprised}"); B.stay(67.0, "fish_wait{face=l;expr=deadpan}")
-B.stay(END, "fish_wait{face=l;expr=deadpan;gloom=1}")
+B.stay(40.9, "fish_wait{face=l;expr=surprised;lookY=-0.15;pitch=-0.05}"); B.stay(47.81, "fish_wait{face=l;expr=excited;lookY=-0.15;pitch=-0.05}")   # menonton Pak Hasan (sejajar mata)
+B.stay(51.6, "fish_wait{face=l;expr=shocked;lookY=0.5;pitch=0.35}"); B.stay(54.27, "fish_wait{face=l;expr=laugh;lookY=-0.15;pitch=-0.05}")   # ke air, lalu ke Pak Hasan
+B.stay(60.77, "fish_wait{face=l;expr=smile;lookY=-0.15;pitch=-0.05}"); B.stay(62.45, "fish_wait{face=l;expr=curious;lookY=1;pitch=0.6}"); B.stay(67.0, "fish_wait{face=l;expr=shocked;lookY=1;pitch=0.6}")   # menunduk ke ember
+B.stay(END, "fish_wait{face=l;expr=deadpan;gloom=1;lookY=-0.15;pitch=-0.05}")
 
 # Pak Hasan setelah tercebur: kepala di air, lalu naik ke tepi basah kuyup
 H.stay(HASAN_OUT_OF_WATER, "idle{hide=1}")   # (selama di air dipakai aktor kedua "hasan" di dalam_empang -> lihat CAST_WATER)
@@ -137,7 +138,7 @@ BIMA_ROD = [(0, 70, 0, "worm", "r"), (12.71, 70, 0, "worm", "r"), (12.95, 108, 0
   (20.99, 28, 0.2, None, "r"), (21.15, 58, 0.1, "fish", "r"), (21.45, 58, 0.05, "fish", "r"), (21.5, 58, 0, "worm", "r"), (22.3, 58, 0, "worm", "r"), (22.7, 28, 0, None, "r"),
   (32.0, 75, 0, "worm", "r"), (32.1, 75, 0, "worm", "l"), (33.8, 75, 0, "worm", "r"),
   (36.3, 75, 0, "worm", "r"), (36.55, 28, 0, None, "r"), (37.35, 28, 0.2, None, "r"), (37.5, 58, 0.1, "fish", "r"), (38.3, 58, 0.05, "fish", "r"), (38.35, 58, 0, "worm", "r"),
-  (39.0, 28, 0, None, "r"), (47.81, 75, 0, None, "l"), (END, 75, 0, None, "l")]
+  (39.0, 28, 0, None, "r"), (40.05, 28, 0, None, "r"), (40.5, 75, 0, "worm", "l"), (END, 75, 0, "worm", "l")]  # angkat joran & berbalik menonton
 ROD_H = {"type": "rod", "style": "mahal", "waterY": WY, "keys": rod_keys(H, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in HASAN_ROD], "mahal"),
          "bites": [[17.2, 18.5], [22.4, 23.6], [38.8, 39.0]]}
 ROD_B = {"type": "rod", "style": "bambu", "waterY": WY, "keys": rod_keys(B, BIMA_ROD, "bambu"), "bites": [[13.9, 14.8], [20.1, 20.95], [37.0, 37.3]]}

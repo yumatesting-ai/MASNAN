@@ -93,6 +93,19 @@ function createWorld(opt = {}) {
   const ground = (pts, fill, o = {}) => poly(pts, fill, Object.assign({ layer: "ground" }, o));
   // garis 3D (kabel, garis lapangan); curve = lengkung kabel (meter) di tengah
   function line3(pts, stroke = LINE, width = null, o = {}) {
+    // garis yang (sebagian) di belakang kamera: potong di bidang dekat (dulu terproyeksi melintang layar = bug)
+    const zn = cam.z + NEAR + 0.02;
+    if (pts.every((p) => p[2] < zn)) return;
+    if (pts.some((p) => p[2] < zn)) {
+      const out = [];
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[i], b = pts[i + 1];
+        if (a[2] >= zn) out.push(a);
+        if (b && (a[2] >= zn) !== (b[2] >= zn)) { const u = (zn - a[2]) / (b[2] - a[2]); out.push([a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, zn]); }
+      }
+      if (out.length < 2) return;
+      pts = out; o = Object.assign({}, o, { sag: 0 });
+    }
     const zc = pts.reduce((a, p) => a + p[2], 0) / pts.length;
     let d;
     if (o.sag) {

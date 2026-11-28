@@ -115,6 +115,12 @@ function gazeAt(m, t, self) {
   // 2) dialog: pendengar ke pembicara, pembicara ke lawan bicara
   const tg = gazeTarget(m.who, t);
   if (tg) { const g = toWho(tg); if (g) return g; }
+  // 2b) sedang berjalan/berlari tanpa konteks lain: menatap ke arah tujuan (bukan menoleh ke belakang = terlihat jalan mundur)
+  if (m.tl && m.tl.at) {
+    const a = m.tl.at(Math.max(0, t - 0.1)), b = m.tl.at(t + 0.1);
+    const vx = b.x - a.x, vz = b.z - a.z, v = Math.hypot(vx, vz);
+    if (v > 0.03 && !b.pose.hide) return toPoint(self.x + (vx / v) * 3, eye - 0.25, self.z + (vz / v) * 3);
+  }
   // 3) tanpa konteks: melirik tokoh terdekat yang terlihat (bukan menatap kamera); sesekali kembali ke depan
   let best = null, bd = 1e9;
   for (const c of cast) if (c.who !== m.who) { const st = visibleAt(c, t); if (st) { const d = Math.hypot(st.x - self.x, st.z - self.z); if (d < bd) { bd = d; best = c.who; } } }

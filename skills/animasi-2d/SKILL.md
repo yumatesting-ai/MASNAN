@@ -510,3 +510,9 @@ Selang-seling dua tokoh untuk ritme komedi. (Bug lama: `ease` terbawa ke key ber
 setelah potongan — sudah diperbaiki di `tools/location.js`; kini gerak kamera dalam shot benar-benar jalan.)
 **Benda dalam wadah** (ember, gelas, keranjang): gambar bukaan elips + isi di dalamnya terpotong bibir wadah,
 dinding depan menutup bagian bawah — jangan menempel isi di atas wadah (terlihat di luar). Contoh: fx `ember`.
+**Benda dipegang panjang (joran, tongkat, sapu panjang)**: gambar di BELAKANG pemegang (tangan & badan menutupi
+pegangan) dengan pangkal menjulur ke belakang tangan — kalau di depan tangan terlihat menempel, bukan digenggam.
+Garis 3D yang lewat di belakang kamera dipotong di bidang dekat (`world3d.line3`), jadi tidak melintang layar.
+**Arah pandang saat berjalan**: tanpa konteks lain, tokoh yang bergerak menatap ke arah tujuan (otomatis di
+`gazeAt`); dulu melirik tokoh terdekat di belakangnya sehingga terlihat jalan mundur. Saat tokoh menonton/mencari
+sesuatu, set arah hadap (`face=`), `lookY`/`pitch` (menunduk ke ember, sejajar mata ke lawan) secara eksplisit.
