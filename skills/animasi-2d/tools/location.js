@@ -164,7 +164,7 @@ function frame(t) {
     const base = Object.assign({}, camOpt.cam || { x: 0, y: 1.5, z: 0 }, { f: camOpt.f || 1300, horizon: camOpt.horizon ?? 0.42 });
     const keys = []; let prev = base;
     for (const k of camkeys) {
-      const full = Object.assign({}, prev, k);
+      const full = Object.assign({}, prev, k); full.ease = k.ease; // ease TIDAK diwarisi (dulu "cut" terbawa -> kamera membeku setelah potongan)
       if (k.track) { const i = cast.findIndex((m) => m.who === k.track); if (i >= 0) { full.x = states[i].x + (k.dx || 0); if (k.dz != null) full.z = states[i].z + k.dz; } }
       if (!k.track) delete full.track;
       keys.push(full); prev = Object.assign({}, full, { track: undefined });

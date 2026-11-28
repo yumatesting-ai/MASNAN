@@ -501,3 +501,12 @@ kontak tiap 0,5–1 dtk → perbaiki sendiri → kirim pratinjau → render HANY
 Kata "render" berlaku untuk versi yang sudah dilihat kreator; setelah ada perubahan baru, kirim pratinjau dulu.
 Render: `WARNA=1 node tools/episode.js <ep>.json --audio vo.mp3 --out video.mp4`, lalu
 `python3 tools/backsound.py <ep>.json --out bs.wav --vo vo.mp3 --mix audio.m4a` dan gabung dengan ffmpeg.
+
+**Bahasa kamera (jangan polos).** Satu adegan = banyak shot berganti (camkeys dengan `ease:"cut"`), dan tiap shot
+punya gerak (push-in, pan, crane, tracking). Variasikan: establishing crane turun di awal, low angle untuk tokoh
+sombong, insert setinggi benda (pelampung di air, kamera setinggi kucing), reveal dari bawah untuk benda lucu,
+snap-zoom saat kejutan, close-up wajah saat tegang, high angle untuk jatuh/BYUR, crane naik / tracking di akhir.
+Selang-seling dua tokoh untuk ritme komedi. (Bug lama: `ease` terbawa ke key berikutnya sehingga kamera membeku
+setelah potongan — sudah diperbaiki di `tools/location.js`; kini gerak kamera dalam shot benar-benar jalan.)
+**Benda dalam wadah** (ember, gelas, keranjang): gambar bukaan elips + isi di dalamnya terpotong bibir wadah,
+dinding depan menutup bagian bawah — jangan menempel isi di atas wadah (terlihat di luar). Contoh: fx `ember`.

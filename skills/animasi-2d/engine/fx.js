@@ -221,17 +221,32 @@ function draw(w, list, t) {
           <path d="M${-p * 0.025},0 L${p * 0.025},0" stroke="#ffffff" stroke-width="${sw * 0.8}"/></g>`, { y: WY + 0.03 + bob, bias: -0.13 });
         w.line3([[tip[0] - 0.08, WY + 0.002, bz], [tip[0] + 0.08, WY + 0.002, bz]], "#d6eef7", null, { layer: "ground", bias: -0.19, swk: 0.8 });
       }
-    } else if (e.type === "ember") { // ember berisi ikan: fills [[t, jumlah]] (jumlah terakhir yang sudah lewat dipakai)
-      let n = 0; for (const [ft, fn] of e.fills || []) if (t >= ft) n = fn;
+    } else if (e.type === "ember") { // ember berisi air & ikan, dilihat sedikit dari atas: bukaan elips, ikan DI DALAM air
+      // (terpotong bibir ember), dinding depan menutup bagian bawah; cipratan kecil saat ikan masuk. fills [[t, jumlah]]
+      let n = 0, tIn = -9; for (const [ft, fn] of e.fills || []) if (t >= ft) { if (fn > n && ft > 0) tIn = ft; n = fn; }
       w.sprite(e.x, e.z, (sx, sy, p, fog, lc, sw) => {
-        const s = p * 0.0085, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round"`;
+        const s = p * (e.scale || 0.011), k1 = sw / s, L = `stroke="${lc}" stroke-width="${(k1 * 2.2).toFixed(2)}" stroke-linejoin="round"`; // garis tetap tipis di layar
+        const id = `emb${Math.round(e.x * 100)}_${Math.round(e.z * 100)}`, body = C2("#3f86c4"), dark = C2("#2c5f8a");
         let fish = "";
-        for (let k = 0; k < Math.min(n, 5); k++) { const fx = -10 + k * 5, rot = -60 + k * 30 + Math.sin(t * 6 + k) * 8;
-          fish += `<g transform="translate(${fx} -30) rotate(${rot})"><path d="M0,0 C-4,-6 -4,-14 0,-18 C4,-14 4,-6 0,0 Z" fill="${fog(C2("#e0913a"))}" ${L}/><path d="M0,-18 L-5,-25 L0,-22 L5,-25 Z" fill="${fog(C2("#e0913a"))}" ${L}/></g>`; }
-        return `<g transform="translate(${sx} ${sy}) scale(${s})"><path d="M-18,-30 Q0,-52 18,-30" fill="none" ${L}/>
-          <path d="M-18,-30 L18,-30 L13,0 L-13,0 Z" fill="${fog(C2("#3f86c4"))}" ${L}/>${fish}
-          <ellipse cx="0" cy="-30" rx="18" ry="5" fill="${fog(C2(n ? "#4f9ac0" : "#2c5f8a"))}" ${L}/>
-          <path d="M-18,-30 L18,-30 L13,0 L-13,0 Z" fill="none" ${L}/></g>`;
+        const spots = [[-7, -31, 15], [6, -29.5, -160], [-1, -32.5, 200], [9, -32, 20], [-10, -29, -150]];
+        for (let k = 0; k < Math.min(n, 5); k++) { const [fx, fy, rot] = spots[k], wig = Math.sin(t * 7 + k * 1.7) * 9;
+          fish += `<g transform="translate(${fx} ${fy}) rotate(${rot + wig}) scale(0.55)"><path d="M-10,0 C-6,-5 6,-5 9,0 C6,5 -6,5 -10,0 Z" fill="${fog(C2(k % 2 ? "#d9822f" : "#e9a24a"))}" ${L}/>
+            <path d="M9,0 L15,-5 L14,0 L15,5 Z" fill="${fog(C2("#d9822f"))}" ${L}/><circle cx="-5" cy="-1" r="1.2" fill="${lc}"/></g>`; }
+        // satu ekor sesekali menepuk permukaan
+        const flick = n ? `<path d="M${2 + Math.sin(t * 3) * 4},-31 q3,${-5 - 3 * Math.abs(Math.sin(t * 9))} 6,-1" fill="${fog(C2("#e9a24a"))}" ${L}/>` : "";
+        const splash = t - tIn < 0.45 ? Array.from({ length: 6 }, (_, k) => { const a = (k / 6) * Math.PI - Math.PI, r = 6 + (t - tIn) * 40;
+          return `<circle cx="${Math.cos(a) * r}" cy="${-34 + Math.sin(a) * r * 0.6 - (t - tIn) * 20}" r="1.6" fill="#bfe3f2" stroke="${lc}" stroke-width="0.5"/>`; }).join("") : "";
+        return `<g transform="translate(${sx} ${sy}) scale(${s})">
+          <defs><clipPath id="${id}"><ellipse cx="0" cy="-31" rx="16.4" ry="5.2"/></clipPath></defs>
+          <path d="M-14,-31 Q0,-56 14,-31" fill="none" ${L}/>
+          <ellipse cx="0" cy="-31" rx="18" ry="6" fill="${fog(dark)}" ${L}/>
+          <g clip-path="url(#${id})"><ellipse cx="0" cy="${n ? -29.6 : -27}" rx="17" ry="5.2" fill="${fog(C2(n ? "#6fb7d6" : "#24507a"))}"/>${fish}
+            ${n ? `<path d="M-12,-30 q6,-1.5 12,0 M0,-28 q5,-1.2 10,0" fill="none" stroke="#e6f4fa" stroke-width="${(k1 * 1.2).toFixed(2)}"/>` : ""}</g>
+          ${flick}
+          <path d="M-18,-31 A18,6 0 0 0 18,-31 L13.5,0 Q0,3 -13.5,0 Z" fill="${fog(body)}" ${L}/>
+          <path d="M-16,-20 A16,5 0 0 0 16,-20" fill="none" stroke="${fog(dark)}" stroke-width="${(k1 * 1.6).toFixed(2)}"/>
+          <path d="M-12,-27 L-10,-4" stroke="#ffffff" stroke-width="${(k1 * 2.5).toFixed(2)}" opacity="0.35"/>
+          <ellipse cx="0" cy="-31" rx="18" ry="6" fill="none" ${L}/>${splash}</g>`;
       }, { bias: e.bias ?? -0.08 });
     } else if (e.type === "waterfront") { // permukaan air di depan tokoh yang tercebur: menutup badan di bawah air
       if (e.t0 !== undefined && (t < e.t0 || t > (e.t1 ?? 1e9))) continue;

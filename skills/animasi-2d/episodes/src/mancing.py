@@ -89,7 +89,8 @@ B.stay(END, "fish_wait{face=l;expr=deadpan;gloom=1}")
 # Pak Hasan setelah tercebur: kepala di air, lalu naik ke tepi basah kuyup
 H.stay(HASAN_OUT_OF_WATER, "idle{hide=1}")   # (selama di air dipakai aktor kedua "hasan" di dalam_empang -> lihat CAST_WATER)
 H.stay(54.27, "wet_idle"); H.stay(58.12, "shirt_wiggle"); H.stay(60.37, "pat_belly{expr=proud;dirty=0}")
-H.stay(67.0, "wet_idle{expr=smile;eyes=happy;mouth=smile;gloom=0}"); H.stay(70.28, "pat_belly{expr=proud}"); H.stay(END, "shirt_wiggle")
+H.stay(66.9, "wet_idle{expr=smile;eyes=happy;mouth=smile;gloom=0}")
+H.walk((-1.5, 3.75), (-3.0, 3.05), (-4.3, 1.8), (-5.4, 0.6), clip="walk{expr=proud}")   # pulang bangga, ikan menggelepar di dalam kaus
 
 def hasan_spec():
     # fase "di air" disisipkan: hide 48.75..48.75, lalu in_water di dalam_empang, lalu kembali ke tepi
@@ -162,20 +163,24 @@ FX = [
  ROD_H, ROD_B, ROD_FLOAT,
  fish_to_ember(15.5, 16.3, tip(ROD_B["keys"], 15.45)), fish_to_ember(21.5, 21.8, tip(ROD_B["keys"], 21.45)),
  fish_to_ember(38.35, 39.4, tip(ROD_B["keys"], 38.3)),
- drop_to("boot", 19.9, BOOT_AT, (2.0, DECK + 0.02, 6.0)), drop_to("can", 24.6, CAN_AT, (1.45, DECK + 0.02, 5.95)),
+ drop_to("boot", 19.9, BOOT_AT, (1.2, DECK + 0.02, 5.92)), drop_to("can", 24.6, CAN_AT, (1.0, DECK + 0.02, 6.58)),
  drop_to("branch", 40.1, BRANCH_AT, (-0.35, 0.02, 3.55)),
  # Oyen: datang diam-diam, duduk di samping ember, (makan ikan saat semua menonton BYUR), tidur kekenyangan
  {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "fatAt": 49.5, "keys": [[0, -3.6, 0, 3.5, 0, 0, "hide"], [24.6, -3.6, 0, 3.5, 0, 0, "hide"],
    [24.7, -3.6, 0, 3.5, 0, 0, "walk"], [27.9, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "walk"], [28.0, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"],
-   [49.4, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"], [49.5, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sleep"]]},
+   [49.4, OYEN_DUDUK[0], 0, OYEN_DUDUK[1], 0, 0, "sit"], [49.5, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sleep"],
+   [68.4, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sleep"], [68.45, OYEN_DUDUK[0] - 0.15, 0, OYEN_DUDUK[1] + 0.05, 0, 0, "sit"]]
+   + [[round(69.2 + k * 0.3, 2), round(H.at(69.2 + k * 0.3 - 1.4)[0] + 0.35, 3), 0, round(H.at(69.2 + k * 0.3 - 1.4)[1] - 0.05, 3), 0, 0, "walk"] for k in range(int((END - 69.2) / 0.3) + 1)]},
+ AT(68.5, "!", (OYEN_DUDUK[0] - 0.1, 0.5, OYEN_DUDUK[1]), dur=0.7, size=0.06), AT(69.0, "~ bau ikan ~", (OYEN_DUDUK[0], 0.6, OYEN_DUDUK[1]), dur=1.5, size=0.045),
  # tercebur: cipratan besar + tokoh di air (permukaan menutup badan) + tetesan saat naik
  {"type": "splash", "t": 47.85, "x": 1.2, "y": WY, "z": 4.5, "n": 40, "size": 2.2, "color": "#7fc3e0"},
  {"type": "splash", "t": 48.1, "x": 1.5, "y": WY, "z": 4.6, "n": 24, "size": 1.6, "color": "#a8d8ec"},
  {"type": "waterfront", "t0": 48.7, "t1": HASAN_OUT_OF_WATER, "x0": AIR[0] - 0.8, "x1": AIR[0] + 0.8, "z": AIR[1] - 0.12, "cx": AIR[0], "cz": AIR[1], "y": WY},
- {"type": "drip", "t0": HASAN_OUT_OF_WATER, "t1": 66.0, "x": TEPI[0], "y": 1.1, "z": TEPI[1] - 0.05, "n": 9},
- # ikan di dalam baju: ekor ikan menyembul dari bawah kaus, menggelepar kiri-kanan (badan menggeliat)
+ {"type": "drip", "t0": HASAN_OUT_OF_WATER, "t1": 66.8, "x": TEPI[0], "y": 1.1, "z": TEPI[1] - 0.05, "n": 9},
+ # ikan di dalam baju: ekor menyembul dari bawah kaus, menggelepar kiri-kanan; ikut berjalan bersama Pak Hasan
  {"type": "prop", "kind": "fish", "hold": "end", "color": "#e0913a", "bias": -0.6, "keys": [[0, TEPI[0], 0.55, TEPI[1] - 0.12, 90, 0, "hide"], [54.25, TEPI[0], 0.55, TEPI[1] - 0.12, 90, 0, "hide"]]
-   + [[round(54.3 + k * 0.25, 2), round(TEPI[0] + (0.06 if k % 2 else -0.06), 3), 0.55, TEPI[1] - 0.12, 90 + (25 if k % 2 else -25)] for k in range(int((END - 54.3) / 0.25))]},
+   + [[round(54.3 + k * 0.25, 2), round(H.at(54.3 + k * 0.25)[0] + (0.06 if k % 2 else -0.06), 3), 0.55, round(H.at(54.3 + k * 0.25)[1] - 0.12, 3), 90 + (25 if k % 2 else -25)]
+      for k in range(int((END - 54.3) / 0.25) + 1)]},
  F(12.75, "LEMPAR!", sy=0.24, size=0.1, dur=0.7), AT(16.34, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06),
  AT(21.48, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06), AT(39.4, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06),
  F(18.8, "SEPATU BOT?!", sy=0.22, size=0.09, dur=1.2), F(23.85, "KALENG?!", sy=0.22, size=0.09, dur=1.0), F(39.2, "RANTING?!", sy=0.22, size=0.09, dur=1.0),
@@ -184,36 +189,49 @@ FX = [
  F(46.33, "TARIK!", sx=0.3, sy=0.25, size=0.09, dur=0.5), F(46.99, "TARIK!", sx=0.68, sy=0.28, size=0.1, rot=6, dur=0.5),
  F(47.81, "BYUR!!", sy=0.24, size=0.15, dur=1.0), SH(47.81, 0.06, 0.6), {"type": "burst", "t": 47.81, "sx": 0.5, "sy": 0.55},
  F(53.1, "BASAH KUYUP", sy=0.2, size=0.08, dur=0.9), F(54.4, "MENGGELIAT!", sx=0.5, sy=0.2, size=0.08, dur=1.0),
- F(62.45, "KOSONG!", sy=0.24, size=0.11, dur=0.9), AT(63.4, "z z z", (OYEN_DUDUK[0] - 0.15, 0.45, OYEN_DUDUK[1]), dur=3.0, size=0.05),
+ F(62.45, "KOSONG!", sy=0.24, size=0.12, dur=1.4), AT(64.0, "z z z", (OYEN_DUDUK[0] - 0.15, 0.45, OYEN_DUDUK[1]), dur=3.0, size=0.05),
 ]
 
 # ---------------- KAMERA (shot) ----------------
 def cam(x, y, z, f, h=0.47): return {"x": x, "y": y, "z": z, "f": f, "horizon": h}
+# Bahasa kamera: establishing crane, low-angle "pahlawan" untuk kesombongan, insert pelampung (setinggi air),
+# reveal tangkapan dari bawah, kamera setinggi kucing (mengendap), snap-zoom, close-up tegang, high angle BYUR,
+# kamera setinggi air, reveal ember dari atas lalu pan ke Oyen, crane naik di akhir. Shot berselang-seling Bima vs
+# Pak Hasan untuk ritme komedi (pola: dapat ikan / dapat sampah).
 SHOTS = [
- (0.0, cam(0.85, 1.25, 0.3, 900), cam(0.85, 1.2, 0.9, 930)),       # pembuka: empang, Bima di tepi, Pak Hasan di dermaga
- (4.1, cam(1.9, 1.05, 4.0, 1100), cam(1.85, 1.05, 4.3, 1150)),     # joran mahal Pak Hasan (gulungan berputar)
- (9.75, cam(0.45, 0.85, 2.5, 1100), cam(0.45, 0.85, 2.75, 1150)),  # Bima: bambu + cacing
- (12.65, cam(0.9, 1.2, 0.8, 900), cam(0.9, 1.2, 1.0, 900)),        # LEMPAR! keduanya
- (13.75, cam(0.6, 0.95, 2.0, 950), cam(0.6, 0.95, 2.2, 980)),       # Bima dapat ikan -> ember
- (17.0, cam(2.1, 1.1, 4.0, 950), cam(2.1, 1.1, 4.2, 980)),          # Pak Hasan: sepatu bot
- (19.95, cam(0.6, 0.95, 2.0, 950), cam(0.6, 0.95, 2.2, 980)),       # Bima ikan lagi
- (22.2, cam(2.1, 1.1, 4.0, 950), cam(2.1, 1.1, 4.2, 980)),          # Pak Hasan: kaleng
- (24.65, cam(-0.9, 0.55, 2.0, 1050), cam(-0.75, 0.55, 2.3, 1080)), # Oyen datang diam-diam
- (28.55, cam(-0.8, 0.45, 3.1, 1500), cam(-0.8, 0.45, 3.2, 1550)),  # Si Oyen. Meong.
- (30.4, cam(0.75, 1.25, 1.3, 900), cam(0.75, 1.25, 1.6, 920)),      # kesal + tukar tempat (lebar)
- (36.05, cam(2.1, 1.0, 4.1, 1000), cam(2.1, 1.0, 4.3, 1030)),       # Bima tetap dapat ikan (dermaga)
- (38.15, cam(0.55, 0.95, 2.4, 1050), cam(0.55, 0.95, 2.6, 1080)),   # Pak Hasan: ranting
- (40.1, cam(1.0, 1.05, 2.0, 900), cam(1.0, 1.05, 2.4, 950)),        # joran melengkung! Ini dia!
- (44.35, cam(0.75, 0.95, 2.5, 1100), cam(0.75, 0.95, 2.8, 1250)),   # tarik sekuat tenaga (push-in)
- (47.75, cam(0.9, 1.35, 1.2, 880), cam(0.9, 1.35, 1.3, 900)),       # BYUR!
- (48.7, cam(1.4, 0.55, 2.7, 1200), cam(1.4, 0.55, 2.9, 1250)),      # Pak Hasan di dalam empang
- (51.55, cam(0.3, 0.95, 2.4, 1100), cam(0.3, 0.95, 2.6, 1150)),     # naik, basah kuyup
- (54.2, cam(0.2, 0.98, 2.9, 1350), cam(0.2, 0.98, 3.05, 1450)),     # baju bergerak-gerak, ikan menyembul
- (58.05, cam(0.5, 1.05, 2.3, 1000), cam(0.5, 1.05, 2.45, 1030)),    # "Akhirnya dapat ikan!"
- (60.7, cam(1.75, 0.95, 4.65, 1250), cam(1.75, 0.95, 4.8, 1300)),   # Bima menoleh ke ember
- (62.4, cam(-0.5, 0.65, 2.9, 1250), cam(-0.5, 0.65, 3.0, 1300)),  # ember kosong (Oyen ikut terlihat)
- (63.25, cam(-0.95, 0.5, 2.6, 1100), cam(-0.95, 0.5, 2.75, 1200)), # Oyen tidur perut bulat, di samping ember kosong
- (66.95, cam(0.55, 1.2, 1.1, 900), cam(0.55, 1.2, 1.5, 950)),       # penutup lebar
+ (0.0, cam(2.6, 3.4, -3.2, 760, 0.22), cam(0.9, 1.3, 0.6, 900, 0.47)),     # crane turun: empang Minggu pagi -> dua pemancing
+ (4.1, cam(1.85, 0.42, 4.75, 1050, 0.74), cam(1.85, 0.45, 5.0, 1200, 0.74)), # low angle "pahlawan": joran mahal, push-in
+ (6.8, cam(2.0, 1.2, 4.55, 1300), cam(2.0, 1.2, 4.7, 1450)),                # sombong: "bisa narik ikan paus!"
+ (9.75, cam(0.15, 0.9, 3.05, 1300), cam(0.15, 0.9, 3.15, 1350)),            # Bima: cuma bambu...
+ (11.5, cam(0.85, 1.75, 3.45, 1700, 0.62), cam(0.85, 1.75, 3.5, 1850, 0.62)),# ...dan cacing (insert cacing menggeliat)
+ (12.65, cam(1.0, 1.3, 0.5, 830), cam(1.0, 1.3, 0.7, 850)),                  # LEMPAR! keduanya
+ (13.75, cam(0.85, 0.3, 2.2, 820, 0.5), cam(0.9, 0.3, 2.4, 900, 0.5)),    # pelampung Bima menyelam (Bima & senar terlihat)
+ (14.8, cam(0.35, 0.95, 2.15, 950), cam(0.3, 0.95, 2.3, 980)),              # angkat ikan -> lempar ke ember. Plung!
+ (17.0, cam(3.5, 0.14, 5.5, 1500, 0.5), cam(3.5, 0.14, 5.55, 1650, 0.5)),   # insert pelampung Pak Hasan menyelam
+ (18.6, cam(2.25, 0.9, 4.45, 1000, 0.66), cam(2.25, 0.9, 4.55, 1050, 0.66)),# reveal dari bawah: ...sepatu bot
+ (19.95, cam(0.35, 0.95, 2.15, 950), cam(0.3, 0.95, 2.3, 980)),             # Bima dapat lagi, Plung!
+ (22.2, cam(2.0, 1.2, 4.6, 1350), cam(2.0, 1.2, 4.7, 1450)),                # Pak Hasan tegang menunggu (push-in wajah)
+ (23.7, cam(2.25, 0.9, 4.45, 1000, 0.66), cam(2.25, 0.9, 4.55, 1050, 0.66)),# ...kaleng
+ (24.65, cam(-3.0, 0.3, 1.9, 950, 0.5), cam(-1.2, 0.3, 2.6, 1000, 0.5)),    # kamera setinggi kucing: Oyen mengendap (tracking)
+ (28.55, cam(-0.75, 0.45, 3.05, 1250, 0.5), cam(-0.75, 0.45, 3.15, 1350, 0.5)),# Oyen melirik ember penuh ikan. Meong.
+ (30.4, cam(2.0, 1.15, 4.6, 1500), cam(2.0, 1.15, 4.65, 1600)),             # Pak Hasan kesal (close)
+ (31.6, cam(0.9, 1.2, 1.3, 900), cam(0.55, 1.2, 1.6, 920)),                 # tukar tempat (lebar, pan mengikuti)
+ (36.05, cam(2.1, 1.0, 4.15, 1050), cam(2.1, 1.0, 4.3, 1100)),              # Bima tetap dapat ikan (dermaga)
+ (38.15, cam(0.55, 0.75, 2.75, 1050, 0.66), cam(0.55, 0.75, 2.85, 1100, 0.66)),# reveal dari bawah: ...ranting
+ (40.1, cam(1.0, 1.05, 2.0, 850), cam(0.9, 1.05, 2.25, 1350)),              # snap-zoom: joran melengkung!
+ (42.45, cam(0.2, 1.22, 2.85, 1400), cam(0.2, 1.22, 2.9, 1500)),              # close-up: "Ini dia! Ikan paus!"
+ (44.35, cam(0.9, 0.45, 2.3, 950, 0.7), cam(0.9, 0.45, 2.45, 1000, 0.7)),   # low angle lebar: tarik-menarik
+ (46.3, cam(0.15, 1.25, 2.9, 1500), cam(0.15, 1.25, 2.92, 1600)),           # TARIK! wajah mengejan
+ (46.95, cam(1.75, 1.0, 4.85, 1300), cam(1.75, 1.0, 4.87, 1400)),          # TARIK! Bima melongo
+ (47.75, cam(0.95, 2.7, 1.7, 850, 0.28), cam(0.95, 2.8, 1.6, 830, 0.28)),   # high angle: BYUR!
+ (48.7, cam(1.45, 0.04, 3.35, 1250, 0.5), cam(1.45, 0.04, 3.5, 1350, 0.5)), # kamera setinggi air: Pak Hasan megap-megap
+ (51.55, cam(0.3, 0.95, 2.35, 1100), cam(0.3, 0.95, 2.55, 1150)),           # naik, basah kuyup
+ (54.2, cam(0.18, 0.85, 3.0, 1300), cam(0.18, 0.85, 3.15, 1600)),           # baju menggeliat (push-in ke ekor ikan)
+ (58.05, cam(0.85, 1.1, 1.9, 950), cam(0.85, 1.1, 2.05, 980)),              # "Akhirnya Bapak dapat ikan!" (dua tokoh)
+ (60.7, cam(1.75, 0.95, 4.7, 1350), cam(1.75, 0.95, 4.8, 1450)),            # Bima menoleh...
+ (62.4, cam(-0.45, 0.95, 3.45, 1400, 0.12), cam(-0.85, 0.6, 2.6, 1050, 0.47)),# ember KOSONG (dari atas) -> pan turun ke Oyen
+ (66.85, cam(-0.3, 1.2, 1.0, 850), cam(-1.2, 2.0, -0.6, 800, 0.36)),      # crane naik: Pak Hasan pulang, Oyen terbangun
+ (70.2, cam(-2.6, 0.95, 0.55, 1050), cam(-4.0, 0.95, -0.55, 1050)),       # tracking: ikan menggelepar di kaus, Oyen membuntuti         # crane naik: pulang, Oyen membuntuti
 ]
 CUT = lambda t, c: dict(t=round(t, 2), ease="cut", **c)
 CAMKEYS = []
