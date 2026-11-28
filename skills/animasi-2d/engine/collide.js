@@ -16,6 +16,7 @@ function checkTimeline(LOC, who, tl, opt = {}) {
   const obs = LOC.obstacles || [], out = [], r = opt.radius ?? BODY;
   tl.phases.forEach((ph, i) => {
     if (!ph.to || ph.dist < 0.02) return;
+    if (ph.over && ph.over.intoWater) return; // gerak sengaja masuk ke air (tercebur) -> bukan tembus
     const n = Math.max(2, Math.ceil(ph.dist / 0.05));
     const loose = (spot) => spot && (spot.seat != null || spot.y);
     for (let k = 0; k <= n; k++) {

@@ -529,3 +529,7 @@ Garis 3D yang lewat di belakang kamera dipotong di bidang dekat (`world3d.line3`
 **Arah pandang saat berjalan**: tanpa konteks lain, tokoh yang bergerak menatap ke arah tujuan (otomatis di
 `gazeAt`); dulu melirik tokoh terdekat di belakangnya sehingga terlihat jalan mundur. Saat tokoh menonton/mencari
 sesuatu, set arah hadap (`face=`), `lookY`/`pitch` (menunduk ke ember, sejajar mata ke lawan) secara eksplisit.
+
+**Konvensi `lean` tampak samping/serong**: tokoh menghadap kanan -> lean NEGATIF = condong ke DEPAN, positif = ke belakang
+(lihat klip `run`: lean -7). Lari, melempar, terhuyung, jatuh: negatif. Menarik kuat (badan ke belakang): positif.
+Bila ragu, render cepat `idle_side{face=r;lean=±25}` dulu.

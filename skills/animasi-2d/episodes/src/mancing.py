@@ -44,7 +44,8 @@ class Actor:
     def walk(s, *pts, clip="walk", y_end=None):
         path = [s.pos] + list(pts)
         for a, b in zip(path, path[1:]):
-            dur = math.dist(a, b) / SPEED[s.who]; s.t += dur; s.track.append((s.t, b, s.y))
+            sp = SPEED[s.who] * (2.75 if clip.startswith("run") else 1)
+            dur = math.dist(a, b) / sp; s.t += dur; s.track.append((s.t, b, s.y))
         spec = ">".join(",".join(map(str, p)) for p in path)
         s.ph.append(f"{clip}@{spec}"); s.pos = pts[-1]
     def teleport(s, pos):
@@ -63,32 +64,38 @@ class Actor:
     def spec(s): return f"{s.who}:" + "+".join(s.ph)
 
 # ---------------- PAK HASAN ----------------
+CARRY = "armL=50;elbowL=35;armR=42;elbowR=40"     # berjalan sambil memegang joran tegak di depan badan
 H = Actor("hasan", DERMAGA)
 H.stay(4.18, "fish_wait{face=r}"); H.stay(6.85, "fish_wait{face=r;expr=proud}"); H.stay(9.43, "fish_wait{face=r;expr=smug}")
-H.stay(12.71, "fish_wait{face=r;expr=smug}"); H.stay(13.71, "fish_cast{face=r}"); H.stay(17.6, "fish_wait{face=r}")
-H.stay(18.6, "fish_lift{face=r}"); H.stay(19.9, "fish_wait{face=r;expr=deadpan;armL=60;armR=55}"); H.stay(22.7, "fish_wait{face=r;expr=determined}")
-H.stay(23.7, "fish_lift{face=r}"); H.stay(24.6, "fish_wait{face=r;expr=deadpan;gloom=1}"); H.stay(30.46, "fish_wait{face=r;expr=badmood}")
-H.stay(31.66, "fish_wait{face=r;expr=furious}")
-H.stay(34.65, "fish_wait{face=l;expr=furious}")                     # menoleh ke Bima: "Bima, tukar tempat!"
-SWAP = 34.65                                                         # potongan (whoosh): mereka sudah bertukar tempat
-H.teleport(TEPI)
-H.stay(35.2, "fish_wait{face=r;expr=smug}"); H.stay(36.2, "fish_cast{face=r}"); H.stay(38.9, "fish_wait{face=r;expr=smug}")
+H.stay(12.71, "fish_wait{face=r;expr=smug}"); H.stay(13.71, "fish_cast{face=r}"); H.stay(18.6, "fish_wait{face=r}")
+H.stay(19.6, "fish_lift{face=r}"); H.stay(20.3, "fish_wait{face=r;expr=deadpan;armL=60;armR=55}")
+H.stay(21.3, "fish_cast{face=r}"); H.stay(23.7, "fish_wait{face=r;expr=determined}")
+H.stay(24.7, "fish_lift{face=r}"); H.stay(25.2, "fish_wait{face=r;expr=deadpan;gloom=1}"); H.stay(26.2, "fish_cast{face=r}")
+H.stay(30.46, "fish_wait{face=r;expr=badmood}"); H.stay(30.85, "fish_wait{face=r;expr=furious}")
+# TUKAR TEMPAT (berjalan sungguhan): Pak Hasan turun dari dermaga sambil mengomel, memutar lewat sisi kiri (belakang)
+# sementara Bima menepi di bibir air lalu berlari ke dermaga -> jalur tidak saling menutupi
+H.walk(PANGKAL, (0.3, 6.55), (-0.6, 6.4), (-0.85, 4.85), TEPI, clip=f"walk{{{CARRY};expr=badmood}}")   # 31.66 -> ~36.6
+H.stay(36.75, "fish_wait{face=r;expr=smug}"); H.stay(37.75, "fish_cast{face=r}"); H.stay(38.9, "fish_wait{face=r;expr=smug}")
 H.stay(39.9, "fish_lift{face=r}"); H.stay(40.17, "fish_wait{face=r;expr=deadpan;gloom=1}")
 H.stay(40.9, "fish_wait{face=r;expr=surprised}"); H.stay(44.43, "fish_wait{face=r;expr=excited;lean=-4}")
-H.stay(47.5, "pull_hard{face=r}")
-H.move((0.6, 4.35), 48.0, "fall_in{face=r}")                      # tertarik terhuyung ke bibir air lalu tercebur
+H.stay(47.3, "pull_hard{face=r}")
+# JATUH: terhuyung maju ke bibir air (kincir lengan) -> lompat menyelam -> tenggelam di balik permukaan
+H.move((0.6, 4.34), 47.78, "teeter{face=r}")
+H.move((1.15, 4.36), 48.33, "fall_in{face=r;intoWater=1}")   # melayang ke atas air lalu tenggelam
 H.stay(48.75, "idle{hide=1}")
 HASAN_OUT_OF_WATER = 51.63
 
 # ---------------- BIMA ----------------
 B = Actor("bima", TEPI)
 B.stay(9.83, "fish_wait{face=r}"); B.stay(12.71, "fish_wait{face=r;expr=sheepish;lookX=0.2;pitch=0}"); B.stay(13.71, "fish_cast{face=r}")
-B.stay(13.82, "fish_wait{face=r}"); B.stay(14.82, "fish_lift{face=r}"); B.stay(17.13, "fish_wait{face=r;expr=happy}")
-B.stay(19.99, "fish_wait{face=r;expr=smile}"); B.stay(20.99, "fish_lift{face=r}"); B.stay(24.7, "fish_wait{face=r;expr=happy}")
-B.stay(31.66, "fish_wait{face=r}"); B.stay(34.65, "fish_wait{face=r;expr=surprised}")
-B.teleport(DERMAGA)
-B.stay(35.0, "fish_wait{face=r;expr=happy}"); B.stay(36.0, "fish_cast{face=r}"); B.stay(36.9, "fish_wait{face=r}")
-B.stay(37.9, "fish_lift{face=r}"); B.stay(40.17, "fish_wait{face=r;expr=happy}")
+B.stay(14.82, "fish_wait{face=r}"); B.stay(15.82, "fish_lift{face=r}"); B.stay(16.5, "fish_wait{face=r;expr=happy}"); B.stay(17.5, "fish_cast{face=r}")
+B.stay(20.99, "fish_wait{face=r;expr=smile}"); B.stay(21.99, "fish_lift{face=r}"); B.stay(22.4, "fish_wait{face=r;expr=happy}"); B.stay(23.4, "fish_cast{face=r}")
+B.stay(32.0, "fish_wait{face=r;expr=happy}"); B.stay(34.2, "fish_wait{face=l;expr=surprised}")   # menonton Pak Hasan memutar lewat belakang
+# TUKAR TEMPAT: setelah Pak Hasan lewat di sisi kiri, Bima berlari riang menyusuri bibir air ke dermaga
+B.walk((0.4, 5.2), (0.5, 6.3), DERMAGA, clip=f"run{{{CARRY};expr=happy}}")
+B.stay(35.8, "fish_wait{face=r;expr=happy}"); B.stay(36.8, "fish_cast{face=r}")
+B.stay(37.1, "fish_wait{face=r}"); B.stay(38.1, "fish_lift{face=r}")
+B.stay(40.17, "fish_wait{face=r;expr=happy}")
 # 40,6: Bima menaruh joran di dermaga (senar tetap di air) lalu BERBALIK MENGHADAP KAMERA untuk menonton & bereaksi
 B.stay(40.6, "fish_wait{face=r;expr=happy}"); B.stay(44.43, "idle{expr=surprised}")
 B.stay(47.81, "cheer{expr=excited}")                                   # menyemangati: "Tarik! Tarik!"
@@ -140,23 +147,25 @@ def rod_keys(actor, plan, style):
     return keys
 
 # (t, sudut, lengkung, tangkapan, arah). tangkapan: None = senar di air + pelampung; "worm" = cacing tergantung
-HASAN_ROD = [(0, 72, 0, "worm", "r"), (12.71, 72, 0, "worm", "r"), (13.0, 112, 0, "worm", "r"), (13.22, 28, 0, None, "r"), (13.5, 30, 0, None, "r"),
-  (18.6, 30, 0.2, None, "r"), (18.8, 62, 0.1, "boot", "r"), (19.9, 62, 0.05, "boot", "r"), (20.0, 30, 0, None, "r"),
-  (23.7, 30, 0.2, None, "r"), (23.9, 62, 0.1, "can", "r"), (24.6, 62, 0.05, "can", "r"), (24.7, 30, 0, None, "r"),
-  (31.66, 30, 0, None, "r"), (32.0, 75, 0, "worm", "r"), (32.1, 75, 0, "worm", "l"), (34.65, 72, 0, "worm", "r"),
-  (35.2, 72, 0, "worm", "r"), (35.5, 112, 0, "worm", "r"), (35.72, 28, 0, None, "r"), (36.0, 30, 0, None, "r"),
-  (38.9, 30, 0.2, None, "r"), (39.05, 62, 0.1, "branch", "r"), (40.05, 62, 0.05, "branch", "r"), (40.12, 30, 0, None, "r"),
-  (40.4, 30, 0.75, None, "r"), (44.43, 55, 0.85, None, "r"), (47.5, 60, 0.95, None, "r"), (47.8, 10, 0.95, None, "r"), (48.0, "hide", 0, "hide", "r")]
-BIMA_ROD = [(0, 70, 0, "worm", "r"), (12.71, 70, 0, "worm", "r"), (13.0, 112, 0, "worm", "r"), (13.22, 26, 0, None, "r"), (13.5, 28, 0, None, "r"),
-  (14.82, 28, 0.2, None, "r"), (15.0, 58, 0.1, "fish", "r"), (15.45, 58, 0.05, "fish", "r"), (15.5, 58, 0, "worm", "r"), (16.6, 58, 0, "worm", "r"), (16.8, 105, 0, "worm", "r"), (17.0, 26, 0, None, "r"), (17.3, 28, 0, None, "r"),
-  (20.99, 28, 0.2, None, "r"), (21.15, 58, 0.1, "fish", "r"), (21.45, 58, 0.05, "fish", "r"), (21.5, 58, 0, "worm", "r"), (22.3, 58, 0, "worm", "r"), (22.5, 105, 0, "worm", "r"), (22.7, 26, 0, None, "r"), (23.0, 28, 0, None, "r"),
-  (31.66, 28, 0, None, "r"), (32.0, 70, 0, "worm", "r"), (34.65, 70, 0, "worm", "r"),
-  (35.0, 70, 0, "worm", "r"), (35.3, 112, 0, "worm", "r"), (35.52, 26, 0, None, "r"), (35.8, 28, 0, None, "r"),
-  (37.0, 28, 0.2, None, "r"), (37.15, 58, 0.1, "fish", "r"), (37.6, 58, 0.05, "fish", "r"), (37.65, 58, 0, "worm", "r"), (38.4, 58, 0, "worm", "r"), (38.6, 105, 0, "worm", "r"), (38.8, 26, 0, None, "r"), (39.1, 28, 0, None, "r"),
-  (40.6, "hide", 0, "hide", "r")]  # joran ditaruh di dermaga (lihat ROD_B_LAID)
+def CAST(t0, f="r", frm=72):
+    """lempar: ancang-ancang ke belakang (125°, ujung tertinggal) -> ayun cepat (26°, joran melecut) -> tenang (30°)"""
+    return [(t0, frm, 0, "worm", f), (t0 + 0.33, 125, 0.18, "worm", f), (t0 + 0.5, 26, 0.38, None, f), (t0 + 0.8, 30, 0, None, f)]
+def LIFT(t0, item, f="r"):
+    return [(t0, 30, 0.25, None, f), (t0 + 0.18, 62, 0.12, item, f)]
+HASAN_ROD = ([(0, 72, 0, "worm", "r")] + CAST(12.71) + LIFT(18.6, "boot") + [(19.55, 62, 0.05, "boot", "r"), (19.6, 72, 0, "worm", "r")] + CAST(20.3)
+  + LIFT(23.7, "can") + [(24.65, 62, 0.05, "can", "r"), (24.7, 72, 0, "worm", "r")] + CAST(25.2)
+  + [(30.5, 30, 0, None, "r"), (30.85, 78, 0, "worm", "l"), (36.6, 78, 0, "worm", "l"), (36.75, 72, 0, "worm", "r")] + CAST(36.75)
+  + LIFT(38.9, "branch") + [(40.05, 62, 0.05, "branch", "r"), (40.12, 30, 0, None, "r"),
+  (40.4, 30, 0.75, None, "r"), (44.43, 55, 0.85, None, "r"), (47.3, 58, 0.95, None, "r"), (47.75, 8, 0.95, None, "r"), (47.95, "hide", 0, "hide", "r")])
+BIMA_ROD = ([(0, 70, 0, "worm", "r")] + CAST(12.71, frm=70) + LIFT(14.82, "fish") + [(15.45, 62, 0.05, "fish", "r"), (15.5, 70, 0, "worm", "r")] + CAST(16.5, frm=70)
+  + LIFT(20.99, "fish") + [(21.45, 62, 0.05, "fish", "r"), (21.5, 70, 0, "worm", "r")] + CAST(22.4, frm=70)
+  + [(32.3, 30, 0, None, "r"), (32.6, 78, 0, "worm", "l"), (34.2, 78, 0, "worm", "r"), (35.8, 72, 0, "worm", "r")] + CAST(35.8, frm=72)
+  + LIFT(37.1, "fish") + [(37.75, 62, 0.05, "fish", "r"), (37.8, 70, 0, "worm", "r")] + CAST(38.1, frm=70) + [(40.6, "hide", 0, "hide", "r")])
 ROD_H = {"type": "rod", "style": "mahal", "waterY": WY, "keys": rod_keys(H, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in HASAN_ROD], "mahal"),
-         "bites": [[17.2, 18.5], [22.4, 23.6], [38.3, 38.9]], "casts": [[13.12, 0.45], [35.62, 0.45], [40.08, 0.25]], "reeling": [[31.7, 32.0], [44.4, 47.8]]}
-ROD_B = {"type": "rod", "style": "bambu", "waterY": WY, "keys": rod_keys(B, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in BIMA_ROD], "bambu"), "bites": [[13.9, 14.8], [20.1, 20.95], [36.4, 37.0]], "casts": [[13.12, 0.45], [16.92, 0.4], [22.62, 0.4], [35.42, 0.45], [38.72, 0.4]]}
+         "bites": [[17.2, 18.5], [22.4, 23.6], [38.3, 38.9]], "casts": [[13.21, 0.45], [20.8, 0.45], [25.7, 0.45], [37.25, 0.45], [40.08, 0.25]],
+         "swings": [12.71, 20.3, 25.2, 36.75], "reeling": [[30.5, 30.85], [44.4, 47.3]]}
+ROD_B = {"type": "rod", "style": "bambu", "waterY": WY, "keys": rod_keys(B, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in BIMA_ROD], "bambu"), "bites": [[13.9, 14.8], [20.1, 20.95], [36.7, 37.1]], "casts": [[13.21, 0.45], [17.0, 0.45], [22.9, 0.45], [36.3, 0.45], [38.6, 0.45]],
+         "swings": [12.71, 16.5, 22.4, 35.8, 38.1]}
 # joran Pak Hasan setelah tercebur: mengapung di air
 ROD_B_LAID = {"type": "rod", "style": "bambu", "waterY": WY, "keys": [[0, 0, 0, 0, 0, 0, 0, "hide"], [40.55, 0, 0, 0, 0, 0, 0, "hide"],
   [40.6, 1.55, DECK + 0.05, 6.45, 4, 1.55, 0, None]], "bites": []}   # joran bambu Bima tergeletak di dermaga, senar ke air
@@ -175,13 +184,13 @@ def fish_to_ember(t0, t1, src):
     return {"type": "prop", "kind": "fish", "hold": "none", "keys": [[t0, *src, 80], [t1, EMBER[0], 0.3, EMBER[1] - 0.01, 200, 0.3], [t1 + 0.05, EMBER[0], 0.3, EMBER[1], 200, 0, "hide"]]}
 def drop_to(kind, t0, src, dst, rot=0):
     return {"type": "prop", "kind": kind, "hold": "end", "keys": [[t0 - 0.01, *src, rot, 0, "hide"], [t0, *src, rot], [t0 + 0.4, *dst, rot + 70, -1]]}
-BOOT_AT = tip(ROD_H["keys"], 19.85); CAN_AT = tip(ROD_H["keys"], 24.55); BRANCH_AT = tip(ROD_H["keys"], 40.05)
+BOOT_AT = tip(ROD_H["keys"], 19.5); CAN_AT = tip(ROD_H["keys"], 24.6); BRANCH_AT = tip(ROD_H["keys"], 40.05)
 FX = [
- {"type": "ember", "x": EMBER[0], "z": EMBER[1], "fills": [[0, 0], [16.3, 1], [21.8, 2], [38.4, 3], [49.0, 0]]},
+ {"type": "ember", "x": EMBER[0], "z": EMBER[1], "fills": [[0, 0], [16.3, 1], [21.8, 2], [38.5, 3], [49.0, 0]]},
  ROD_H, ROD_B, ROD_B_LAID, ROD_FLOAT,
- fish_to_ember(15.5, 16.3, tip(ROD_B["keys"], 15.45)), fish_to_ember(21.5, 21.8, tip(ROD_B["keys"], 21.45)),
- fish_to_ember(37.65, 38.4, tip(ROD_B["keys"], 37.6)),
- drop_to("boot", 19.9, BOOT_AT, (1.2, DECK + 0.02, 5.92)), drop_to("can", 24.6, CAN_AT, (1.0, DECK + 0.02, 6.58)),
+ fish_to_ember(15.5, 16.3, tip(ROD_B["keys"], 15.4)), fish_to_ember(21.5, 21.8, tip(ROD_B["keys"], 21.45)),
+ fish_to_ember(37.8, 38.5, tip(ROD_B["keys"], 37.7)),
+ drop_to("boot", 19.55, BOOT_AT, (1.2, DECK + 0.02, 5.92)), drop_to("can", 24.65, CAN_AT, (1.0, DECK + 0.02, 6.58)),
  drop_to("branch", 40.1, BRANCH_AT, (-0.35, 0.02, 3.55)),
  # Oyen: datang diam-diam, duduk di samping ember, (makan ikan saat semua menonton BYUR), tidur kekenyangan
  {"type": "prop", "kind": "cat", "hold": "end", **OYEN, "fatAt": 49.5, "keys": [[0, -3.6, 0, 4.9, 0, 0, "hide"], [24.6, -3.6, 0, 4.9, 0, 0, "hide"],
@@ -191,19 +200,19 @@ FX = [
    + [[round(69.2 + k * 0.3, 2), round(H.at(69.2 + k * 0.3 - 1.4)[0] + 0.35, 3), 0, round(H.at(69.2 + k * 0.3 - 1.4)[1] - 0.05, 3), 0, 0, "walk"] for k in range(int((END - 69.2) / 0.3) + 1)]},
  AT(68.5, "!", (OYEN_DUDUK[0] - 0.1, 0.5, OYEN_DUDUK[1]), dur=0.7, size=0.06), AT(69.0, "~ bau ikan ~", (OYEN_DUDUK[0], 0.6, OYEN_DUDUK[1]), dur=1.5, size=0.045),
  # tercebur: cipratan besar + tokoh di air (permukaan menutup badan) + tetesan saat naik
- {"type": "splash", "t": 47.98, "x": 1.1, "y": WY, "z": 4.5, "n": 40, "size": 2.2, "color": "#7fc3e0"},
- {"type": "splash", "t": 48.15, "x": 1.35, "y": WY, "z": 4.6, "n": 24, "size": 1.6, "color": "#a8d8ec"},
- {"type": "waterfront", "t0": 48.7, "t1": HASAN_OUT_OF_WATER, "x0": AIR[0] - 0.8, "x1": AIR[0] + 0.8, "z": AIR[1] - 0.12, "cx": AIR[0], "cz": AIR[1], "y": WY},
+ {"type": "splash", "t": 48.05, "x": 1.05, "y": WY, "z": 4.5, "n": 26, "size": 1.2, "color": "#7fc3e0"},
+ {"type": "splash", "t": 48.2, "x": 1.2, "y": WY, "z": 4.6, "n": 16, "size": 0.9, "color": "#a8d8ec"},
+ {"type": "waterfront", "t0": 47.98, "t1": 48.75, "x0": 0.8, "x1": 2.6, "z": 4.22, "cx": 1.1, "cz": 4.4, "y": WY, "depth": 1.6, "color": "#5da3bd"},
+ {"type": "waterfront", "t0": 48.7, "t1": HASAN_OUT_OF_WATER, "x0": AIR[0] - 0.8, "x1": AIR[0] + 0.8, "z": AIR[1] - 0.12, "cx": AIR[0], "cz": AIR[1], "y": WY, "depth": 0.8, "color": "#5da3bd"},
  {"type": "drip", "t0": HASAN_OUT_OF_WATER, "t1": 66.8, "x": TEPI[0], "y": 1.1, "z": TEPI[1] - 0.05, "n": 9},
  # ikan di dalam baju: ekor menyembul dari bawah kaus, menggelepar kiri-kanan; ikut berjalan bersama Pak Hasan
  {"type": "prop", "kind": "fish", "hold": "end", "color": "#e0913a", "bias": -0.6, "keys": [[0, TEPI[0], 0.55, TEPI[1] - 0.12, 90, 0, "hide"], [54.25, TEPI[0], 0.55, TEPI[1] - 0.12, 90, 0, "hide"]]
    + [[round(54.3 + k * 0.25, 2), round(H.at(54.3 + k * 0.25)[0] + (0.06 if k % 2 else -0.06), 3), 0.55, round(H.at(54.3 + k * 0.25)[1] - 0.12, 3), 90 + (25 if k % 2 else -25)]
       for k in range(int((END - 54.3) / 0.25) + 1)]},
  F(12.75, "LEMPAR!", sy=0.24, size=0.1, dur=0.7), AT(16.34, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06),
- AT(21.48, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06), AT(38.4, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06),
+ AT(21.48, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06), AT(38.5, "PLUNG!", (EMBER[0], 0.55, EMBER[1]), dur=0.6, size=0.06),
  F(18.8, "SEPATU BOT?!", sy=0.22, size=0.09, dur=1.2), F(23.85, "KALENG?!", sy=0.22, size=0.09, dur=1.0), F(39.1, "RANTING?!", sy=0.22, size=0.09, dur=1.0),
  F(29.73, "MEONG~", sx=0.6, sy=0.3, size=0.08, rot=6, dur=0.8),
- F(34.68, "TUKAR!", sy=0.24, size=0.11, dur=0.8), SH(34.66, 0.02, 0.25),
  F(40.4, "!!", sx=0.55, sy=0.2, size=0.13, dur=0.8), SH(40.4, 0.02, 0.3),
  F(46.33, "TARIK!", sx=0.3, sy=0.25, size=0.09, dur=0.5), F(46.99, "TARIK!", sx=0.68, sy=0.28, size=0.1, rot=6, dur=0.5),
  F(47.81, "BYUR!!", sy=0.24, size=0.15, dur=1.0), SH(47.81, 0.06, 0.6), {"type": "burst", "t": 47.81, "sx": 0.5, "sy": 0.55},
@@ -233,17 +242,16 @@ SHOTS = [
  (23.7, cam(2.25, 0.9, 4.45, 1000, 0.66), cam(2.25, 0.9, 4.55, 1050, 0.66)),# ...kaleng
  (24.65, cam(-3.3, 0.32, 2.85, 900, 0.5), cam(-1.0, 0.32, 2.75, 900, 0.5)),    # kamera setinggi kucing: Oyen mengendap (tracking)
  (28.55, cam(-0.75, 0.45, 3.05, 1250, 0.5), cam(-0.75, 0.45, 3.15, 1350, 0.5)),# Oyen melirik ember penuh ikan. Meong.
- (30.4, cam(2.0, 1.15, 4.6, 1500), cam(2.0, 1.15, 4.65, 1600)),             # Pak Hasan kesal (close)
- (31.6, cam(0.95, 1.15, 1.6, 880), cam(0.95, 1.15, 1.85, 900)),             # "Bima, tukar tempat!" (dua tokoh)
- (34.65, cam(0.95, 1.2, 1.4, 860), cam(0.95, 1.2, 1.7, 880)),               # potong (whoosh): sudah bertukar
- (36.8, cam(2.55, 1.25, 3.75, 850), cam(2.55, 1.25, 3.9, 880)),              # Bima tetap dapat ikan (dermaga)
- (38.8, cam(0.55, 0.75, 2.75, 1050, 0.66), cam(0.55, 0.75, 2.85, 1100, 0.66)),# reveal dari bawah: ...ranting
+ (30.4, cam(2.0, 1.15, 4.6, 1500), cam(1.25, 1.3, 3.4, 900)),             # Pak Hasan kesal (close)
+ (31.6, cam(1.1, 2.3, 0.9, 800, 0.3), cam(0.7, 2.3, 1.1, 780, 0.3)),              # "Bima, tukar tempat!" -> berjalan bertukar (pan mengikuti)
+ (36.05, cam(2.55, 1.25, 3.75, 850), cam(2.55, 1.25, 3.9, 880)),              # Bima tetap dapat ikan (dermaga)
+ (38.85, cam(0.55, 0.75, 2.75, 1050, 0.66), cam(0.55, 0.75, 2.85, 1100, 0.66)),# reveal dari bawah: ...ranting
  (40.1, cam(1.0, 1.05, 2.0, 850), cam(0.9, 1.05, 2.25, 1350)),              # snap-zoom: joran melengkung!
  (42.45, cam(0.2, 1.22, 2.85, 1400), cam(0.2, 1.22, 2.9, 1500)),              # close-up: "Ini dia! Ikan paus!"
  (44.35, cam(0.9, 0.45, 2.3, 950, 0.7), cam(0.9, 0.45, 2.45, 1000, 0.7)),   # low angle lebar: tarik-menarik
  (46.3, cam(0.15, 1.25, 2.9, 1500), cam(0.15, 1.25, 2.92, 1600)),           # TARIK! wajah mengejan
  (46.95, cam(1.75, 1.0, 4.85, 1300), cam(1.75, 1.0, 4.87, 1400)),          # TARIK! Bima melongo
- (47.45, cam(0.55, 1.1, 1.7, 880), cam(0.6, 1.3, 1.45, 850)),   # high angle: BYUR!
+ (47.3, cam(0.75, 1.1, 1.9, 900), cam(0.95, 1.25, 1.6, 860)),               # terhuyung -> menyelam -> BYUR   # high angle: BYUR!
  (48.7, cam(1.45, 0.04, 3.35, 1250, 0.5), cam(1.45, 0.04, 3.5, 1350, 0.5)), # kamera setinggi air: Pak Hasan megap-megap
  (51.55, cam(0.3, 0.95, 2.35, 1100), cam(0.3, 0.95, 2.55, 1150)),           # naik, basah kuyup
  (54.2, cam(0.18, 0.85, 3.0, 1300), cam(0.18, 0.85, 3.15, 1600)),           # baju menggeliat (push-in ke ekor ikan)
@@ -273,7 +281,7 @@ ep = {"title": "Mancing Bareng Pak Hasan", "format": "portrait", "hd": True, "ca
       "keywords": ["JORAN", "PAUS", "IKAN", "PLUNG", "SEPATU", "BOT", "KALENG", "OYEN", "MEONG", "RANTING", "TARIK", "BYUR", "KOSONG", "BAJUNYA", "BULAT"],
       "music": {"style": "kocak", "tense_until": 0, "bpm": 112},
       "sfx": [{"t": 13.25, "type": "whoosh"}, {"t": 16.34, "type": "pop"}, {"t": 18.8, "type": "wahwah"}, {"t": 21.48, "type": "pop"}, {"t": 23.85, "type": "wahwah"},
-              {"t": 29.73, "type": "pop"}, {"t": 34.65, "type": "whoosh"}, {"t": 39.1, "type": "wahwah"}, {"t": 38.4, "type": "pop"}, {"t": 40.4, "type": "dundun"}, {"t": 47.81, "type": "thud"},
+              {"t": 29.73, "type": "pop"}, {"t": 39.1, "type": "wahwah"}, {"t": 38.5, "type": "pop"}, {"t": 40.4, "type": "dundun"}, {"t": 47.81, "type": "thud"},
               {"t": 47.85, "type": "rustle"}, {"t": 54.3, "type": "boing"}, {"t": 62.45, "type": "wahwah"}],
       "positions": {"hasan": list(TEPI), "bima": list(DERMAGA)},
       "scenes": [{"judul": "Empang: mancing bareng Pak Hasan", "loc": "empang", "seconds": END,

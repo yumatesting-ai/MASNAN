@@ -100,7 +100,7 @@
       const s = wave(t, 0.6);
       const ph = TAU * t / 0.6, knee = (q, c) => 12 + 35 * Math.max(0, -q) + 60 * Math.max(0, c);
       return { expr: "nervous", legL: 36 * s, legR: -36 * s, kneeL: knee(s, Math.cos(ph)), kneeR: knee(-s, -Math.cos(ph)), lookX: 1.9, lookY: 0.2,
-        armL: -45 * s, armR: 45 * s, elbowL: 80, elbowR: 80, lean: 9,
+        armL: -45 * s, armR: 45 * s, elbowL: 80, elbowR: 80, lean: -9,
         bodyY: -6 * Math.abs(Math.cos(TAU * t / 0.6)), hairSway: -3.5 + 0.8 * wave(t, 0.3) };
     } },
     jump: { duration: 1.6, view: "front", pose: (t) => {
@@ -360,7 +360,7 @@
       const knee = (s, c) => 12 + 40 * Math.max(0, -s) + 70 * Math.max(0, c);
       return { expr: "nervous", mouth: "shout", eyes: "wide", sweat: true,
         legL: 40 * sv, legR: -40 * sv, kneeL: knee(sv, Math.cos(ph)), kneeR: knee(-sv, -Math.cos(ph)), lookX: 1.9, lookY: 0.2, // mata menatap ke depan (arah lari), bukan ke kamera
-        armL: -55 * sv, armR: 55 * sv, elbowL: 95, elbowR: 95, lean: 12, bodyY: -10 * air, squash: 0.07 * land,
+        armL: -55 * sv, armR: 55 * sv, elbowL: 95, elbowR: 95, lean: -12, bodyY: -10 * air, squash: 0.07 * land,
         headTilt: 4 + 2 * Math.cos(ph * 2), headY: 1.5 * land, hairSway: -6 + 1.2 * Math.cos(ph * 2), fx: t / 0.23 };
     } },
     run_panic_three: { duration: 0.46, view: "three", pose: (t) => {
@@ -455,23 +455,40 @@
     // ---------- MEMANCING (tampak samping, menghadap air; joran digambar fx "rod" dari tangan) ----------
     // menunggu: dua tangan memegang pangkal joran di depan perut, badan sedikit condong, mata ke pelampung
     fish_wait: { duration: 3, view: "side", smooth: 0.02, pose: (t) => ({ ...life(t, 3), armL: 50, elbowL: 35, armR: 42, elbowR: 40,
-      lean: 4, pitch: 0.35, lookX: 1.4, lookY: 0.6, legL: 4, legR: -4, blink: blinkAt(t, [1.4]) }) },
+      lean: -4, pitch: 0.35, lookX: 1.4, lookY: 0.6, legL: 4, legR: -4, blink: blinkAt(t, [1.4]) }) },
     // melempar kail: tarik joran ke belakang atas (antisipasi) -> ayun ke depan -> follow-through
-    fish_cast: { once: true, duration: 1.0, view: "side", smooth: 0.008, pose: (t) => {
-      const sw = kf(t, [[0, 0], [0.3, -1, "out"], [0.5, 1.1, "in"], [0.7, 0.9, "out"], [1.0, 0, "io"]]);
-      return { ...life(t, 1), armL: 60 + 70 * Math.max(0, -sw) - 10 * Math.max(0, sw), elbowL: 30, armR: 50 + 70 * Math.max(0, -sw), elbowR: 35,
-        lean: 4 + 8 * Math.max(0, sw) - 6 * Math.max(0, -sw), legL: 10 * Math.max(0, sw), legR: -8, expr: "determined", lookX: 1.4, pitch: 0.1 }; } },
+    // MELEMPAR KAIL (1 dtk): ancang-ancang (joran diangkat tinggi ke belakang, badan condong ke belakang, kaki depan
+    // terangkat, menoleh ke ujung joran) -> AYUN eksplosif (melangkah maju, badan condong ke depan, squash) ->
+    // follow-through (lengan tetap terjulur, mata mengikuti kail yang melayang ke air, wajah penuh harap)
+    fish_cast: { once: true, duration: 1.0, view: "side", smooth: 0.006, pose: (t) => {
+      const wind = kf(t, [[0, 0], [0.32, 1, "out"], [0.4, 1], [0.5, 0, "in"], [1, 0]]);
+      const thr = kf(t, [[0, 0], [0.38, 0], [0.5, 1, "out"], [0.75, 0.85, "io"], [1, 0.55, "io"]]);
+      return { ...life(t, 1), armL: 50 + 95 * wind - 5 * thr, elbowL: 35 - 25 * wind, armR: 42 + 95 * wind - 2 * thr, elbowR: 40 - 25 * wind,
+        lean: 9 * wind - 14 * thr, legL: -14 * wind + 24 * thr, legR: 6 * wind - 10 * thr, bodyY: -3 * wind + 2 * thr,
+        squash: 0.07 * Math.max(0, thr - 0.6) * 2.5, headTilt: -5 * wind + 3 * thr,
+        lookX: wind > 0.5 ? -0.8 : 1.5, lookY: wind > 0.5 ? -0.6 : 0.3 * thr, pitch: -0.35 * wind + 0.25 * thr,
+        expr: wind > 0.5 ? "determined" : thr > 0.3 ? "hopeful" : "determined", mouth: t > 0.38 && t < 0.56 ? "shout" : undefined }; } },
     // ikan menyambar: sentak joran ke atas, badan ke belakang, wajah gembira
     fish_lift: { once: true, duration: 1.0, view: "side", smooth: 0.01, pose: (t) => {
       const up = kf(t, [[0, 0], [0.25, 1, "out"], [1.0, 0.85]]);
-      return { ...life(t, 1), armL: 50 + 55 * up, elbowL: 35 - 20 * up, armR: 42 + 55 * up, elbowR: 40 - 20 * up, lean: 4 - 12 * up, legL: 10 * up, legR: -10 * up,
+      return { ...life(t, 1), armL: 50 + 55 * up, elbowL: 35 - 20 * up, armR: 42 + 55 * up, elbowR: 40 - 20 * up, lean: -4 + 12 * up, legL: 10 * up, legR: -10 * up,
         expr: up > 0.5 ? "excited" : "surprised", lookX: 1.2, lookY: -0.6 * up, pitch: -0.3 * up }; } },
     // tarik sekuat tenaga: badan condong jauh ke belakang, kaki menahan, gemetar, wajah mengejan
-    pull_hard: { duration: 0.6, view: "side", pose: (t) => ({ armL: 70, elbowL: 10, armR: 62, elbowR: 12, lean: -16, legL: 26, legR: -14,
+    pull_hard: { duration: 0.6, view: "side", pose: (t) => ({ armL: 70, elbowL: 10, armR: 62, elbowR: 12, lean: 16, legL: 26, legR: -14,
       bodyX: 1.6 * Math.sin(t * 60), bodyY: 1.5, squash: 0.05, expr: "effort", mouth: "teeth", sweat: true, lookX: 1.4, fx: t / 0.3 }) },
     // tertarik ke air: badan terhuyung ke depan, tangan menggapai ke depan (dipadukan dengan gerak maju & hide)
-    fall_in: { once: true, duration: 0.5, view: "side", smooth: 0.005, pose: (t) => ({ armL: 120, elbowL: 0, armR: 110, elbowR: 0, lean: 25 + 40 * t, legL: -30, legR: 20,
-      expr: "shocked", mouth: "shout", eyes: "wide", lookX: 1.5, bodyY: -6 * Math.sin(Math.PI * t) }) },
+    // TERHUYUNG di bibir empang (ditarik ikan): satu kaki terangkat, lengan berputar seperti kincir, badan condong ke air
+    teeter: { duration: 0.5, view: "side", smooth: 0.004, pose: (t) => {
+      const w = TAU * t / 0.25;
+      return { armL: 120 + 70 * Math.sin(w), armR: 120 - 70 * Math.sin(w + 0.8), elbowL: 0, elbowR: 0, lean: -22 - 6 * Math.sin(w * 0.5),
+        legL: 45, legR: -6, bodyX: 3 * Math.sin(w), bodyY: -2, expr: "shocked", eyes: "wide", mouth: "shout", sweat: true, lookX: 1.4, lookY: 0.8, fx: t / 0.25 }; } },
+    // JATUH ke air: lompatan kecil ke depan (melengkung), badan berputar menyelam (lean ~80°), lalu tenggelam di balik
+    // permukaan air (bodyY besar; fx "waterfront" menutup bagian di bawah air), kaki terangkat ke belakang
+    fall_in: { once: true, duration: 0.55, view: "side", smooth: 0.003, pose: (t) => {
+      const u = t / 0.55, arc = Math.sin(Math.PI * Math.min(1, u * 1.6));
+      return { armL: 150, elbowL: 0, armR: 140, elbowR: 0, lean: -30 - 55 * Math.min(1, u * 1.4), legL: -40 - 20 * u, legR: -10 - 30 * u,
+        bodyX: 10 * u, bodyY: -26 * arc + (u > 0.55 ? 340 * Math.pow((u - 0.55) / 0.45, 1.6) : 0), squash: -0.05,
+        expr: "shocked", mouth: "shout", eyes: "wide", lookX: 1.5, lookY: 1 }; } },
     // timbul di air (hanya kepala & bahu di atas permukaan): megap-megap, tangan menepuk air
     in_water: { duration: 1.2, view: "front", pose: (t) => ({ armL: 100 + 30 * Math.sin(t * 10), armR: 100 - 30 * Math.sin(t * 10), elbowL: -10, elbowR: -10,
       bodyY: 2 * Math.sin(t * 5), expr: "shocked", mouth: "shout", eyes: "wide", sweat: false }) },

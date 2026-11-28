@@ -226,6 +226,12 @@ function draw(w, list, t) {
             <circle cx="${R * 0.85 * Math.cos(a)}" cy="${R * 0.85 * Math.sin(a)}" r="${R * 0.18}" fill="#2a2a2a"/>
             <path d="M${-R * 0.55},${-R * 0.55} A${R * 0.78},${R * 0.78} 0 0 1 ${R * 0.2},${-R * 0.76}" fill="none" stroke="#ffffff" stroke-width="${sw * 0.8}" opacity="0.8"/></g>`; }, { y: rp[1], bias: RB - 0.006 });
       } else for (let k = 2; k < 10; k += 2) { const q = pts[k + 1], m = pts[k].map((v, j) => v + (q[j] - v) * 0.12); w.line3([pts[k], m], "#7d5a2a", null, { bias: RB - 0.002, swk: 3.6 - k * 0.2 }); } // ruas bambu
+      // garis gerak (speed lines) saat joran diayun cepat ke depan
+      for (const sw0 of e.swings || []) if (t >= sw0 + 0.32 && t < sw0 + 0.62) {
+        const k = (t - sw0 - 0.32) / 0.3, a1 = Math.max(26, 125 - 99 * Math.min(1, k * 1.4) + 30), arcP = [];
+        for (let A = a1; A <= Math.min(130, a1 + 55); A += 6) { const r = (A * Math.PI) / 180; arcP.push([bx + dir * Math.cos(r) * len * 1.04, by + Math.sin(r) * len * 1.04, BZ]); }
+        if (arcP.length > 1) for (const [f, sc] of [[1.04, 1], [0.9, 0.7], [0.76, 0.5]]) w.line3(arcP.map((q) => [bx + (q[0] - bx) * f / 1.04, by + (q[1] - by) * f / 1.04, BZ]), "#ffffff", null, { bias: RB + 0.01, swk: 1.6 * sc, extra: `opacity="${(0.85 * (1 - k)).toFixed(2)}"` });
+      }
       const sway = Math.sin(t * 7) * 0.04;
       // titik jatuh kail/pelampung di air (di depan ujung joran) + animasi LEMPAR (kail melayang melengkung dari ujung
       // joran ke air, lalu riak melingkar) dan ANGKAT (tangkapan keluar dari air menuju ujung joran + cipratan)
