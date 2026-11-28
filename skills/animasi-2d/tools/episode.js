@@ -154,6 +154,9 @@ function shortsEvents(c) {
   });
   return out;
 }
+// subtitle Shorts tidak boleh bertumpuk: tiap baris berakhir sebelum baris berikutnya mulai
+if (SHORTS) { const sc = cues.filter((c) => c.style === "Dialog" || c.style === "Narasi" || c.style === "NarasiAtas").sort((x, y) => x.a - y.a);
+  for (let i = 0; i + 1 < sc.length; i++) if (sc[i].b > sc[i + 1].a - 0.03) sc[i].b = Math.max(sc[i].a + 0.2, sc[i + 1].a - 0.03); }
 for (const c of cues) if (SHORTS && (c.style === "Dialog" || c.style === "Narasi" || c.style === "NarasiAtas")) ass += shortsEvents(c); else ass += `Dialogue: 0,${fmt(c.a)},${fmt(c.b)},${c.style || "Narasi"},,0,0,0,,{\\fad(120,120)}${c.style === "Dialog" && c.name ? `{\\c&H00C8C8C8&}${c.name}:{\\c&H00FFFFFF&} ${c.line}` : c.style === "Dialog" ? c.line : c.text}\n`;
 const assPath = path.join(tmp, "sub.ass");
 fs.writeFileSync(assPath, ass);

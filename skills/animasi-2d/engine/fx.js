@@ -218,7 +218,7 @@ function draw(w, list, t) {
           return `<circle cx="${sx}" cy="${sy + r * 1.1}" r="${r}" fill="none" stroke="${lc}" stroke-width="${sw * 1.6}"/><circle cx="${sx}" cy="${sy + r * 1.1}" r="${r}" fill="none" stroke="#d9d9d9" stroke-width="${sw * 0.8}"/>`;
         }, { y: pts[k][1], bias: RB - 0.005 });
         const rp = pts[1];
-        w.sprite(rp[0], BZ, (sx, sy, p, fog, lc, sw) => { const R = p * 0.062, a = t * 9;
+        w.sprite(rp[0], BZ, (sx, sy, p, fog, lc, sw) => { const R = p * 0.062, a = t * (e.reeling && e.reeling.some(([r0, r1]) => t >= r0 && t < r1) ? 5 : 0.6); // engkol berputar pelan (cepat hanya saat menggulung)
           return `<g transform="translate(${sx} ${sy + R * 1.05})">
             <rect x="${-R * 0.25}" y="${-R * 1.1}" width="${R * 0.5}" height="${R * 0.5}" fill="#9a9a9a" stroke="${lc}" stroke-width="${sw * 0.7}"/>
             <circle r="${R}" fill="#e3e3e3" stroke="${lc}" stroke-width="${sw * 0.9}"/><circle r="${R * 0.62}" fill="#b9b9b9" stroke="${lc}" stroke-width="${sw * 0.5}"/>
@@ -227,20 +227,37 @@ function draw(w, list, t) {
             <path d="M${-R * 0.55},${-R * 0.55} A${R * 0.78},${R * 0.78} 0 0 1 ${R * 0.2},${-R * 0.76}" fill="none" stroke="#ffffff" stroke-width="${sw * 0.8}" opacity="0.8"/></g>`; }, { y: rp[1], bias: RB - 0.006 });
       } else for (let k = 2; k < 10; k += 2) { const q = pts[k + 1], m = pts[k].map((v, j) => v + (q[j] - v) * 0.12); w.line3([pts[k], m], "#7d5a2a", null, { bias: RB - 0.002, swk: 3.6 - k * 0.2 }); } // ruas bambu
       const sway = Math.sin(t * 7) * 0.04;
-      if (cat) { // tangkapan tergantung
+      // titik jatuh kail/pelampung di air (di depan ujung joran) + animasi LEMPAR (kail melayang melengkung dari ujung
+      // joran ke air, lalu riak melingkar) dan ANGKAT (tangkapan keluar dari air menuju ujung joran + cipratan)
+      const bob = Math.sin(t * 2.4) * 0.012 - (e.bites || []).some(([b0, b1]) => t > b0 && t < b1) * (0.03 + 0.03 * Math.sin(t * 30));
+      const land = [tip[0] + dir * (e.cast || 0.45), WY + 0.03 + bob, bz];
+      const cast = (e.casts || []).find(([c0, cd]) => t >= c0 && t < c0 + cd + 0.7);
+      const floatAt = (x, y) => w.sprite(x, bz, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy})"><ellipse rx="${p * 0.022}" ry="${p * 0.032}" fill="#d84a4a" stroke="${lc}" stroke-width="${sw * 0.6}"/>
+          <path d="M${-p * 0.022},0 L${p * 0.022},0" stroke="#ffffff" stroke-width="${sw * 0.8}"/></g>`, { y, bias: -0.13 });
+      const ring = (x, k) => { const r = 0.05 + k * 0.35; w.line3(Array.from({ length: 15 }, (_, j) => { const q = (j / 14) * Math.PI * 2; return [x + Math.cos(q) * r, WY + 0.003, bz + Math.sin(q) * r * 0.5]; }), "#e6f4fa", null, { layer: "ground", bias: -0.19, swk: 0.8 * (1 - k) + 0.1 }); };
+      // awal tangkapan saat ini (untuk animasi keluar dari air)
+      let tc = null; if (cat && cat !== "worm") { let j = i; while (j > 0 && K[j - 1][7] === cat) j--; tc = K[j][0]; }
+      if (cat && !(tc !== null && t - tc < 0.35)) { // tangkapan/cacing tergantung di ujung senar
         const hy = tip[1] - 0.32, hx = tip[0] + sway;
         w.line3([tip, [hx, hy + 0.06, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
         drawProp(w, cat, { x: hx, y: hy - (cat === "boot" ? 0.12 : cat === "can" ? 0.1 : cat === "worm" ? -0.18 : 0.02), z: bz - 0.01, rot: cat === "fish" ? 80 + Math.sin(t * 14) * 20 : cat === "worm" ? Math.sin(t * 5) * 15 : sway * 200, t }, false, { ...e, t0: t });
+      } else if (cat) { // tangkapan keluar dari air -> ke ujung joran (melengkung), cipratan di titik keluar
+        const k = (t - tc) / 0.35, ex = land[0] + (tip[0] - land[0]) * k, ey = WY + (tip[1] - 0.32 - WY) * k + 0.25 * Math.sin(Math.PI * k);
+        w.line3([tip, [ex, ey + 0.06, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
+        drawProp(w, cat, { x: ex, y: ey, z: bz - 0.01, rot: 60 + 120 * k, t }, false, { ...e, t0: t });
+        drops(w, { t: tc, x: land[0], y: WY, z: bz, n: 10, size: 0.9 }, t, 0.5, (r) => [(r() - 0.5) * 1.2, 1.2 + r() * 1.2, (r() - 0.5) * 0.4], "#bfe3f2");
       } else if (bend > 0.25) { // tegang: senar miring masuk ke air
         const ex = tip[0] + dir * 0.6, ez = bz;
         w.line3([tip, [ex, WY, ez]], "#3a3a3a", null, { bias: -0.125, swk: 0.6 });
         drops(w, { t: Math.floor(t * 3) / 3, x: ex, y: WY, z: ez, n: 4, size: 0.6 }, t, 0.3, (r) => [(r() - 0.5) * 0.8, 1 + r(), (r() - 0.5) * 0.3], "#e6f4fa");
+      } else if (cast && t < cast[0] + cast[1]) { // kail & pelampung melayang ke air
+        const k = (t - cast[0]) / cast[1], px = tip[0] + (land[0] - tip[0]) * k, py = tip[1] + (land[1] - tip[1]) * k * k + 0.35 * Math.sin(Math.PI * k) * (1 - k);
+        w.line3([tip, [px, py, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
+        floatAt(px, py);
       } else {
-        const bob = Math.sin(t * 2.4) * 0.012 - (e.bites || []).some(([b0, b1]) => t > b0 && t < b1) * (0.03 + 0.03 * Math.sin(t * 30));
-        w.line3([tip, [tip[0], WY + 0.03 + bob, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
-        w.sprite(tip[0], bz, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy})"><ellipse rx="${p * 0.025}" ry="${p * 0.035}" fill="#d84a4a" stroke="${lc}" stroke-width="${sw * 0.6}"/>
-          <path d="M${-p * 0.025},0 L${p * 0.025},0" stroke="#ffffff" stroke-width="${sw * 0.8}"/></g>`, { y: WY + 0.03 + bob, bias: -0.13 });
-        w.line3([[tip[0] - 0.08, WY + 0.002, bz], [tip[0] + 0.08, WY + 0.002, bz]], "#d6eef7", null, { layer: "ground", bias: -0.19, swk: 0.8 });
+        w.line3([tip, land], "#3a3a3a", null, { bias: -0.125, swk: 0.5, sag: 0.05 });
+        floatAt(land[0], land[1]);
+        if (cast) ring(land[0], Math.min(1, (t - cast[0] - cast[1]) / 0.7)); else w.line3([[land[0] - 0.08, WY + 0.002, bz], [land[0] + 0.08, WY + 0.002, bz]], "#d6eef7", null, { layer: "ground", bias: -0.19, swk: 0.8 });
       }
     } else if (e.type === "ember") { // ember berisi air & ikan, dilihat sedikit dari atas: bukaan elips, ikan DI DALAM air
       // (terpotong bibir ember), dinding depan menutup bagian bawah; cipratan kecil saat ikan masuk. fills [[t, jumlah]]

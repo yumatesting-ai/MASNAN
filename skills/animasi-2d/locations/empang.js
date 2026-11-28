@@ -37,7 +37,7 @@ module.exports = {
     // kehijauan -> jauh biru gelap), pantulan langit & bayangan pohon seberang, riak melengkung + kilau berkelip,
     // ganggang di tepi, teratai bertakik dengan bunga, gelembung ikan.
     const X1 = 14, Z0 = -7, Z1 = 13;
-    const shore = (z) => EDGE_X + 0.12 * Math.sin(z * 1.7) + 0.07 * Math.sin(z * 4.3 + 1); // garis tepi berkelok
+    const shore = (z) => EDGE_X + 0.07 * Math.sin(z * 1.3) + 0.025 * Math.sin(z * 3.1 + 1); // garis tepi berkelok
     const zs = []; for (let z = Z0; z <= Z1; z += 0.25) zs.push(z);
     // lumpur basah (pita coklat gelap di bibir air) + tebing tanah
     w.ground([...zs.map((z) => [shore(z) - 0.07, 0.003, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.02, 0.003, z])], c("#9c7d55"), { stroke: false, bias: -0.08 });
@@ -58,7 +58,7 @@ module.exports = {
     for (let i = 0; i + 1 < zs.length; i++) w.face([[shore(zs[i]), WATER_Y, zs[i]], [shore(zs[i]), 0, zs[i]], [shore(zs[i + 1]), 0, zs[i + 1]], [shore(zs[i + 1]), WATER_Y, zs[i + 1]]], c("#8a6a45"), { stroke: false, bias: -0.12 });
     w.line3(zs.map((z) => [shore(z), 0.002, z]), c("#5e4630"), null, { bias: -0.11, swk: 0.9 });
     // batu-batu kecil di bibir air
-    for (const [z, r] of [[3.4, 0.1], [7.4, 0.08], [9.1, 0.1], [10.8, 0.08]])
+    for (const [z, r] of [[8.4, 0.08], [9.6, 0.1], [11.2, 0.08]])
       w.sprite(shore(z) - 0.05, z, (sx, sy, p, fog, lc, sw) => `<ellipse cx="${sx}" cy="${sy - p * r * 0.35}" rx="${p * r}" ry="${p * r * 0.55}" fill="${fog(c("#9a958a"))}" stroke="${lc}" stroke-width="${sw * 0.7}"/>
         <ellipse cx="${sx - p * r * 0.3}" cy="${sy - p * r * 0.55}" rx="${p * r * 0.35}" ry="${p * r * 0.15}" fill="#ffffff" opacity="0.35"/>`, { bias: -0.04 });
     // riak melengkung (bergerak pelan) + kilau matahari berkelip
@@ -85,7 +85,7 @@ module.exports = {
       ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="${-p * 0.05}" rx="${p * 0.03}" ry="${p * 0.06}" fill="${fog(c("#f7b6c2"))}" transform="rotate(${a})"/>`).join("")}
       <circle r="${p * 0.025}" fill="${fog(c("#f4d06f"))}"/></g>`, { y: WATER_Y, bias: -0.05 });
     // rumput tinggi & eceng di tepi air (depan & belakang tokoh)
-    for (const [x, z] of [[0.72, 7.4], [0.6, 8.3], [0.75, 9.6], [0.65, 11.2], [1.2, 12.6], [0.85, 3.4], [13, 12.8], [11.5, 12.9], [6, 12.95], [3.5, 12.9]])
+    for (const [x, z] of [[0.72, 7.4], [0.6, 8.3], [0.75, 9.6], [0.65, 11.2], [1.2, 12.6], [13, 12.8], [11.5, 12.9], [6, 12.95], [3.5, 12.9]])
       w.sprite(x, z, (sx, sy, p, fog, lc, sw) => { let d = ""; for (let i = 0; i < 7; i++) { const bx = (i - 3) * p * 0.05, h = p * (0.45 + (i % 3) * 0.12), lean = (i - 3) * p * 0.03 + Math.sin(t * 1.4 + x + i) * p * 0.02;
         d += `M${sx + bx},${sy} Q${sx + bx + lean * 0.5},${sy - h * 0.6} ${sx + bx + lean},${sy - h} `; }
         return `<path d="${d}" stroke="${lc}" stroke-width="${sw * 1.8}" fill="none"/><path d="${d}" stroke="${fog(c("#4f9a3c"))}" stroke-width="${sw * 1.1}" fill="none"/>`; }, { bias: -0.04 });
