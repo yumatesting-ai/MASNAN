@@ -1,6 +1,6 @@
 ---
 name: animasi-2d
-description: Membuat konten animasi 2D dari karakter chibi rig vektor (SVG) milik kreator — Nana, Bima, Rara, Pak Hasan, Buk Atin, atau karakter baru — dengan 18 ekspresi, 4 tampak (depan, 3/4, samping, belakang), 27 klip gerak, dan adegan multi-karakter, dirender ke PNG/MP4. Gunakan saat user minta membuat/menggerakkan karakter animasi 2D, menambah karakter/baju/rambut/ekspresi/gerakan/tampak baru, atau merender klip/adegan untuk konten.
+description: Membuat konten animasi 2D kartun chibi kampung Indonesia (channel ANIMASI RT 05) dari rig vektor SVG — tokoh Nana, Bima, Rara, Pak Hasan, Bu Atin, Pak RT, Mbah Sum, Bu Sari atau tokoh baru — di 10 lokasi 2.5D (kampung, warung, lapangan, masjid, pos ronda, kamar, sekolah, kelas hadap murid/guru, sawah), dengan 100+ klip gerak, 29 ekspresi, 4 tampak, lip sync, arah pandang, VO narator, subtitle Shorts, musik & SFX, render HD 1080x1920. Gunakan skill ini setiap kali user minta naskah/cerita lucu untuk animasi, membuat/merevisi/merender video animasi kartun, menyesuaikan animasi dengan VO, menambah tokoh/lokasi/gerakan/ekspresi, atau membuat thumbnail, foto profil, banner, Shorts untuk konten animasi — walau user tidak menyebut "skill" atau "animasi 2D".
 ---
 
 # Animasi 2D — Karakter Rig Chibi
@@ -57,7 +57,7 @@ tools/check.js        QA numerik: lompatan parameter antar frame & sambungan loo
 tools/location.js     lokasi kampung 2.5D + karakter di dalamnya -> PNG/MP4 (landscape/portrait)
 engine/world3d.js     mesin 2.5D (kamera perspektif, bidang berarsir, kabut, sprite)
 engine/props.js       perlengkapan kampung (rumah, pohon, pagar, tiang, gapura, perabot)
-locations/<id>.js     lokasi: kampung, warung, lapangan, masjid, posronda
+locations/<id>.js     lokasi: kampung, warung, lapangan, masjid, posronda, kamar, sekolah, sawah, kelas, kelas_guru
 ```
 
 ## Alur kerja
@@ -452,3 +452,52 @@ Tokoh baru dibuat dari bagian tokoh lama (`hair` Pak Hasan / Bu Atin, `HIJAB`/`P
   [--format landscape|portrait] [--camera '{...}'] --out out/thumb.png` -> 1280x720 / 1080x1920, judul tebal otomatis muat,
   kata kunci kuning, bingkai kuning. Pilih momen paling lucu & wajah ekspresif.
 - **Banner & foto profil**: `tools/banner.js` (2560x1440, area aman) & `tools/avatar.js`.
+
+## Pelajaran dari revisi kreator (cek ulang setiap konten baru)
+Semua sudah tertanam di mesin; poin ini menjelaskan *kenapa*, supaya pola yang sama dipakai di tokoh/lokasi lain.
+
+**Waktu VO.** Bila hanya ada mp3 tanpa teks/subtitle, perkirakan waktu kalimat dari jeda suara (energi < -36 dB,
+jeda ≥ 0,2 dtk) + jumlah suku kata (≈6 suku kata/dtk), lalu pasangkan kalimat↔potongan suara dengan pemrograman
+dinamis (contoh lengkap: `episodes/src/pr-dimakan-kucing.py`, tabel `NARR`). Katakan ke kreator bahwa timing
+adalah tebakan, dan minta teks persis atau video VO bersubtitle (CapCut) agar pasti.
+
+**Kelas / duduk di meja.** Kamera engine selalu menghadap +z, jadi satu ruang dibuat dua sudut: `kelas` (hadap murid:
+murid menghadap kamera di balik meja dua-orang, meja menutup pinggang) dan `kelas_guru` (dari belakang: papan tulis,
+guru, punggung murid). Shot bergantian antar sudut = shot–reverse-shot. Jangan dudukkan murid menyamping di sebelah
+mejanya — tidak masuk akal.
+- Dari belakang (`sit_back`), kaki TIDAK digambar (ada di kolong meja) dan pinggul menempel di papan bangku tipis;
+  tangan diarahkan ke depan (`armsFwd`) tertutup badan — sama dengan tampak depan (tangan di meja).
+- Kamera tampak guru yang sudah melewati barisan murid: murid & figuran di belakang kamera jangan digambar
+  (siluet raksasa menutupi layar).
+- Close-up: jangan majukan kamera sampai menembus meja (meja hilang, tokoh tampak di depan meja). Berhenti ±1 m,
+  zoom pakai lensa (`f` besar).
+- Teman sekelas = figuran siluet abu + blur kuat (`extrasStyle`, `extrasBlur`), supaya fokus ke tokoh utama.
+
+**Aksi harus terbaca benar.**
+- Menulis: buku terbuka di pangkuan (`lapBook`, varian `"oily"` bernoda minyak), ujung pensil menggores halaman.
+- Makan: makanan diangkat ke MULUT (bukan mata), dipegang jari, ada bekas gigitan (`bite`), mulut mengunyah.
+- Memberi nilai: tangan + pulpen merah menulis di kertas, tulisan muncul bertahap mengikuti ujung pena
+  (prop `book` dengan `writes: [[t, durasi, "100", x, y, ukuran]]`) + close-up buku. Jangan cuma memegang pulpen.
+- Benda yang akan dipakai harus sudah terlihat sebelum aksi; benda yang dilempar/dibawa harus lepas dari tubuh;
+  kucing membawa barang pakai `carry` (barang di mulut).
+
+**Lari.** Varian depan/serong/belakang/samping dipilih otomatis dari arah gerak (jangan lari menyamping saat
+mendekati kamera). Tampak samping punya lutut (`kneeL/kneeR`): kaki ayun & kaki belakang menekuk, kaki tumpu lurus;
+badan condong KE ARAH lari, melayang di tengah langkah, squash saat mendarat; lengan siku ±90° memompa berlawanan kaki.
+
+**Mata & mulut.** Tokoh tidak menatap kamera saat bergerak/beraksi: mata ke arah lari, lawan bicara, atau benda.
+Tampak samping memakai mata profil (putih lonjong, pupil di sisi depan) dan mulut profil (bukaan menghadap depan,
+di dalam wajah) untuk semua bentuk lip sync. Override `{expr=...}` di timeline menerapkan seluruh preset ekspresi.
+
+**Badan & sambungan.** Celana punya sambungan pinggang (badan tidak terlihat putus saat condong/serong); lengan
+tekuk satu bentuk (tidak patah/tembus badan).
+
+**Komposisi.** Subtitle Shorts ada di sepertiga bawah — aksi penting (buku, nilai, wajah) taruh di atasnya
+(atur `horizon`/`y` kamera). Teks komik jangan menimpa tokoh; angka/label jangan terpotong tepi; tokoh yang masuk
+di akhir video harus sudah utuh di layar saat teks kuncinya muncul.
+
+**Proses.** Naskah → VO kreator → episode (generator Python di `episodes/src/`) → `--check` → `tools/qa.js` lembar
+kontak tiap 0,5–1 dtk → perbaiki sendiri → kirim pratinjau → render HANYA setelah kreator bilang "render".
+Kata "render" berlaku untuk versi yang sudah dilihat kreator; setelah ada perubahan baru, kirim pratinjau dulu.
+Render: `WARNA=1 node tools/episode.js <ep>.json --audio vo.mp3 --out video.mp4`, lalu
+`python3 tools/backsound.py <ep>.json --out bs.wav --vo vo.mp3 --mix audio.m4a` dan gabung dengan ffmpeg.
