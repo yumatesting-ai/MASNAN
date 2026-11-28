@@ -33,27 +33,59 @@ module.exports = {
     w.ground([[-40, 0.002, -20], [EDGE_X, 0.002, -20], [EDGE_X, 0.002, 13], [-40, 0.002, 13]], c("#8cc063"), { stroke: false, bias: -0.05 }); // tepian rumput
     w.ground([[-4.2, 0.004, -20], [-2.9, 0.004, -20], [-2.9, 0.004, 13], [-4.2, 0.004, 13]], c("#b89b6e"), { stroke: false, bias: -0.1 }); // jalan setapak
     for (let z = 15; z < 40; z += 0.7) w.line3([[-30, 0.01, z], [30, 0.01, z]], c("#5f9c45"), null, { layer: "ground", bias: -0.3, swk: 0.7 }); // larik padi jauh
-    // AIR KOLAM: sedikit di bawah tepian; tebing tanah tipis di sisi tepian
-    const X1 = 14, Z0 = 1.5, Z1 = 13;
-    w.ground([[EDGE_X, WATER_Y, Z0 - 8], [X1, WATER_Y, Z0 - 8], [X1, WATER_Y, Z1], [EDGE_X, WATER_Y, Z1]], c("#5aa5c4"), { stroke: false, bias: -0.15 });
-    w.ground([[EDGE_X, WATER_Y + 0.001, Z1 - 0.6], [X1, WATER_Y + 0.001, Z1 - 0.6], [X1, WATER_Y + 0.001, Z1], [EDGE_X, WATER_Y + 0.001, Z1]], c("#4f9a5a"), { stroke: false, bias: -0.16 });
-    w.face([[EDGE_X, WATER_Y, Z0 - 8], [EDGE_X, 0, Z0 - 8], [EDGE_X, 0, Z1], [EDGE_X, WATER_Y, Z1]], c("#8a6a45"), { swk: 0.7, bias: -0.12 });
-    // riak & kilau air bergerak pelan
-    for (let i = 0; i < 26; i++) {
-      const x = EDGE_X + 0.6 + ((i * 2.37) % (X1 - EDGE_X - 1)), z = Z0 - 3 + ((i * 3.11) % (Z1 - Z0 + 2.5)), dx = 0.25 * Math.sin(t * 0.6 + i);
-      w.line3([[x - 0.35 + dx, WATER_Y + 0.002, z], [x + 0.35 + dx, WATER_Y + 0.002, z]], c("#c9e6f2"), null, { layer: "ground", bias: -0.17, swk: 0.9 });
+    // AIR KOLAM (natural): tepi berkelok tidak lurus, pita lumpur basah & batu di tepian, air bergradasi (dekat jernih
+    // kehijauan -> jauh biru gelap), pantulan langit & bayangan pohon seberang, riak melengkung + kilau berkelip,
+    // ganggang di tepi, teratai bertakik dengan bunga, gelembung ikan.
+    const X1 = 14, Z0 = -7, Z1 = 13;
+    const shore = (z) => EDGE_X + 0.12 * Math.sin(z * 1.7) + 0.07 * Math.sin(z * 4.3 + 1); // garis tepi berkelok
+    const zs = []; for (let z = Z0; z <= Z1; z += 0.25) zs.push(z);
+    // lumpur basah (pita coklat gelap di bibir air) + tebing tanah
+    w.ground([...zs.map((z) => [shore(z) - 0.07, 0.003, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.02, 0.003, z])], c("#9c7d55"), { stroke: false, bias: -0.08 });
+    // air: tiga pita gradasi kedalaman
+    for (const [z0, z1, col] of [[Z0, 2.5, "#6ab3c8"], [2.5, 6, "#62abc4"], [6, 9.5, "#57a0bc"], [9.5, Z1, "#4d93b2"]]) {
+      const zz = zs.filter((z) => z >= z0 && z <= z1);
+      w.ground([...zz.map((z) => [shore(z), WATER_Y, z]), [X1, WATER_Y, z1], [X1, WATER_Y, z0]], c(col), { stroke: false, bias: -0.15 });
     }
-    // teratai
-    for (const [x, z, r] of [[3.4, 8.8, 0.28], [4.1, 9.4, 0.22], [6.2, 7.2, 0.3], [2.6, 10.6, 0.25], [7.5, 11.2, 0.3]]) {
-      const pts = []; for (let k = 0; k < 12; k++) { const a = (k / 12) * Math.PI * 2 + 0.3; if (k === 0) continue; pts.push([x + Math.cos(a) * r, WATER_Y + 0.004, z + Math.sin(a) * r * 0.9]); }
+    // air dangkal kehijauan di tepian (ganggang)
+    w.ground([...zs.map((z) => [shore(z), WATER_Y + 0.001, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.45 + 0.15 * Math.sin(z * 2.1), WATER_Y + 0.001, z])], c("#6fae8f"), { stroke: false, bias: -0.155 });
+    // bayangan pohon & gubuk seberang di air (pantulan gelap) + pantulan awan terang
+    w.ground([[2.5, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 12.6], [2.5, WATER_Y + 0.002, 12.6]], c("#3f7f8a"), { stroke: false, bias: -0.16 });
+    for (const [x, z, r] of [[4.5, 5.5, 1.1], [8, 9.5, 1.4]]) {
+      const pts = []; for (let k = 0; k < 14; k++) { const a = (k / 14) * Math.PI * 2; pts.push([x + Math.cos(a) * r * (1 + 0.15 * Math.sin(k * 2.3)), WATER_Y + 0.002, z + Math.sin(a) * r * 0.45]); }
+      w.ground(pts, c("#8fcbe0"), { stroke: false, bias: -0.16 });
+    }
+    // tebing tepian (sisi tanah turun ke air) mengikuti kelokan
+    for (let i = 0; i + 1 < zs.length; i++) w.face([[shore(zs[i]), WATER_Y, zs[i]], [shore(zs[i]), 0, zs[i]], [shore(zs[i + 1]), 0, zs[i + 1]], [shore(zs[i + 1]), WATER_Y, zs[i + 1]]], c("#8a6a45"), { stroke: false, bias: -0.12 });
+    w.line3(zs.map((z) => [shore(z), 0.002, z]), c("#5e4630"), null, { bias: -0.11, swk: 0.9 });
+    // batu-batu kecil di bibir air
+    for (const [z, r] of [[3.4, 0.1], [7.4, 0.08], [9.1, 0.1], [10.8, 0.08]])
+      w.sprite(shore(z) - 0.05, z, (sx, sy, p, fog, lc, sw) => `<ellipse cx="${sx}" cy="${sy - p * r * 0.35}" rx="${p * r}" ry="${p * r * 0.55}" fill="${fog(c("#9a958a"))}" stroke="${lc}" stroke-width="${sw * 0.7}"/>
+        <ellipse cx="${sx - p * r * 0.3}" cy="${sy - p * r * 0.55}" rx="${p * r * 0.35}" ry="${p * r * 0.15}" fill="#ffffff" opacity="0.35"/>`, { bias: -0.04 });
+    // riak melengkung (bergerak pelan) + kilau matahari berkelip
+    for (let i = 0; i < 30; i++) {
+      const x = EDGE_X + 1.0 + ((i * 2.37) % (X1 - EDGE_X - 1.5)), z = Z0 + 4 + ((i * 3.11) % (Z1 - Z0 - 5)), dx = 0.25 * Math.sin(t * 0.6 + i), L = 0.18 + (i % 3) * 0.08;
+      w.line3([[x - L + dx, WATER_Y + 0.003, z], [x + dx, WATER_Y + 0.003, z - 0.04], [x + L + dx, WATER_Y + 0.003, z]], c("#d8eef6"), null, { layer: "ground", bias: -0.17, swk: 0.9 });
+    }
+    for (let i = 0; i < 12; i++) {
+      const x = 2 + ((i * 3.7) % 10), z = 1 + ((i * 2.9) % 10), on = Math.max(0, Math.sin(t * 3 + i * 1.9));
+      if (on > 0.3) w.sprite(x, z, (sx, sy, p) => `<path d="M${sx - p * 0.06},${sy} L${sx + p * 0.06},${sy} M${sx},${sy - p * 0.03} L${sx},${sy + p * 0.03}" stroke="#ffffff" stroke-width="${p * 0.012}" opacity="${on.toFixed(2)}" stroke-linecap="round"/>`, { y: WATER_Y + 0.01, bias: -0.16 });
+    }
+    // gelembung ikan (naik & pecah) — tanda ada ikan di empang
+    for (const [x, z, ph] of [[2.3, 3.6, 0], [3.0, 7.6, 1.3], [5.2, 4.4, 2.1]]) {
+      const k = (t * 0.7 + ph) % 1;
+      w.sprite(x, z, (sx, sy, p, fog, lc, sw) => `<circle cx="${sx}" cy="${sy}" r="${p * (0.015 + 0.02 * k)}" fill="none" stroke="#e6f4fa" stroke-width="${sw * 0.8}" opacity="${(1 - k).toFixed(2)}"/>`, { y: WATER_Y + 0.005, bias: -0.16 });
+    }
+    // teratai bertakik (daun bulat dengan celah) + bunga
+    for (const [x, z, r] of [[3.4, 8.8, 0.28], [4.1, 9.4, 0.22], [6.2, 7.2, 0.3], [2.6, 10.6, 0.25], [7.5, 11.2, 0.3], [4.8, 10.2, 0.18]]) {
+      const pts = []; for (let k = 1; k < 14; k++) { const a = (k / 14) * Math.PI * 2 + z; pts.push([x + Math.cos(a) * r, WATER_Y + 0.004, z + Math.sin(a) * r * 0.9]); }
       pts.push([x, WATER_Y + 0.004, z]);
-      w.ground(pts, c("#4f9a5a"), { bias: -0.18 });
+      w.ground(pts, c("#4f9a5a"), { bias: -0.18, swk: 0.6 });
     }
-    w.sprite(4.1, 9.4, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 0.04})" stroke="${lc}" stroke-width="${sw * 0.6}">
+    for (const [x, z] of [[4.1, 9.4], [6.2, 7.2], [7.5, 11.2]]) w.sprite(x, z, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy - p * 0.04})" stroke="${lc}" stroke-width="${sw * 0.6}">
       ${[0, 72, 144, 216, 288].map((a) => `<ellipse cx="0" cy="${-p * 0.05}" rx="${p * 0.03}" ry="${p * 0.06}" fill="${fog(c("#f7b6c2"))}" transform="rotate(${a})"/>`).join("")}
       <circle r="${p * 0.025}" fill="${fog(c("#f4d06f"))}"/></g>`, { y: WATER_Y, bias: -0.05 });
     // rumput tinggi & eceng di tepi air (depan & belakang tokoh)
-    for (const [x, z] of [[0.72, 7.4], [0.6, 8.3], [0.75, 9.6], [0.65, 11.2], [1.2, 12.6]])
+    for (const [x, z] of [[0.72, 7.4], [0.6, 8.3], [0.75, 9.6], [0.65, 11.2], [1.2, 12.6], [0.85, 3.4], [13, 12.8], [11.5, 12.9], [6, 12.95], [3.5, 12.9]])
       w.sprite(x, z, (sx, sy, p, fog, lc, sw) => { let d = ""; for (let i = 0; i < 7; i++) { const bx = (i - 3) * p * 0.05, h = p * (0.45 + (i % 3) * 0.12), lean = (i - 3) * p * 0.03 + Math.sin(t * 1.4 + x + i) * p * 0.02;
         d += `M${sx + bx},${sy} Q${sx + bx + lean * 0.5},${sy - h * 0.6} ${sx + bx + lean},${sy - h} `; }
         return `<path d="${d}" stroke="${lc}" stroke-width="${sw * 1.8}" fill="none"/><path d="${d}" stroke="${fog(c("#4f9a3c"))}" stroke-width="${sw * 1.1}" fill="none"/>`; }, { bias: -0.04 });

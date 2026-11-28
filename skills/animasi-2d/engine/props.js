@@ -36,7 +36,9 @@ const TREE_TINT = { "#7d7d7d": "#8a6240", "#5f5f5f": "#6e4a2e", "#555555": "#5a3
   "#5c5c5c": "#7a5a2e", "#9e9e9e": "#5f9f48", "#858585": "#4a8a3a", "#b4b4b4": "#82bf60", "#6e6e6e": "#3f7a32", "#7f7f7f": "#4f8f3c",
   "#9a9a9a": "#62a44a", "#a8a8a8": "#76b358", "#6a6a6a": "#3f7a32", "#4f4f4f": "#8a7a42", "#5a5a5a": "#3f7a32",
   "#b9b9b9": "#b5cf4c", "#a5a5a5": "#93b23c", "#d6d6d6": "#e3ef9a", "#4c4c4c": "#3d3a2a", "#5e5e5e": "#8a2f45", "#6c6c6c": "#5f1f30", "#8b8b8b": "#6f8a3a",
-  "#a3a3a3": "#6fb052", "#8c8c8c": "#579a43", "#b2b2b2": "#86c463", "#777777": "#8a6a44", "#7a7a7a": "#7f6340" };
+  "#a3a3a3": "#6fb052", "#8c8c8c": "#579a43", "#b2b2b2": "#86c463", "#777777": "#8a6a44", "#7a7a7a": "#7f6340",
+  // pisang (desain baru): batang hijau pucat, pelepah kering coklat, daun dua nada, tulang daun kuning pucat
+  "#a1a1a1": "#a9c768", "#8d8d8d": "#86a84c", "#7e7e7e": "#a07a4a", "#717171": "#7a5634", "#a7a7a7": "#7dc35a", "#909090": "#5c9e42", "#c4c4c4": "#dce9a0", "#7b7b7b": "#4a8436", "#868686": "#b08a52" };
 const BUSH_TINT = { "#6e6e6e": "#3f7a32", "#828282": "#4c8c3c", "#999999": "#5f9f48", "#b0b0b0": "#7cba5b" };
 const GRASS_TINT = { "#9c9c9c": "#6aa84a", "#ababab": "#7fbb59" };
 const tint = (fog, map) => (THEME.COLOR ? (c) => fog(map[c] || c) : fog);
@@ -437,35 +439,47 @@ function tree(w, x, z, o = {}) {
         <path d="${rings}" fill="none" stroke="${fog("#5f5f5f")}" stroke-width="${sw * 0.7}"/>
         ${back}${nuts}${front}`;
     } else if (kind === "banana") {
-      const sh = h * 0.62, sw0 = h * 0.07;
-      const stem = `M${P(-sw0)},0 C${P(-sw0)},${P(-sh * 0.4)} ${P(-sw0 * 0.75)},${P(-sh * 0.8)} ${P(-sw0 * 0.6)},${P(-sh)} L${P(sw0 * 0.6)},${P(-sh)} C${P(sw0 * 0.75)},${P(-sh * 0.8)} ${P(sw0)},${P(-sh * 0.4)} ${P(sw0)},0 Z`;
-      const sheaths = `M${P(-sw0 * 0.4)},0 C${P(-sw0 * 0.3)},${P(-sh * 0.4)} ${P(-sw0 * 0.2)},${P(-sh * 0.7)} ${P(-sw0 * 0.1)},${P(-sh)}
-        M${P(sw0 * 0.35)},0 C${P(sw0 * 0.3)},${P(-sh * 0.5)} ${P(sw0 * 0.25)},${P(-sh * 0.75)} ${P(sw0 * 0.2)},${P(-sh * 0.95)}`;
-      // daun pisang: lebar, melengkung menjuntai, tulang daun, sobekan (celah warna langit)
-      const leaf = (ang, len, droop, col, torn, dead) => {
-        const a = (ang * Math.PI) / 180, base = [0, -sh * 0.97], segs = 12, mid = [];
+      const sh = h * 0.6, sw0 = h * 0.052;
+      // BATANG SEMU (pseudostem): meruncing ke atas, sedikit melengkung, garis pelepah membujur, pelepah kering coklat di bawah
+      const bend = h * 0.015;
+      const stem = `M${P(-sw0)},0 C${P(-sw0 * 1.02)},${P(-sh * 0.35)} ${P(-sw0 * 0.72 + bend)},${P(-sh * 0.75)} ${P(-sw0 * 0.55 + bend)},${P(-sh)} L${P(sw0 * 0.55 + bend)},${P(-sh)} C${P(sw0 * 0.72 + bend)},${P(-sh * 0.75)} ${P(sw0 * 1.02)},${P(-sh * 0.35)} ${P(sw0)},0 Z`;
+      const stripes = [-0.55, -0.15, 0.3, 0.65].map((f) => `M${P(sw0 * f * 1.0)},0 C${P(sw0 * f)},${P(-sh * 0.4)} ${P(sw0 * f * 0.8 + bend)},${P(-sh * 0.7)} ${P(sw0 * f * 0.6 + bend)},${P(-sh * 0.98)}`).join(" ");
+      const drySheath = `M${P(-sw0 * 1.02)},0 C${P(-sw0 * 1.25)},${P(-sh * 0.15)} ${P(-sw0 * 1.35)},${P(-sh * 0.32)} ${P(-sw0 * 1.1)},${P(-sh * 0.42)} C${P(-sw0 * 0.9)},${P(-sh * 0.3)} ${P(-sw0 * 0.75)},${P(-sh * 0.15)} ${P(-sw0 * 0.55)},0 Z
+        M${P(sw0 * 0.6)},0 C${P(sw0 * 1.15)},${P(-sh * 0.1)} ${P(sw0 * 1.3)},${P(-sh * 0.22)} ${P(sw0 * 1.08)},${P(-sh * 0.3)} C${P(sw0 * 0.95)},${P(-sh * 0.2)} ${P(sw0 * 0.9)},${P(-sh * 0.1)} ${P(sw0 * 0.95)},0 Z`;
+      // DAUN: tangkai melengkung dari pucuk -> helai lebar melengkung naik lalu menjuntai di ujung; dua nada (atas terang,
+      // bawah gelap), tulang daun pucat, urat miring sejajar, tepi bersobek (takik) alami; bergoyang pelan per daun
+      const top = [bend, -sh * 0.98];
+      const leaf = (ang, len, droop, n, dead) => {
+        const sw2 = Math.sin(T * (1.1 + 0.13 * n) + seed + n * 1.7) * (dead ? 2 : 4.5);
+        const a = ((ang + sw2) * Math.PI) / 180, segs = 16, mid = [];
+        const pet = len * 0.18; // tangkai daun
         for (let i = 0; i <= segs; i++) {
-          const t = i / segs;
-          mid.push([base[0] + Math.cos(a) * len * t, base[1] - Math.sin(a) * len * t + droop * t * t * 1.4 - len * 0.25 * Math.sin(Math.PI * t) * Math.max(0, Math.sin(a))]);
+          const t = i / segs, d = len * t;
+          const lift = Math.sin(Math.PI * Math.min(1, t * 1.3)) * len * 0.18 * Math.max(0.2, Math.sin(a));
+          mid.push([top[0] + Math.cos(a) * d, top[1] - Math.sin(a) * d - lift + droop * t * t * t * 1.6]);
         }
-        const up = [], dn = [], cuts = [];
+        const up = [], dn = [];
         for (let i = 0; i <= segs; i++) {
           const [x0, y0] = mid[Math.max(0, i - 1)], [x1, y1] = mid[Math.min(segs, i + 1)];
-          const dx = x1 - x0, dy = y1 - y0, m = Math.hypot(dx, dy) || 1, nx = -dy / m, ny = dx / m;
-          const t = i / segs, wd = len * (dead ? 0.07 : 0.17) * Math.pow(Math.sin(Math.PI * Math.min(1, t * 1.05)), 0.7);
-          const [px, py] = mid[i];
-          up.push([px + nx * wd, py + ny * wd]); dn.push([px - nx * wd, py - ny * wd]);
-          if (torn && i > 2 && i < segs - 1 && i % 2 === 0) {
-            const sgn = i % 4 === 0 ? 1 : -1;
-            cuts.push(`M${P(px + nx * wd * 1.1 * sgn)},${P(py + ny * wd * 1.1 * sgn)} L${P(px + nx * wd * 0.2 * sgn - dx * 0.15)},${P(py + ny * wd * 0.2 * sgn - dy * 0.15)}`);
-          }
+          const dx = x1 - x0, dy = y1 - y0, m = Math.hypot(dx, dy) || 1, nx = -dy / m, ny = dx / m, t = i / segs;
+          const tb = Math.max(0, (t - pet / len) / (1 - pet / len));                // 0 di pangkal helai
+          let wd = len * (dead ? 0.09 : 0.16) * Math.pow(Math.sin(Math.PI * Math.min(1, tb * 1.02)), 0.55) * (t < pet / len ? 0.08 : 1);
+          const notchU = !dead && i > 4 && i < segs - 1 && (i * 7 + n) % 5 === 0 ? 0.35 : 1, notchD = !dead && i > 4 && i < segs - 1 && (i * 3 + n) % 4 === 0 ? 0.4 : 1;
+          up.push([mid[i][0] + nx * wd * notchU, mid[i][1] + ny * wd * notchU]); dn.push([mid[i][0] - nx * wd * notchD, mid[i][1] - ny * wd * notchD]);
         }
-        const body = "M" + [...up, ...dn.reverse()].map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L") + " Z";
-        const rib = "M" + mid.map(([a2, b2]) => `${P(a2)},${P(b2)}`).join(" L");
-        const veins = mid.filter((_, i) => i > 0 && i < segs && i % 2).map(([px, py], k) => `M${P(px)},${P(py)} l${P(0.06)},${P(-0.08)}`).join(" ");
-        return `<path d="${body}" fill="${fog(col)}" ${L}/>
-          <path d="${rib}" fill="none" stroke="${fog(dead ? "#4f4f4f" : "#6a6a6a")}" stroke-width="${sw * 0.9}"/>
-          ${cuts.length ? `<path d="${cuts.join(" ")}" fill="none" stroke="${fog("#eeeeee")}" stroke-width="${sw * 1.3}"/>` : ""}`;
+        const pts = (arr) => arr.map(([x2, y2]) => `${P(x2)},${P(y2)}`).join(" L");
+        const midS = "M" + pts(mid);
+        const upper = `M${pts(up)} L${pts([...mid].reverse())} Z`, lower = `M${pts(dn)} L${pts([...mid].reverse())} Z`;
+        let veins = "";
+        if (!dead) for (let i = 4; i < segs - 1; i += 2) { const [px, py] = mid[i], [ux, uy] = up[i + 1], [qx, qy] = dn[i + 1];
+          veins += `M${P(px)},${P(py)} L${P(px + (ux - px) * 0.85)},${P(py + (uy - py) * 0.85)} M${P(px)},${P(py)} L${P(px + (qx - px) * 0.85)},${P(py + (qy - py) * 0.85)} `; }
+        const outline = `M${pts(up)} L${pts([...dn].reverse())} Z`;
+        return dead
+          ? `<path d="${outline}" fill="${fog("#7e7e7e")}" ${L}/><path d="${midS}" fill="none" stroke="${fog("#717171")}" stroke-width="${sw * 1.1}"/>`
+          : `<path d="${upper}" fill="${fog("#a7a7a7")}"/><path d="${lower}" fill="${fog("#909090")}"/>
+            <path d="${veins}" fill="none" stroke="${fog("#7b7b7b")}" stroke-width="${sw * 0.45}" opacity="0.7"/>
+            <path d="${outline}" fill="none" ${L}/>
+            <path d="${midS}" fill="none" stroke="${fog("#c4c4c4")}" stroke-width="${sw * 1.3}" stroke-linecap="round"/>`;
       };
       const s2 = Math.sin(T * 1.5 + seed) * 4;
       // TANDAN PISANG (ukuran wajar, ±70% versi lama): tangkai ramping melengkung keluar dari pucuk lalu menjuntai;
@@ -502,16 +516,17 @@ function tree(w, x, z, o = {}) {
         <path d="M${P(hx)},${P(hyy)} c${P(-h * 0.025 * HS)},${P(h * 0.025 * HS)} ${P(-h * 0.018 * HS)},${P(h * 0.06 * HS)} 0,${P(h * 0.08 * HS)}" fill="none" stroke="${fog("#6c6c6c")}" stroke-width="${sw * 0.6}"/>
         <path d="M${P(hx + h * 0.004)},${P(hyy + h * 0.004)} q${P(h * 0.03 * HS)},${P(h * 0.005)} ${P(h * 0.034 * HS)},${P(h * 0.035 * HS)} q${P(-h * 0.02 * HS)},${P(-h * 0.004)} ${P(-h * 0.03 * HS)},${P(-h * 0.02 * HS)} Z" fill="${fog("#6c6c6c")}" ${L} stroke-width="${sw * 0.5}"/>`;
       out = `${shadow}
-        ${leaf(-60 + s2 * 0.3, h * 0.4, h * 0.25, "#777777", false, true)}
-        ${leaf(150 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}${leaf(30 + s2, h * 0.52, h * 0.35, "#8c8c8c", true)}
-        <path d="${stem}" fill="${fog("#a3a3a3")}" ${L}/>
-        <path d="${sheaths}" fill="none" stroke="${fog("#7a7a7a")}" stroke-width="${sw * 0.7}"/>
+        ${leaf(250, h * 0.26, h * 0.12, 0, true)}${leaf(-70, h * 0.24, h * 0.1, 1, true)}
+        ${leaf(170, h * 0.58, h * 0.3, 2)}${leaf(10, h * 0.6, h * 0.3, 3)}
+        <path d="${stem}" fill="${fog("#a1a1a1")}" ${L}/>
+        <path d="${stripes}" fill="none" stroke="${fog("#8d8d8d")}" stroke-width="${sw * 0.7}"/>
+        <path d="${drySheath}" fill="${fog("#868686")}" ${L} stroke-width="${sw * 0.7}"/>
         ${backF}
         <path d="${stalk}" fill="none" stroke="${lc}" stroke-width="${(sw * 2.4).toFixed(2)}" stroke-linecap="round"/>
         <path d="${stalk}" fill="none" stroke="${fog("#8b8b8b")}" stroke-width="${(sw * 1.2).toFixed(2)}" stroke-linecap="round"/>
         ${frontF}${heart}
-        ${leaf(125 + s2, h * 0.5, h * 0.18, "#a3a3a3", true)}${leaf(55 + s2, h * 0.5, h * 0.18, "#a3a3a3", false)}
-        ${leaf(95 + s2 * 0.5, h * 0.4, h * 0.02, "#b2b2b2", true)}`;
+        ${leaf(148, h * 0.6, h * 0.36, 4)}${leaf(30, h * 0.6, h * 0.34, 5)}
+        ${leaf(118, h * 0.52, h * 0.2, 6)}${leaf(64, h * 0.5, h * 0.16, 7)}`;
     }
     return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})">${out}</g>`;
   }, { bias: o.bias || 0 });
