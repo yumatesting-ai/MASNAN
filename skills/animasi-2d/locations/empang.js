@@ -29,7 +29,9 @@ module.exports = {
   build(w, { t = 0 } = {}) {
     P.sky(w, { clouds: [[0.2, 0.08, 1.1], [0.7, 0.11, 1.2]] });
     // tanah & sawah di kejauhan (pita kedalaman agar kabut bertahap)
-    for (const [z0, z1] of [[-20, 13], [13, 20], [20, 35], [35, 60]]) w.ground([[-40, 0, z0], [40, 0, z0], [40, 0, z1], [-40, 0, z1]], c("#7fb35a"), { stroke: false });
+    // tanah dasar TIDAK menutupi kolam (dulu tergambar di atas air bagian belakang -> kotak hijau di belakang dermaga)
+    for (const [z0, z1] of [[13, 20], [20, 35], [35, 60]]) w.ground([[-40, 0, z0], [40, 0, z0], [40, 0, z1], [-40, 0, z1]], c("#7fb35a"), { stroke: false });
+    w.ground([[14, 0, -20], [40, 0, -20], [40, 0, 13], [14, 0, 13]], c("#7fb35a"), { stroke: false });
     w.ground([[-40, 0.002, -20], [EDGE_X, 0.002, -20], [EDGE_X, 0.002, 13], [-40, 0.002, 13]], c("#8cc063"), { stroke: false, bias: -0.05 }); // tepian rumput
     w.ground([[-4.2, 0.004, -20], [-2.9, 0.004, -20], [-2.9, 0.004, 13], [-4.2, 0.004, 13]], c("#b89b6e"), { stroke: false, bias: -0.1 }); // jalan setapak
     for (let z = 15; z < 40; z += 0.7) w.line3([[-30, 0.01, z], [30, 0.01, z]], c("#5f9c45"), null, { layer: "ground", bias: -0.3, swk: 0.7 }); // larik padi jauh
@@ -46,8 +48,8 @@ module.exports = {
       const zz = zs.filter((z) => z >= z0 && z <= z1);
       w.ground([...zz.map((z) => [shore(z), WATER_Y, z]), [X1, WATER_Y, z1], [X1, WATER_Y, z0]], c(col), { stroke: false, bias: -0.15 });
     }
-    // air dangkal kehijauan di tepian (ganggang)
-    w.ground([...zs.map((z) => [shore(z), WATER_Y + 0.001, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.45 + 0.15 * Math.sin(z * 2.1), WATER_Y + 0.001, z])], c("#6fae8f"), { stroke: false, bias: -0.155 });
+    // bayangan tebing di air: pita tipis sedikit lebih gelap dari air (bukan hijau) mengikuti kelokan tepi
+    w.ground([...zs.map((z) => [shore(z), WATER_Y + 0.001, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.12, WATER_Y + 0.001, z])], c("#4f93ad"), { stroke: false, bias: -0.155 });
     // bayangan pohon & gubuk seberang di air (pantulan gelap) + pantulan awan terang
     w.ground([[2.5, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 12.6], [2.5, WATER_Y + 0.002, 12.6]], c("#3f7f8a"), { stroke: false, bias: -0.16 });
     for (const [x, z, r] of [[4.5, 5.5, 1.1], [8, 9.5, 1.4]]) {
