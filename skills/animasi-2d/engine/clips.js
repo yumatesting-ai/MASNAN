@@ -452,6 +452,35 @@
         headTilt: 3 * wave(t, 0.8), headY: 7 * up, lookY: 0.6, eyes: "half", mouth: "o", sweat: false };
     } },
     // makan gorengan: gigit -> kunyah (pipi bergerak) -> gigit lagi
+    // ---------- MEMANCING (tampak samping, menghadap air; joran digambar fx "rod" dari tangan) ----------
+    // menunggu: dua tangan memegang pangkal joran di depan perut, badan sedikit condong, mata ke pelampung
+    fish_wait: { duration: 3, view: "side", smooth: 0.02, pose: (t) => ({ ...life(t, 3), armL: 50, elbowL: 35, armR: 42, elbowR: 40,
+      lean: 4, pitch: 0.35, lookX: 1.4, lookY: 0.6, legL: 4, legR: -4, blink: blinkAt(t, [1.4]) }) },
+    // melempar kail: tarik joran ke belakang atas (antisipasi) -> ayun ke depan -> follow-through
+    fish_cast: { once: true, duration: 1.0, view: "side", smooth: 0.008, pose: (t) => {
+      const sw = kf(t, [[0, 0], [0.3, -1, "out"], [0.5, 1.1, "in"], [0.7, 0.9, "out"], [1.0, 0, "io"]]);
+      return { ...life(t, 1), armL: 60 + 70 * Math.max(0, -sw) - 10 * Math.max(0, sw), elbowL: 30, armR: 50 + 70 * Math.max(0, -sw), elbowR: 35,
+        lean: 4 + 8 * Math.max(0, sw) - 6 * Math.max(0, -sw), legL: 10 * Math.max(0, sw), legR: -8, expr: "determined", lookX: 1.4, pitch: 0.1 }; } },
+    // ikan menyambar: sentak joran ke atas, badan ke belakang, wajah gembira
+    fish_lift: { once: true, duration: 1.0, view: "side", smooth: 0.01, pose: (t) => {
+      const up = kf(t, [[0, 0], [0.25, 1, "out"], [1.0, 0.85]]);
+      return { ...life(t, 1), armL: 50 + 55 * up, elbowL: 35 - 20 * up, armR: 42 + 55 * up, elbowR: 40 - 20 * up, lean: 4 - 12 * up, legL: 10 * up, legR: -10 * up,
+        expr: up > 0.5 ? "excited" : "surprised", lookX: 1.2, lookY: -0.6 * up, pitch: -0.3 * up }; } },
+    // tarik sekuat tenaga: badan condong jauh ke belakang, kaki menahan, gemetar, wajah mengejan
+    pull_hard: { duration: 0.6, view: "side", pose: (t) => ({ armL: 70, elbowL: 10, armR: 62, elbowR: 12, lean: -16, legL: 26, legR: -14,
+      bodyX: 1.6 * Math.sin(t * 60), bodyY: 1.5, squash: 0.05, expr: "effort", mouth: "teeth", sweat: true, lookX: 1.4, fx: t / 0.3 }) },
+    // tertarik ke air: badan terhuyung ke depan, tangan menggapai ke depan (dipadukan dengan gerak maju & hide)
+    fall_in: { once: true, duration: 0.5, view: "side", smooth: 0.005, pose: (t) => ({ armL: 120, elbowL: 0, armR: 110, elbowR: 0, lean: 25 + 40 * t, legL: -30, legR: 20,
+      expr: "shocked", mouth: "shout", eyes: "wide", lookX: 1.5, bodyY: -6 * Math.sin(Math.PI * t) }) },
+    // timbul di air (hanya kepala & bahu di atas permukaan): megap-megap, tangan menepuk air
+    in_water: { duration: 1.2, view: "front", pose: (t) => ({ armL: 100 + 30 * Math.sin(t * 10), armR: 100 - 30 * Math.sin(t * 10), elbowL: -10, elbowR: -10,
+      bodyY: 2 * Math.sin(t * 5), expr: "shocked", mouth: "shout", eyes: "wide", sweat: false }) },
+    // basah kuyup: lesu, bahu turun, mata setengah, mulut cemberut, sesekali menggigil
+    wet_idle: { duration: 3, view: "front", pose: (t) => ({ ...life(t, 3), armL: -6, armR: -6, elbowL: 8, elbowR: 8, headY: 3, eyes: "half", mouth: "frown",
+      bodyX: 0.8 * Math.sin(t * 40) * (t % 1.5 < 0.3 ? 1 : 0), gloom: true, sweat: false }) },
+    // baju bergerak-gerak (ada ikan di dalam): badan menggeliat geli, tangan menepuk-nepuk perut, tertawa kegelian
+    shirt_wiggle: { duration: 1.2, view: "front", smooth: 0.005, pose: (t) => ({ armL: 25 + 15 * Math.sin(t * 16), elbowL: 100, armR: 25 - 15 * Math.sin(t * 16), elbowR: 100,
+      bodyX: 3 * Math.sin(t * 22), squash: 0.05 * Math.sin(t * 15), headTilt: 6 * Math.sin(t * 11), expr: "laugh", eyes: "cry", mouth: "grin", sweat: false, fx: t / 0.3 }) },
     // ---------- DUDUK BELAJAR / KELAS ----------
     // menulis di buku yang ada di samping kanan (bale/meja): menunduk, tangan kanan menggores pensil
     // menulis di buku yang terbuka di PANGKUAN: tangan kiri memegang tepi buku, ujung pensil (tangan kanan) menggores

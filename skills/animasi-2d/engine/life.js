@@ -92,7 +92,7 @@ function cat(w, x, z, o = {}) {
     if (mode === "sleep") { // meringkuk: napas, ekor melingkar ke depan, kepala bersandar
       const br = 1 + 0.035 * Math.sin(T * 2.2);
       body = `<g transform="translate(0 0) scale(1 ${br.toFixed(3)})" transform-origin="0 0">
-        <ellipse cx="2" cy="-9" rx="22" ry="10.5" fill="${F(c)}" ${L}/>
+        <ellipse cx="2" cy="${o.fat ? -12 : -9}" rx="${o.fat ? 27 : 22}" ry="${o.fat ? 14.5 : 10.5}" fill="${F(c)}" ${L}/>
         <path d="M-6,-18 q3,4 0,8 M2,-19.5 q3,4 0,9 M10,-18 q3,4 0,8" fill="none" stroke="${F(c2)}" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M20,-5 Q28,2 14,3 L-14,3 Q-22,2 -20,-3" fill="${F(c)}" ${L}/>
         <path d="M-14,2 Q-4,5 8,2" fill="none" stroke="${F(c2)}" stroke-width="2" stroke-linecap="round" opacity="0.8"/></g>

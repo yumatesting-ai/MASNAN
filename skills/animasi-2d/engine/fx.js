@@ -70,7 +70,7 @@ function drawProp(w, kind, st, dent, e) {
   if (kind === "ball") return P.ball(w, st.x, st.z, { y: st.y, r: e.r || 0.11, spin: st.rot / 30, bias: e.bias ?? -0.2 });
   w.sprite(st.x, st.z, (sx, sy, p, fog, lc, sw) => {
     // skala per jenis agar ukuran SAMA dengan saat dipegang tokoh (sandal ±0,22 m, sapu ±0,75 m, ember ±0,3 m)
-    const s = p * ({ sandal: 0.0068, sapu: 0.0063, ember: 0.0088, mango: 0.008, book: 0.0064 }[kind] || 0.01), L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
+    const s = p * ({ sandal: 0.0068, sapu: 0.0063, ember: 0.0088, mango: 0.008, book: 0.0064, fish: 0.0062, worm: 0.005, boot: 0.0072, can: 0.0065, branch: 0.0075 }[kind] || 0.01), L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round" stroke-linecap="round"`;
     let g = "";
     if (kind === "sandal") g = `<path d="M-14,-4 Q-16,-12 -6,-13 L14,-11 Q20,-6 14,-1 L-8,1 Q-14,1 -14,-4 Z" fill="${fog(C("#7a4a2a"))}" ${L}/>
       <path d="M-4,-12 Q2,-20 8,-11" fill="none" stroke="${fog(C("#2f6b8f"))}" stroke-width="4" stroke-linecap="round"/>`;
@@ -114,12 +114,23 @@ function drawProp(w, kind, st, dent, e) {
           ${score ? `<text x="${e.scoreX ?? 20}" y="-2" font-size="13" font-family="DejaVu Sans" font-weight="700" text-anchor="middle" fill="#d8423a" transform="rotate(-10 20 -6)">${score}</text>` : ""}`;
       }
     }
+    else if (kind === "worm") g = `<path d="M0,-14 C6,-10 -6,-6 0,-2 C6,2 -4,6 0,10" fill="none" stroke="${lc}" stroke-width="6" stroke-linecap="round"/>
+        <path d="M0,-14 C6,-10 -6,-6 0,-2 C6,2 -4,6 0,10" fill="none" stroke="${fog(C("#e98aa0"))}" stroke-width="3.6" stroke-linecap="round"/><path d="M0,-20 L0,-14" stroke="${lc}" stroke-width="1.4"/>`;
+    else if (kind === "fish") g = `<g transform="rotate(${Math.sin((e.t0 || 0) + st.x * 9) * 8})"><path d="M-16,0 C-10,-9 8,-9 14,0 C8,9 -10,9 -16,0 Z" fill="${fog(C(e.color || "#e0913a"))}" ${L}/>
+        <path d="M14,0 L24,-8 L22,0 L24,8 Z" fill="${fog(C(e.color || "#e0913a"))}" ${L}/><circle cx="-9" cy="-2" r="2" fill="${lc}"/><path d="M-2,-5 Q2,0 -2,5" fill="none" ${L}/></g>`;
+    else if (kind === "boot") g = `<path d="M-8,-34 L8,-34 L8,-6 L22,-4 Q26,4 20,6 L-8,6 Z" fill="${fog(C("#2f6b4f"))}" ${L}/><path d="M-8,-30 L8,-30" ${L}/>
+        <path d="M-8,6 L20,6" stroke="${lc}" stroke-width="3"/><path d="M-6,-20 q4,-3 8,0" fill="none" stroke="${fog("#6fa58a")}" stroke-width="2"/>`;
+    else if (kind === "can") g = `<rect x="-9" y="-24" width="18" height="24" rx="2" fill="${fog(C("#d84a4a"))}" ${L}/><ellipse cx="0" cy="-24" rx="9" ry="3" fill="${fog("#cfcfcf")}" ${L}/>
+        <rect x="-9" y="-16" width="18" height="7" fill="${fog("#f3ead6")}"/><path d="M-4,-2 l3,-4 l3,4" fill="none" stroke="${lc}" stroke-width="1.2"/>`;
+    else if (kind === "branch") g = `<path d="M-26,4 L22,-4" stroke="${lc}" stroke-width="7" stroke-linecap="round"/><path d="M-26,4 L22,-4" stroke="${fog(C("#8a6a45"))}" stroke-width="4" stroke-linecap="round"/>
+        <path d="M2,0 L14,-14 M-10,2 L-18,-10" stroke="${fog(C("#8a6a45"))}" stroke-width="3" stroke-linecap="round"/><ellipse cx="16" cy="-16" rx="5" ry="3" fill="${fog(C("#5f9c45"))}" ${L}/>`;
     else if (kind === "mango") g = `<ellipse cx="0" cy="-10" rx="8" ry="10" fill="${fog(C("#e0b13a"))}" ${L}/><path d="M0,-20 l2,-5" ${L}/>`;
     return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)}) rotate(${st.rot.toFixed(1)}) scale(${s.toFixed(4)})">${g}</g>`;
   }, { y: st.y, bias: e.bias ?? -0.2 });
 }
 
 function draw(w, list, t) {
+  const C2 = require("./life.js").col;
   for (const e of list) {
     if (e.type === "ball") {
       const hold = e.hold || "end";
@@ -133,7 +144,7 @@ function draw(w, list, t) {
       P.ball(w, x, z, { y, r: e.rFly ? (e.r || 0.11) + (e.rFly - (e.r || 0.11)) * Math.min(1, k * 3) : e.r, spin: dist / 0.11 + (e.spin0 || 0), bias: -0.2 });
     } else if (e.type === "splash") {
       const tau = t - e.t;
-      drops(w, e, t, 1.0, (r) => { const a = r() * Math.PI * 2, s = 0.6 + r() * 1.6; return [Math.cos(a) * s * 0.7, 2.2 + r() * 2.2, Math.sin(a) * s * 0.5 - 0.4]; }, "#5a5a5a");
+      drops(w, e, t, 1.0, (r) => { const a = r() * Math.PI * 2, s = 0.6 + r() * 1.6; return [Math.cos(a) * s * 0.7, 2.2 + r() * 2.2, Math.sin(a) * s * 0.5 - 0.4]; }, e.color || "#5a5a5a");
       if (tau >= 0 && tau < 0.3) w.sprite(e.x, e.z, (sx, sy, p, fog, lc, sw) => { // mahkota cairan
         const R = p * 0.12 * (0.6 + tau * 3) * (e.size || 1), H = p * 0.18 * Math.sin((tau / 0.3) * Math.PI);
         return `<path d="M${sx - R},${sy} L${sx - R * 0.8},${sy - H} L${sx - R * 0.45},${sy - H * 0.4} L${sx - R * 0.2},${sy - H * 1.2} L${sx + R * 0.1},${sy - H * 0.5} L${sx + R * 0.4},${sy - H * 1.1} L${sx + R * 0.7},${sy - H * 0.45} L${sx + R},${sy - H * 0.9} L${sx + R},${sy} Z" fill="#5a5a5a" stroke="${lc}" stroke-width="${sw * 0.6}"/>`;
@@ -172,13 +183,74 @@ function draw(w, list, t) {
         const k = (t - e.t) / (e.dur || 0.4), x = e.from[0] + (e.x - e.from[0]) * k, z = e.from[1] + (e.z - e.from[1]) * k;
         LIFE.cat(w, x, z, { mode: "leap", y: 4 * (e.h || 0.45) * k * (1 - k), flip: e.x > e.from[0], color: e.color, stripe: e.stripe, food: !!e.food });
       } else LIFE.cat(w, e.x, e.z, { mode: e.mode || "sit", flip: e.flip, color: e.color, stripe: e.stripe, food: !!e.food });
+    } else if (e.type === "rod") {
+      // JORAN: keys [[t, bx,by,bz, sudut(°), panjang, lengkung(0..1), tangkapan|null, lempar(0..1)]] — pangkal (dekat tangan),
+      // arah dir (+1 kanan). Senar dari ujung: tanpa tangkapan -> turun ke air + pelampung; tegang -> miring ke dalam air;
+      // dengan tangkapan -> benda tergantung di ujung senar, berayun.
+      const K = e.keys; if (!K || !K.length || t < K[0][0] - (e.pre ?? 1e9)) continue;
+      let i = 0; while (i + 1 < K.length && K[i + 1][0] <= t) i++;
+      const a = K[i], b = K[Math.min(i + 1, K.length - 1)], u = b[0] > a[0] ? Math.max(0, Math.min(1, (t - a[0]) / (b[0] - a[0]))) : 0;
+      const L = (j) => (typeof a[j] === "number" && typeof b[j] === "number" ? a[j] + (b[j] - a[j]) * u : a[j]);
+      if (a[7] === "hide") continue;
+      const dir = e.dir || 1, bx = L(1), by = L(2), bz = L(3), ang = (L(4) * Math.PI) / 180, len = L(5), bend = L(6), cat = a[7];
+      const WY = e.waterY ?? -0.12, pts = [];
+      for (let k = 0; k <= 10; k++) { const q = k / 10, sag = bend * len * 0.55 * q * q; pts.push([bx + dir * Math.cos(ang) * len * q, by + Math.sin(ang) * len * q - sag, bz]); }
+      const tip = pts[10];
+      w.line3(pts, "#2a2a2a", null, { bias: -0.12, swk: 3.4 });
+      const mahal = e.style === "mahal";
+      w.line3(pts, C2(mahal ? "#2c5f8a" : "#c9a35a"), null, { bias: -0.13, swk: mahal ? 1.8 : 2.2 });
+      if (mahal) { // joran mahal: pegangan hitam + gulungan (reel) perak berkilau
+        w.line3([pts[0], pts[2]], C2("#2a2a2a"), null, { bias: -0.135, swk: 2.8 });
+        const rp = pts[1];
+        w.sprite(rp[0], rp[2], (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy + p * 0.05})"><circle r="${p * 0.045}" fill="#d9d9d9" stroke="${lc}" stroke-width="${sw * 0.7}"/>
+          <circle r="${p * 0.015}" fill="#9a9a9a"/><path d="M0,0 L${p * 0.04 * Math.cos(t * 9)},${p * 0.04 * Math.sin(t * 9)}" stroke="${lc}" stroke-width="${sw * 0.6}"/></g>`, { y: rp[1], bias: -0.14 });
+      } else for (let k = 2; k < 10; k += 2) { const q = pts[k + 1], m = pts[k].map((v, j) => v + (q[j] - v) * 0.12); w.line3([pts[k], m], "#7d5a2a", null, { bias: -0.135, swk: 2.8 }); } // ruas bambu
+      const sway = Math.sin(t * 7) * 0.04;
+      if (cat) { // tangkapan tergantung
+        const hy = tip[1] - 0.32, hx = tip[0] + sway;
+        w.line3([tip, [hx, hy + 0.06, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
+        drawProp(w, cat, { x: hx, y: hy - (cat === "boot" ? 0.12 : cat === "can" ? 0.1 : cat === "worm" ? -0.18 : 0.02), z: bz - 0.01, rot: cat === "fish" ? 80 + Math.sin(t * 14) * 20 : cat === "worm" ? Math.sin(t * 5) * 15 : sway * 200, t }, false, { ...e, t0: t });
+      } else if (bend > 0.25) { // tegang: senar miring masuk ke air
+        const ex = tip[0] + dir * 0.6, ez = bz;
+        w.line3([tip, [ex, WY, ez]], "#3a3a3a", null, { bias: -0.125, swk: 0.6 });
+        drops(w, { t: Math.floor(t * 3) / 3, x: ex, y: WY, z: ez, n: 4, size: 0.6 }, t, 0.3, (r) => [(r() - 0.5) * 0.8, 1 + r(), (r() - 0.5) * 0.3], "#e6f4fa");
+      } else {
+        const bob = Math.sin(t * 2.4) * 0.012 - (e.bites || []).some(([b0, b1]) => t > b0 && t < b1) * (0.03 + 0.03 * Math.sin(t * 30));
+        w.line3([tip, [tip[0], WY + 0.03 + bob, bz]], "#3a3a3a", null, { bias: -0.125, swk: 0.5 });
+        w.sprite(tip[0], bz, (sx, sy, p, fog, lc, sw) => `<g transform="translate(${sx} ${sy})"><ellipse rx="${p * 0.025}" ry="${p * 0.035}" fill="#d84a4a" stroke="${lc}" stroke-width="${sw * 0.6}"/>
+          <path d="M${-p * 0.025},0 L${p * 0.025},0" stroke="#ffffff" stroke-width="${sw * 0.8}"/></g>`, { y: WY + 0.03 + bob, bias: -0.13 });
+        w.line3([[tip[0] - 0.08, WY + 0.002, bz], [tip[0] + 0.08, WY + 0.002, bz]], "#d6eef7", null, { layer: "ground", bias: -0.19, swk: 0.8 });
+      }
+    } else if (e.type === "ember") { // ember berisi ikan: fills [[t, jumlah]] (jumlah terakhir yang sudah lewat dipakai)
+      let n = 0; for (const [ft, fn] of e.fills || []) if (t >= ft) n = fn;
+      w.sprite(e.x, e.z, (sx, sy, p, fog, lc, sw) => {
+        const s = p * 0.0085, L = `stroke="${lc}" stroke-width="${(sw * 0.7).toFixed(2)}" stroke-linejoin="round"`;
+        let fish = "";
+        for (let k = 0; k < Math.min(n, 5); k++) { const fx = -10 + k * 5, rot = -60 + k * 30 + Math.sin(t * 6 + k) * 8;
+          fish += `<g transform="translate(${fx} -30) rotate(${rot})"><path d="M0,0 C-4,-6 -4,-14 0,-18 C4,-14 4,-6 0,0 Z" fill="${fog(C2("#e0913a"))}" ${L}/><path d="M0,-18 L-5,-25 L0,-22 L5,-25 Z" fill="${fog(C2("#e0913a"))}" ${L}/></g>`; }
+        return `<g transform="translate(${sx} ${sy}) scale(${s})"><path d="M-18,-30 Q0,-52 18,-30" fill="none" ${L}/>
+          <path d="M-18,-30 L18,-30 L13,0 L-13,0 Z" fill="${fog(C2("#3f86c4"))}" ${L}/>${fish}
+          <ellipse cx="0" cy="-30" rx="18" ry="5" fill="${fog(C2(n ? "#4f9ac0" : "#2c5f8a"))}" ${L}/>
+          <path d="M-18,-30 L18,-30 L13,0 L-13,0 Z" fill="none" ${L}/></g>`;
+      }, { bias: e.bias ?? -0.08 });
+    } else if (e.type === "waterfront") { // permukaan air di depan tokoh yang tercebur: menutup badan di bawah air
+      if (e.t0 !== undefined && (t < e.t0 || t > (e.t1 ?? 1e9))) continue;
+      const y = e.y ?? -0.12, d = e.depth || 1.4;
+      w.face([[e.x0, y - d, e.z], [e.x1, y - d, e.z], [e.x1, y, e.z], [e.x0, y, e.z]], C2(e.color || "#5aa5c4"), { stroke: false, bias: -0.3 });
+      const T = t * 3; // riak lingkaran di sekitar tokoh
+      for (let k = 0; k < 2; k++) { const r = 0.25 + ((T + k * 0.5) % 1) * 0.5;
+        w.line3(Array.from({ length: 13 }, (_, j) => { const a = (j / 12) * Math.PI * 2; return [e.cx + Math.cos(a) * r, y + 0.003, e.cz + Math.sin(a) * r * 0.6]; }), "#d6eef7", null, { layer: "ground", bias: -0.2, swk: 0.8 }); }
+    } else if (e.type === "drip") { // tetesan air dari badan basah
+      if (t < e.t0 || t > e.t1) continue;
+      for (let k = 0; k < (e.n || 7); k++) { const ph = ((t * 1.6 + k * 0.37) % 1), x = e.x + ((k * 0.13) % 0.4) - 0.2, y = (e.y ?? 1.0) * (1 - ph) - 0.05;
+        w.sprite(x, e.z, (sx, sy, p, fog, lc, sw) => `<ellipse cx="${sx}" cy="${sy}" rx="${p * 0.012}" ry="${p * 0.02}" fill="#7fc3e0" stroke="${lc}" stroke-width="${sw * 0.4}" opacity="${(1 - ph * 0.6).toFixed(2)}"/>`, { y, bias: -0.3 }); }
     } else if (e.type === "prop") { // benda bergerak berkeyframe: keys [[t,x,y,z,rot,arc,mode]] (mode untuk kucing)
       const st = keyAt(e.keys, t, e.hold);
       if (!st) continue;
       if (e.kind === "cat") {
         const LIFE = require("./life.js");
         const carry = e.carry && t >= (e.carry[0] ?? -1e9) && t < (e.carry[1] ?? 1e9) ? e.carryKind || "book" : null;
-        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0, moving: st.moving, carry });
+        LIFE.cat(w, st.x, st.z - 0.001, { mode: st.mode || "sit", y: st.y, flip: st.flip ?? e.flip, color: e.color, stripe: e.stripe, phase: 0, moving: st.moving, carry, fat: e.fatAt !== undefined && t >= e.fatAt });
       } else drawProp(w, e.kind, { ...st, t }, t >= (e.dentAt ?? 1e9), e);
     } else if (e.type === "jemuran") {
       P.jemuran(w, e.x, e.za, e.zb);

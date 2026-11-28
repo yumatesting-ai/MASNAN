@@ -298,7 +298,7 @@ function frame(t) {
           const key = `${pp.who}|${mv.name}`; if (seen.has(key)) continue; seen.add(key);
           exCrash.push(`${pp.who} bertabrakan/tembus dengan '${mv.name}' pada t=${t.toFixed(1)} dtk (x=${mv.x.toFixed(2)} z=${mv.z.toFixed(2)})`);
         }
-        const ob = (LOC.obstacles || []).find((ob2) => hit(ob2, mv.x, mv.z, mv.r * 0.9));
+        const ob = (LOC.obstacles || []).find((ob2) => !(ob2.water && /bebek|itik/.test(mv.name)) && hit(ob2, mv.x, mv.z, mv.r * 0.9)); // air: bebek boleh berenang
         if (ob) { const key = `${mv.name}|${ob.name}`; if (!seen.has(key)) { seen.add(key); exCrash.push(`'${mv.name}' menembus '${ob.name}' pada t=${t.toFixed(1)} dtk (x=${mv.x.toFixed(2)} z=${mv.z.toFixed(2)})`); } }
       }
     }
