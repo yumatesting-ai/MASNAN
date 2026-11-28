@@ -82,10 +82,17 @@ B.walk((-0.55, 5.35), clip="walk{armL=50;elbowL=35;armR=42;elbowR=40}")         
 B.stay(33.8, "fish_wait{face=r;expr=confused}")
 B.walk((0.05, 6.25), DERMAGA, clip="walk{armL=50;elbowL=35;armR=42;elbowR=40}")             # ke dermaga
 B.stay(37.35, "fish_wait{face=r;expr=smile}"); B.stay(38.35, "fish_lift{face=r}"); B.stay(40.17, "fish_wait{face=r;expr=happy}")
-B.stay(40.9, "fish_wait{face=l;expr=surprised;lookY=-0.15;pitch=-0.05}"); B.stay(47.81, "fish_wait{face=l;expr=excited;lookY=-0.15;pitch=-0.05}")   # menonton Pak Hasan (sejajar mata)
-B.stay(51.6, "fish_wait{face=l;expr=shocked;lookY=0.5;pitch=0.35}"); B.stay(54.27, "fish_wait{face=l;expr=laugh;lookY=-0.15;pitch=-0.05}")   # ke air, lalu ke Pak Hasan
-B.stay(60.77, "fish_wait{face=l;expr=smile;lookY=-0.15;pitch=-0.05}"); B.stay(62.45, "fish_wait{face=l;expr=curious;lookY=1;pitch=0.6}"); B.stay(67.0, "fish_wait{face=l;expr=shocked;lookY=1;pitch=0.6}")   # menunduk ke ember
-B.stay(END, "fish_wait{face=l;expr=deadpan;gloom=1;lookY=-0.15;pitch=-0.05}")
+# 40,6: Bima menaruh joran di dermaga (senar tetap di air) lalu BERBALIK MENGHADAP KAMERA untuk menonton & bereaksi
+B.stay(40.6, "fish_wait{face=r;expr=happy}"); B.stay(44.43, "idle{expr=surprised}")
+B.stay(47.81, "cheer{expr=excited}")                                   # menyemangati: "Tarik! Tarik!"
+B.stay(48.77, "idle{expr=shocked;sweat=1}")                            # BYUR!
+B.stay(51.6, "laugh")                                                  # Pak Hasan megap-megap di air
+B.stay(54.27, "idle{expr=surprised}")                                  # Pak Hasan naik basah kuyup
+B.stay(58.12, "laugh")                                                 # baju menggeliat
+B.stay(60.77, "thumbs_up")                                             # "Akhirnya Bapak dapat ikan!"
+B.stay(62.45, "idle_three{face=l;expr=confused;above=0;pitch=0.7;lookY=1;lookX=-0.6}")                         # menoleh & menunduk ke ember
+B.stay(67.0, "idle_three{face=l;expr=shocked;pitch=0.75;lookY=1;lookX=-0.6;sweat=1}")                   # KOSONG! ... Oyen tidur
+B.stay(END, "idle{expr=deadpan;gloom=1}")                              # pasrah
 
 # Pak Hasan setelah tercebur: kepala di air, lalu naik ke tepi basah kuyup
 H.stay(HASAN_OUT_OF_WATER, "idle{hide=1}")   # (selama di air dipakai aktor kedua "hasan" di dalam_empang -> lihat CAST_WATER)
@@ -138,11 +145,13 @@ BIMA_ROD = [(0, 70, 0, "worm", "r"), (12.71, 70, 0, "worm", "r"), (12.95, 108, 0
   (20.99, 28, 0.2, None, "r"), (21.15, 58, 0.1, "fish", "r"), (21.45, 58, 0.05, "fish", "r"), (21.5, 58, 0, "worm", "r"), (22.3, 58, 0, "worm", "r"), (22.7, 28, 0, None, "r"),
   (32.0, 75, 0, "worm", "r"), (32.1, 75, 0, "worm", "l"), (33.8, 75, 0, "worm", "r"),
   (36.3, 75, 0, "worm", "r"), (36.55, 28, 0, None, "r"), (37.35, 28, 0.2, None, "r"), (37.5, 58, 0.1, "fish", "r"), (38.3, 58, 0.05, "fish", "r"), (38.35, 58, 0, "worm", "r"),
-  (39.0, 28, 0, None, "r"), (40.05, 28, 0, None, "r"), (40.5, 75, 0, "worm", "l"), (END, 75, 0, "worm", "l")]  # angkat joran & berbalik menonton
+  (39.0, 28, 0, None, "r"), (40.6, "hide", 0, "hide", "r")]  # joran ditaruh di dermaga (lihat ROD_B_LAID)
 ROD_H = {"type": "rod", "style": "mahal", "waterY": WY, "keys": rod_keys(H, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in HASAN_ROD], "mahal"),
          "bites": [[17.2, 18.5], [22.4, 23.6], [38.8, 39.0]]}
-ROD_B = {"type": "rod", "style": "bambu", "waterY": WY, "keys": rod_keys(B, BIMA_ROD, "bambu"), "bites": [[13.9, 14.8], [20.1, 20.95], [37.0, 37.3]]}
+ROD_B = {"type": "rod", "style": "bambu", "waterY": WY, "keys": rod_keys(B, [(p[0], p[1] if p[1] != "hide" else 0, p[2], p[3], p[4]) for p in BIMA_ROD], "bambu"), "bites": [[13.9, 14.8], [20.1, 20.95], [37.0, 37.3]]}
 # joran Pak Hasan setelah tercebur: mengapung di air
+ROD_B_LAID = {"type": "rod", "style": "bambu", "waterY": WY, "keys": [[0, 0, 0, 0, 0, 0, 0, "hide"], [40.55, 0, 0, 0, 0, 0, 0, "hide"],
+  [40.6, 1.55, DECK + 0.05, 6.45, 4, 1.55, 0, None]], "bites": []}   # joran bambu Bima tergeletak di dermaga, senar ke air
 ROD_FLOAT = {"type": "rod", "style": "mahal", "waterY": WY, "keys": [[0, 0, 0, 0, 0, 0, 0, "hide"], [48.0, 0, 0, 0, 0, 0, 0, "hide"], [48.05, 1.6, WY + 0.02, 4.0, 5, 1.75, 0, None]]}
 
 def tip(keys, t):
@@ -161,7 +170,7 @@ def drop_to(kind, t0, src, dst, rot=0):
 BOOT_AT = tip(ROD_H["keys"], 19.85); CAN_AT = tip(ROD_H["keys"], 24.55); BRANCH_AT = tip(ROD_H["keys"], 40.05)
 FX = [
  {"type": "ember", "x": EMBER[0], "z": EMBER[1], "fills": [[0, 0], [16.3, 1], [21.8, 2], [39.4, 3], [49.0, 0]]},
- ROD_H, ROD_B, ROD_FLOAT,
+ ROD_H, ROD_B, ROD_B_LAID, ROD_FLOAT,
  fish_to_ember(15.5, 16.3, tip(ROD_B["keys"], 15.45)), fish_to_ember(21.5, 21.8, tip(ROD_B["keys"], 21.45)),
  fish_to_ember(38.35, 39.4, tip(ROD_B["keys"], 38.3)),
  drop_to("boot", 19.9, BOOT_AT, (1.2, DECK + 0.02, 5.92)), drop_to("can", 24.6, CAN_AT, (1.0, DECK + 0.02, 6.58)),
