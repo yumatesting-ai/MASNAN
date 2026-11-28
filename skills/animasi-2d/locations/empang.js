@@ -44,7 +44,7 @@ module.exports = {
     // lumpur basah (pita coklat gelap di bibir air) + tebing tanah
     w.ground([...zs.map((z) => [shore(z) - 0.07, 0.003, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.02, 0.003, z])], c("#9c7d55"), { stroke: false, bias: -0.08 });
     // air: tiga pita gradasi kedalaman
-    for (const [z0, z1, col] of [[Z0, 2.5, "#6ab3c8"], [2.5, 6, "#62abc4"], [6, 9.5, "#57a0bc"], [9.5, Z1, "#4d93b2"]]) {
+    for (const [z0, z1, col] of Array.from({ length: 10 }, (_, k) => { const z0 = Z0 + (k * (Z1 - Z0)) / 10, z1 = Z0 + ((k + 1) * (Z1 - Z0)) / 10, q = k / 9; const mix = (a, b) => Math.round(a + (b - a) * q).toString(16).padStart(2, "0"); return [z0, z1 + 0.02, `#${mix(0x6c, 0x50)}${mix(0xb4, 0x96)}${mix(0xc9, 0xb4)}`]; })) {
       const zz = zs.filter((z) => z >= z0 && z <= z1);
       w.ground([...zz.map((z) => [shore(z), WATER_Y, z]), [X1, WATER_Y, z1], [X1, WATER_Y, z0]], c(col), { stroke: false, bias: -0.15 });
     }
@@ -52,10 +52,6 @@ module.exports = {
     w.ground([...zs.map((z) => [shore(z), WATER_Y + 0.001, z]), ...zs.slice().reverse().map((z) => [shore(z) + 0.12, WATER_Y + 0.001, z])], c("#4f93ad"), { stroke: false, bias: -0.155 });
     // bayangan pohon & gubuk seberang di air (pantulan gelap) + pantulan awan terang
     w.ground([[2.5, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 11.6], [12, WATER_Y + 0.002, 12.6], [2.5, WATER_Y + 0.002, 12.6]], c("#3f7f8a"), { stroke: false, bias: -0.16 });
-    for (const [x, z, r] of [[4.5, 5.5, 1.1], [8, 9.5, 1.4]]) {
-      const pts = []; for (let k = 0; k < 14; k++) { const a = (k / 14) * Math.PI * 2; pts.push([x + Math.cos(a) * r * (1 + 0.15 * Math.sin(k * 2.3)), WATER_Y + 0.002, z + Math.sin(a) * r * 0.45]); }
-      w.ground(pts, c("#8fcbe0"), { stroke: false, bias: -0.16 });
-    }
     // tebing tepian (sisi tanah turun ke air) mengikuti kelokan
     for (let i = 0; i + 1 < zs.length; i++) w.face([[shore(zs[i]), WATER_Y, zs[i]], [shore(zs[i]), 0, zs[i]], [shore(zs[i + 1]), 0, zs[i + 1]], [shore(zs[i + 1]), WATER_Y, zs[i + 1]]], c("#8a6a45"), { stroke: false, bias: -0.12 });
     w.line3(zs.map((z) => [shore(z), 0.002, z]), c("#5e4630"), null, { bias: -0.11, swk: 0.9 });
@@ -65,7 +61,7 @@ module.exports = {
         <ellipse cx="${sx - p * r * 0.3}" cy="${sy - p * r * 0.55}" rx="${p * r * 0.35}" ry="${p * r * 0.15}" fill="#ffffff" opacity="0.35"/>`, { bias: -0.04 });
     // riak melengkung (bergerak pelan) + kilau matahari berkelip
     for (let i = 0; i < 30; i++) {
-      const x = EDGE_X + 1.0 + ((i * 2.37) % (X1 - EDGE_X - 1.5)), z = Z0 + 4 + ((i * 3.11) % (Z1 - Z0 - 5)), dx = 0.25 * Math.sin(t * 0.6 + i), L = 0.18 + (i % 3) * 0.08;
+      const x = EDGE_X + 1.0 + ((i * 2.37) % (X1 - EDGE_X - 1.5)), z = 2 + ((i * 3.11) % (Z1 - 2.5)), dx = 0.25 * Math.sin(t * 0.6 + i), L = 0.18 + (i % 3) * 0.08;
       w.line3([[x - L + dx, WATER_Y + 0.003, z], [x + dx, WATER_Y + 0.003, z - 0.04], [x + L + dx, WATER_Y + 0.003, z]], c("#d8eef6"), null, { layer: "ground", bias: -0.17, swk: 0.9 });
     }
     for (let i = 0; i < 12; i++) {

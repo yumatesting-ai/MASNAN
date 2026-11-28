@@ -452,7 +452,7 @@ function tree(w, x, z, o = {}) {
       const leaf = (ang, len, droop, n, dead) => {
         const sw2 = Math.sin(T * (1.1 + 0.13 * n) + seed + n * 1.7) * (dead ? 2 : 4.5);
         const a = ((ang + sw2) * Math.PI) / 180, segs = 16, mid = [];
-        const pet = len * 0.18; // tangkai daun
+        const pet = len * 0.14; // tangkai daun
         for (let i = 0; i <= segs; i++) {
           const t = i / segs, d = len * t;
           const lift = Math.sin(Math.PI * Math.min(1, t * 1.3)) * len * 0.18 * Math.max(0.2, Math.sin(a));
@@ -474,9 +474,13 @@ function tree(w, x, z, o = {}) {
         if (!dead) for (let i = 4; i < segs - 1; i += 2) { const [px, py] = mid[i], [ux, uy] = up[i + 1], [qx, qy] = dn[i + 1];
           veins += `M${P(px)},${P(py)} L${P(px + (ux - px) * 0.85)},${P(py + (uy - py) * 0.85)} M${P(px)},${P(py)} L${P(px + (qx - px) * 0.85)},${P(py + (qy - py) * 0.85)} `; }
         const outline = `M${pts(up)} L${pts([...dn].reverse())} Z`;
+        // TANGKAI DAUN tebal dari pucuk batang ke pangkal helai -> daun jelas menempel (tidak melayang dari jauh)
+        const pi = Math.max(2, Math.round((pet / len) * segs) + 1), petS = "M" + pts(mid.slice(0, pi + 1));
+        const petiole = `<path d="${petS}" fill="none" stroke="${lc}" stroke-width="${sw * 4.2}" stroke-linecap="round"/>
+          <path d="${petS}" fill="none" stroke="${fog(dead ? "#868686" : "#a1a1a1")}" stroke-width="${sw * 2.6}" stroke-linecap="round"/>`;
         return dead
-          ? `<path d="${outline}" fill="${fog("#7e7e7e")}" ${L}/><path d="${midS}" fill="none" stroke="${fog("#717171")}" stroke-width="${sw * 1.1}"/>`
-          : `<path d="${upper}" fill="${fog("#a7a7a7")}"/><path d="${lower}" fill="${fog("#909090")}"/>
+          ? `${petiole}<path d="${outline}" fill="${fog("#7e7e7e")}" ${L}/><path d="${midS}" fill="none" stroke="${fog("#717171")}" stroke-width="${sw * 1.1}"/>`
+          : `${petiole}<path d="${upper}" fill="${fog("#a7a7a7")}"/><path d="${lower}" fill="${fog("#909090")}"/>
             <path d="${veins}" fill="none" stroke="${fog("#7b7b7b")}" stroke-width="${sw * 0.45}" opacity="0.7"/>
             <path d="${outline}" fill="none" ${L}/>
             <path d="${midS}" fill="none" stroke="${fog("#c4c4c4")}" stroke-width="${sw * 1.3}" stroke-linecap="round"/>`;
@@ -526,7 +530,8 @@ function tree(w, x, z, o = {}) {
         <path d="${stalk}" fill="none" stroke="${fog("#8b8b8b")}" stroke-width="${(sw * 1.2).toFixed(2)}" stroke-linecap="round"/>
         ${frontF}${heart}
         ${leaf(148, h * 0.6, h * 0.36, 4)}${leaf(30, h * 0.6, h * 0.34, 5)}
-        ${leaf(118, h * 0.52, h * 0.2, 6)}${leaf(64, h * 0.5, h * 0.16, 7)}`;
+        ${leaf(118, h * 0.52, h * 0.2, 6)}${leaf(64, h * 0.5, h * 0.16, 7)}
+        <ellipse cx="${P(bend)}" cy="${P(-sh * 0.98)}" rx="${P(sw0 * 0.75)}" ry="${P(sw0 * 0.45)}" fill="${fog("#a1a1a1")}" ${L}/>`;
     }
     return `<g transform="translate(${sx.toFixed(1)} ${sy.toFixed(1)})">${out}</g>`;
   }, { bias: o.bias || 0 });
